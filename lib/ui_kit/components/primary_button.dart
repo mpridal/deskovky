@@ -31,6 +31,9 @@ class _PrimaryButtonState extends State<PrimaryButton> {
     return Semantics(
       button: true,
       enabled: enabled,
+      // Own node, so a dialog does not merge the button into its text and
+      // screen readers can press it.
+      container: true,
       child: GestureDetector(
         onTapDown: (_) => _setPressed(true),
         onTapUp: (_) => _setPressed(false),

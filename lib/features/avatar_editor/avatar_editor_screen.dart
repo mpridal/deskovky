@@ -3,8 +3,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../core/avatar/avatar_spec.dart';
+import '../../core/players/player_profile.dart';
 import '../../l10n/app_localizations.dart';
 import '../../ui_kit/avatar/avatar_view.dart';
+import '../../ui_kit/components/app_dialog.dart';
 import '../../ui_kit/components/color_swatch_picker.dart';
 import '../../ui_kit/components/paper_card.dart';
 import '../../ui_kit/components/primary_button.dart';
@@ -15,15 +17,41 @@ import '../../ui_kit/tokens/app_typography.dart';
 
 enum _Layer { face, skin, hair, eyes, mouth, background }
 
-/// Avatar editor (spec 5.3, mockup "Editor avatara"). Pops the edited
-/// [AvatarSpec] on save and `null` on back.
+/// What the editor saves: the profile name (when shown) and the avatar.
+@immutable
+class AvatarEditResult {
+  const AvatarEditResult({required this.name, required this.avatar});
+
+  final String name;
+  final AvatarSpec avatar;
+}
+
+/// Persists an edit; returns the error to show, or null on success.
+typedef AvatarEditSave = Future<ProfileError?> Function(AvatarEditResult result);
+
+/// Avatar editor (spec 5.3, mockup "Editor avatara"), optionally with the
+/// profile name. With [onSave] it stays open and shows the returned error;
+/// without it, it pops the edited [AvatarSpec] (or [AvatarEditResult] when
+/// [showName]) on save. Back pops `null`, asking first when something
+/// changed.
 class AvatarEditorScreen extends StatefulWidget {
-  const AvatarEditorScreen({super.key, this.initial = AvatarSpec.defaults, this.random});
+  const AvatarEditorScreen({
+    super.key,
+    this.initial = AvatarSpec.defaults,
+    this.random,
+    this.showName = false,
+    this.initialName = '',
+    this.onSave,
+  });
 
   final AvatarSpec initial;
 
   /// Source for the "Random" button; injectable for tests.
   final Random? random;
+
+  final bool showName;
+  final String initialName;
+  final AvatarEditSave? onSave;
 
   @override
   State<AvatarEditorScreen> createState() => _AvatarEditorScreenState();
@@ -32,9 +60,60 @@ class AvatarEditorScreen extends StatefulWidget {
 class _AvatarEditorScreenState extends State<AvatarEditorScreen> {
   late AvatarSpec _spec = widget.initial;
   late final Random _random = widget.random ?? Random();
+  late final TextEditingController _name = TextEditingController(text: widget.initialName)
+    ..addListener(() => setState(() {}));
   _Layer _layer = _Layer.hair;
+  ProfileError? _error;
+  bool _saving = false;
+
+  bool get _dirty => _spec != widget.initial || (widget.showName && _name.text.trim() != widget.initialName.trim());
 
   void _update(AvatarSpec spec) => setState(() => _spec = spec);
+
+  @override
+  void dispose() {
+    _name.dispose();
+    super.dispose();
+  }
+
+  Future<void> _save() async {
+    final result = AvatarEditResult(name: _name.text, avatar: _spec);
+    final navigator = Navigator.of(context);
+    if (widget.onSave == null) {
+      navigator.pop(widget.showName ? result : _spec);
+      return;
+    }
+    setState(() => _saving = true);
+    final error = await widget.onSave!(result);
+    if (!mounted) return;
+    setState(() {
+      _saving = false;
+      _error = error;
+    });
+    // Navigator.pop skips PopScope, so a saved edit closes without asking.
+    if (error == null) navigator.pop(result);
+  }
+
+  Future<void> _confirmDiscard() async {
+    final l10n = AppLocalizations.of(context);
+    final navigator = Navigator.of(context);
+    final discard = await showAppConfirmDialog(
+      context,
+      title: l10n.discardTitle,
+      message: l10n.discardMessage,
+      confirmLabel: l10n.discardConfirm,
+      cancelLabel: l10n.cancel,
+    );
+    if (discard && mounted) navigator.pop();
+  }
+
+  String? _errorText(AppLocalizations l10n) => switch (_error) {
+    null || ProfileError.notFound => null,
+    ProfileError.nameEmpty => l10n.profileErrorEmpty,
+    ProfileError.nameTooLong => l10n.profileErrorTooLong,
+    ProfileError.nameTaken => l10n.profileErrorTaken,
+    ProfileError.limitReached => l10n.profileErrorLimit,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +124,11 @@ class _AvatarEditorScreenState extends State<AvatarEditorScreen> {
       padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
       child: Row(
         children: [
-          RoundIconButton(icon: Icons.arrow_back, tooltip: l10n.back, onPressed: () => Navigator.of(context).pop()),
+          RoundIconButton(
+            icon: Icons.arrow_back,
+            tooltip: l10n.back,
+            onPressed: () => Navigator.of(context).maybePop(),
+          ),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
@@ -87,47 +170,79 @@ class _AvatarEditorScreenState extends State<AvatarEditorScreen> {
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
       child: SizedBox(
         width: double.infinity,
-        child: PaperCard(child: _LayerOptions(layer: _layer, spec: _spec, onChanged: _update)),
+        child: PaperCard(
+          child: _LayerOptions(layer: _layer, spec: _spec, onChanged: _update),
+        ),
       ),
     );
     final save = Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-      child: PrimaryButton(label: l10n.avatarSave, onPressed: () => Navigator.of(context).pop(_spec)),
+      child: PrimaryButton(label: l10n.avatarSave, onPressed: _saving ? null : _save),
     );
+    final nameField = !widget.showName
+        ? const SizedBox.shrink()
+        : Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+            child: TextField(
+              controller: _name,
+              maxLength: 16,
+              textCapitalization: TextCapitalization.words,
+              style: AppTypography.h2(color: AppColors.ink),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: AppColors.paper,
+                labelText: l10n.profileName,
+                suffixIcon: const Icon(Icons.edit, color: AppColors.wood),
+                errorText: _errorText(l10n),
+                errorStyle: AppTypography.caption(color: AppColors.paper),
+                counterStyle: AppTypography.caption(color: AppColors.woodLight),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide.none),
+              ),
+            ),
+          );
 
-    return Scaffold(
-      body: FeltBackground(
-        child: SafeArea(
-          child: wide
-              ? Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(width: 280, child: Column(children: [topBar, preview])),
-                    Expanded(
-                      child: Column(
-                        children: [
-                          // Tabs scroll with the options: a phone in landscape
-                          // is only ~360 dp tall.
-                          Expanded(
-                            child: SingleChildScrollView(
-                              child: Column(children: [const SizedBox(height: 16), tabs, options]),
-                            ),
-                          ),
-                          save,
-                        ],
+    return PopScope(
+      canPop: !_dirty,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) _confirmDiscard();
+      },
+      child: Scaffold(
+        body: FeltBackground(
+          child: SafeArea(
+            child: wide
+                ? Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 280,
+                        child: SingleChildScrollView(child: Column(children: [topBar, preview, nameField])),
                       ),
-                    ),
-                  ],
-                )
-              : Column(
-                  children: [
-                    topBar,
-                    Expanded(
-                      child: SingleChildScrollView(child: Column(children: [preview, tabs, options])),
-                    ),
-                    save,
-                  ],
-                ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            // Tabs scroll with the options: a phone in landscape
+                            // is only ~360 dp tall.
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: Column(children: [const SizedBox(height: 16), tabs, options]),
+                              ),
+                            ),
+                            save,
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                : Column(
+                    children: [
+                      topBar,
+                      Expanded(
+                        child: SingleChildScrollView(child: Column(children: [preview, nameField, tabs, options])),
+                      ),
+                      save,
+                    ],
+                  ),
+          ),
         ),
       ),
     );
@@ -160,30 +275,30 @@ class _LayerTabs extends StatelessWidget {
         children: [
           for (final MapEntry(key: layer, value: label) in labels.entries)
             Semantics(
-                button: true,
-                selected: layer == selected,
-                child: GestureDetector(
-                  onTap: () => onSelected(layer),
-                  behavior: HitTestBehavior.opaque,
-                  // No `alignment` here: it would stretch each pill to the
-                  // full row width inside the Wrap.
-                  child: Container(
-                    constraints: const BoxConstraints(minHeight: 48, minWidth: 48),
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: layer == selected ? AppColors.paper : const Color(0x40000000),
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                    child: Text(
-                      label,
-                      maxLines: 1,
-                      softWrap: false,
-                      style: AppTypography.button(color: layer == selected ? AppColors.ink : AppColors.paper)
-                          .copyWith(fontSize: 14),
-                    ),
+              button: true,
+              selected: layer == selected,
+              child: GestureDetector(
+                onTap: () => onSelected(layer),
+                behavior: HitTestBehavior.opaque,
+                // No `alignment` here: it would stretch each pill to the
+                // full row width inside the Wrap.
+                child: Container(
+                  constraints: const BoxConstraints(minHeight: 48, minWidth: 48),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: layer == selected ? AppColors.paper : const Color(0x40000000),
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    softWrap: false,
+                    style: AppTypography.button(color: layer == selected ? AppColors.ink : AppColors.paper)
+                        .copyWith(fontSize: 14),
                   ),
                 ),
               ),
+            ),
         ],
       ),
     );

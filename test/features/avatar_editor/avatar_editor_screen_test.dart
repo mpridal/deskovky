@@ -174,6 +174,9 @@ void main() {
 
     tester.semantics.tap(find.semantics.byLabel('Zpět'));
     await tester.pumpAndSettle();
+    // Changes were made, so Back asks before discarding them.
+    tester.semantics.tap(find.semantics.byLabel('Zahodit'));
+    await tester.pumpAndSettle();
     expect(harness.popped, isTrue);
   });
 
@@ -225,5 +228,43 @@ void main() {
     expect(tile.width, lessThanOrEqualTo(112), reason: 'variant tiles stay compact on wide screens');
     final avatar = tester.getSize(find.descendant(of: find.byKey(const ValueKey('variant0')), matching: find.byType(AvatarView)));
     expect(avatar.width / tile.width, greaterThan(0.6), reason: 'avatar fills its tile');
+  });
+  group('unsaved changes', () {
+    testWidgets('back without changes closes at once', (tester) async {
+      final harness = await _pumpEditor(tester);
+      await tester.tap(find.bySemanticsLabel('Zpět'));
+      await tester.pumpAndSettle();
+      expect(harness.popped, isTrue);
+    });
+
+    testWidgets('back after a change asks; cancel stays, discard closes without saving', (tester) async {
+      final harness = await _pumpEditor(tester);
+      await _tapTab(tester, 'Vlasy');
+      await _tapLabel(tester, 'kudrny');
+      await tester.tap(find.bySemanticsLabel('Zpět'));
+      await tester.pumpAndSettle();
+      expect(find.text('Zahodit změny?'), findsOneWidget);
+
+      await tester.tap(find.text('Zrušit'));
+      await tester.pumpAndSettle();
+      expect(harness.popped, isFalse);
+      expect(find.byType(AvatarEditorScreen), findsOneWidget);
+
+      await tester.tap(find.bySemanticsLabel('Zpět'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Zahodit'));
+      await tester.pumpAndSettle();
+      expect(harness.popped, isTrue);
+      expect(harness.result, isNull);
+    });
+
+    testWidgets('system back after a change also asks', (tester) async {
+      await _pumpEditor(tester);
+      await _tapTab(tester, 'Vlasy');
+      await _tapLabel(tester, 'kudrny');
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      expect(find.text('Zahodit změny?'), findsOneWidget);
+    });
   });
 }

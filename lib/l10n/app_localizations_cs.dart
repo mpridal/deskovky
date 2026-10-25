@@ -58,9 +58,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get avatarEditorTitle => 'Můj avatar';
 
   @override
-  String get avatarEdit => 'Upravit avatar';
-
-  @override
   String get avatarSave => 'Uložit';
 
   @override
@@ -201,4 +198,69 @@ class AppLocalizationsCs extends AppLocalizations {
   String backgroundColor(int n) {
     return 'Pozadí $n';
   }
+
+  @override
+  String get playersNew => 'Nový hráč';
+
+  @override
+  String get playersLimit => 'Na tomto zařízení může být nejvýš 8 hráčů.';
+
+  @override
+  String get playersEmpty => 'Zatím tu nikdo není. Vytvoř prvního hráče!';
+
+  @override
+  String playersNowPlaying(String name) {
+    return 'Teď hraje $name';
+  }
+
+  @override
+  String get playerActiveTag => 'Hraje teď';
+
+  @override
+  String playerEdit(String name) {
+    return 'Upravit $name';
+  }
+
+  @override
+  String playerDelete(String name) {
+    return 'Smazat $name';
+  }
+
+  @override
+  String get profileName => 'Jméno';
+
+  @override
+  String get profileErrorEmpty => 'Napiš jméno.';
+
+  @override
+  String get profileErrorTooLong => 'Nejvýš 16 znaků.';
+
+  @override
+  String get profileErrorTaken => 'Toto jméno už má jiný hráč.';
+
+  @override
+  String get profileErrorLimit => 'Na tomto zařízení může být nejvýš 8 hráčů.';
+
+  @override
+  String deleteTitle(String name) {
+    return 'Smazat hráče $name?';
+  }
+
+  @override
+  String get deleteMessage => 'Smažou se i jeho výsledky. Tohle nejde vrátit.';
+
+  @override
+  String get deleteConfirm => 'Smazat';
+
+  @override
+  String get discardTitle => 'Zahodit změny?';
+
+  @override
+  String get discardMessage => 'Úpravy avatara a jména se neuloží.';
+
+  @override
+  String get discardConfirm => 'Zahodit';
+
+  @override
+  String get cancel => 'Zrušit';
 }

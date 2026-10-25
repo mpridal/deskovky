@@ -20,7 +20,6 @@
     }
   },
   "avatarEditorTitle": "My avatar",
-  "avatarEdit": "Edit avatar",
   "avatarSave": "Save",
   "avatarRandom": "Random",
   "back": "Back",
@@ -80,5 +79,52 @@
         "type": "int"
       }
     }
-  }
+  },
+  "playersNew": "New player",
+  "playersLimit": "This device can have at most 8 players.",
+  "playersEmpty": "Nobody here yet. Create the first player!",
+  "playersNowPlaying": "{name} is playing now",
+  "@playersNowPlaying": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "playerActiveTag": "Playing",
+  "playerEdit": "Edit {name}",
+  "@playerEdit": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "playerDelete": "Delete {name}",
+  "@playerDelete": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "profileName": "Name",
+  "profileErrorEmpty": "Enter a name.",
+  "profileErrorTooLong": "16 characters at most.",
+  "profileErrorTaken": "Another player already has this name.",
+  "profileErrorLimit": "This device can have at most 8 players.",
+  "deleteTitle": "Delete player {name}?",
+  "@deleteTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteMessage": "Their results will be deleted too. This cannot be undone.",
+  "deleteConfirm": "Delete",
+  "discardTitle": "Discard changes?",
+  "discardMessage": "Your avatar and name changes will not be saved.",
+  "discardConfirm": "Discard",
+  "cancel": "Cancel"
 }

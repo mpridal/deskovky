@@ -56,11 +56,18 @@ void main() {
           }
         });
 
+        testWidgets('players screen labels fit on one line: $name', (tester) async {
+          await pumpApp(tester, size: size, locale: locale, textScale: scale);
+          await tester.tap(find.text(l10n.navPlayers).last);
+          await tester.pumpAndSettle();
+          expect(_fitsOnOneLine(tester, find.text(l10n.playersNew)), isTrue, reason: l10n.playersNew);
+        });
+
         testWidgets('avatar editor labels fit on one line: $name', (tester) async {
           await pumpApp(tester, size: size, locale: locale, textScale: scale);
           await tester.tap(find.text(l10n.navPlayers).last);
           await tester.pumpAndSettle();
-          await tester.tap(find.text(l10n.avatarEdit));
+          await tester.tap(find.text(l10n.playersNew));
           await tester.pumpAndSettle();
           for (final label in [
             l10n.avatarEditorTitle,
@@ -72,6 +79,7 @@ void main() {
             l10n.avatarTabBackground,
             l10n.avatarHairColor.toUpperCase(),
             l10n.avatarSave,
+            l10n.profileName,
           ]) {
             expect(_fitsOnOneLine(tester, find.text(label)), isTrue, reason: '"$label" wraps or is clipped');
           }
