@@ -24,6 +24,9 @@ class RoundIconButton extends StatelessWidget {
       button: true,
       enabled: onPressed != null,
       label: tooltip,
+      // excludeSemantics drops the detector's tap action, so screen readers
+      // need it here explicitly.
+      onTap: onPressed,
       excludeSemantics: true,
       child: Tooltip(
         message: tooltip,

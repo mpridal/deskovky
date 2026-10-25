@@ -18,6 +18,8 @@ void main() {
     )));
     await tester.tap(find.bySemanticsLabel('modrá'));
     expect(picked, 2);
+    tester.semantics.tap(find.semantics.byLabel('zelená'));
+    expect(picked, 1, reason: 'screen readers can activate a swatch');
     expect(tester.getSemantics(find.bySemanticsLabel('červená')).flagsCollection.isSelected, Tristate.isTrue);
     expect(tester.getSemantics(find.bySemanticsLabel('zelená')).flagsCollection.isSelected, isNot(Tristate.isTrue));
     for (final label in ['červená', 'zelená', 'modrá']) {

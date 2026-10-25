@@ -330,6 +330,8 @@ class _VariantGrid extends StatelessWidget {
                 button: true,
                 selected: selected,
                 label: label,
+                // excludeSemantics drops the detector's tap action; keep it for screen readers.
+                onTap: () => onSelected(spec),
                 excludeSemantics: true,
                 child: GestureDetector(
                   onTap: () => onSelected(spec),

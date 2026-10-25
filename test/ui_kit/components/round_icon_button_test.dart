@@ -17,6 +17,8 @@ void main() {
     expect(find.bySemanticsLabel('Zvuk'), findsOneWidget);
     await tester.tap(find.byType(RoundIconButton));
     expect(taps, 1);
+    tester.semantics.tap(find.semantics.byLabel('Zvuk'));
+    expect(taps, 2, reason: 'screen readers can activate it');
     handle.dispose();
   });
 }

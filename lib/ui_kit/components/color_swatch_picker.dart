@@ -30,6 +30,8 @@ class ColorSwatchPicker extends StatelessWidget {
             button: true,
             selected: i == selected,
             label: semanticLabels[i],
+            // excludeSemantics drops the detector's tap action; keep it for screen readers.
+            onTap: () => onSelected(i),
             excludeSemantics: true,
             child: GestureDetector(
               onTap: () => onSelected(i),

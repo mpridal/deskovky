@@ -73,7 +73,7 @@ void main() {
 
   testWidgets('golden: avatar sheet', (tester) async {
     tester.view.devicePixelRatio = 1.0;
-    tester.view.physicalSize = const Size(700, 1240);
+    tester.view.physicalSize = const Size(700, 1400);
     addTearDown(tester.view.reset);
 
     Widget cell(AvatarSpec spec, double size) =>
@@ -95,6 +95,14 @@ void main() {
           Row(children: [
             for (final mouth in MouthStyle.values) cell(AvatarSpec.defaults.copyWith(mouth: mouth, background: 6), 64),
           ]),
+          // Darkest skin tones: eyes and mouth must stay visible.
+          Row(children: [
+            for (final eyes in EyeStyle.values) cell(AvatarSpec.defaults.copyWith(eyes: eyes, skin: 5, background: 1), 64),
+          ]),
+          Row(children: [
+            for (final mouth in MouthStyle.values) cell(AvatarSpec.defaults.copyWith(mouth: mouth, skin: 4, background: 3), 64),
+          ]),
+          Row(children: [for (var skin = 0; skin < 6; skin++) cell(AvatarSpec.defaults.copyWith(skin: skin), 28)]),
           Row(children: [for (var i = 0; i < 8; i++) cell(AvatarSpec.random(rnd), 28)]),
           Row(children: [for (var i = 0; i < 3; i++) cell(AvatarSpec.random(rnd), 160)]),
         ],

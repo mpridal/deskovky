@@ -5,7 +5,9 @@ import 'package:flutter/rendering.dart';
 import '../../core/avatar/avatar_spec.dart';
 
 const _ink = Color(0xFF2B211B);
-const _mouthColor = Color(0xFF7A2F2A);
+const _mouthColor = Color(0xFF5E1F1B);
+const _lightFeature = Color(0xFFFFF1E6);
+const _lightMouth = Color(0xFFF7B2A4);
 const _shirt = Color(0xFFF4EADB);
 const _cheek = Color(0x59E58A7A);
 const _capColor = Color(0xFFD9534F);
@@ -18,6 +20,13 @@ class AvatarPainter extends CustomPainter {
   AvatarPainter(this.spec);
 
   final AvatarSpec spec;
+
+  /// Colors of eye lines and the mouth for a skin tone, chosen for at least
+  /// 3:1 contrast. The two darkest tones get light features (and eye whites).
+  static ({Color eyes, Color mouth}) featureColors(int skin) =>
+      _isDarkSkin(skin) ? (eyes: _lightFeature, mouth: _lightMouth) : (eyes: _ink, mouth: _mouthColor);
+
+  static bool _isDarkSkin(int skin) => skin >= 4;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -63,12 +72,16 @@ class AvatarPainter extends CustomPainter {
   }
 
   void _eyes(Canvas canvas) {
+    final colors = featureColors(spec.skin);
+    final dark = _isDarkSkin(spec.skin);
     final fill = Paint()..color = _ink;
     final white = Paint()..color = const Color(0xFFFFFFFF);
-    final stroke = _stroke(_ink, 3);
+    final stroke = _stroke(colors.eyes, 3);
 
     void roundEye(double x) {
-      canvas.drawCircle(Offset(x, 51), 3.6, fill);
+      // On dark skin a dark pupil alone disappears; give it an eye white.
+      if (dark) canvas.drawCircle(Offset(x, 51), 4.8, white);
+      canvas.drawCircle(Offset(x, 51), dark ? 3 : 3.6, fill);
       canvas.drawCircle(Offset(x + 1.2, 49.8), 1.1, white);
     }
 
@@ -108,7 +121,7 @@ class AvatarPainter extends CustomPainter {
       case EyeStyle.lashes:
         roundEye(42);
         roundEye(58);
-        final lash = _stroke(_ink, 1.5);
+        final lash = _stroke(colors.eyes, 1.5);
         for (final (x, dir) in [(42.0, -1.0), (58.0, 1.0)]) {
           canvas.drawLine(Offset(x + 3 * dir, 48.6), Offset(x + 5.2 * dir, 46.8), lash);
           canvas.drawLine(Offset(x + 1.2 * dir, 47.5), Offset(x + 2.4 * dir, 45.2), lash);
@@ -117,18 +130,19 @@ class AvatarPainter extends CustomPainter {
   }
 
   void _mouth(Canvas canvas) {
-    final fill = Paint()..color = _mouthColor;
+    final mouthColor = featureColors(spec.skin).mouth;
+    final fill = Paint()..color = mouthColor;
     final smile = Path()
       ..moveTo(42, 61)
       ..quadraticBezierTo(50, 69, 58, 61);
 
     switch (spec.mouth) {
       case MouthStyle.smile:
-        canvas.drawPath(smile, _stroke(_mouthColor, 3));
+        canvas.drawPath(smile, _stroke(mouthColor, 3));
       case MouthStyle.open:
         canvas.drawOval(Rect.fromCenter(center: const Offset(50, 64), width: 12, height: 9), fill);
       case MouthStyle.flat:
-        canvas.drawLine(const Offset(44, 64), const Offset(56, 64), _stroke(_mouthColor, 3));
+        canvas.drawLine(const Offset(44, 64), const Offset(56, 64), _stroke(mouthColor, 3));
       case MouthStyle.grin:
         final grin = Path()
           ..moveTo(41, 61)
@@ -141,7 +155,7 @@ class AvatarPainter extends CustomPainter {
         canvas.restore();
       case MouthStyle.tongue:
         canvas.drawOval(Rect.fromCenter(center: const Offset(52, 66.5), width: 7, height: 6), Paint()..color = const Color(0xFFE06C75));
-        canvas.drawPath(smile, _stroke(_mouthColor, 3));
+        canvas.drawPath(smile, _stroke(mouthColor, 3));
       case MouthStyle.surprised:
         canvas.drawCircle(const Offset(50, 65), 3.6, fill);
     }

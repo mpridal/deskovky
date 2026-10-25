@@ -156,6 +156,27 @@ void main() {
     expect(tester.getSemantics(find.bySemanticsLabel('dlouhé')).flagsCollection.isSelected, isNot(Tristate.isTrue));
   });
 
+  testWidgets('screen-reader double tap activates variants, swatches, Random and Back', (tester) async {
+    final harness = await _pumpEditor(tester, random: Random(1));
+    await _tapTab(tester, 'Vlasy');
+
+    tester.semantics.tap(find.semantics.byLabel('dlouhé'));
+    await tester.pumpAndSettle();
+    expect(_preview(tester).hair, HairStyle.long);
+
+    tester.semantics.tap(find.semantics.byLabel('zrzavá'));
+    await tester.pumpAndSettle();
+    expect(_preview(tester).hairColor, 5);
+
+    tester.semantics.tap(find.semantics.byLabel('Náhodně'));
+    await tester.pumpAndSettle();
+    expect(_preview(tester), AvatarSpec.random(Random(1)));
+
+    tester.semantics.tap(find.semantics.byLabel('Zpět'));
+    await tester.pumpAndSettle();
+    expect(harness.popped, isTrue);
+  });
+
   testWidgets('all touch targets are at least 48 dp on a 360 dp phone', (tester) async {
     await _pumpEditor(tester);
     for (final tab in ['Obličej', 'Pleť', 'Vlasy', 'Oči', 'Ústa', 'Pozadí']) {
