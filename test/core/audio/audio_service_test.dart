@@ -158,4 +158,66 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(backend.audible, isEmpty);
   });
+
+  testWidgets('music off: no channel is even started (no audio focus taken)', (tester) async {
+    final (service, backend) = _service(settings: _settings.copyWith(musicOn: false));
+    addTearDown(service.dispose);
+    service.playMusic('menu');
+    await _wait(tester, 700);
+    expect(backend.active, isEmpty);
+    service.applySettings(_settings.copyWith(musicVolume: 0));
+    await _wait(tester, 700);
+    expect(backend.active, isEmpty, reason: 'volume 0 is off too');
+    service.applySettings(_settings);
+    await _wait(tester, 700);
+    expect(backend.audible, ['music/menu.wav']);
+    service.applySettings(_settings.copyWith(musicOn: false));
+    await _wait(tester, 50);
+    expect(backend.active, isEmpty, reason: 'switching off stops the channels');
+  });
+
+  testWidgets('a track requested while another is still loading: only the last one plays', (tester) async {
+    final (service, backend) = _service();
+    addTearDown(service.dispose);
+    backend.holdLoads = true;
+    service.playMusic('menu');
+    await _wait(tester, 10);
+    service.playMusic('sample');
+    await _wait(tester, 10);
+    service.playMusic('ludo');
+    await _wait(tester, 10);
+    backend.releaseLoads();
+    await _wait(tester, 800);
+    expect(backend.active.length, 1);
+    expect(backend.audible, ['music/ludo.wav']);
+  });
+
+  testWidgets('going to the background during a load does not start music there', (tester) async {
+    final (service, backend) = _service();
+    addTearDown(service.dispose);
+    backend.holdLoads = true;
+    service.playMusic('menu');
+    await _wait(tester, 10);
+    service.onLifecycle(AppLifecycleState.paused);
+    backend.releaseLoads();
+    await _wait(tester, 800);
+    expect(backend.active, isEmpty);
+    service.onLifecycle(AppLifecycleState.resumed);
+    await _wait(tester, 800);
+    expect(backend.audible, ['music/menu.wav']);
+    expect(backend.volumeOf('music/menu.wav'), closeTo(0.5, 0.01));
+  });
+
+  testWidgets('effects are dropped in the background; playSfx says whether it played', (tester) async {
+    final (service, backend) = _service();
+    addTearDown(service.dispose);
+    expect(service.playSfx('tap'), isTrue);
+    service.onLifecycle(AppLifecycleState.paused);
+    expect(service.playSfx('tap'), isFalse);
+    service.onLifecycle(AppLifecycleState.resumed);
+    service.applySettings(_settings.copyWith(sfxOn: false));
+    expect(service.playSfx('tap'), isFalse);
+    await _wait(tester, 10);
+    expect(backend.sfx.length, 1);
+  });
 }

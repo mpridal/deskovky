@@ -338,6 +338,8 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
     final wide = MediaQuery.sizeOf(context).width >= 600;
     final musicOn = ref.watch(musicOnProvider).value ?? true;
     final sfxOn = ref.watch(sfxOnProvider).value ?? true;
+    // Watched so the haptic callback reads a loaded value, not the default.
+    ref.watch(vibrationOnProvider);
     final settings = ref.read(settingsRepositoryProvider);
 
     // Phones show compact chips scaled to fit, so all four players stay visible.

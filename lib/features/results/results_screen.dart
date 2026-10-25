@@ -135,9 +135,9 @@ class _JingleState extends ConsumerState<_Jingle> {
         if (places[s] == 1) s,
     ];
     final humanWon = winners.length == 1 && widget.outcome.config.seats[winners.single] is HumanSeat;
-    ref.read(audioServiceProvider)
-      ..duck(const Duration(seconds: 3))
-      ..playSfx(humanWon ? 'jingle_win' : 'jingle_lose');
+    final audio = ref.read(audioServiceProvider);
+    // Music dips only when the jingle is actually heard.
+    if (audio.playSfx(humanWon ? 'jingle_win' : 'jingle_lose')) audio.duck(const Duration(seconds: 3));
   }
 
   @override

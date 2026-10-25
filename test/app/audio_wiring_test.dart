@@ -10,6 +10,7 @@ import 'package:deskovky/features/game_play/game_outcome.dart';
 import 'package:deskovky/features/game_play/game_screen.dart';
 import 'package:deskovky/features/game_play/seat_identity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
@@ -179,5 +180,45 @@ void main() {
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
     await tester.pump();
     expect(audio.audible, ['music/menu.wav']);
+  });
+
+  testWidgets('vibration switched off is respected from the first tip after start', (tester) async {
+    await tester.runAsync(() => SettingsRepository(db).setVibrationOn(false));
+    final t = (await tester.runAsync(() => PlayerRepository(db).create(name: 'Tereza', avatar: AvatarSpec.defaults)))!;
+    final haptics = <String>[];
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(SystemChannels.platform, (call) async {
+      if (call.method.startsWith('HapticFeedback')) haptics.add(call.method);
+      return null;
+    });
+    addTearDown(() => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(SystemChannels.platform, null));
+    await pumpApp(tester, size: const Size(800, 1280), db: db, audio: audio, disableAnimations: true);
+    _router(tester).push('/play/sample', extra: _config([HumanSeat(t.id), const RobotSeat()]));
+    await _settle(tester);
+    final tile = find.byKey(const ValueKey('number1'));
+    await tester.ensureVisible(tile);
+    await tester.tap(tile);
+    await tester.pump(const Duration(milliseconds: 50));
+    expect(haptics, isEmpty);
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('results with effects off: no jingle and no ducking', (tester) async {
+    await tester.runAsync(() => SettingsRepository(db).setSfxOn(false));
+    await pumpApp(tester, size: const Size(412, 915), db: db, audio: audio, disableAnimations: true);
+    _router(tester).push(
+      '/play/sample/results',
+      extra: GameOutcomeView(
+        config: _config(const [HumanSeat(1), RobotSeat()]),
+        result: const GameResult(places: [1, 2], scores: [4, 3], stars: [3, 1]),
+        seats: const [
+          SeatIdentity(seat: 0, name: 'Tereza', profile: null, difficulty: null),
+          SeatIdentity(seat: 1, name: 'Čipík', profile: null, difficulty: Difficulty.easy),
+        ],
+      ),
+    );
+    await _settle(tester);
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(audio.sfx, isEmpty);
+    expect(audio.volumeOf('music/sample.wav'), closeTo(0.7, 0.01));
   });
 }

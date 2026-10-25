@@ -11,7 +11,9 @@ import 'audio_backend.dart';
 class JustAudioBackend implements AudioBackend {
   JustAudioBackend({int sfxSlots = 6})
     : _music = [AudioPlayer(), AudioPlayer()],
-      _sfx = List.generate(sfxSlots, (_) => AudioPlayer()),
+      // Effects must not take the audio focus: a click would pause the
+      // music of another app (a parent's podcast).
+      _sfx = List.generate(sfxSlots, (_) => AudioPlayer(handleAudioSessionActivation: false)),
       _sfxAsset = List.filled(sfxSlots, null);
 
   static const _root = 'assets/audio/';
@@ -44,6 +46,7 @@ class JustAudioBackend implements AudioBackend {
   Future<void> playSfx(int slot, String asset, double volume) async {
     final player = _sfx[slot];
     if (_sfxAsset[slot] != asset) {
+      _sfxAsset[slot] = null;
       await player.setAsset('$_root$asset');
       _sfxAsset[slot] = asset;
     } else {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:deskovky/core/audio/audio_backend.dart';
 
 /// Records what the AudioService asks the platform to do.
@@ -7,6 +9,23 @@ class FakeAudioBackend implements AudioBackend {
   final Map<int, bool> playing = {0: false, 1: false};
   final List<(int slot, String asset, double volume)> sfx = [];
   bool failLoads = false;
+
+  /// When true, loads wait until [releaseLoads] — to test calls that
+  /// overlap a slow load on a real device.
+  bool holdLoads = false;
+  final List<Completer<void>> _held = [];
+
+  void releaseLoads() {
+    holdLoads = false;
+    for (final c in _held) {
+      c.complete();
+    }
+    _held.clear();
+  }
+
+  /// Channels playing at all, audible or not (an active channel holds the
+  /// device's audio focus).
+  List<int> get active => [for (final c in [0, 1]) if (playing[c]!) c];
 
   /// Tracks audible right now (volume above zero and playing).
   List<String> get audible => [
@@ -19,6 +38,11 @@ class FakeAudioBackend implements AudioBackend {
 
   @override
   Future<void> loadMusic(int channel, String asset) async {
+    if (holdLoads) {
+      final gate = Completer<void>();
+      _held.add(gate);
+      await gate.future;
+    }
     if (failLoads) throw Exception('cannot load $asset');
     loaded[channel] = asset;
   }
