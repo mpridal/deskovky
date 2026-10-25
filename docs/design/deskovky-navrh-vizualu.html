@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deskovky – návrh vizuálu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@400;600;800&display=swap&subset=latin-ext" rel="stylesheet">
+<style>
+:root{
+  --walnut:#3B2A20; --wood:#8B5A3C; --wood-light:#C89B6D;
+  --felt:#2F5D50; --felt-dark:#234A3F;
+  --paper:#F4EADB; --paper-2:#E9DCC7; --ink:#2B211B; --ink-soft:#6B5A4C;
+  --gold:#E0A82E;
+  --p1:#D9534F; --p2:#3B7DD8; --p3:#E8B931; --p4:#4CAF6A;
+  --radius:18px;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Nunito,system-ui,sans-serif;color:var(--paper);
+  background:var(--walnut);
+  background-image:
+    repeating-linear-gradient(92deg,rgba(255,255,255,.025) 0 2px,transparent 2px 9px),
+    repeating-linear-gradient(88deg,rgba(0,0,0,.08) 0 1px,transparent 1px 23px),
+    linear-gradient(180deg,#4a3428,#33241b);
+}
+h1,h2,h3,.display{font-family:"Baloo 2",Nunito,sans-serif;margin:0}
+.page{max-width:1180px;margin:0 auto;padding:32px 16px 64px}
+header.top h1{font-size:40px;line-height:1.1}
+header.top p{color:var(--wood-light);max-width:720px}
+section{margin-top:48px}
+section>h2{font-size:26px;margin-bottom:6px}
+section>p.lead{color:var(--wood-light);margin:0 0 20px;max-width:760px}
+.row{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start}
+.scroll{overflow-x:auto;padding-bottom:8px}
+
+/* palette */
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+.sw{border-radius:12px;overflow:hidden;background:var(--paper);color:var(--ink);font-size:13px}
+.sw i{display:block;height:64px}
+.sw div{padding:8px 10px}
+.sw b{display:block}
+
+/* device frames */
+.device{display:inline-block;background:#111;border-radius:36px;padding:12px;box-shadow:0 20px 50px rgba(0,0,0,.5);flex:none}
+.screen{position:relative;overflow:hidden;border-radius:26px;background:var(--felt);
+  background-image:radial-gradient(ellipse at 50% 30%,rgba(255,255,255,.08),transparent 60%),
+  repeating-radial-gradient(circle at 20% 20%,rgba(0,0,0,.03) 0 1px,transparent 1px 3px);}
+.phone .screen{width:360px;height:740px}
+.tablet .screen{width:1024px;height:640px}
+.cap{margin-top:10px;color:var(--wood-light);font-size:14px;text-align:center}
+
+/* common ui */
+.bar{display:flex;align-items:center;gap:10px;padding:14px 16px;background:rgba(0,0,0,.18)}
+.av{border-radius:50%;flex:none;display:block}
+.pill{background:rgba(0,0,0,.25);border-radius:999px;padding:6px 12px;font-weight:800;font-size:14px;display:flex;gap:6px;align-items:center}
+.iconbtn{width:44px;height:44px;border-radius:50%;background:var(--paper);color:var(--ink);display:grid;place-items:center;
+  box-shadow:0 3px 0 var(--paper-2),0 5px 10px rgba(0,0,0,.3);flex:none}
+.iconbtn svg{width:22px;height:22px}
+.grow{flex:1}
+.hello small{display:block;color:var(--wood-light);font-size:12px}
+.hello b{font-family:"Baloo 2",Nunito,sans-serif;font-size:20px;line-height:1}
+
+.continue{margin:14px 16px;padding:14px;border-radius:var(--radius);background:linear-gradient(135deg,var(--gold),#c98a1a);color:var(--ink);
+  display:flex;align-items:center;gap:12px;box-shadow:0 4px 0 #9b6a12}
+.continue .t{font-weight:800}
+.continue small{display:block;font-size:12px;opacity:.8}
+.play{background:var(--ink);color:var(--paper);border-radius:999px;padding:8px 14px;font-weight:800;font-size:14px}
+
+.games{display:grid;gap:14px;padding:4px 16px 16px}
+.card{background:var(--paper);color:var(--ink);border-radius:var(--radius);padding:12px;position:relative;
+  box-shadow:0 5px 0 var(--paper-2),0 8px 16px rgba(0,0,0,.35)}
+.card .art{height:92px;border-radius:12px;display:grid;place-items:center;margin-bottom:8px}
+.card .art svg{width:70px;height:70px}
+.card h3{font-size:18px;line-height:1.1}
+.card small{color:var(--ink-soft);font-size:12px}
+.badge{position:absolute;top:10px;right:10px;background:var(--walnut);color:var(--paper);font-size:11px;font-weight:800;padding:3px 8px;border-radius:999px}
+.stars{color:var(--gold);font-size:12px;font-weight:800}
+
+.nav{position:absolute;left:0;right:0;bottom:0;display:flex;background:var(--walnut);padding:8px 6px 12px;border-top:3px solid var(--wood)}
+.nav a{flex:1;text-align:center;font-size:11px;font-weight:800;color:var(--wood-light);display:flex;flex-direction:column;align-items:center;gap:2px}
+.nav a.on{color:var(--gold)}
+.nav svg{width:24px;height:24px}
+
+/* tablet layout */
+.tlay{display:grid;grid-template-columns:96px 1fr 280px;height:100%}
+.rail{background:var(--walnut);border-right:3px solid var(--wood);display:flex;flex-direction:column;align-items:center;gap:18px;padding:18px 0}
+.rail a{font-size:11px;font-weight:800;color:var(--wood-light);display:flex;flex-direction:column;align-items:center;gap:4px}
+.rail a.on{color:var(--gold)}
+.rail svg{width:28px;height:28px}
+.side{background:rgba(0,0,0,.2);padding:16px;display:flex;flex-direction:column;gap:14px}
+.panel{background:var(--paper);color:var(--ink);border-radius:var(--radius);padding:12px}
+.panel h3{font-size:16px;margin-bottom:8px}
+.lb{display:flex;align-items:center;gap:8px;padding:5px 0;border-top:1px dashed var(--paper-2);font-size:14px}
+.lb:first-of-type{border-top:0}
+.rank{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:12px;background:var(--paper-2)}
+.rank.g{background:var(--gold)}
+.plist{display:flex;flex-wrap:wrap;gap:10px}
+.plist div{text-align:center;font-size:12px;font-weight:700}
+.add{width:52px;height:52px;border-radius:50%;border:3px dashed var(--wood-light);display:grid;place-items:center;font-size:26px;color:var(--wood)}
+
+/* avatar editor */
+.editor-prev{display:grid;place-items:center;padding:18px 0 8px}
+.editor-prev .av{box-shadow:0 0 0 6px var(--paper),0 10px 24px rgba(0,0,0,.4)}
+.namefield{margin:10px 16px;background:var(--paper);color:var(--ink);border-radius:14px;padding:10px 14px;font-weight:800;font-size:18px;display:flex;justify-content:space-between}
+.tabs{display:flex;gap:6px;padding:4px 16px;overflow:hidden}
+.tabs span{background:rgba(0,0,0,.25);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:800;white-space:nowrap}
+.tabs span.on{background:var(--paper);color:var(--ink)}
+.opts{margin:10px 16px;background:var(--paper);border-radius:var(--radius);padding:12px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.opt{border-radius:14px;background:var(--paper-2);display:grid;place-items:center;aspect-ratio:1}
+.opt.on{outline:4px solid var(--gold)}
+.dots{display:flex;gap:10px;padding:4px 16px;flex-wrap:wrap}
+.dot{width:38px;height:38px;border-radius:50%;border:3px solid var(--paper)}
+.dot.on{outline:3px solid var(--gold);outline-offset:2px}
+.sublbl{padding:10px 16px 4px;font-size:12px;font-weight:800;color:var(--wood-light);text-transform:uppercase;letter-spacing:.06em}
+.bigbtn{margin:14px 16px;padding:14px;border-radius:999px;background:var(--gold);color:var(--ink);font-family:"Baloo 2",Nunito,sans-serif;font-size:20px;text-align:center;box-shadow:0 5px 0 #9b6a12}
+
+/* setup */
+.seg{display:flex;margin:6px 16px;background:rgba(0,0,0,.25);border-radius:999px;padding:4px}
+.seg span{flex:1;text-align:center;padding:8px;border-radius:999px;font-weight:800}
+.seg span.on{background:var(--paper);color:var(--ink)}
+.slot{margin:6px 16px;background:var(--paper);color:var(--ink);border-radius:14px;padding:8px 10px;display:flex;align-items:center;gap:10px;border-left:8px solid}
+.slot b{flex:1}
+.slot small{font-size:11px;background:var(--paper-2);border-radius:999px;padding:3px 8px;font-weight:800}
+.note{margin:8px 16px;font-size:12px;color:var(--wood-light);display:flex;gap:6px;align-items:center}
+
+/* in-game */
+.hud{display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(0,0,0,.25)}
+.pstrip{display:flex;gap:10px;flex:1;justify-content:center}
+.pchip{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.25);border-radius:999px;padding:4px 14px 4px 4px;font-weight:800;border:3px solid transparent}
+.pchip.on{background:var(--paper);color:var(--ink)}
+.pchip em{font-style:normal;font-family:"Baloo 2",Nunito,sans-serif;font-size:20px}
+.board{display:grid;grid-template-columns:repeat(8,84px);gap:12px;justify-content:center;padding:22px 26px}
+.pc{height:100px;border-radius:12px;background:linear-gradient(135deg,var(--wood),var(--wood-light));box-shadow:0 4px 0 #5e3c27;
+  display:grid;place-items:center}
+.pc::after{content:"";width:34px;height:34px;border-radius:50%;border:3px solid rgba(255,255,255,.35)}
+.pc.up{background:var(--paper);box-shadow:0 4px 0 var(--paper-2);font-size:44px}
+.pc.up::after{display:none}
+.pc.gone{opacity:.15}
+.turn{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);background:var(--paper);color:var(--ink);padding:8px 18px;border-radius:999px;font-weight:800;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+
+/* notes */
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.notes .panel p,.notes .panel li{font-size:14px;color:var(--ink-soft)}
+.notes .panel ul{padding-left:18px;margin:0}
+.typo{background:var(--paper);color:var(--ink);border-radius:var(--radius);padding:18px}
+
+.shopgrid{margin:8px 16px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.item{background:var(--paper);color:var(--ink);border-radius:14px;padding:6px 6px 8px;text-align:center;position:relative;border-top:5px solid var(--r)}
+.item.sel{outline:4px solid var(--gold)}
+.item .nm{font-size:12px;font-weight:800;line-height:1.1;margin-top:2px}
+.item .pr{font-size:12px;font-weight:800;display:flex;gap:3px;justify-content:center;align-items:center;margin-top:3px}
+.item .st{font-size:10px;font-weight:800;background:var(--paper-2);border-radius:999px;padding:2px 6px;display:inline-block;margin-top:3px}
+.lvl{margin:0 16px;font-size:12px;font-weight:800;color:var(--wood-light)}
+.lvlbar{margin:6px 16px 0;height:10px;border-radius:999px;background:rgba(0,0,0,.3);overflow:hidden}
+.lvlbar i{display:block;height:100%;width:62%;background:var(--gold)}
+.brk{margin:6px 16px;background:var(--paper);color:var(--ink);border-radius:14px;padding:10px 12px}
+.brk .l{display:flex;justify-content:space-between;font-size:14px;padding:3px 0;border-top:1px dashed var(--paper-2)}
+.brk .l:first-of-type{border:0}
+.brk .tot{display:flex;justify-content:space-between;align-items:center;font-family:"Baloo 2",Nunito,sans-serif;font-size:22px;margin-top:4px}
+</style>
+</head>
+<body>
+<div class="page">
+<header class="top">
+  <h1>Deskovky – návrh vizuálu</h1>
+  <p>Styl „herní stůl“: tmavý ořechový rám, zelená plsť jako hrací plocha, krémové papírové karty a zlaté odměny. Jeden vzhled pro framework i všechny hry. Mockupy jsou referenční – rozměry v dp.</p>
+</header>
+
+<section>
+  <h2>Paleta</h2>
+  <p class="lead">Barvy hráčů 1–4 jsou pevné napříč všemi hrami (pěšáci, rámečky avatarů, skóre). Kontrast textu na plsti i papíře splňuje WCAG AA.</p>
+  <div class="swatches">
+    <div class="sw"><i style="background:#3B2A20"></i><div><b>Walnut</b>#3B2A20 · rám, navigace</div></div>
+    <div class="sw"><i style="background:#8B5A3C"></i><div><b>Wood</b>#8B5A3C · okraje, rub karet</div></div>
+    <div class="sw"><i style="background:#C89B6D"></i><div><b>Wood light</b>#C89B6D · sekundární text</div></div>
+    <div class="sw"><i style="background:#2F5D50"></i><div><b>Felt</b>#2F5D50 · hrací plocha</div></div>
+    <div class="sw"><i style="background:#F4EADB"></i><div><b>Paper</b>#F4EADB · karty, panely</div></div>
+    <div class="sw"><i style="background:#E0A82E"></i><div><b>Gold</b>#E0A82E · hlavní akce, odměny</div></div>
+    <div class="sw"><i style="background:#D9534F"></i><div><b>Hráč 1</b>#D9534F červená</div></div>
+    <div class="sw"><i style="background:#3B7DD8"></i><div><b>Hráč 2</b>#3B7DD8 modrá</div></div>
+    <div class="sw"><i style="background:#E8B931"></i><div><b>Hráč 3</b>#E8B931 žlutá</div></div>
+    <div class="sw"><i style="background:#4CAF6A"></i><div><b>Hráč 4</b>#4CAF6A zelená</div></div>
+  </div>
+  <div class="row" style="margin-top:16px">
+    <div class="typo" style="flex:1;min-width:260px">
+      <div class="display" style="font-size:34px">Baloo 2 – Nadpisy</div>
+      <div style="font-size:16px;margin-top:6px">Nunito – texty a tlačítka. Obě písma podporují češtinu i španělštinu (ěščřžůú / ñ ¿ ¡) a jsou pod licencí SIL OFL, přibalí se do aplikace.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Hlavní stránka – mobil</h2>
+  <p class="lead">Nahoře aktivní hráč s nasazenými vylepšeními a zůstatek bodů (tap → obchod), rychlé ovládání zvuku. Zlatý pruh „Pokračovat“ spustí poslední hru se stejným nastavením jedním dotykem. Dole spodní navigace.</p>
+  <div class="row">
+    <div>
+      <div class="device phone"><div class="screen" id="phoneHome"></div></div>
+      <div class="cap">Telefon na výšku · 360 × 740 dp</div>
+    </div>
+    <div>
+      <div class="device phone"><div class="screen" id="phoneAvatar"></div></div>
+      <div class="cap">Editor avatara</div>
+    </div>
+    <div>
+      <div class="device phone"><div class="screen" id="phoneSetup"></div></div>
+      <div class="cap">Nastavení hry před startem</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Hlavní stránka – tablet</h2>
+  <p class="lead">Na šířku ≥ 840 dp: navigační lišta vlevo, mřížka her uprostřed, panel s hráči a žebříčkem vpravo.</p>
+  <div class="scroll">
+    <div class="device tablet"><div class="screen" id="tabletHome"></div></div>
+  </div>
+  <div class="cap" style="text-align:left">Tablet na šířku · 1024 × 640 dp</div>
+</section>
+
+<section>
+  <h2>Ve hře – společné HUD</h2>
+  <p class="lead">Každá hra dostane stejný horní pruh: Konec (s potvrzením), pauza, hudba, efekty. Uprostřed hráči – ten na tahu je zvýrazněný papírovým podkladem.</p>
+  <div class="scroll">
+    <div class="device tablet"><div class="screen" id="tabletGame"></div></div>
+  </div>
+  <div class="cap" style="text-align:left">Příklad: Pexeso, 4 místa – 2 lidé + 2 roboti, na tahu robot</div>
+</section>
+
+<section>
+  <h2>Body, obchod a výsledky</h2>
+  <p class="lead">Za každou výhru body (zlatá mince ●). Za body se v obchodě kupují vylepšení avatara – nejdřív se dají zdarma vyzkoušet v „kabince“. Utracené body nesnižují pořadí v žebříčku.</p>
+  <div class="row">
+    <div>
+      <div class="device phone"><div class="screen" id="phoneShop"></div></div>
+      <div class="cap">Obchod s vylepšeními</div>
+    </div>
+    <div>
+      <div class="device phone"><div class="screen" id="phoneResults"></div></div>
+      <div class="cap">Výsledky s rozpisem bodů</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Hra přes Wi-Fi (fáze 3)</h2>
+  <p class="lead">Hostitel otevře místnost, ostatní se připojí na svém zařízení – v seznamu nalezených her nebo naskenováním QR kódu. Každý slot ukazuje, kde hráč hraje: 🏠 na tomto zařízení, 📱 na svém zařízení, 🤖 robot.</p>
+  <div class="row">
+    <div>
+      <div class="device phone"><div class="screen" id="phoneLobby"></div></div>
+      <div class="cap">Místnost – pohled hostitele</div>
+    </div>
+    <div>
+      <div class="device phone"><div class="screen" id="phoneJoin"></div></div>
+      <div class="cap">Připojení na zařízení hráče</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Pravidla vizuálu</h2>
+  <div class="notes">
+    <div class="panel"><h3>Ovládání</h3><ul><li>Dotykové cíle min. 48 dp, v dětských režimech 56 dp.</li><li>Tlačítka mají „fyzický“ spodní stín 3–5 dp a při stisku se o něj posunou dolů.</li><li>Haptická odezva při tahu a výhře (lze vypnout).</li></ul></div>
+    <div class="panel"><h3>Tvary a pohyb</h3><ul><li>Zaoblení 18 dp karty, 999 tlačítka/štítky.</li><li>Animace 150–300 ms, ease-out; karty se otáčí 3D flipem.</li><li>Výhra: konfety v barvě vítěze + zlaté hvězdy letí do počítadla.</li></ul></div>
+    <div class="panel"><h3>Ikony a grafika</h3><ul><li>Vlastní vektorová grafika (SVG / kód), žádné cizí obrázky.</li><li>Ikony her v jednotném stylu: krémový podklad, tmavá kresba, barevný akcent.</li><li>Avatary skládané z vrstev – žádné bitmapy.</li></ul></div>
+  </div>
+</section>
+</div>
+
+<script>
+
+const ACC={
+  crown:`<path d="M31 24 L34 6 L43 16 L50 3 L57 16 L66 6 L69 24Z" fill="#E0A82E" stroke="#9b6a12" stroke-width="1.6" stroke-linejoin="round"/><rect x="31" y="21" width="38" height="5" rx="2" fill="#c98a1a"/><circle cx="50" cy="15" r="2.6" fill="#D9534F"/><circle cx="40" cy="19" r="1.8" fill="#3B7DD8"/><circle cx="60" cy="19" r="1.8" fill="#4CAF6A"/>`,
+  halo:`<ellipse cx="50" cy="9" rx="19" ry="5" fill="none" stroke="#FFE08A" stroke-width="6" opacity=".45"/><ellipse cx="50" cy="9" rx="19" ry="5" fill="none" stroke="#E0A82E" stroke-width="3"/>`,
+  tophat:`<ellipse cx="50" cy="25" rx="30" ry="6" fill="#2B211B"/><rect x="34" y="1" width="32" height="24" rx="3" fill="#2B211B"/><rect x="34" y="17" width="32" height="5" fill="#D9534F"/>`,
+  wizard:`<path d="M24 28 Q50 20 76 28 L56 -2 Q50 -6 44 4Z" fill="#5B3FA0"/><ellipse cx="50" cy="28" rx="28" ry="5" fill="#4a3285"/><circle cx="46" cy="14" r="2" fill="#FFE08A"/><circle cx="55" cy="21" r="1.5" fill="#FFE08A"/>`,
+  glasses:`<g fill="rgba(255,255,255,.25)" stroke="#2B211B" stroke-width="2.4"><circle cx="41" cy="51" r="7.5"/><circle cx="59" cy="51" r="7.5"/></g><path d="M48.5 51h3M26 48l7.5 2M74 48l-7.5 2" stroke="#2B211B" stroke-width="2.4"/>`,
+  sunglasses:`<g fill="#2B211B"><rect x="31" y="45" width="17" height="11" rx="5"/><rect x="52" y="45" width="17" height="11" rx="5"/></g><path d="M48 49h4M26 47l5 1M74 47l-5 1" stroke="#2B211B" stroke-width="2.4"/><path d="M34 48l5 0" stroke="#fff" stroke-width="1.5" opacity=".6"/>`,
+  mask:`<path d="M24 45 Q50 38 76 45 Q77 59 63 58 Q54 57 50 53 Q46 57 37 58 Q23 59 24 45Z" fill="#3B7DD8"/><ellipse cx="42" cy="51" rx="6" ry="4.5" fill="#fff"/><ellipse cx="58" cy="51" rx="6" ry="4.5" fill="#fff"/>`,
+  wand:`<circle cx="80" cy="88" r="7" fill="#EEC1A0" stroke="#2B211B" stroke-width="1"/><path d="M79 88 L93 63" stroke="#2B211B" stroke-width="3.2" stroke-linecap="round"/><path d="M93 54 l2.4 5 5.4.6-4 3.7 1.1 5.3-4.9-2.7-4.9 2.7 1.1-5.3-4-3.7 5.4-.6z" fill="#E0A82E" stroke="#9b6a12" stroke-width="1"/><circle cx="86" cy="56" r="1.3" fill="#FFE08A"/><circle cx="99" cy="70" r="1.1" fill="#FFE08A"/>`,
+  phone:`<rect x="76" y="62" width="16" height="26" rx="3.5" fill="#2B211B"/><rect x="78" y="65" width="12" height="18" rx="1.5" fill="#3B7DD8"/><circle cx="84" cy="85.5" r="1.1" fill="#888"/><circle cx="80" cy="90" r="6.5" fill="#EEC1A0" stroke="#2B211B" stroke-width="1"/>`,
+};
+const COIN='<svg width="16" height="16" viewBox="0 0 16 16" style="flex:none"><circle cx="8" cy="8" r="7.5" fill="#E0A82E"/><circle cx="8" cy="8" r="5" fill="none" stroke="#9b6a12" stroke-width="1.4"/></svg>';
+
+const ROBOT_NAMES=['Robík','Čipík','Šroubek','Bzučák'];
+function robot(color,size,thinking){
+  return `<svg class="av" width="${size}" height="${size}" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="50" fill="${color}"/>
+  <line x1="50" y1="22" x2="50" y2="10" stroke="#5b6670" stroke-width="3"/><circle cx="50" cy="9" r="5" fill="${color}" stroke="#2B211B" stroke-width="2"/>
+  <path d="M22 100 Q24 82 50 82 Q76 82 78 100Z" fill="#9aa4ad"/>
+  <rect x="42" y="72" width="16" height="12" fill="#7c8791"/>
+  <rect x="22" y="22" width="56" height="52" rx="14" fill="#c9d1d8" stroke="#5b6670" stroke-width="2.5"/>
+  <rect x="17" y="40" width="6" height="16" rx="3" fill="#7c8791"/><rect x="77" y="40" width="6" height="16" rx="3" fill="#7c8791"/>
+  <rect x="30" y="33" width="40" height="20" rx="8" fill="#2B211B"/>
+  <circle cx="41" cy="43" r="5" fill="${color}"/><circle cx="59" cy="43" r="5" fill="${color}"/>
+  <circle cx="41" cy="43" r="2" fill="#fff" opacity=".8"/><circle cx="59" cy="43" r="2" fill="#fff" opacity=".8"/>
+  <rect x="36" y="59" width="28" height="8" rx="3" fill="#7c8791"/><path d="M43 59v8M50 59v8M57 59v8" stroke="#c9d1d8" stroke-width="1.5"/>
+  ${size<64?`<circle cx="82" cy="82" r="19" fill="#2B211B" stroke="#fff" stroke-width="3"/><text x="82" y="89" font-size="20" font-weight="800" text-anchor="middle" fill="#fff" font-family="Nunito,sans-serif">AI</text>`:''}
+  </svg>`;
+}
+const SKIN=['#F6D7C3','#EEC1A0','#D9A07A','#B97A55','#8D5A3B','#5C3A26'];
+const HAIR=['#2B1E16','#5A3825','#A0522D','#D8A657','#E8D9B5','#B03A2E','#7A7A7A','#3B7DD8'];
+function avatar(o,size){
+  const {skin=SKIN[1],hair=HAIR[0],style='short',bg='#E0A82E',eyes='round',mouth='smile',face='oval',acc={}}=o;
+  const rx= face==='round'?27:face==='wide'?28:24, ry= face==='round'?27:face==='wide'?25:28;
+  let back='',front='';
+  if(style==='short') front=`<path d="M25 46 Q24 17 50 17 Q76 17 75 46 Q70 30 52 29 Q34 29 25 46Z" fill="${hair}"/>`;
+  if(style==='long'){ back=`<path d="M23 48 Q20 16 50 16 Q80 16 77 48 L80 86 L64 86 L66 52 L34 52 L36 86 L20 86Z" fill="${hair}"/>`;
+    front=`<path d="M25 46 Q27 18 50 18 Q73 18 75 46 Q62 32 46 33 Q34 35 25 46Z" fill="${hair}"/>`;}
+  if(style==='curly'){ let c=''; for(let i=0;i<9;i++){const a=Math.PI*(1+i/8);c+=`<circle cx="${50+27*Math.cos(a)}" cy="${44+25*Math.sin(a)}" r="9" fill="${hair}"/>`;} front=c+`<circle cx="50" cy="22" r="10" fill="${hair}"/>`;}
+  if(style==='bun') front=`<circle cx="50" cy="13" r="9" fill="${hair}"/><path d="M25 46 Q24 19 50 19 Q76 19 75 46 Q66 31 50 31 Q34 31 25 46Z" fill="${hair}"/>`;
+  if(style==='spiky') front=`<path d="M25 46 L26 26 L33 30 L36 16 L44 26 L50 12 L56 26 L64 16 L67 30 L74 26 L75 46 Q64 32 50 32 Q36 32 25 46Z" fill="${hair}"/>`;
+  const ey = eyes==='happy'
+    ? `<path d="M38 52 Q42 47 46 52 M54 52 Q58 47 62 52" stroke="#2B211B" stroke-width="3" fill="none" stroke-linecap="round"/>`
+    : `<circle cx="42" cy="51" r="3.6" fill="#2B211B"/><circle cx="58" cy="51" r="3.6" fill="#2B211B"/><circle cx="43.2" cy="49.8" r="1.1" fill="#fff"/><circle cx="59.2" cy="49.8" r="1.1" fill="#fff"/>`;
+  const mo = mouth==='open' ? `<ellipse cx="50" cy="64" rx="6" ry="4.5" fill="#7a2f2a"/>`
+          : mouth==='flat' ? `<path d="M44 64 H56" stroke="#7a2f2a" stroke-width="3" stroke-linecap="round"/>`
+          : `<path d="M42 61 Q50 69 58 61" stroke="#7a2f2a" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  return `<svg class="av" width="${size}" height="${size}" viewBox="0 0 100 100"><defs><clipPath id="c${size}${Math.random().toString(36).slice(2,6)}"></clipPath></defs>
+  <circle cx="50" cy="50" r="50" fill="${bg}"/>${back}
+  <path d="M22 100 Q24 78 50 78 Q76 78 78 100Z" fill="#F4EADB"/>
+  <rect x="43" y="70" width="14" height="12" rx="4" fill="${skin}"/>
+  <ellipse cx="50" cy="50" rx="${rx}" ry="${ry}" fill="${skin}"/>
+  <circle cx="35" cy="60" r="4" fill="#e58a7a" opacity=".35"/><circle cx="65" cy="60" r="4" fill="#e58a7a" opacity=".35"/>
+  ${acc.face==='mask'?ACC.mask:''}${ey}${mo}${front}${acc.head?ACC[acc.head]:''}${acc.face&&acc.face!=='mask'?ACC[acc.face]:''}${acc.hand?ACC[acc.hand]:''}</svg>`;
+}
+const P=[
+  {name:'Tereza',skin:SKIN[0],hair:HAIR[3],style:'long',bg:'#D9534F',eyes:'happy',acc:{head:'crown'}},
+  {name:'Kuba',skin:SKIN[2],hair:HAIR[0],style:'spiky',bg:'#3B7DD8',acc:{face:'sunglasses',hand:'phone'}},
+  {name:'Táta',skin:SKIN[1],hair:HAIR[1],style:'short',bg:'#E8B931',mouth:'flat'},
+  {name:'Babi',skin:SKIN[3],hair:HAIR[6],style:'bun',bg:'#4CAF6A',eyes:'happy',acc:{face:'glasses',head:'halo'}},
+];
+const I={
+  sound:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>',
+  music:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3" fill="currentColor"/><circle cx="17" cy="16" r="3" fill="currentColor"/></svg>',
+  gear:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg>',
+  close:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+  pause:'<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>',
+  back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
+  games:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg>',
+  players:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="8" r="3.5"/><path d="M2 20a7 7 0 0 1 14 0"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14a5 5 0 0 1 5 6"/></svg>',
+  trophy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4M12 14v4M8 21h8"/></svg>',
+};
+const G=[
+  {id:'tic',name:'Piškvorky',sub:'1–2 hráči',bg:'#F9E3C4',art:'<svg viewBox="0 0 60 60" fill="none" stroke-linecap="round"><path d="M20 6v48M40 6v48M6 20h48M6 40h48" stroke="#8B5A3C" stroke-width="3"/><path d="M9 9l8 8M17 9l-8 8M43 43l8 8M51 43l-8 8" stroke="#D9534F" stroke-width="4"/><circle cx="30" cy="30" r="5.5" stroke="#3B7DD8" stroke-width="4"/><circle cx="13" cy="47" r="5.5" stroke="#3B7DD8" stroke-width="4"/></svg>',stars:'★★★',badge:''},
+  {id:'mem',name:'Pexeso',sub:'1–4 hráči',bg:'#DCE9F7',art:'<svg viewBox="0 0 60 60"><rect x="6" y="12" width="22" height="32" rx="4" fill="#8B5A3C" transform="rotate(-8 17 28)"/><rect x="30" y="14" width="22" height="32" rx="4" fill="#F4EADB" stroke="#8B5A3C" stroke-width="2" transform="rotate(8 41 30)"/><circle cx="41" cy="30" r="6" fill="#E8B931"/></svg>',stars:'★★☆',badge:''},
+  {id:'mine',name:'Miny',sub:'1–4 hráči',bg:'#DDEBDD',art:'<svg viewBox="0 0 60 60"><g stroke="#2B211B" stroke-width="4" stroke-linecap="round"><path d="M30 10v40M10 30h40M16 16l28 28M44 16 16 44"/></g><circle cx="30" cy="30" r="13" fill="#2B211B"/><circle cx="25" cy="25" r="3.5" fill="#fff"/></svg>',stars:'',badge:'Brzy'},
+  {id:'ludo',name:'Člověče',sub:'1–4 hráči',bg:'#F7DEDB',art:'<svg viewBox="0 0 60 60"><g><circle cx="20" cy="18" r="6" fill="#D9534F"/><path d="M13 44 Q14 26 20 24 Q26 26 27 44Z" fill="#D9534F"/></g><g><circle cx="40" cy="22" r="6" fill="#4CAF6A"/><path d="M33 48 Q34 30 40 28 Q46 30 47 48Z" fill="#4CAF6A"/></g><rect x="8" y="46" width="44" height="6" rx="3" fill="#8B5A3C"/></svg>',stars:'',badge:'Brzy'},
+  {id:'chk',name:'Dáma',sub:'1–2 hráči',bg:'#EDE3D3',art:'<svg viewBox="0 0 60 60"><path d="M6 6h16v16H6zM38 6h16v16H38zM22 22h16v16H22zM6 38h16v16H6zM38 38h16v16H38z" fill="#8B5A3C"/><circle cx="14" cy="14" r="6" fill="#F4EADB" stroke="#2B211B" stroke-width="2"/><circle cx="30" cy="30" r="6" fill="#2B211B"/><circle cx="46" cy="46" r="6" fill="#2B211B"/></svg>',stars:'',badge:'Brzy'},
+];
+const card=g=>`<div class="card">${g.badge?`<span class="badge">${g.badge}</span>`:''}<div class="art" style="background:${g.bg}">${g.art}</div><h3>${g.name}</h3><small>${g.sub}</small> <span class="stars">${g.stars}</span></div>`;
+const btn=(i,label)=>`<div class="iconbtn" title="${label}">${I[i]}</div>`;
+
+document.getElementById('phoneHome').innerHTML=`
+  <div class="bar">${avatar(P[0],46)}<div class="hello grow"><small>Hraje</small><b>${P[0].name}</b></div>
+   <div class="pill">${COIN}340</div>${btn('sound','Zvuk')}</div>
+  <div class="continue"><div class="grow"><div class="t">Pokračovat: Pexeso</div><small>4 hráči (2 + 2 🤖) · Střední</small></div><div class="play">Hrát ▸</div></div>
+  <div class="games" style="grid-template-columns:1fr 1fr">${G.map(card).join('')}</div>
+  <div class="nav"><a class="on">${I.games}Hry</a><a>${I.players}Hráči</a><a>${I.trophy}Žebříčky</a><a>${I.gear}Nastavení</a></div>`;
+
+const styles=[['short','Krátké'],['long','Dlouhé'],['curly','Kudrny'],['bun','Drdol'],['spiky','Ježek'],['bald','Bez']];
+document.getElementById('phoneAvatar').innerHTML=`
+  <div class="bar">${btn('back','Zpět')}<div class="grow display" style="font-size:22px">Můj avatar</div></div>
+  <div class="editor-prev">${avatar(P[0],150)}</div>
+  <div class="namefield"><span>Tereza</span><span style="color:#6B5A4C">✎</span></div>
+  <div class="tabs"><span>Obličej</span><span>Pleť</span><span class="on">Vlasy</span><span>Oči</span><span>Ústa</span><span>Pozadí</span></div>
+  <div class="opts">${styles.slice(0,4).concat(styles.slice(4)).slice(0,8).map(([s],k)=>`<div class="opt ${s==='long'?'on':''}">${avatar({...P[0],style:s,bg:'transparent'},58)}</div>`).join('')}</div>
+  <div class="sublbl">Barva vlasů</div>
+  <div class="dots">${HAIR.map(h=>`<div class="dot ${h===P[0].hair?'on':''}" style="background:${h}"></div>`).join('')}</div>
+  <div class="sublbl">Barva pleti</div>
+  <div class="dots">${SKIN.map(s=>`<div class="dot ${s===P[0].skin?'on':''}" style="background:${s}"></div>`).join('')}</div>
+  <div class="bigbtn">Uložit</div>`;
+
+const colors=['#D9534F','#3B7DD8','#E8B931','#4CAF6A'];
+document.getElementById('phoneSetup').innerHTML=`
+  <div class="bar">${btn('back','Zpět')}<div class="grow display" style="font-size:22px">Pexeso</div>${btn('music','Hudba')}</div>
+  <div class="sublbl">Počet hráčů</div>
+  <div class="seg"><span>1</span><span>2</span><span>3</span><span class="on">4</span></div>
+  <div class="sublbl">Hráči · 2 lidé + 2 roboti</div>
+  ${[0,1].map(i=>`<div class="slot" style="border-color:${colors[i]}">${avatar(P[i],40)}<b>${P[i].name}</b><small>Člověk</small></div>`).join('')}
+  ${[2,3].map(i=>`<div class="slot" style="border-color:${colors[i]}">${robot(colors[i],40)}<b>${ROBOT_NAMES[i]} <span style="color:#E0A82E;font-size:12px">●●○</span></b><small style="background:#2B211B;color:#F4EADB">🤖 Robot</small></div>`).join('')}
+  <div class="sublbl">Obtížnost robotů</div>
+  <div class="seg"><span>Lehká</span><span class="on">Střední</span><span>Těžká</span></div>
+  <div class="sublbl">Velikost hry</div>
+  <div class="seg"><span>12</span><span>16</span><span class="on">24</span><span>36</span></div>
+  <div class="note">↺ Nastavení načteno z minulé hry · volné sloty doplněny roboty</div>
+  <div class="bigbtn" style="margin-top:14px">Hrát!</div>`;
+
+document.getElementById('tabletHome').innerHTML=`
+ <div class="tlay">
+  <div class="rail"><div style="margin-bottom:6px">${avatar(P[0],52)}</div><a class="on">${I.games}Hry</a><a>${I.players}Hráči</a><a>${I.trophy}Žebříčky</a><a>${I.gear}Nastavení</a><div class="grow"></div>${btn('sound','Zvuk')}</div>
+  <div style="overflow:hidden">
+   <div class="bar" style="background:none;padding:18px 20px 0"><div class="grow display" style="font-size:30px">Ahoj, ${P[0].name}!</div><div class="pill">${COIN}340</div></div>
+   <div class="continue" style="margin:14px 20px"><div class="grow"><div class="t">Pokračovat: Pexeso</div><small>4 hráči (2 lidé + 2 roboti) · Střední · 24 karet</small></div><div class="play">Hrát ▸</div></div>
+   <div class="games" style="grid-template-columns:repeat(3,1fr);padding:4px 20px">${G.map(card).join('')}</div>
+  </div>
+  <div class="side">
+   <div class="panel"><h3>Hráči na zařízení</h3><div class="plist">${P.map(p=>`<div>${avatar(p,52)}<br>${p.name}</div>`).join('')}<div><div class="add">+</div>Nový</div></div></div>
+   <div class="panel"><h3>Žebříček · tento týden</h3>
+    ${[['Kuba',520],['Tereza',340],['Babi',290],['Táta',180]].map(([n,s],i)=>`<div class="lb"><span class="rank ${i===0?'g':''}">${i+1}</span>${avatar(P.find(p=>p.name===n),28)}<b class="grow">${n}</b><span style="display:flex;gap:4px;align-items:center">${COIN}${s}</span></div>`).join('')}
+   </div>
+   <div class="panel"><h3>Poslední odměna</h3><div style="display:flex;gap:10px;align-items:center"><div class="rank g" style="width:40px;height:40px;font-size:20px">🏅</div><div style="font-size:13px"><b>Paměť jako slon</b><br>Pexeso bez chyby</div></div></div>
+  </div>
+ </div>`;
+
+const faces=['🍎','🐞','⭐','🌻','🐟','🍄','🎈','🦋'];
+let cells='';for(let i=0;i<24;i++){ const st= i===2||i===9?'up':([5,12,17,22].includes(i)?'gone':''); cells+=`<div class="pc ${st}">${st==='up'?faces[5]:''}</div>`;}
+document.getElementById('tabletGame').innerHTML=`
+  <div class="hud">${btn('close','Konec')}${btn('pause','Pauza')}
+   <div class="pstrip">${[0,1,2,3].map(i=>`<div class="pchip ${i===2?'on':''}" style="border-color:${colors[i]}">${i<2?avatar(P[i],40):robot(colors[i],40)}<span>${i<2?P[i].name:ROBOT_NAMES[i]}${i===2?' …':''}</span><em>${[3,4,2,1][i]}</em></div>`).join('')}</div>
+   ${btn('music','Hudba')}${btn('sound','Efekty')}</div>
+  <div class="board" style="grid-template-columns:repeat(8,84px)">${cells}</div>
+  <div class="turn">🤖 Šroubek přemýšlí…</div>`;
+
+const items=[
+ ['crown','Korunka',1000,'#E0A82E','🔒 Úroveň 8','head'],
+ ['halo','Svatozář',900,'#E0A82E','Máš','head'],
+ ['wizard','Čaroděj',400,'#8E5BC8','','head'],
+ ['tophat','Klobouk',150,'#3B7DD8','','head'],
+ ['glasses','Brýle',40,'#B8A58F','Nasazeno','face'],
+ ['sunglasses','Sluneční brýle',120,'#3B7DD8','','face'],
+ ['mask','Maska hrdiny',180,'#3B7DD8','','face'],
+ ['wand','Kouzelná hůlka',380,'#8E5BC8','','hand'],
+ ['phone','Mobil',160,'#3B7DD8','','hand'],
+];
+const base={...P[2],acc:{}};
+document.getElementById('phoneShop').innerHTML=`
+  <div class="bar">${btn('back','Zpět')}<div class="grow display" style="font-size:22px">Obchod</div><div class="pill">${COIN}340</div></div>
+  <div style="display:flex;align-items:center;gap:14px;padding:8px 16px">${avatar({...base,acc:{head:'wizard',face:'glasses'}},104)}
+    <div style="font-size:13px"><b style="font-family:'Baloo 2',Nunito;font-size:18px">Zkouška: Čaroděj</b><br><span style="color:var(--wood-light)">Táta · Úroveň 6</span></div></div>
+  <div class="lvl">Úroveň 6 → 7 · ještě 410 bodů</div><div class="lvlbar"><i></i></div>
+  <div class="tabs" style="margin-top:10px"><span class="on">Vše</span><span>Na hlavu</span><span>Obličej</span><span>Do ruky</span><span>Mazlíček</span></div>
+  <div class="shopgrid">${items.map(([id,n,pr,r,st,slot])=>{
+     const acc={}; acc[slot]=id;
+     return `<div class="item ${id==='wizard'?'sel':''}" style="--r:${r}">${avatar({...base,bg:'transparent',acc},58)}<div class="nm">${n}</div>${st?`<span class="st">${st}</span>`:`<div class="pr">${COIN}${pr}</div>`}</div>`}).join('')}</div>
+  <div class="bigbtn" style="margin-top:6px;opacity:.55;font-size:17px">Chybí ti 60 bodů</div>`;
+
+document.getElementById('phoneResults').innerHTML=`
+  <div style="text-align:center;padding:22px 16px 6px"><div class="display" style="font-size:30px">Vyhrála Tereza!</div><div style="color:var(--wood-light);font-size:13px">Pexeso · Střední · 24 karet</div></div>
+  <div style="display:grid;place-items:center;padding:6px 0 10px">${avatar(P[0],120)}</div>
+  ${[0,2,1,3].map((i,k)=>`<div class="slot" style="border-color:${colors[i]};margin:6px 16px">${i<2?avatar(P[i],36):robot(colors[i],36)}<b>${k+1}. ${i<2?P[i].name:ROBOT_NAMES[i]}</b><span style="display:flex;gap:4px;align-items:center;font-weight:800">${i<2?'+'+[34,3][i]+' '+COIN:'<small style="font-size:11px;color:#6B5A4C">robot · bez bodů</small>'}</span></div>`).join('')}
+  <div class="sublbl">Rozpis – Tereza</div>
+  <div class="brk">
+    <div class="l"><span>Výhra (Střední)</span><b>+20</b></div>
+    <div class="l"><span>Hodnocení ★★☆</span><b>+4</b></div>
+    <div class="l"><span>Série 3 výher</span><b>+5</b></div>
+    <div class="l"><span>První hra dne</span><b>+5</b></div>
+    <div class="tot"><span>Celkem</span><span style="display:flex;gap:6px;align-items:center">+34 ${COIN}</span></div>
+  </div>
+  <div class="note" style="color:var(--gold)">★ Nová úroveň 5! Odemčeno: Kouzelná hůlka</div>
+  <div style="display:flex;gap:8px;margin:10px 16px"><div class="bigbtn" style="margin:0;flex:1;font-size:16px">Hrát znovu</div><div class="bigbtn" style="margin:0;flex:1;font-size:16px;background:var(--paper)">Domů</div></div>`;
+
+function qr(size){let c='';const n=21,cell=size/n;let seed=7;const r=()=>{seed=(seed*9301+49297)%233280;return seed/233280};
+ const finder=(x,y)=>`<rect x="${x*cell}" y="${y*cell}" width="${7*cell}" height="${7*cell}" fill="#2B211B"/><rect x="${(x+1)*cell}" y="${(y+1)*cell}" width="${5*cell}" height="${5*cell}" fill="#fff"/><rect x="${(x+2)*cell}" y="${(y+2)*cell}" width="${3*cell}" height="${3*cell}" fill="#2B211B"/>`;
+ for(let y=0;y<n;y++)for(let x=0;x<n;x++){ if((x<8&&y<8)||(x>12&&y<8)||(x<8&&y>12))continue; if(r()>.52)c+=`<rect x="${x*cell}" y="${y*cell}" width="${cell}" height="${cell}" fill="#2B211B"/>`;}
+ return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="background:#fff;border-radius:8px;padding:6px;box-sizing:content-box">${c}${finder(0,0)}${finder(14,0)}${finder(0,14)}</svg>`;}
+const dot=c=>`<span style="width:10px;height:10px;border-radius:50%;background:${c};display:inline-block"></span>`;
+document.getElementById('phoneLobby').innerHTML=`
+  <div class="bar">${btn('close','Zavřít')}<div class="grow display" style="font-size:22px">Místnost · Člověče</div></div>
+  <div style="display:flex;gap:14px;align-items:center;padding:14px 16px">${qr(120)}
+    <div><div style="font-size:12px;color:var(--wood-light);font-weight:800">KÓD MÍSTNOSTI</div><div class="display" style="font-size:40px;letter-spacing:4px">4827</div><div style="font-size:12px;color:var(--wood-light)">Wi-Fi: Domov · nebo naskenuj QR</div></div></div>
+  <div class="sublbl">Místa u stolu · 4</div>
+  <div class="slot" style="border-color:${colors[0]}">${avatar(P[2],40)}<b>Táta <small style="background:none;padding:0">🏠</small></b><small>Hostitel</small></div>
+  <div class="slot" style="border-color:${colors[1]}">${avatar(P[0],40)}<b>Tereza <small style="background:none;padding:0">📱</small></b>${dot('#4CAF6A')}<small style="background:#4CAF6A;color:#fff">Připravena</small></div>
+  <div class="slot" style="border-color:${colors[2]}">${avatar(P[1],40)}<b>Kuba <small style="background:none;padding:0">📱</small></b>${dot('#E8B931')}<small>Vybírá…</small></div>
+  <div class="slot" style="border-color:${colors[3]}">${robot(colors[3],40)}<b>Bzučák <span style="color:#E0A82E;font-size:12px">●●○</span></b><small style="background:#2B211B;color:#F4EADB">🤖 Robot</small></div>
+  <div class="note">Tap na slot: přidat hráče z tohoto zařízení / robota / uvolnit místo</div>
+  <div class="bigbtn" style="opacity:.55;font-size:17px">Čekám na Kubu…</div>`;
+document.getElementById('phoneJoin').innerHTML=`
+  <div class="bar">${btn('back','Zpět')}<div class="grow display" style="font-size:22px">Připojit se ke hře</div></div>
+  <div class="sublbl">Nalezené hry v síti „Domov“</div>
+  <div class="slot" style="border-color:#E0A82E">${avatar(P[2],44)}<b>Člověče, nezlob se<br><span style="font-weight:600;font-size:12px;color:#6B5A4C">Hostitel: Táta · 1 volné místo</span></b><small style="background:#E0A82E">Připojit</small></div>
+  <div class="slot" style="border-color:#C89B6D;opacity:.7">${avatar(P[3],44)}<b>Pexeso<br><span style="font-weight:600;font-size:12px;color:#6B5A4C">Hostitel: Babi · plno</span></b><small>Plno</small></div>
+  <div style="display:flex;gap:8px;margin:12px 16px"><div class="bigbtn" style="margin:0;flex:1;font-size:15px;background:var(--paper)">📷 Skenovat QR</div><div class="bigbtn" style="margin:0;flex:1;font-size:15px;background:var(--paper)"># Zadat kód</div></div>
+  <div class="sublbl">Kdo hraje na tomto zařízení?</div>
+  <div style="display:flex;gap:14px;padding:6px 16px">${[1,0].map((i,k)=>`<div style="text-align:center;font-size:12px;font-weight:800">${avatar(P[i],60)}<br>${P[i].name}${k===0?' ✓':''}</div>`).join('')}</div>
+  <div class="note">Na tahu ti telefon zavibruje a cinkne.</div>
+  <div class="bigbtn" style="margin-top:22px">Jsem připraven</div>`;
+</script>
+</body>
+</html>
