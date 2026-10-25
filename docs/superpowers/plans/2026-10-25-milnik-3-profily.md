@@ -13,7 +13,7 @@
 ## Global Constraints
 
 - Platí vše z Global Constraints milníků 1 a 2.
-- Profil: `id` (autoincrement int), `name` 1–16 znaků po oříznutí mezer, **unikátní bez ohledu na velikost písmen a diakritiku se nebere v potaz** (`Tereza` = `tereza`, ale `Tereza` ≠ `Terézа`), `avatar` = JSON z `AvatarSpec.toJson()`, `favoriteSeat` volitelný 0–3, `createdAt` (UTC). **Max. 8 profilů.**
+- Profil: `id` (autoincrement int), `name` 1–16 znaků po oříznutí mezer, **unikátní bez ohledu na velikost písmen a okrajové mezery; diakritika se rozlišuje** (`Tereza` = `tereza` = `" Tereza "`, ale `Tereza` ≠ `Teréza`), `avatar` = JSON z `AvatarSpec.toJson()`, `favoriteSeat` volitelný 0–3, `createdAt` (UTC). **Max. 8 profilů.**
 - Smazání profilu vždy po potvrzení (`showAppConfirmDialog`).
 - Aktivní hráč se pamatuje; když je smazán, aktivním se stane nejstarší zbývající profil, bez profilů žádný.
 - Jazyk: `null` = podle systému (pravidlo z milníku 1), jinak `cs` / `en` / `es`; volba se pamatuje.
