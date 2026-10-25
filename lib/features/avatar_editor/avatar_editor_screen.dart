@@ -304,7 +304,8 @@ class _LayerOptions extends StatelessWidget {
   }
 }
 
-/// Four-column grid; each tile previews the whole avatar with one variant.
+/// Grid of variant tiles (four columns on phones, more on wide screens);
+/// each tile previews the whole avatar with one variant.
 class _VariantGrid extends StatelessWidget {
   const _VariantGrid({required this.variants, required this.onSelected});
 
@@ -312,12 +313,13 @@ class _VariantGrid extends StatelessWidget {
   final ValueChanged<AvatarSpec> onSelected;
 
   static const _gap = 10.0;
+  static const _maxTile = 104.0;
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final tile = (constraints.maxWidth - 3 * _gap) / 4;
+        final tile = min((constraints.maxWidth - 3 * _gap) / 4, _maxTile);
         return Wrap(
           spacing: _gap,
           runSpacing: _gap,
@@ -341,7 +343,7 @@ class _VariantGrid extends StatelessWidget {
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(color: selected ? AppColors.gold : Colors.transparent, width: 4),
                     ),
-                    child: AvatarView(spec: spec, size: (tile - 12).clamp(28, 58)),
+                    child: AvatarView(spec: spec, size: (tile * 0.78).clamp(28, 80)),
                   ),
                 ),
               ),

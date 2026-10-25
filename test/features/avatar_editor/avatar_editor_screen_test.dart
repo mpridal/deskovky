@@ -199,5 +199,10 @@ void main() {
     final preview = tester.getCenter(find.byType(AnimatedAvatarView));
     final options = tester.getCenter(find.text('Vlasy'));
     expect(preview.dx, lessThan(options.dx));
+
+    final tile = tester.getSize(find.byKey(const ValueKey('variant0')));
+    expect(tile.width, lessThanOrEqualTo(112), reason: 'variant tiles stay compact on wide screens');
+    final avatar = tester.getSize(find.descendant(of: find.byKey(const ValueKey('variant0')), matching: find.byType(AvatarView)));
+    expect(avatar.width / tile.width, greaterThan(0.6), reason: 'avatar fills its tile');
   });
 }
