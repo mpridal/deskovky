@@ -34,7 +34,7 @@ class HomeScreen extends StatelessWidget {
               children: [
                 for (var i = 0; i < _placeholderCount; i++)
                   _PlaceholderCard(
-                    key: const Key('gamePlaceholder'),
+                    key: ValueKey('gamePlaceholder$i'),
                     tint: AppColors.players[i % AppColors.players.length],
                     label: l10n.comingSoon,
                   ),

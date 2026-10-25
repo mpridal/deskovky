@@ -3,10 +3,12 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../../helpers/pump_app.dart';
 
-const _card = Key('gamePlaceholder');
+final _card = find.byWidgetPredicate(
+  (w) => w.key is ValueKey<String> && (w.key! as ValueKey<String>).value.startsWith('gamePlaceholder'),
+);
 
 List<double> _rowTops(WidgetTester tester) =>
-    tester.widgetList(find.byKey(_card)).map((w) => tester.getTopLeft(find.byWidget(w)).dy).toList();
+    tester.widgetList(_card).map((w) => tester.getTopLeft(find.byWidget(w)).dy).toList();
 
 void main() {
   testWidgets('phone 360x740: 2 columns', (tester) async {
@@ -32,7 +34,7 @@ void main() {
 
   testWidgets('every placeholder card is labelled "Brzy"', (tester) async {
     await pumpApp(tester, size: const Size(1280, 800));
-    final cards = find.byKey(_card);
+    final cards = _card;
     expect(cards, findsNWidgets(6));
     for (var i = 0; i < 6; i++) {
       expect(find.descendant(of: cards.at(i), matching: find.text('Brzy')), findsOneWidget);

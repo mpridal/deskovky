@@ -21,6 +21,19 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('rotating phone and tablet keeps the current tab without errors', (tester) async {
+    await pumpApp(tester, size: const Size(360, 740));
+    await tester.tap(find.text('Nastavení'));
+    await tester.pumpAndSettle();
+
+    for (final size in const [Size(740, 360), Size(1280, 800), Size(800, 1280), Size(360, 740)]) {
+      tester.view.physicalSize = size;
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull, reason: 'after resize to $size');
+      expect(find.text('Příliš žluťoučký kůň úpěl ďábelské ódy'), findsWidgets, reason: 'Settings tab kept at $size');
+    }
+  });
+
   testWidgets('tablet portrait 800x1280: rail, no right panel', (tester) async {
     await pumpApp(tester, size: const Size(800, 1280));
     expect(find.byType(NavigationRail), findsOneWidget);
