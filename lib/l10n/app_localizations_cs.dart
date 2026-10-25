@@ -278,4 +278,59 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get settingsLanguageSystem => 'Podle telefonu';
+
+  @override
+  String get sampleTitle => 'Hádej číslo';
+
+  @override
+  String get sampleDescription => 'Kdo dřív uhodne tajné číslo?';
+
+  @override
+  String get sampleRules =>
+      'Hra skryje číslo. Hráči se střídají v tipování. Po každém tipu se dozvíte, jestli je tajné číslo větší, nebo menší. Kdo ho trefí, vyhrává!';
+
+  @override
+  String gamePlayersRange(int min, int max) {
+    String _temp0 = intl.Intl.pluralLogic(
+      max,
+      locale: localeName,
+      other: '$min–$max hráčů',
+      few: '$min–$max hráči',
+      one: '$min–$max hráč',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String continueTitle(String game) {
+    return 'Pokračovat: $game';
+  }
+
+  @override
+  String get continueSaved => 'Rozehraná hra';
+
+  @override
+  String continueSummary(String players, String difficulty) {
+    return '$players · $difficulty';
+  }
+
+  @override
+  String seatSummary(String players, int humans, int robots) {
+    return '$players ($humans + $robots 🤖)';
+  }
+
+  @override
+  String get continuePlay => 'Hrát ▸';
+
+  @override
+  String get difficultyEasy => 'Lehká';
+
+  @override
+  String get difficultyMedium => 'Střední';
+
+  @override
+  String get difficultyHard => 'Těžká';
+
+  @override
+  String get sampleOptionRange => 'Rozsah čísel';
 }

@@ -279,4 +279,52 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsLanguageSystem => 'Phone setting';
+
+  @override
+  String get sampleTitle => 'Guess the number';
+
+  @override
+  String get sampleDescription => 'Who guesses the secret number first?';
+
+  @override
+  String get sampleRules =>
+      'The game hides a number. Players take turns guessing. After each guess you learn whether the secret number is higher or lower. Whoever hits it wins!';
+
+  @override
+  String gamePlayersRange(int min, int max) {
+    return '$min–$max players';
+  }
+
+  @override
+  String continueTitle(String game) {
+    return 'Continue: $game';
+  }
+
+  @override
+  String get continueSaved => 'Game in progress';
+
+  @override
+  String continueSummary(String players, String difficulty) {
+    return '$players · $difficulty';
+  }
+
+  @override
+  String seatSummary(String players, int humans, int robots) {
+    return '$players ($humans + $robots 🤖)';
+  }
+
+  @override
+  String get continuePlay => 'Play ▸';
+
+  @override
+  String get difficultyEasy => 'Easy';
+
+  @override
+  String get difficultyMedium => 'Medium';
+
+  @override
+  String get difficultyHard => 'Hard';
+
+  @override
+  String get sampleOptionRange => 'Number range';
 }

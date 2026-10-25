@@ -131,5 +131,58 @@
   "homeSwitchPlayer": "Switch player",
   "homeCreatePlayer": "Create a player",
   "settingsLanguage": "Language",
-  "settingsLanguageSystem": "Phone setting"
+  "settingsLanguageSystem": "Phone setting",
+  "sampleTitle": "Guess the number",
+  "sampleDescription": "Who guesses the secret number first?",
+  "sampleRules": "The game hides a number. Players take turns guessing. After each guess you learn whether the secret number is higher or lower. Whoever hits it wins!",
+  "gamePlayersRange": "{min}–{max} players",
+  "@gamePlayersRange": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "continueTitle": "Continue: {game}",
+  "@continueTitle": {
+    "placeholders": {
+      "game": {
+        "type": "String"
+      }
+    }
+  },
+  "continueSaved": "Game in progress",
+  "continueSummary": "{players} · {difficulty}",
+  "@continueSummary": {
+    "placeholders": {
+      "players": {
+        "type": "String"
+      },
+      "difficulty": {
+        "type": "String"
+      }
+    }
+  },
+  "seatSummary": "{players} ({humans} + {robots} 🤖)",
+  "@seatSummary": {
+    "placeholders": {
+      "players": {
+        "type": "String"
+      },
+      "humans": {
+        "type": "int"
+      },
+      "robots": {
+        "type": "int"
+      }
+    }
+  },
+  "continuePlay": "Play ▸",
+  "difficultyEasy": "Easy",
+  "difficultyMedium": "Medium",
+  "difficultyHard": "Hard",
+  "sampleOptionRange": "Number range"
 }

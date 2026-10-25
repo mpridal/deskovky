@@ -597,6 +597,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Phone setting'**
   String get settingsLanguageSystem;
+
+  /// No description provided for @sampleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Guess the number'**
+  String get sampleTitle;
+
+  /// No description provided for @sampleDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Who guesses the secret number first?'**
+  String get sampleDescription;
+
+  /// No description provided for @sampleRules.
+  ///
+  /// In en, this message translates to:
+  /// **'The game hides a number. Players take turns guessing. After each guess you learn whether the secret number is higher or lower. Whoever hits it wins!'**
+  String get sampleRules;
+
+  /// No description provided for @gamePlayersRange.
+  ///
+  /// In en, this message translates to:
+  /// **'{min}–{max} players'**
+  String gamePlayersRange(int min, int max);
+
+  /// No description provided for @continueTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue: {game}'**
+  String continueTitle(String game);
+
+  /// No description provided for @continueSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Game in progress'**
+  String get continueSaved;
+
+  /// No description provided for @continueSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{players} · {difficulty}'**
+  String continueSummary(String players, String difficulty);
+
+  /// No description provided for @seatSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{players} ({humans} + {robots} 🤖)'**
+  String seatSummary(String players, int humans, int robots);
+
+  /// No description provided for @continuePlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Play ▸'**
+  String get continuePlay;
+
+  /// No description provided for @difficultyEasy.
+  ///
+  /// In en, this message translates to:
+  /// **'Easy'**
+  String get difficultyEasy;
+
+  /// No description provided for @difficultyMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get difficultyMedium;
+
+  /// No description provided for @difficultyHard.
+  ///
+  /// In en, this message translates to:
+  /// **'Hard'**
+  String get difficultyHard;
+
+  /// No description provided for @sampleOptionRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Number range'**
+  String get sampleOptionRange;
 }
 
 class _AppLocalizationsDelegate

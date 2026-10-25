@@ -82,5 +82,18 @@
   "homeSwitchPlayer": "Přepnout hráče",
   "homeCreatePlayer": "Vytvořit hráče",
   "settingsLanguage": "Jazyk",
-  "settingsLanguageSystem": "Podle telefonu"
+  "settingsLanguageSystem": "Podle telefonu",
+  "sampleTitle": "Hádej číslo",
+  "sampleDescription": "Kdo dřív uhodne tajné číslo?",
+  "sampleRules": "Hra skryje číslo. Hráči se střídají v tipování. Po každém tipu se dozvíte, jestli je tajné číslo větší, nebo menší. Kdo ho trefí, vyhrává!",
+  "gamePlayersRange": "{max, plural, one{{min}–{max} hráč} few{{min}–{max} hráči} other{{min}–{max} hráčů}}",
+  "continueTitle": "Pokračovat: {game}",
+  "continueSaved": "Rozehraná hra",
+  "continueSummary": "{players} · {difficulty}",
+  "seatSummary": "{players} ({humans} + {robots} 🤖)",
+  "continuePlay": "Hrát ▸",
+  "difficultyEasy": "Lehká",
+  "difficultyMedium": "Střední",
+  "difficultyHard": "Těžká",
+  "sampleOptionRange": "Rozsah čísel"
 }

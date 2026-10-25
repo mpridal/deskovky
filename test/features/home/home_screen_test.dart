@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../helpers/pump_app.dart';
 
 final _card = find.byWidgetPredicate(
-  (w) => w.key is ValueKey<String> && (w.key! as ValueKey<String>).value.startsWith('gamePlaceholder'),
+  (w) => w.key is ValueKey<String> && (w.key! as ValueKey<String>).value.startsWith('gameCard'),
 );
 
 List<double> _rowTops(WidgetTester tester) =>
@@ -32,12 +33,23 @@ void main() {
     expect(tops[4], greaterThan(tops[0]));
   });
 
-  testWidgets('every placeholder card is labelled "Brzy"', (tester) async {
+  testWidgets('the sample game comes first and is playable, the other five say "Brzy"', (tester) async {
     await pumpApp(tester, size: const Size(1280, 800));
-    final cards = _card;
-    expect(cards, findsNWidgets(6));
-    for (var i = 0; i < 6; i++) {
-      expect(find.descendant(of: cards.at(i), matching: find.text('Brzy')), findsOneWidget);
+    expect(_card, findsNWidgets(6));
+    final first = _card.at(0);
+    expect(find.descendant(of: first, matching: find.text('Hádej číslo')), findsOneWidget);
+    expect(find.descendant(of: first, matching: find.text('1–4 hráči')), findsOneWidget);
+    expect(find.descendant(of: first, matching: find.text('Brzy')), findsNothing);
+    for (var i = 1; i < 6; i++) {
+      expect(find.descendant(of: _card.at(i), matching: find.text('Brzy')), findsOneWidget);
     }
+  });
+
+  testWidgets('tapping the sample game opens its setup', (tester) async {
+    await pumpApp(tester, size: const Size(360, 740));
+    await tester.tap(find.text('Hádej číslo'));
+    await tester.pumpAndSettle();
+    final router = GoRouter.of(tester.element(find.byType(Navigator).last));
+    expect(router.state.uri.path, '/play/sample/setup');
   });
 }

@@ -82,5 +82,18 @@
   "homeSwitchPlayer": "Cambiar de jugador",
   "homeCreatePlayer": "Crear un jugador",
   "settingsLanguage": "Idioma",
-  "settingsLanguageSystem": "Según el teléfono"
+  "settingsLanguageSystem": "Según el teléfono",
+  "sampleTitle": "Adivina el número",
+  "sampleDescription": "¿Quién adivina primero el número secreto?",
+  "sampleRules": "El juego esconde un número. Los jugadores adivinan por turnos. Después de cada intento sabréis si el número secreto es mayor o menor. ¡Gana quien lo acierte!",
+  "gamePlayersRange": "{min}–{max} jugadores",
+  "continueTitle": "Continuar: {game}",
+  "continueSaved": "Partida en curso",
+  "continueSummary": "{players} · {difficulty}",
+  "seatSummary": "{players} ({humans} + {robots} 🤖)",
+  "continuePlay": "Jugar ▸",
+  "difficultyEasy": "Fácil",
+  "difficultyMedium": "Media",
+  "difficultyHard": "Difícil",
+  "sampleOptionRange": "Rango de números"
 }
