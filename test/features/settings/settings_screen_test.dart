@@ -1,6 +1,7 @@
 import 'dart:ui' show Tristate;
 
 import 'package:deskovky/core/db/app_database.dart';
+import 'package:deskovky/core/settings/settings_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -46,6 +47,54 @@ void main() {
     await _openSettings(tester, db);
     expect(tester.getSemantics(find.bySemanticsLabel('Podle telefonu')).flagsCollection.isSelected, Tristate.isTrue);
     handle.dispose();
+  });
+
+  group('sound', () {
+    Future<T> read<T>(WidgetTester tester, Stream<T> Function(SettingsRepository s) watch) async =>
+        (await tester.runAsync(() => watch(SettingsRepository(db)).first)) as T;
+
+    Future<void> showSound(WidgetTester tester) async {
+      await _openSettings(tester, db);
+      await tester.scrollUntilVisible(find.byKey(const ValueKey('vibrationOn')), 120);
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('music, effects and vibration switches are stored', (tester) async {
+      await showSound(tester);
+      expect(find.text('Zvuk'), findsOneWidget);
+      for (final key in ['musicOn', 'sfxOn', 'vibrationOn']) {
+        await tester.tap(find.byKey(ValueKey(key)));
+        await tester.pumpAndSettle();
+      }
+      expect(await read(tester, (s) => s.watchMusicOn()), isFalse);
+      expect(await read(tester, (s) => s.watchSfxOn()), isFalse);
+      expect(await read(tester, (s) => s.watchVibrationOn()), isFalse);
+    });
+
+    testWidgets('volume sliders start at the defaults and store a new value', (tester) async {
+      await showSound(tester);
+      expect(tester.widget<Slider>(find.byKey(const ValueKey('musicVolume'))).value, closeTo(0.7, 0.001));
+      expect(tester.widget<Slider>(find.byKey(const ValueKey('sfxVolume'))).value, closeTo(0.9, 0.001));
+      await tester.drag(find.byKey(const ValueKey('musicVolume')), const Offset(-1000, 0));
+      await tester.pumpAndSettle();
+      expect(await read(tester, (s) => s.watchMusicVolume()), closeTo(0, 0.001));
+    });
+
+    testWidgets('a slider is disabled while its sound is off', (tester) async {
+      await tester.runAsync(() => SettingsRepository(db).setMusicOn(false));
+      await showSound(tester);
+      expect(tester.widget<Slider>(find.byKey(const ValueKey('musicVolume'))).onChanged, isNull);
+      expect(tester.widget<Slider>(find.byKey(const ValueKey('sfxVolume'))).onChanged, isNotNull);
+    });
+
+    testWidgets('sliders and switches have screen reader labels', (tester) async {
+      final handle = tester.ensureSemantics();
+      await showSound(tester);
+      for (final label in ['Hudba', 'Hlasitost hudby', 'Efekty', 'Hlasitost efektů', 'Vibrace']) {
+        expect(find.bySemanticsLabel(label), findsOneWidget, reason: label);
+      }
+      handle.dispose();
+    });
   });
 
   group('fit', () {

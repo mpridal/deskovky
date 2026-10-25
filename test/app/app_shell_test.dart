@@ -30,7 +30,8 @@ void main() {
       tester.view.physicalSize = size;
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull, reason: 'after resize to $size');
-      expect(find.text('Příliš žluťoučký kůň úpěl ďábelské ódy'), findsWidgets, reason: 'Settings tab kept at $size');
+      // The language heading sits at the top of Settings at every size.
+      expect(find.text('Jazyk'), findsOneWidget, reason: 'Settings tab kept at $size');
     }
   });
 

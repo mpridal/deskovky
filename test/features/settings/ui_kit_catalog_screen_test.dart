@@ -23,6 +23,7 @@ void main() {
     await pumpApp(tester, size: const Size(360, 740));
     await tester.tap(find.text('Nastavení'));
     await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('UI kit'), 200);
     await tester.tap(find.text('UI kit'));
     await tester.pumpAndSettle();
     expect(find.byType(UiKitCatalogScreen), findsOneWidget);

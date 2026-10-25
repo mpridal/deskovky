@@ -289,5 +289,23 @@
       }
     }
   },
-  "seatReplacedByRobot": "Missing players were replaced by robots."
+  "seatReplacedByRobot": "Missing players were replaced by robots.",
+  "settingsSound": "Sound",
+  "settingsMusic": "Music",
+  "settingsMusicVolume": "Music volume",
+  "settingsSfx": "Sound effects",
+  "settingsSfxVolume": "Effects volume",
+  "settingsVibration": "Vibration",
+  "settingsCredits": "Credits and licences",
+  "creditsSounds": "Music and sounds",
+  "creditsFonts": "Fonts",
+  "creditsLibraries": "Library licences",
+  "creditsLicense": "Licence: {license}",
+  "@creditsLicense": {
+    "placeholders": {
+      "license": {
+        "type": "String"
+      }
+    }
+  }
 }
