@@ -5,6 +5,7 @@ import 'package:deskovky/core/avatar/avatar_spec.dart';
 import 'package:deskovky/features/avatar_editor/avatar_editor_screen.dart';
 import 'package:deskovky/l10n/app_localizations.dart';
 import 'package:deskovky/ui_kit/avatar/avatar_view.dart';
+import 'package:deskovky/ui_kit/components/paper_card.dart';
 import 'package:deskovky/ui_kit/tokens/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -180,6 +181,17 @@ void main() {
       final pill = find.ancestor(of: find.text(t), matching: find.byType(Container)).first;
       expect(tester.getSize(pill).width, lessThan(160), reason: '$t pill is ${tester.getSize(pill)}');
     }
+  });
+
+  testWidgets('options card keeps the same width and tabs start at the left on every tab', (tester) async {
+    await _pumpEditor(tester);
+    final widths = <double>{};
+    for (final tab in ['Obličej', 'Pleť', 'Vlasy', 'Oči', 'Ústa', 'Pozadí']) {
+      await _tapTab(tester, tab);
+      widths.add(tester.getSize(find.byType(PaperCard)).width);
+    }
+    expect(widths, hasLength(1), reason: 'card widths $widths');
+    expect(tester.getTopLeft(find.text('Obličej')).dx, lessThan(48));
   });
 
   testWidgets('tablet shows preview and options side by side', (tester) async {

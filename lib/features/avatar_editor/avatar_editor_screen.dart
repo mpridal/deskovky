@@ -78,10 +78,17 @@ class _AvatarEditorScreenState extends State<AvatarEditorScreen> {
         ),
       ),
     );
-    final tabs = _LayerTabs(selected: _layer, onSelected: (layer) => setState(() => _layer = layer));
+    final tabs = Align(
+      alignment: Alignment.centerLeft,
+      child: _LayerTabs(selected: _layer, onSelected: (layer) => setState(() => _layer = layer)),
+    );
+    // Full width on every tab, so the card does not jump when switching.
     final options = Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-      child: PaperCard(child: _LayerOptions(layer: _layer, spec: _spec, onChanged: _update)),
+      child: SizedBox(
+        width: double.infinity,
+        child: PaperCard(child: _LayerOptions(layer: _layer, spec: _spec, onChanged: _update)),
+      ),
     );
     final save = Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
