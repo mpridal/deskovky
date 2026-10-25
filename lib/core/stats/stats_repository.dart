@@ -7,6 +7,9 @@ import 'match_record.dart';
 /// A game event reported through `GameHost.reportEvent` (spec 8).
 typedef GameEvent = (String id, Map<String, Object?> data);
 
+/// Whether an event concerns [seat]: events naming a seat concern only it.
+bool eventConcerns(Map<String, Object?> data, int seat) => data['seat'] is! int || data['seat'] == seat;
+
 /// Finished games, event counters and earned badges (spec 5.4, 5.5).
 class StatsRepository {
   StatsRepository(this._db, {DateTime Function()? now}) : _now = now ?? DateTime.now;
@@ -17,7 +20,8 @@ class StatsRepository {
   DateTime now() => _now();
 
   /// Stores [match]; [events] add up in the human players' counters
-  /// (`data['count']`, default 1). Returns the match id.
+  /// (`data['count']`, default 1; only the player at `data['seat']` when the
+  /// event names a seat). Returns the match id.
   Future<int> recordMatch(MatchRecord match, {List<GameEvent> events = const []}) => _db.transaction(() async {
     final id = await _db
         .into(_db.matches)
@@ -44,10 +48,12 @@ class StatsRepository {
             ),
           );
     }
-    final humans = {for (final p in match.participants) ?p.playerId};
     for (final (key, data) in events) {
       final count = data['count'] is int ? data['count']! as int : 1;
-      for (final player in humans) {
+      for (final player in {
+        for (final p in match.participants)
+          if (eventConcerns(data, p.seat)) ?p.playerId,
+      }) {
         await _db.customStatement(
           'INSERT INTO player_counters (player_id, key, value) VALUES (?, ?, ?) '
           'ON CONFLICT (player_id, key) DO UPDATE SET value = value + excluded.value',

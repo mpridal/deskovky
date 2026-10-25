@@ -537,4 +537,41 @@ class AppLocalizationsCs extends AppLocalizations {
   String creditsLicense(String license) {
     return 'Licence: $license';
   }
+
+  @override
+  String get badgeFirstWinTitle => 'První výhra';
+
+  @override
+  String get badgeFirstWinDescription => 'Vyhraj svou první hru.';
+
+  @override
+  String get badgeStreak5Title => 'Pět v řadě';
+
+  @override
+  String get badgeStreak5Description => 'Vyhraj 5 her za sebou.';
+
+  @override
+  String get badgeGames10Title => 'Desítka';
+
+  @override
+  String get badgeGames10Description => 'Odehraj 10 her.';
+
+  @override
+  String get badgeHardWinTitle => 'Přemožitel robotů';
+
+  @override
+  String get badgeHardWinDescription => 'Poraz roboty na Těžkou.';
+
+  @override
+  String get badgeAllGamesTitle => 'Průzkumník';
+
+  @override
+  String get badgeAllGamesDescription => 'Zahraj si každou hru.';
+
+  @override
+  String get sampleBadgeBullseyeTitle => 'Trefa!';
+
+  @override
+  String get sampleBadgeBullseyeDescription =>
+      'Uhádni číslo hned prvním tipem.';
 }

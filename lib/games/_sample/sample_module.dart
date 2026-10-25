@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/badges/badge.dart';
 import '../../core/game/ai_player.dart';
 import '../../core/game/game_module.dart';
 import '../../core/game/game_option.dart';
@@ -40,6 +41,18 @@ class SampleModule extends GameModule<SampleState> {
       labelKey: 'sampleOptionRange',
       choices: [(20, '1–20'), (50, '1–50'), (100, '1–100')],
       defaultValue: SampleRules.defaultRange,
+    ),
+  ];
+
+  @override
+  List<BadgeDef> get badges => const [
+    BadgeDef(
+      id: 'sample.bullseye',
+      titleKey: 'sampleBadgeBullseyeTitle',
+      descriptionKey: 'sampleBadgeBullseyeDescription',
+      icon: Icons.gps_fixed,
+      reward: 15,
+      condition: BadgeCondition.all([BadgeCondition.won(), BadgeCondition.event('sample.bullseye')]),
     ),
   ];
 

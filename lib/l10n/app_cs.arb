@@ -153,5 +153,17 @@
   "creditsSounds": "Hudba a zvuky",
   "creditsFonts": "Písma",
   "creditsLibraries": "Licence knihoven",
-  "creditsLicense": "Licence: {license}"
+  "creditsLicense": "Licence: {license}",
+  "badgeFirstWinTitle": "První výhra",
+  "badgeFirstWinDescription": "Vyhraj svou první hru.",
+  "badgeStreak5Title": "Pět v řadě",
+  "badgeStreak5Description": "Vyhraj 5 her za sebou.",
+  "badgeGames10Title": "Desítka",
+  "badgeGames10Description": "Odehraj 10 her.",
+  "badgeHardWinTitle": "Přemožitel robotů",
+  "badgeHardWinDescription": "Poraz roboty na Těžkou.",
+  "badgeAllGamesTitle": "Průzkumník",
+  "badgeAllGamesDescription": "Zahraj si každou hru.",
+  "sampleBadgeBullseyeTitle": "Trefa!",
+  "sampleBadgeBullseyeDescription": "Uhádni číslo hned prvním tipem."
 }

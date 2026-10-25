@@ -307,5 +307,17 @@
         "type": "String"
       }
     }
-  }
+  },
+  "badgeFirstWinTitle": "First win",
+  "badgeFirstWinDescription": "Win your first game.",
+  "badgeStreak5Title": "Five in a row",
+  "badgeStreak5Description": "Win 5 games in a row.",
+  "badgeGames10Title": "Ten games",
+  "badgeGames10Description": "Play 10 games.",
+  "badgeHardWinTitle": "Robot tamer",
+  "badgeHardWinDescription": "Beat the robots on Hard.",
+  "badgeAllGamesTitle": "Explorer",
+  "badgeAllGamesDescription": "Play every game.",
+  "sampleBadgeBullseyeTitle": "Bullseye!",
+  "sampleBadgeBullseyeDescription": "Guess the number with your first tip."
 }

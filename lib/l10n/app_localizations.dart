@@ -1023,6 +1023,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Licence: {license}'**
   String creditsLicense(String license);
+
+  /// No description provided for @badgeFirstWinTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'First win'**
+  String get badgeFirstWinTitle;
+
+  /// No description provided for @badgeFirstWinDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Win your first game.'**
+  String get badgeFirstWinDescription;
+
+  /// No description provided for @badgeStreak5Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Five in a row'**
+  String get badgeStreak5Title;
+
+  /// No description provided for @badgeStreak5Description.
+  ///
+  /// In en, this message translates to:
+  /// **'Win 5 games in a row.'**
+  String get badgeStreak5Description;
+
+  /// No description provided for @badgeGames10Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Ten games'**
+  String get badgeGames10Title;
+
+  /// No description provided for @badgeGames10Description.
+  ///
+  /// In en, this message translates to:
+  /// **'Play 10 games.'**
+  String get badgeGames10Description;
+
+  /// No description provided for @badgeHardWinTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Robot tamer'**
+  String get badgeHardWinTitle;
+
+  /// No description provided for @badgeHardWinDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Beat the robots on Hard.'**
+  String get badgeHardWinDescription;
+
+  /// No description provided for @badgeAllGamesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Explorer'**
+  String get badgeAllGamesTitle;
+
+  /// No description provided for @badgeAllGamesDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Play every game.'**
+  String get badgeAllGamesDescription;
+
+  /// No description provided for @sampleBadgeBullseyeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bullseye!'**
+  String get sampleBadgeBullseyeTitle;
+
+  /// No description provided for @sampleBadgeBullseyeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Guess the number with your first tip.'**
+  String get sampleBadgeBullseyeDescription;
 }
 
 class _AppLocalizationsDelegate

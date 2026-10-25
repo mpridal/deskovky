@@ -531,4 +531,41 @@ class AppLocalizationsEs extends AppLocalizations {
   String creditsLicense(String license) {
     return 'Licencia: $license';
   }
+
+  @override
+  String get badgeFirstWinTitle => 'Primera victoria';
+
+  @override
+  String get badgeFirstWinDescription => 'Gana tu primera partida.';
+
+  @override
+  String get badgeStreak5Title => 'Cinco seguidas';
+
+  @override
+  String get badgeStreak5Description => 'Gana 5 partidas seguidas.';
+
+  @override
+  String get badgeGames10Title => 'Diez partidas';
+
+  @override
+  String get badgeGames10Description => 'Juega 10 partidas.';
+
+  @override
+  String get badgeHardWinTitle => 'Domador de robots';
+
+  @override
+  String get badgeHardWinDescription => 'Vence a los robots en Difícil.';
+
+  @override
+  String get badgeAllGamesTitle => 'Explorador';
+
+  @override
+  String get badgeAllGamesDescription => 'Juega a todos los juegos.';
+
+  @override
+  String get sampleBadgeBullseyeTitle => '¡En el blanco!';
+
+  @override
+  String get sampleBadgeBullseyeDescription =>
+      'Adivina el número a la primera.';
 }

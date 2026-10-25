@@ -55,6 +55,15 @@ void main() {
     expect(await stats.counter(tereza, 'nothing'), 0);
   });
 
+  test("an event with a seat counts only for that seat's player", () async {
+    await stats.recordMatch(
+      match(players: [tereza, kuba]),
+      events: const [('sample.bullseye', {'seat': 1}), ('sample.bullseye', {'seat': 1, 'count': 2})],
+    );
+    expect(await stats.counter(tereza, 'sample.bullseye'), 0);
+    expect(await stats.counter(kuba, 'sample.bullseye'), 3);
+  });
+
   test('a deleted player leaves the match in place but no counters or badges', () async {
     await stats.recordMatch(match(players: [tereza, kuba]), events: const [('x', {})]);
     await stats.awardBadge(kuba, 'first_win');

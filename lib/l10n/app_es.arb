@@ -153,5 +153,17 @@
   "creditsSounds": "Música y sonidos",
   "creditsFonts": "Fuentes",
   "creditsLibraries": "Licencias de bibliotecas",
-  "creditsLicense": "Licencia: {license}"
+  "creditsLicense": "Licencia: {license}",
+  "badgeFirstWinTitle": "Primera victoria",
+  "badgeFirstWinDescription": "Gana tu primera partida.",
+  "badgeStreak5Title": "Cinco seguidas",
+  "badgeStreak5Description": "Gana 5 partidas seguidas.",
+  "badgeGames10Title": "Diez partidas",
+  "badgeGames10Description": "Juega 10 partidas.",
+  "badgeHardWinTitle": "Domador de robots",
+  "badgeHardWinDescription": "Vence a los robots en Difícil.",
+  "badgeAllGamesTitle": "Explorador",
+  "badgeAllGamesDescription": "Juega a todos los juegos.",
+  "sampleBadgeBullseyeTitle": "¡En el blanco!",
+  "sampleBadgeBullseyeDescription": "Adivina el número a la primera."
 }
