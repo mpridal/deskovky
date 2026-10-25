@@ -171,6 +171,17 @@ void main() {
     }
   });
 
+  testWidgets('layer tabs are compact pills, at most two rows on a 360 dp phone', (tester) async {
+    await _pumpEditor(tester);
+    final tabs = ['Obličej', 'Pleť', 'Vlasy', 'Oči', 'Ústa', 'Pozadí'];
+    final rows = {for (final t in tabs) tester.getTopLeft(find.text(t)).dy.round()};
+    expect(rows.length, lessThanOrEqualTo(2), reason: 'tab rows at $rows');
+    for (final t in tabs) {
+      final pill = find.ancestor(of: find.text(t), matching: find.byType(Container)).first;
+      expect(tester.getSize(pill).width, lessThan(160), reason: '$t pill is ${tester.getSize(pill)}');
+    }
+  });
+
   testWidgets('tablet shows preview and options side by side', (tester) async {
     await _pumpEditor(tester, size: const Size(1280, 800));
     final preview = tester.getCenter(find.byType(AnimatedAvatarView));

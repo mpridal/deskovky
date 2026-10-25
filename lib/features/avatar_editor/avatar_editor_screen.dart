@@ -158,10 +158,11 @@ class _LayerTabs extends StatelessWidget {
                 child: GestureDetector(
                   onTap: () => onSelected(layer),
                   behavior: HitTestBehavior.opaque,
+                  // No `alignment` here: it would stretch each pill to the
+                  // full row width inside the Wrap.
                   child: Container(
                     constraints: const BoxConstraints(minHeight: 48, minWidth: 48),
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                     decoration: BoxDecoration(
                       color: layer == selected ? AppColors.paper : const Color(0x40000000),
                       borderRadius: BorderRadius.circular(999),
