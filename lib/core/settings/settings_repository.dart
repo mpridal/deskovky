@@ -12,6 +12,8 @@ class SettingsRepository {
   /// Also written by [PlayerRepository] inside its transactions.
   static const activePlayerKey = 'activePlayerId';
   static const _localeKey = 'locale';
+  static const _musicKey = 'musicOn';
+  static const _sfxKey = 'sfxOn';
 
   Stream<int?> watchActivePlayerId() => _watch(activePlayerKey).map((v) => v == null ? null : int.tryParse(v));
 
@@ -23,6 +25,15 @@ class SettingsRepository {
       );
 
   Future<void> setLocale(Locale? locale) => _set(_localeKey, locale?.languageCode);
+
+  /// Music and sound effects are on unless switched off (spec 5.8, 7.1).
+  Stream<bool> watchMusicOn() => _watch(_musicKey).map((v) => v != 'false');
+
+  Future<void> setMusicOn(bool on) => _set(_musicKey, '$on');
+
+  Stream<bool> watchSfxOn() => _watch(_sfxKey).map((v) => v != 'false');
+
+  Future<void> setSfxOn(bool on) => _set(_sfxKey, '$on');
 
   Stream<String?> _watch(String key) => (_db.select(_db.appSettings)..where((s) => s.key.equals(key)))
       .watchSingleOrNull()

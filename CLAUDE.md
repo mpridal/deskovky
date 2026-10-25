@@ -50,9 +50,9 @@ Flutter není v PATH starších terminálů – v případě potřeby `export PA
 - Generovaný kód (`*.g.dart`, `test/core/db/generated/`) se **commituje**; po změně tabulek: `dart run build_runner build --delete-conflicting-outputs`.
 - **Změna schématu** (nikdy jinak – data hráčů nesmí aktualizace smazat):
   1. zvýšit `schemaVersion` a doplnit krok do `migration.onUpgrade`,
-  2. `dart run drift_dev make-migrations` (uloží `drift_schemas/app/drift_schema_vN.json`),
-  3. `dart run drift_dev schema generate drift_schemas/app/ test/core/db/generated/`,
-  4. do `test/core/db/migration_test.dart` přidat test migrace z každé starší verze na novou (`verifier.startAt(n)` → `migrateAndValidate(db, N)`).
+  2. `MSYS_NO_PATHCONV=1 dart run drift_dev make-migrations` – uloží `drift_schemas/app/drift_schema_vN.json` a pomocné soubory do `test/core/db/generated/app/` (včetně vzorového testu bez dat),
+  3. do `test/core/db/migration_test.dart` přidat test migrace z každé starší verze na novou **s daty** (vložit řádky přes `vN.DatabaseAtVN`, migrovat, ověřit přes repozitáře),
+  4. časová razítka pro řazení ukládat jako `int` ms (`DateTimeColumn` drží jen sekundy).
 - Testy widgetů používají `testDatabase()` (`test/helpers/test_database.dart`, proudy se zavírají synchronně); zápisy do DB přímo v těle `testWidgets` jen přes `tester.runAsync`.
 - V Git Bash na Windows při `adb shell … /sdcard/…` nastavit `MSYS_NO_PATHCONV=1`, jinak se cesta přepíše.
 
