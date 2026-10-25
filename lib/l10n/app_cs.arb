@@ -138,5 +138,8 @@
   "resultChangeSettings": "Změnit nastavení",
   "resultHome": "Domů",
   "resultRobotTag": "robot",
-  "resultSubtitle": "{game} · {difficulty}"
+  "resultSubtitle": "{game} · {difficulty}",
+  "sampleHigher": "Víc!",
+  "sampleLower": "Míň!",
+  "sampleTurnHint": "{name}, tipni číslo od {low} do {high}"
 }

@@ -272,5 +272,21 @@
         "type": "String"
       }
     }
+  },
+  "sampleHigher": "Higher!",
+  "sampleLower": "Lower!",
+  "sampleTurnHint": "{name}, guess a number from {low} to {high}",
+  "@sampleTurnHint": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "low": {
+        "type": "int"
+      },
+      "high": {
+        "type": "int"
+      }
+    }
   }
 }

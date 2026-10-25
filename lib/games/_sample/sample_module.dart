@@ -4,10 +4,10 @@ import '../../core/game/ai_player.dart';
 import '../../core/game/game_module.dart';
 import '../../core/game/game_option.dart';
 import '../../core/game/game_rules.dart';
-import '../../core/game/move.dart';
-import '../../ui_kit/tokens/app_colors.dart';
-import '../../ui_kit/tokens/app_typography.dart';
+import '../../l10n/app_localizations.dart';
 import 'sample_ai.dart';
+import 'sample_board.dart';
+import 'sample_icon.dart';
 import 'sample_rules.dart';
 
 /// Manifest of the sample game that proves the whole game API (spec 8, 12).
@@ -50,26 +50,14 @@ class SampleModule extends GameModule<SampleState> {
   AiPlayer<SampleState> get ai => const SampleAi();
 
   @override
-  Widget icon(BuildContext context) =>
-      Center(child: Text('?', style: AppTypography.h1(color: AppColors.ink).copyWith(fontSize: 48)));
+  Widget icon(BuildContext context) => const SampleIcon();
 
   @override
-  Widget board(BuildContext context, GameBoardView<SampleState> view) {
-    final s = view.state;
-    return Wrap(
-      spacing: 6,
-      runSpacing: 6,
-      children: [
-        for (var n = s.low; n <= s.high; n++)
-          OutlinedButton(
-            onPressed: view.canAct && view.mySeat != null
-                ? () => view.submit(Move(seat: view.mySeat!, type: 'guess', data: {'value': n}))
-                : null,
-            child: Text('$n'),
-          ),
-      ],
-    );
-  }
+  Widget board(BuildContext context, GameBoardView<SampleState> view) => SampleBoard(view: view);
+
+  @override
+  String? turnHint(BuildContext context, SampleState state, String playerName) =>
+      AppLocalizations.of(context).sampleTurnHint(playerName, state.low, state.high);
 }
 
 const sampleModule = SampleModule();

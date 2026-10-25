@@ -138,5 +138,8 @@
   "resultChangeSettings": "Cambiar ajustes",
   "resultHome": "Inicio",
   "resultRobotTag": "robot",
-  "resultSubtitle": "{game} · {difficulty}"
+  "resultSubtitle": "{game} · {difficulty}",
+  "sampleHigher": "¡Más!",
+  "sampleLower": "¡Menos!",
+  "sampleTurnHint": "{name}, adivina un número del {low} al {high}"
 }

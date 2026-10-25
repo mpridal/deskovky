@@ -488,4 +488,15 @@ class AppLocalizationsCs extends AppLocalizations {
   String resultSubtitle(String game, String difficulty) {
     return '$game · $difficulty';
   }
+
+  @override
+  String get sampleHigher => 'Víc!';
+
+  @override
+  String get sampleLower => 'Míň!';
+
+  @override
+  String sampleTurnHint(String name, int low, int high) {
+    return '$name, tipni číslo od $low do $high';
+  }
 }

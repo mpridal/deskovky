@@ -481,4 +481,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String resultSubtitle(String game, String difficulty) {
     return '$game · $difficulty';
   }
+
+  @override
+  String get sampleHigher => '¡Más!';
+
+  @override
+  String get sampleLower => '¡Menos!';
+
+  @override
+  String sampleTurnHint(String name, int low, int high) {
+    return '$name, adivina un número del $low al $high';
+  }
 }

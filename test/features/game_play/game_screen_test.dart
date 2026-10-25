@@ -36,7 +36,7 @@ Future<void> _startGame(WidgetTester tester, AppDatabase db, Object extra) async
 GameScreenState _screen(WidgetTester tester) => tester.state<GameScreenState>(find.byType(GameScreen));
 
 Future<void> _tapNumber(WidgetTester tester, int n) async {
-  final number = find.widgetWithText(OutlinedButton, '$n');
+  final number = find.byKey(ValueKey('number$n'));
   await tester.ensureVisible(number);
   await tester.tap(number);
   await tester.pump();
@@ -55,7 +55,8 @@ void main() {
     }
     expect(find.byKey(const ValueKey('chip0')), findsOneWidget);
     expect(find.descendant(of: find.byKey(const ValueKey('chip1')), matching: find.text('Čipík')), findsOneWidget);
-    expect(find.text('Na tahu: Tereza'), findsOneWidget);
+    // The sample game's own hint replaces the generic "Na tahu: …".
+    expect(find.text('Tereza, tipni číslo od 1 do 20'), findsOneWidget);
   });
 
   testWidgets('music switch is remembered', (tester) async {
@@ -131,7 +132,7 @@ void main() {
     final t = await _player(tester, db, 'Tereza');
     await _startGame(tester, db, _config([const RobotSeat(), HumanSeat(t)], speed: RobotSpeed.slow));
     expect(find.text('🤖 Robík přemýšlí…'), findsOneWidget);
-    await tester.tap(find.widgetWithText(OutlinedButton, '1'), warnIfMissed: false);
+    await tester.tap(find.byKey(const ValueKey('number1')), warnIfMissed: false);
     await tester.pump();
     expect(_screen(tester).debugSession!.moves, isEmpty);
     await tester.pump(const Duration(milliseconds: 1300));

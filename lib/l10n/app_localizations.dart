@@ -933,6 +933,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{game} · {difficulty}'**
   String resultSubtitle(String game, String difficulty);
+
+  /// No description provided for @sampleHigher.
+  ///
+  /// In en, this message translates to:
+  /// **'Higher!'**
+  String get sampleHigher;
+
+  /// No description provided for @sampleLower.
+  ///
+  /// In en, this message translates to:
+  /// **'Lower!'**
+  String get sampleLower;
+
+  /// No description provided for @sampleTurnHint.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, guess a number from {low} to {high}'**
+  String sampleTurnHint(String name, int low, int high);
 }
 
 class _AppLocalizationsDelegate

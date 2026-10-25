@@ -95,7 +95,10 @@ class SampleRules implements GameRules<SampleState> {
       low: verdict > 0 ? value + 1 : state.low,
       high: verdict < 0 ? value - 1 : state.high,
       current: verdict == 0 ? state.current : (state.current + 1) % state.seats,
-      guesses: [...state.guesses, SampleGuess(seat: move.seat, value: value, verdict: verdict)],
+      guesses: [
+        ...state.guesses,
+        SampleGuess(seat: move.seat, value: value, verdict: verdict),
+      ],
       winner: verdict == 0 ? move.seat : null,
     );
   }
