@@ -951,6 +951,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name}, guess a number from {low} to {high}'**
   String sampleTurnHint(String name, int low, int high);
+
+  /// No description provided for @seatReplacedByRobot.
+  ///
+  /// In en, this message translates to:
+  /// **'Missing players were replaced by robots.'**
+  String get seatReplacedByRobot;
 }
 
 class _AppLocalizationsDelegate

@@ -3,6 +3,7 @@ import 'package:deskovky/core/game/difficulty.dart';
 import 'package:deskovky/core/game/game_config.dart';
 import 'package:deskovky/core/game/game_result.dart';
 import 'package:deskovky/core/players/player_profile.dart';
+import 'package:deskovky/core/players/player_repository.dart';
 import 'package:deskovky/features/game_play/game_outcome.dart';
 import 'package:deskovky/features/game_play/game_screen.dart';
 import 'package:deskovky/features/game_play/seat_identity.dart';
@@ -18,6 +19,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../helpers/app_fonts.dart';
 import '../../helpers/pump_app.dart';
+import '../../helpers/test_database.dart';
 
 final _tereza = PlayerProfile(id: 1, name: 'Tereza', avatar: AvatarSpec.defaults, favoriteSeat: null, createdAt: DateTime.utc(2026));
 
@@ -46,7 +48,11 @@ Future<void> _showResults(
   Size size = const Size(412, 915),
   double textScale = 1.0,
 }) async {
-  await pumpApp(tester, size: size, locale: locale, textScale: textScale, disableAnimations: disableAnimations);
+  // Profile 1 must exist: "Hrát znovu" refuses games without a person.
+  final db = testDatabase();
+  addTearDown(db.close);
+  await tester.runAsync(() => PlayerRepository(db).create(name: 'Tereza', avatar: AvatarSpec.defaults));
+  await pumpApp(tester, size: size, locale: locale, textScale: textScale, db: db, disableAnimations: disableAnimations);
   GoRouter.of(tester.element(find.byType(Navigator).first)).push('/play/sample/results', extra: outcome);
   await tester.pump();
   await tester.pump(const Duration(milliseconds: 400));

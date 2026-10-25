@@ -141,5 +141,6 @@
   "resultSubtitle": "{game} · {difficulty}",
   "sampleHigher": "Víc!",
   "sampleLower": "Míň!",
-  "sampleTurnHint": "{name}, tipni číslo od {low} do {high}"
+  "sampleTurnHint": "{name}, tipni číslo od {low} do {high}",
+  "seatReplacedByRobot": "Chybějící hráče nahradili roboti."
 }

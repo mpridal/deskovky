@@ -21,7 +21,9 @@ class ContinueBar extends ConsumerWidget {
     final saved = ref.watch(lastSavedProvider).value;
     final config = saved?.config ?? ref.watch(lastPlayedProvider).value;
     final module = config == null ? null : moduleById(config.gameId);
-    if (config == null || module == null) return const SizedBox.shrink();
+    // Without anybody to play there is nothing to continue (spec 5.7).
+    final hasPlayer = ref.watch(activePlayerProvider).value != null;
+    if (config == null || module == null || !hasPlayer) return const SizedBox.shrink();
 
     final subtitle = saved != null
         ? l10n.continueSaved
@@ -64,7 +66,10 @@ class ContinueBar extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                 decoration: BoxDecoration(color: AppColors.ink, borderRadius: BorderRadius.circular(999)),
-                child: Text(l10n.continuePlay, style: AppTypography.button(color: AppColors.paper).copyWith(fontSize: 14)),
+                child: Text(
+                  l10n.continuePlay,
+                  style: AppTypography.button(color: AppColors.paper).copyWith(fontSize: 14),
+                ),
               ),
             ],
           ),
@@ -73,6 +78,7 @@ class ContinueBar extends ConsumerWidget {
     );
   }
 
-  static String _seats(AppLocalizations l10n, GameConfig c) =>
-      c.robots == 0 ? l10n.playersCount(c.seats.length) : l10n.seatSummary(l10n.playersCount(c.seats.length), c.humans, c.robots);
+  static String _seats(AppLocalizations l10n, GameConfig c) => c.robots == 0
+      ? l10n.playersCount(c.seats.length)
+      : l10n.seatSummary(l10n.playersCount(c.seats.length), c.humans, c.robots);
 }

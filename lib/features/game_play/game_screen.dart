@@ -66,8 +66,10 @@ class GameScreenState extends ConsumerState<GameScreen> {
     final start = widget.start;
     GameSession<Object?>? session;
     if (start is SavedGame) {
+      final seatCount = start.config.seats.length;
+      final fits = seatCount >= module.minPlayers && seatCount <= module.maxPlayers;
       final allPresent = start.config.seats.whereType<HumanSeat>().every((s) => ids.contains(s.profileId));
-      session = allPresent ? module.withType(<T>(m) => GameSession.restore<T>(m.rules, start)) : null;
+      session = fits && allPresent ? module.withType(<T>(m) => GameSession.restore<T>(m.rules, start)) : null;
       if (session == null) {
         await store.deleteSession(module.id);
         if (!mounted) return;
@@ -82,7 +84,14 @@ class GameScreenState extends ConsumerState<GameScreen> {
         return;
       }
       final active = await ref.read(activePlayerProvider.future);
-      final (seats, _) = SeatEditor.sanitize(config.seats, existing: ids, activeId: active?.id);
+      final resized = SeatEditor.resize(config.seats, config.seats.length.clamp(module.minPlayers, module.maxPlayers));
+      final (seats, changed) = SeatEditor.sanitize(resized, existing: ids, activeId: active?.id);
+      // Spec 5.7: at least one person plays – otherwise go and pick players.
+      if (!seats.any((s) => s is HumanSeat)) {
+        if (mounted) context.pushReplacement('/play/${module.id}/setup');
+        return;
+      }
+      if (changed && mounted) showAppToast(context, AppLocalizations.of(context).seatReplacedByRobot);
       final seed = Random().nextInt(1 << 31);
       session = module.withType(<T>(m) => GameSession<T>.start(m.rules, config.copyWith(seats: seats), seed));
     }
@@ -197,6 +206,9 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
     final l10n = AppLocalizations.of(context);
     final router = GoRouter.of(context);
     final store = ref.read(gameStoreProvider);
+    // Robots must not play (or even finish the game) under the dialog.
+    final wasPaused = _turns.paused;
+    _turns.pause();
     final quit = await showAppConfirmDialog(
       context,
       title: l10n.exitTitle,
@@ -204,7 +216,10 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
       confirmLabel: l10n.exitConfirm,
       cancelLabel: l10n.cancel,
     );
-    if (!quit) return;
+    if (!quit) {
+      if (!wasPaused && mounted) _turns.resume();
+      return;
+    }
     if (_module.supportsSaveResume && !_turns.isOver) {
       await store.saveSession(_session.toSave());
     } else {
@@ -266,7 +281,6 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
         if (mounted) await _openPause();
       case 'exit':
         await _confirmExit();
-        if (mounted && !_finished) _turns.resume();
       default:
         _turns.resume();
     }
@@ -311,25 +325,27 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
     final sfxOn = ref.watch(sfxOnProvider).value ?? true;
     final settings = ref.read(settingsRepositoryProvider);
 
-    final strip = SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          for (final id in seats)
-            Padding(
-              key: ValueKey('chip${id.seat}'),
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: PlayerChip(
-                identity: id,
-                score: _session.rules.score(_session.state, id.seat),
-                active: id.seat == current,
-                thinking: id.seat == current && id.isRobot,
-              ),
+    // Phones show compact chips scaled to fit, so all four players stay visible.
+    final chips = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (final id in seats)
+          Padding(
+            key: ValueKey('chip${id.seat}'),
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: PlayerChip(
+              identity: id,
+              score: _session.rules.score(_session.state, id.seat),
+              active: id.seat == current,
+              thinking: id.seat == current && id.isRobot,
+              compact: !wide,
             ),
-        ],
-      ),
+          ),
+      ],
     );
+    final strip = wide
+        ? SingleChildScrollView(scrollDirection: Axis.horizontal, child: chips)
+        : FittedBox(fit: BoxFit.scaleDown, child: chips);
 
     final hud = Container(
       color: const Color(0x40000000),

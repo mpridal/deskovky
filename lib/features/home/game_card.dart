@@ -48,7 +48,10 @@ class GameCard extends StatelessWidget {
                       top: 6,
                       left: 6,
                       right: 6,
-                      child: Align(alignment: Alignment.topRight, child: TagPill(label: l10n.comingSoon)),
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: TagPill(label: l10n.comingSoon),
+                      ),
                     ),
                 ],
               ),

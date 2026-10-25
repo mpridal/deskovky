@@ -14,12 +14,16 @@ class PlayerChip extends StatefulWidget {
     required this.score,
     required this.active,
     required this.thinking,
+    this.compact = false,
   });
 
   final SeatIdentity identity;
   final int score;
   final bool active;
   final bool thinking;
+
+  /// Avatar and score only (phones); the bubble says whose turn it is.
+  final bool compact;
 
   @override
   State<PlayerChip> createState() => _PlayerChipState();
@@ -73,18 +77,20 @@ class _PlayerChipState extends State<PlayerChip> with SingleTickerProviderStateM
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            id.avatar(40),
+            id.avatar(widget.compact ? 32 : 40),
             const SizedBox(width: 8),
-            ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 110),
-              child: Text(
-                widget.thinking ? '${id.name} …' : id.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTypography.button(color: fg).copyWith(fontSize: 14),
+            if (!widget.compact) ...[
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 110),
+                child: Text(
+                  widget.thinking ? '${id.name} …' : id.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.button(color: fg).copyWith(fontSize: 14),
+                ),
               ),
-            ),
-            const SizedBox(width: 8),
+              const SizedBox(width: 8),
+            ],
             Text('${widget.score}', style: AppTypography.h2(color: fg).copyWith(fontSize: 20, height: 1)),
           ],
         ),

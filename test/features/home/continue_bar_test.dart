@@ -27,13 +27,22 @@ void main() {
   setUp(() => db = testDatabase());
   tearDown(() => db.close());
 
+  testWidgets('hidden without players even with history', (tester) async {
+    await tester.runAsync(() => GameStore(db).saveLastConfig(_config));
+    await pumpApp(tester, size: const Size(360, 740), db: db, disableAnimations: true);
+    expect(find.textContaining('Pokračovat'), findsNothing);
+  });
+
   testWidgets('hidden without history', (tester) async {
     await pumpApp(tester, size: const Size(360, 740), db: db, disableAnimations: true);
     expect(find.textContaining('Pokračovat'), findsNothing);
   });
 
   testWidgets('with a remembered setup it shows a summary and starts the game', (tester) async {
-    await tester.runAsync(() => GameStore(db).saveLastConfig(_config));
+    await tester.runAsync(() async {
+      await PlayerRepository(db).create(name: 'Tereza', avatar: AvatarSpec.defaults);
+      await GameStore(db).saveLastConfig(_config);
+    });
     await pumpApp(tester, size: const Size(360, 740), db: db, disableAnimations: true);
     expect(find.text('Pokračovat: Hádej číslo'), findsOneWidget);
     expect(find.text('2 hráči (1 + 1 🤖) · Střední'), findsOneWidget);

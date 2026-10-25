@@ -141,5 +141,6 @@
   "resultSubtitle": "{game} · {difficulty}",
   "sampleHigher": "¡Más!",
   "sampleLower": "¡Menos!",
-  "sampleTurnHint": "{name}, adivina un número del {low} al {high}"
+  "sampleTurnHint": "{name}, adivina un número del {low} al {high}",
+  "seatReplacedByRobot": "Los jugadores que faltan han sido sustituidos por robots."
 }

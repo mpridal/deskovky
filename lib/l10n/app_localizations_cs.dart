@@ -499,4 +499,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String sampleTurnHint(String name, int low, int high) {
     return '$name, tipni číslo od $low do $high';
   }
+
+  @override
+  String get seatReplacedByRobot => 'Chybějící hráče nahradili roboti.';
 }

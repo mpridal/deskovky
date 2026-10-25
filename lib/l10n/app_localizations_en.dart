@@ -491,4 +491,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String sampleTurnHint(String name, int low, int high) {
     return '$name, guess a number from $low to $high';
   }
+
+  @override
+  String get seatReplacedByRobot => 'Missing players were replaced by robots.';
 }

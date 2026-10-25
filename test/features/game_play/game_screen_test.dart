@@ -172,4 +172,83 @@ void main() {
     // Leave the game so the endless pulse stops before the test ends.
     await tester.pumpWidget(const SizedBox());
   });
+
+  group('review fixes', () {
+    testWidgets('4 players fit the HUD on a 360 dp phone (es, 130 %)', (tester) async {
+      final t = await _player(tester, db, 'Maximiliánek123');
+      await pumpApp(tester, size: const Size(360, 740), locale: const Locale('es'), textScale: 1.3, db: db, disableAnimations: true);
+      GoRouter.of(tester.element(find.byType(Navigator).first)).push(
+        '/play/sample',
+        extra: _config([HumanSeat(t), const RobotSeat(), const RobotSeat(), const RobotSeat()], speed: RobotSpeed.slow),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      for (var seat = 0; seat < 4; seat++) {
+        final rect = tester.getRect(find.byKey(ValueKey('chip$seat')));
+        expect(rect.left >= 0 && rect.right <= 360, isTrue, reason: 'chip$seat at $rect');
+      }
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('a saved game with more seats than the game allows is discarded, not crashing', (tester) async {
+      final t = await _player(tester, db, 'Tereza');
+      await tester.runAsync(() => GameStore(db).saveSession(SavedGame(
+        config: _config([HumanSeat(t), for (var i = 0; i < 4; i++) const RobotSeat()]),
+        seed: 1,
+        moves: const [],
+      )));
+      await pumpApp(tester, size: const Size(800, 1280), db: db, disableAnimations: true);
+      await tester.tap(find.text('Pokračovat: Hádej číslo'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(tester.takeException(), isNull);
+      expect(find.text('Rozehranou hru nejde obnovit.'), findsOneWidget);
+      await tester.pumpAndSettle();
+      expect(find.byType(GameSetupScreen), findsOneWidget);
+    });
+
+    testWidgets('a game never starts with robots only', (tester) async {
+      final t = await _player(tester, db, 'Tereza');
+      await tester.runAsync(() async {
+        await GameStore(db).saveLastConfig(_config([HumanSeat(t), const RobotSeat()]));
+        await PlayerRepository(db).delete(t);
+      });
+      await pumpApp(tester, size: const Size(800, 1280), db: db, disableAnimations: true);
+      expect(find.text('Pokračovat: Hádej číslo'), findsNothing, reason: 'nobody could play');
+      GoRouter.of(tester.element(find.byType(Navigator).first)).push('/play/sample', extra: _config([HumanSeat(t), const RobotSeat()]));
+      await tester.pumpAndSettle();
+      expect(find.byType(GameScreen), findsNothing);
+      expect(find.byType(GameSetupScreen), findsOneWidget);
+    });
+
+    testWidgets('continuing with a deleted player tells that a robot took the seat', (tester) async {
+      final t = await _player(tester, db, 'Tereza');
+      final k = await _player(tester, db, 'Kuba');
+      await tester.runAsync(() async {
+        await GameStore(db).saveLastConfig(_config([HumanSeat(t), HumanSeat(k)]));
+        await PlayerRepository(db).delete(k);
+      });
+      await pumpApp(tester, size: const Size(800, 1280), db: db, disableAnimations: true);
+      await tester.tap(find.text('Pokračovat: Hádej číslo'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.byType(GameScreen), findsOneWidget);
+      expect(find.text('Chybějící hráče nahradili roboti.'), findsOneWidget);
+      expect(_screen(tester).debugSession!.config.seats, [HumanSeat(t), const RobotSeat()]);
+    });
+
+    testWidgets('the exit dialog pauses robots until it is cancelled', (tester) async {
+      final t = await _player(tester, db, 'Tereza');
+      await _startGame(tester, db, _config([const RobotSeat(), HumanSeat(t)], speed: RobotSpeed.slow));
+      await tester.tap(find.bySemanticsLabel(RegExp('^Konec')));
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 3));
+      expect(_screen(tester).debugSession!.moves, isEmpty, reason: 'robot waits under the dialog');
+      await tester.tap(find.text('Zrušit'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 1300));
+      expect(_screen(tester).debugSession!.moves, hasLength(1));
+    });
+  });
 }

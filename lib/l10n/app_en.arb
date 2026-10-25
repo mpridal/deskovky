@@ -288,5 +288,6 @@
         "type": "int"
       }
     }
-  }
+  },
+  "seatReplacedByRobot": "Missing players were replaced by robots."
 }
