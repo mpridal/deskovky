@@ -66,6 +66,14 @@ void main() {
     }
   });
 
+  testWidgets('tablet right panel "+ New player" opens the editor', (tester) async {
+    await pumpApp(tester, size: const Size(1280, 800), db: db);
+    final panel = find.byKey(const Key('rightPanel'));
+    await tester.tap(find.descendant(of: panel, matching: find.byIcon(Icons.add)));
+    await tester.pumpAndSettle();
+    expect(find.byType(AvatarEditorScreen), findsOneWidget);
+  });
+
   group('long names', () {
     setUpAll(loadAppFonts);
 

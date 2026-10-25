@@ -34,7 +34,7 @@ Flutter není v PATH starších terminálů – v případě potřeby `export PA
 
 ## UI kit a avatary
 
-- Komponenty jsou v `lib/ui_kit/components/` (`PaperCard`, `PrimaryButton`, `RoundIconButton`, `SegmentedControl`, `ColorSwatchPicker`, `TagPill`, `PlayerSlot`, `showAppConfirmDialog`, `showAppToast`), plsť v `lib/ui_kit/surfaces/felt_background.dart`. Hry i obrazovky používají jen je – nové komponenty patří sem.
+- Komponenty jsou v `lib/ui_kit/components/` (`PaperCard`, `PrimaryButton`, `RoundIconButton`, `SegmentedControl`, `ColorSwatchPicker`, `TagPill`, `ChoicePills`, `PlayerSlot`, `showAppConfirmDialog`, `showAppToast`), plsť v `lib/ui_kit/surfaces/felt_background.dart`. Hry i obrazovky používají jen je – nové komponenty patří sem.
 - Avatar člověka: model `AvatarSpec` (`lib/core/avatar`, JSON s `v`, tolerantní `fromJson`) + `AvatarView` / `AnimatedAvatarView`. Robot: `RobotAvatar(color: barva slotu)`. Jinak se avatary nekreslí.
 - Debug build má v Nastavení tlačítko „UI kit“ s katalogem všech komponent.
 
@@ -43,5 +43,17 @@ Flutter není v PATH starších terminálů – v případě potřeby `export PA
 - Referenční obrázky jsou v `test/**/goldens/`; porovnání toleruje 1 % pixelů (`test/flutter_test_config.dart`, Windows × Linux v CI).
 - Po změně kresby: `flutter test --update-goldens <soubor>` a **vygenerovaný PNG vždy prohlédnout** dřív, než se commitne.
 - Text v testech měří skutečnými fonty jen tam, kde se volá `setUpAll(loadAppFonts)` (`test/helpers/app_fonts.dart`); jinak se kreslí testovacím písmem.
+
+## Data (Drift) a Riverpod
+
+- Databáze: `lib/core/db/` (tabulky v `tables.dart`, `AppDatabase` v `app_database.dart`). UI k ní nepřistupuje přímo, jen přes repozitáře (`PlayerRepository`, `SettingsRepository`) a providery v `lib/app/providers.dart`.
+- Generovaný kód (`*.g.dart`, `test/core/db/generated/`) se **commituje**; po změně tabulek: `dart run build_runner build --delete-conflicting-outputs`.
+- **Změna schématu** (nikdy jinak – data hráčů nesmí aktualizace smazat):
+  1. zvýšit `schemaVersion` a doplnit krok do `migration.onUpgrade`,
+  2. `dart run drift_dev make-migrations` (uloží `drift_schemas/app/drift_schema_vN.json`),
+  3. `dart run drift_dev schema generate drift_schemas/app/ test/core/db/generated/`,
+  4. do `test/core/db/migration_test.dart` přidat test migrace z každé starší verze na novou (`verifier.startAt(n)` → `migrateAndValidate(db, N)`).
+- Testy widgetů používají `testDatabase()` (`test/helpers/test_database.dart`, proudy se zavírají synchronně); zápisy do DB přímo v těle `testWidgets` jen přes `tester.runAsync`.
+- V Git Bash na Windows při `adb shell … /sdcard/…` nastavit `MSYS_NO_PATHCONV=1`, jinak se cesta přepíše.
 
 Pravidla paralelní práce (kap. 13.2 zadání) se doplní v milníku 9.
