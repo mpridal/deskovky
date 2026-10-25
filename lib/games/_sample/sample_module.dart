@@ -29,7 +29,7 @@ class SampleModule extends GameModule<SampleState> {
   @override
   bool get supportsAi => true;
   @override
-  String get musicTrack => 'music/sample.ogg';
+  String get musicTrack => 'sample';
   @override
   bool get supportsSaveResume => true;
 

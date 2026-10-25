@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../tokens/app_colors.dart';
+import 'ui_feedback.dart';
 
 /// Round paper icon button, 44–48 dp (spec 6.3), always with a label for
 /// screen readers.
@@ -11,6 +12,7 @@ class RoundIconButton extends StatelessWidget {
     required this.tooltip,
     required this.onPressed,
     this.size = 48,
+    this.sound = UiSound.tap,
   }) : assert(size >= 44 && size <= 48);
 
   final IconData icon;
@@ -18,20 +20,29 @@ class RoundIconButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final double size;
 
+  /// [UiSound.back] for back and close buttons.
+  final UiSound sound;
+
   @override
   Widget build(BuildContext context) {
+    final onTap = onPressed == null
+        ? null
+        : () {
+            UiFeedback.play(context, sound);
+            onPressed!();
+          };
     return Semantics(
       button: true,
       enabled: onPressed != null,
       label: tooltip,
       // excludeSemantics drops the detector's tap action, so screen readers
       // need it here explicitly.
-      onTap: onPressed,
+      onTap: onTap,
       excludeSemantics: true,
       child: Tooltip(
         message: tooltip,
         child: GestureDetector(
-          onTap: onPressed,
+          onTap: onTap,
           behavior: HitTestBehavior.opaque,
           child: SizedBox.square(
             dimension: 48,

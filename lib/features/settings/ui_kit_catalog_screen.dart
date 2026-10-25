@@ -12,6 +12,7 @@ import '../../ui_kit/components/paper_card.dart';
 import '../../ui_kit/components/player_slot.dart';
 import '../../ui_kit/components/primary_button.dart';
 import '../../ui_kit/components/round_icon_button.dart';
+import '../../ui_kit/components/ui_feedback.dart';
 import '../../ui_kit/components/segmented_control.dart';
 import '../../ui_kit/components/tag_pill.dart';
 import '../../ui_kit/surfaces/felt_background.dart';
@@ -53,7 +54,7 @@ class _UiKitCatalogScreenState extends State<UiKitCatalogScreen> {
             padding: const EdgeInsets.all(16),
             children: [
               Row(children: [
-                RoundIconButton(icon: Icons.arrow_back, tooltip: 'Back', onPressed: () => Navigator.of(context).pop()),
+                RoundIconButton(icon: Icons.arrow_back, tooltip: 'Back', sound: UiSound.back, onPressed: () => Navigator.of(context).pop()),
                 const SizedBox(width: 8),
                 Text('UI kit', style: AppTypography.h1(color: AppColors.paper)),
               ]),

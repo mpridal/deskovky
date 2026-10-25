@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../tokens/app_colors.dart';
 import '../tokens/app_typography.dart';
+import 'ui_feedback.dart';
 
 /// Pill-shaped segmented control; the selected segment is paper.
 class SegmentedControl<T> extends StatelessWidget {
@@ -24,7 +25,10 @@ class SegmentedControl<T> extends StatelessWidget {
                 button: true,
                 selected: value == selected,
                 child: GestureDetector(
-                  onTap: () => onChanged(value),
+                  onTap: () {
+                    UiFeedback.play(context, UiSound.toggle);
+                    onChanged(value);
+                  },
                   behavior: HitTestBehavior.opaque,
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 150),

@@ -2,6 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/audio/audio_catalog.dart';
+import '../core/audio/audio_service.dart';
+import '../core/audio/just_audio_backend.dart';
 import '../core/db/app_database.dart';
 import '../core/game/ai_player.dart';
 import '../core/game/game_config.dart';
@@ -17,8 +20,9 @@ final databaseProvider = Provider<AppDatabase>((ref) => throw UnimplementedError
 
 final playerRepositoryProvider = Provider<PlayerRepository>((ref) => PlayerRepository(ref.watch(databaseProvider)));
 
-final settingsRepositoryProvider =
-    Provider<SettingsRepository>((ref) => SettingsRepository(ref.watch(databaseProvider)));
+final settingsRepositoryProvider = Provider<SettingsRepository>(
+  (ref) => SettingsRepository(ref.watch(databaseProvider)),
+);
 
 final playersProvider = StreamProvider<List<PlayerProfile>>((ref) => ref.watch(playerRepositoryProvider).watchAll());
 
@@ -43,3 +47,16 @@ final aiRunnerProvider = Provider<AiRunner>((ref) => const IsolateAiRunner());
 final musicOnProvider = StreamProvider<bool>((ref) => ref.watch(settingsRepositoryProvider).watchMusicOn());
 
 final sfxOnProvider = StreamProvider<bool>((ref) => ref.watch(settingsRepositoryProvider).watchSfxOn());
+
+final musicVolumeProvider = StreamProvider<double>((ref) => ref.watch(settingsRepositoryProvider).watchMusicVolume());
+
+final sfxVolumeProvider = StreamProvider<double>((ref) => ref.watch(settingsRepositoryProvider).watchSfxVolume());
+
+final vibrationOnProvider = StreamProvider<bool>((ref) => ref.watch(settingsRepositoryProvider).watchVibrationOn());
+
+/// Music and effects; tests override it with a fake backend.
+final audioServiceProvider = Provider<AudioService>((ref) {
+  final service = AudioService(backend: JustAudioBackend(), catalog: AudioCatalog.standard);
+  ref.onDispose(service.dispose);
+  return service;
+});

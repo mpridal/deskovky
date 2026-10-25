@@ -11,6 +11,7 @@ import '../../ui_kit/components/color_swatch_picker.dart';
 import '../../ui_kit/components/paper_card.dart';
 import '../../ui_kit/components/primary_button.dart';
 import '../../ui_kit/components/round_icon_button.dart';
+import '../../ui_kit/components/ui_feedback.dart';
 import '../../ui_kit/surfaces/felt_background.dart';
 import '../../ui_kit/tokens/app_colors.dart';
 import '../../ui_kit/tokens/app_typography.dart';
@@ -130,6 +131,7 @@ class _AvatarEditorScreenState extends State<AvatarEditorScreen> {
           RoundIconButton(
             icon: Icons.arrow_back,
             tooltip: l10n.back,
+            sound: UiSound.back,
             onPressed: () => Navigator.of(context).maybePop(),
           ),
           const SizedBox(width: 8),

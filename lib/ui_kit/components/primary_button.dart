@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../tokens/app_colors.dart';
 import '../tokens/app_typography.dart';
+import 'ui_feedback.dart';
 
 /// Gold pill button with a 5 dp bottom edge that sinks 3 dp while pressed
-/// (spec 6.3). The `tap` sound is added with the AudioService (milestone 5).
+/// (spec 6.3) and plays the `tap` sound.
 class PrimaryButton extends StatefulWidget {
   const PrimaryButton({super.key, required this.label, required this.onPressed, this.icon, this.secondary = false});
 
@@ -27,6 +28,11 @@ class _PrimaryButtonState extends State<PrimaryButton> {
     if (widget.onPressed != null && _pressed != value) setState(() => _pressed = value);
   }
 
+  void _tap() {
+    UiFeedback.play(context, UiSound.tap);
+    widget.onPressed!();
+  }
+
   @override
   Widget build(BuildContext context) {
     final enabled = widget.onPressed != null;
@@ -41,7 +47,7 @@ class _PrimaryButtonState extends State<PrimaryButton> {
         onTapDown: (_) => _setPressed(true),
         onTapUp: (_) => _setPressed(false),
         onTapCancel: () => _setPressed(false),
-        onTap: widget.onPressed,
+        onTap: enabled ? _tap : null,
         child: Opacity(
           opacity: enabled ? 1 : 0.5,
           child: Padding(
