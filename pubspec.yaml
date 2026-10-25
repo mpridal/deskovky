@@ -34,6 +34,8 @@ flutter:
     - assets/audio/music/
     - assets/audio/sfx/
     - assets/audio/CREDITS.json
+    - assets/fonts/OFL-Baloo2.txt
+    - assets/fonts/OFL-Nunito.txt
   fonts:
     - family: Baloo2
       fonts:

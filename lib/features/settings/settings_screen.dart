@@ -39,6 +39,17 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 24),
           const _SoundSection(),
+          const SizedBox(height: 16),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: PrimaryButton(
+              key: const ValueKey('creditsLink'),
+              label: l10n.settingsCredits,
+              icon: Icons.info_outline,
+              secondary: true,
+              onPressed: () => context.push('/settings/credits'),
+            ),
+          ),
           // Visual check of bundled fonts with diacritics (milestone 1).
           const SizedBox(height: 32),
           Text(l10n.fontSample, style: AppTypography.h2(color: AppColors.paper)),
