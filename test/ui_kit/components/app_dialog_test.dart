@@ -34,4 +34,27 @@ void main() {
       expect(result, expected);
     });
   }
+
+  testWidgets('screen readers can press confirm and cancel separately', (tester) async {
+    final handle = tester.ensureSemantics();
+    bool? result;
+    await tester.pumpWidget(uiHost(Builder(
+      builder: (context) => TextButton(
+        onPressed: () async => result = await showAppConfirmDialog(
+          context,
+          title: 'Smazat hráče?',
+          message: 'Opravdu?',
+          confirmLabel: 'Smazat',
+          cancelLabel: 'Zrušit',
+        ),
+        child: const Text('open'),
+      ),
+    )));
+    await tester.tap(find.text('open'));
+    await tester.pumpAndSettle();
+    tester.semantics.tap(find.semantics.byLabel('Smazat'));
+    await tester.pumpAndSettle();
+    expect(result, isTrue);
+    handle.dispose();
+  });
 }

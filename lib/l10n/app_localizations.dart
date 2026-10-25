@@ -178,12 +178,6 @@ abstract class AppLocalizations {
   /// **'My avatar'**
   String get avatarEditorTitle;
 
-  /// No description provided for @avatarEdit.
-  ///
-  /// In en, this message translates to:
-  /// **'Edit avatar'**
-  String get avatarEdit;
-
   /// No description provided for @avatarSave.
   ///
   /// In en, this message translates to:
@@ -459,6 +453,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Background {n}'**
   String backgroundColor(int n);
+
+  /// No description provided for @playersNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New player'**
+  String get playersNew;
+
+  /// No description provided for @playersLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'This device can have at most 8 players.'**
+  String get playersLimit;
+
+  /// No description provided for @playersEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody here yet. Create the first player!'**
+  String get playersEmpty;
+
+  /// No description provided for @playersNowPlaying.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is playing now'**
+  String playersNowPlaying(String name);
+
+  /// No description provided for @playerActiveTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Playing'**
+  String get playerActiveTag;
+
+  /// No description provided for @playerEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit {name}'**
+  String playerEdit(String name);
+
+  /// No description provided for @playerDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {name}'**
+  String playerDelete(String name);
+
+  /// No description provided for @profileName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get profileName;
+
+  /// No description provided for @profileErrorEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a name.'**
+  String get profileErrorEmpty;
+
+  /// No description provided for @profileErrorTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'16 characters at most.'**
+  String get profileErrorTooLong;
+
+  /// No description provided for @profileErrorTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'Another player already has this name.'**
+  String get profileErrorTaken;
+
+  /// No description provided for @profileErrorLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'This device can have at most 8 players.'**
+  String get profileErrorLimit;
+
+  /// No description provided for @deleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete player {name}?'**
+  String deleteTitle(String name);
+
+  /// No description provided for @deleteMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Their results will be deleted too. This cannot be undone.'**
+  String get deleteMessage;
+
+  /// No description provided for @deleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteConfirm;
+
+  /// No description provided for @discardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard changes?'**
+  String get discardTitle;
+
+  /// No description provided for @discardMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your avatar and name changes will not be saved.'**
+  String get discardMessage;
+
+  /// No description provided for @discardConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get discardConfirm;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @homeHello.
+  ///
+  /// In en, this message translates to:
+  /// **'Hi,'**
+  String get homeHello;
+
+  /// No description provided for @homeSwitchPlayer.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch player'**
+  String get homeSwitchPlayer;
+
+  /// No description provided for @homeCreatePlayer.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a player'**
+  String get homeCreatePlayer;
+
+  /// No description provided for @settingsLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get settingsLanguage;
+
+  /// No description provided for @settingsLanguageSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone setting'**
+  String get settingsLanguageSystem;
 }
 
 class _AppLocalizationsDelegate

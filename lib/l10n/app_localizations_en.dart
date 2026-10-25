@@ -57,9 +57,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get avatarEditorTitle => 'My avatar';
 
   @override
-  String get avatarEdit => 'Edit avatar';
-
-  @override
   String get avatarSave => 'Save';
 
   @override
@@ -200,4 +197,86 @@ class AppLocalizationsEn extends AppLocalizations {
   String backgroundColor(int n) {
     return 'Background $n';
   }
+
+  @override
+  String get playersNew => 'New player';
+
+  @override
+  String get playersLimit => 'This device can have at most 8 players.';
+
+  @override
+  String get playersEmpty => 'Nobody here yet. Create the first player!';
+
+  @override
+  String playersNowPlaying(String name) {
+    return '$name is playing now';
+  }
+
+  @override
+  String get playerActiveTag => 'Playing';
+
+  @override
+  String playerEdit(String name) {
+    return 'Edit $name';
+  }
+
+  @override
+  String playerDelete(String name) {
+    return 'Delete $name';
+  }
+
+  @override
+  String get profileName => 'Name';
+
+  @override
+  String get profileErrorEmpty => 'Enter a name.';
+
+  @override
+  String get profileErrorTooLong => '16 characters at most.';
+
+  @override
+  String get profileErrorTaken => 'Another player already has this name.';
+
+  @override
+  String get profileErrorLimit => 'This device can have at most 8 players.';
+
+  @override
+  String deleteTitle(String name) {
+    return 'Delete player $name?';
+  }
+
+  @override
+  String get deleteMessage =>
+      'Their results will be deleted too. This cannot be undone.';
+
+  @override
+  String get deleteConfirm => 'Delete';
+
+  @override
+  String get discardTitle => 'Discard changes?';
+
+  @override
+  String get discardMessage =>
+      'Your avatar and name changes will not be saved.';
+
+  @override
+  String get discardConfirm => 'Discard';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get homeHello => 'Hi,';
+
+  @override
+  String get homeSwitchPlayer => 'Switch player';
+
+  @override
+  String get homeCreatePlayer => 'Create a player';
+
+  @override
+  String get settingsLanguage => 'Language';
+
+  @override
+  String get settingsLanguageSystem => 'Phone setting';
 }

@@ -57,9 +57,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get avatarEditorTitle => 'Mi avatar';
 
   @override
-  String get avatarEdit => 'Editar avatar';
-
-  @override
   String get avatarSave => 'Guardar';
 
   @override
@@ -200,4 +197,87 @@ class AppLocalizationsEs extends AppLocalizations {
   String backgroundColor(int n) {
     return 'Fondo $n';
   }
+
+  @override
+  String get playersNew => 'Nuevo jugador';
+
+  @override
+  String get playersLimit => 'Este dispositivo admite como máximo 8 jugadores.';
+
+  @override
+  String get playersEmpty => 'Aún no hay nadie. ¡Crea el primer jugador!';
+
+  @override
+  String playersNowPlaying(String name) {
+    return 'Ahora juega $name';
+  }
+
+  @override
+  String get playerActiveTag => 'Jugando';
+
+  @override
+  String playerEdit(String name) {
+    return 'Editar a $name';
+  }
+
+  @override
+  String playerDelete(String name) {
+    return 'Eliminar a $name';
+  }
+
+  @override
+  String get profileName => 'Nombre';
+
+  @override
+  String get profileErrorEmpty => 'Escribe un nombre.';
+
+  @override
+  String get profileErrorTooLong => 'Máximo 16 caracteres.';
+
+  @override
+  String get profileErrorTaken => 'Otro jugador ya tiene este nombre.';
+
+  @override
+  String get profileErrorLimit =>
+      'Este dispositivo admite como máximo 8 jugadores.';
+
+  @override
+  String deleteTitle(String name) {
+    return '¿Eliminar al jugador $name?';
+  }
+
+  @override
+  String get deleteMessage =>
+      'También se borrarán sus resultados. No se puede deshacer.';
+
+  @override
+  String get deleteConfirm => 'Eliminar';
+
+  @override
+  String get discardTitle => '¿Descartar cambios?';
+
+  @override
+  String get discardMessage =>
+      'Los cambios del avatar y del nombre no se guardarán.';
+
+  @override
+  String get discardConfirm => 'Descartar';
+
+  @override
+  String get cancel => 'Cancelar';
+
+  @override
+  String get homeHello => '¡Hola,';
+
+  @override
+  String get homeSwitchPlayer => 'Cambiar de jugador';
+
+  @override
+  String get homeCreatePlayer => 'Crear un jugador';
+
+  @override
+  String get settingsLanguage => 'Idioma';
+
+  @override
+  String get settingsLanguageSystem => 'Según el teléfono';
 }

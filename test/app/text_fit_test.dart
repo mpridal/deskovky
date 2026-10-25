@@ -1,4 +1,5 @@
 import 'package:deskovky/l10n/app_localizations.dart';
+import 'package:deskovky/ui_kit/components/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -23,6 +24,10 @@ bool _fitsOnOneLine(WidgetTester tester, Finder finder) {
   final paragraph = tester.renderObject<RenderParagraph>(finder);
   return paragraph.getMaxIntrinsicWidth(double.infinity) <= paragraph.size.width + 0.5;
 }
+
+/// The text inside a PrimaryButton (the same label may also appear elsewhere).
+Finder _inButton(String label) =>
+    find.descendant(of: find.byType(PrimaryButton), matching: find.text(label));
 
 void main() {
   setUpAll(loadAppFonts);
@@ -56,11 +61,18 @@ void main() {
           }
         });
 
+        testWidgets('players screen labels fit on one line: $name', (tester) async {
+          await pumpApp(tester, size: size, locale: locale, textScale: scale);
+          await tester.tap(find.text(l10n.navPlayers).last);
+          await tester.pumpAndSettle();
+          expect(_fitsOnOneLine(tester, _inButton(l10n.playersNew)), isTrue, reason: l10n.playersNew);
+        });
+
         testWidgets('avatar editor labels fit on one line: $name', (tester) async {
           await pumpApp(tester, size: size, locale: locale, textScale: scale);
           await tester.tap(find.text(l10n.navPlayers).last);
           await tester.pumpAndSettle();
-          await tester.tap(find.text(l10n.avatarEdit));
+          await tester.tap(_inButton(l10n.playersNew));
           await tester.pumpAndSettle();
           for (final label in [
             l10n.avatarEditorTitle,
@@ -72,6 +84,7 @@ void main() {
             l10n.avatarTabBackground,
             l10n.avatarHairColor.toUpperCase(),
             l10n.avatarSave,
+            l10n.profileName,
           ]) {
             expect(_fitsOnOneLine(tester, find.text(label)), isTrue, reason: '"$label" wraps or is clipped');
           }

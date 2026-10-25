@@ -2,11 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
-import '../core/avatar/avatar_spec.dart';
-import '../features/avatar_editor/avatar_editor_screen.dart';
 import '../features/home/home_screen.dart';
 import '../features/leaderboards/leaderboards_screen.dart';
 import '../features/players/players_screen.dart';
+import '../features/players/profile_editor_route.dart';
 import '../features/settings/settings_screen.dart';
 import '../features/settings/ui_kit_catalog_screen.dart';
 import 'app_shell.dart';
@@ -29,10 +28,14 @@ GoRouter buildRouter() {
                 routes: [
                   // Full screen above the navigation, like the mockup.
                   GoRoute(
-                    path: 'avatar',
+                    path: 'new',
                     parentNavigatorKey: rootKey,
-                    builder: (_, state) =>
-                        AvatarEditorScreen(initial: state.extra as AvatarSpec? ?? AvatarSpec.defaults),
+                    builder: (_, _) => const ProfileEditorRoute(),
+                  ),
+                  GoRoute(
+                    path: ':id/edit',
+                    parentNavigatorKey: rootKey,
+                    builder: (_, state) => ProfileEditorRoute(playerId: int.tryParse(state.pathParameters['id'] ?? '')),
                   ),
                 ],
               ),

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
+import 'active_player_bar.dart';
 import '../../ui_kit/components/paper_card.dart';
 import '../../ui_kit/components/tag_pill.dart';
 import '../../ui_kit/layout/window_size.dart';
 import '../../ui_kit/tokens/app_colors.dart';
-import '../../ui_kit/tokens/app_typography.dart';
 
 /// Home screen (spec 5.1). For now a grid of placeholder cards; the game
 /// registry fills it in milestone 4.
@@ -41,9 +41,7 @@ class HomeScreen extends StatelessWidget {
       slivers: [
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-          sliver: SliverToBoxAdapter(
-            child: Text(l10n.appTitle, style: AppTypography.h1(color: AppColors.paper)),
-          ),
+          sliver: SliverToBoxAdapter(child: const ActivePlayerBar()),
         ),
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
@@ -92,7 +90,10 @@ class _PlaceholderCard extends StatelessWidget {
             top: 6,
             left: 6,
             right: 6,
-            child: Align(alignment: Alignment.topRight, child: TagPill(label: label)),
+            child: Align(
+              alignment: Alignment.topRight,
+              child: TagPill(label: label),
+            ),
           ),
         ],
       ),

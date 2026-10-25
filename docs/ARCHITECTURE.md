@@ -36,3 +36,9 @@ Pravidla rozsahu pro paralelní vývoj her (kap. 13.2) proto znamenají `lib/gam
 - **Lokalizace:** `flutter_localizations` + `gen-l10n`, ARB soubory v `lib/l10n`, šablona `app_en.arb` (klíče anglicky). Výchozí jazyk podle systému: `cs` → čeština, `es` → španělština, jinak angličtina.
 - **Fonty:** Baloo 2 a Nunito jako variabilní TTF přibalené v `assets/fonts` (offline). Každý `TextStyle` nastavuje `fontWeight` i `FontVariation.weight`, aby se váha správně projevila.
 - **Responzivita:** compact < 600 dp (spodní lišta, 2 sloupce), medium 600–839 (rail, 3 sloupce), expanded ≥ 840 (rail, 3–4 sloupce, pravý panel).
+
+## Data a stav (milník 3)
+
+- **Drift (SQLite)** – `lib/core/db/`. Typované dotazy, sledování změn jako `Stream`, verzované schéma se snapshoty v `drift_schemas/` a generovaným ověřovačem migrací (`test/core/db/generated/`). Soubor DB leží v adresáři aplikace (`drift_flutter`), aktualizace APK ho nemaže.
+- **Repozitáře** – `PlayerRepository` (pravidla profilů z kap. 5.2), `SettingsRepository` (aktivní hráč, jazyk). UI k databázi nikdy nepřistupuje přímo.
+- **Riverpod** – `lib/app/providers.dart`. Jediné místo, kde se skládají závislosti; v testech se `databaseProvider` přepíše paměťovou DB (`test/helpers/test_database.dart`). Proč Riverpod: testovatelné přepisování závislostí bez globálních singletonů a přímá podpora `Stream` → `AsyncValue`.

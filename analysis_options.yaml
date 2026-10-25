@@ -4,3 +4,5 @@ analyzer:
   exclude:
     - build/**
     - android/**
+    - "**/*.g.dart"
+    - test/core/db/generated/**
