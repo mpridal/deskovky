@@ -891,6 +891,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The saved game cannot be continued.'**
   String get resumeFailed;
+
+  /// No description provided for @resultWins.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} wins!'**
+  String resultWins(String name);
+
+  /// No description provided for @resultDraw.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a draw!'**
+  String get resultDraw;
+
+  /// No description provided for @resultPlayAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Play again'**
+  String get resultPlayAgain;
+
+  /// No description provided for @resultChangeSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Change settings'**
+  String get resultChangeSettings;
+
+  /// No description provided for @resultHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get resultHome;
+
+  /// No description provided for @resultRobotTag.
+  ///
+  /// In en, this message translates to:
+  /// **'robot'**
+  String get resultRobotTag;
+
+  /// No description provided for @resultSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{game} · {difficulty}'**
+  String resultSubtitle(String game, String difficulty);
 }
 
 class _AppLocalizationsDelegate

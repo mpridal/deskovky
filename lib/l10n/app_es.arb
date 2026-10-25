@@ -131,5 +131,12 @@
   "close": "Cerrar",
   "turnOf": "Turno de {name}",
   "robotThinking": "🤖 {name} está pensando…",
-  "resumeFailed": "No se puede continuar la partida guardada."
+  "resumeFailed": "No se puede continuar la partida guardada.",
+  "resultWins": "¡Gana {name}!",
+  "resultDraw": "¡Empate!",
+  "resultPlayAgain": "Jugar otra vez",
+  "resultChangeSettings": "Cambiar ajustes",
+  "resultHome": "Inicio",
+  "resultRobotTag": "robot",
+  "resultSubtitle": "{game} · {difficulty}"
 }

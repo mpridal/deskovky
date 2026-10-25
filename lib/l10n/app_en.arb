@@ -248,5 +248,29 @@
       }
     }
   },
-  "resumeFailed": "The saved game cannot be continued."
+  "resumeFailed": "The saved game cannot be continued.",
+  "resultWins": "{name} wins!",
+  "@resultWins": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "resultDraw": "It's a draw!",
+  "resultPlayAgain": "Play again",
+  "resultChangeSettings": "Change settings",
+  "resultHome": "Home",
+  "resultRobotTag": "robot",
+  "resultSubtitle": "{game} · {difficulty}",
+  "@resultSubtitle": {
+    "placeholders": {
+      "game": {
+        "type": "String"
+      },
+      "difficulty": {
+        "type": "String"
+      }
+    }
+  }
 }

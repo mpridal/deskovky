@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/game/game_config.dart';
+import '../features/game_play/game_outcome.dart';
 import '../features/game_play/game_screen.dart';
 import '../features/game_setup/game_setup_screen.dart';
 import '../features/home/home_screen.dart';
 import '../features/leaderboards/leaderboards_screen.dart';
 import '../features/players/players_screen.dart';
+import '../features/results/results_screen.dart';
 import '../features/players/profile_editor_route.dart';
 import '../features/settings/settings_screen.dart';
 import '../features/settings/ui_kit_catalog_screen.dart';
@@ -34,7 +36,9 @@ GoRouter buildRouter() {
       ),
       GoRoute(
         path: '/play/:gameId/results',
-        builder: (_, state) => _PlayStub(label: 'results ${state.pathParameters['gameId']}'),
+        builder: (_, state) => state.extra is GameOutcomeView
+            ? ResultsScreen(outcome: state.extra! as GameOutcomeView)
+            : GameSetupScreen(gameId: state.pathParameters['gameId']!),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, shell) => AppShell(shell: shell),
@@ -78,13 +82,4 @@ GoRouter buildRouter() {
       ),
     ],
   );
-}
-
-class _PlayStub extends StatelessWidget {
-  const _PlayStub({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) => Scaffold(body: Center(child: Text(label)));
 }

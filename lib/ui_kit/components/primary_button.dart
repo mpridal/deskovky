@@ -6,11 +6,14 @@ import '../tokens/app_typography.dart';
 /// Gold pill button with a 5 dp bottom edge that sinks 3 dp while pressed
 /// (spec 6.3). The `tap` sound is added with the AudioService (milestone 5).
 class PrimaryButton extends StatefulWidget {
-  const PrimaryButton({super.key, required this.label, required this.onPressed, this.icon});
+  const PrimaryButton({super.key, required this.label, required this.onPressed, this.icon, this.secondary = false});
 
   final String label;
   final VoidCallback? onPressed;
   final IconData? icon;
+
+  /// Paper instead of gold, for the second choice next to a primary button.
+  final bool secondary;
 
   @override
   State<PrimaryButton> createState() => _PrimaryButtonState();
@@ -49,18 +52,15 @@ class _PrimaryButtonState extends State<PrimaryButton> {
                 constraints: const BoxConstraints(minHeight: 52, minWidth: 120),
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 decoration: BoxDecoration(
-                  color: AppColors.gold,
+                  color: widget.secondary ? AppColors.paper : AppColors.gold,
                   borderRadius: BorderRadius.circular(999),
-                  boxShadow: [BoxShadow(color: _edge, offset: Offset(0, depth))],
+                  boxShadow: [BoxShadow(color: widget.secondary ? AppColors.paper2 : _edge, offset: Offset(0, depth))],
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    if (widget.icon != null) ...[
-                      Icon(widget.icon, color: AppColors.ink),
-                      const SizedBox(width: 8),
-                    ],
+                    if (widget.icon != null) ...[Icon(widget.icon, color: AppColors.ink), const SizedBox(width: 8)],
                     Flexible(
                       child: Text(
                         widget.label,

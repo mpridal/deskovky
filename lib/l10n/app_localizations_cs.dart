@@ -463,4 +463,29 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get resumeFailed => 'Rozehranou hru nejde obnovit.';
+
+  @override
+  String resultWins(String name) {
+    return '$name vyhrává!';
+  }
+
+  @override
+  String get resultDraw => 'Remíza!';
+
+  @override
+  String get resultPlayAgain => 'Hrát znovu';
+
+  @override
+  String get resultChangeSettings => 'Změnit nastavení';
+
+  @override
+  String get resultHome => 'Domů';
+
+  @override
+  String get resultRobotTag => 'robot';
+
+  @override
+  String resultSubtitle(String game, String difficulty) {
+    return '$game · $difficulty';
+  }
 }

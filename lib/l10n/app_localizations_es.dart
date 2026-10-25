@@ -456,4 +456,29 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get resumeFailed => 'No se puede continuar la partida guardada.';
+
+  @override
+  String resultWins(String name) {
+    return '¡Gana $name!';
+  }
+
+  @override
+  String get resultDraw => '¡Empate!';
+
+  @override
+  String get resultPlayAgain => 'Jugar otra vez';
+
+  @override
+  String get resultChangeSettings => 'Cambiar ajustes';
+
+  @override
+  String get resultHome => 'Inicio';
+
+  @override
+  String get resultRobotTag => 'robot';
+
+  @override
+  String resultSubtitle(String game, String difficulty) {
+    return '$game · $difficulty';
+  }
 }
