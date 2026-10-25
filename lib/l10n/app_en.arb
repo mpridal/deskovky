@@ -14,7 +14,71 @@
   "playersCount": "{count, plural, one{{count} player} other{{count} players}}",
   "@playersCount": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "avatarEditorTitle": "My avatar",
+  "avatarEdit": "Edit avatar",
+  "avatarSave": "Save",
+  "avatarRandom": "Random",
+  "back": "Back",
+  "avatarTabFace": "Face",
+  "avatarTabSkin": "Skin",
+  "avatarTabHair": "Hair",
+  "avatarTabEyes": "Eyes",
+  "avatarTabMouth": "Mouth",
+  "avatarTabBackground": "Background",
+  "avatarHairColor": "Hair colour",
+  "faceOval": "oval",
+  "faceRound": "round",
+  "faceWide": "wide",
+  "faceSquare": "square",
+  "hairShort": "short",
+  "hairLong": "long",
+  "hairCurly": "curly",
+  "hairBun": "bun",
+  "hairSpiky": "spiky",
+  "hairPigtails": "pigtails",
+  "hairBob": "bob",
+  "hairBraids": "braids",
+  "hairCap": "cap",
+  "hairBald": "bald",
+  "eyesRound": "round",
+  "eyesHappy": "happy",
+  "eyesWink": "winking",
+  "eyesSleepy": "sleepy",
+  "eyesWide": "wide open",
+  "eyesLashes": "with lashes",
+  "mouthSmile": "smile",
+  "mouthOpen": "open",
+  "mouthFlat": "straight",
+  "mouthGrin": "grin",
+  "mouthTongue": "tongue out",
+  "mouthSurprised": "surprised",
+  "hairColorBlack": "black",
+  "hairColorBrown": "brown",
+  "hairColorChestnut": "chestnut",
+  "hairColorBlond": "blond",
+  "hairColorPlatinum": "platinum",
+  "hairColorRed": "red",
+  "hairColorGrey": "grey",
+  "hairColorBlue": "blue",
+  "skinTone": "Skin tone {n}",
+  "@skinTone": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "backgroundColor": "Background {n}",
+  "@backgroundColor": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
     }
   }
 }

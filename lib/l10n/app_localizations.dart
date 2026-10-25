@@ -171,6 +171,294 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, one{{count} player} other{{count} players}}'**
   String playersCount(int count);
+
+  /// No description provided for @avatarEditorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My avatar'**
+  String get avatarEditorTitle;
+
+  /// No description provided for @avatarEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit avatar'**
+  String get avatarEdit;
+
+  /// No description provided for @avatarSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get avatarSave;
+
+  /// No description provided for @avatarRandom.
+  ///
+  /// In en, this message translates to:
+  /// **'Random'**
+  String get avatarRandom;
+
+  /// No description provided for @back.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get back;
+
+  /// No description provided for @avatarTabFace.
+  ///
+  /// In en, this message translates to:
+  /// **'Face'**
+  String get avatarTabFace;
+
+  /// No description provided for @avatarTabSkin.
+  ///
+  /// In en, this message translates to:
+  /// **'Skin'**
+  String get avatarTabSkin;
+
+  /// No description provided for @avatarTabHair.
+  ///
+  /// In en, this message translates to:
+  /// **'Hair'**
+  String get avatarTabHair;
+
+  /// No description provided for @avatarTabEyes.
+  ///
+  /// In en, this message translates to:
+  /// **'Eyes'**
+  String get avatarTabEyes;
+
+  /// No description provided for @avatarTabMouth.
+  ///
+  /// In en, this message translates to:
+  /// **'Mouth'**
+  String get avatarTabMouth;
+
+  /// No description provided for @avatarTabBackground.
+  ///
+  /// In en, this message translates to:
+  /// **'Background'**
+  String get avatarTabBackground;
+
+  /// No description provided for @avatarHairColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Hair colour'**
+  String get avatarHairColor;
+
+  /// No description provided for @faceOval.
+  ///
+  /// In en, this message translates to:
+  /// **'oval'**
+  String get faceOval;
+
+  /// No description provided for @faceRound.
+  ///
+  /// In en, this message translates to:
+  /// **'round'**
+  String get faceRound;
+
+  /// No description provided for @faceWide.
+  ///
+  /// In en, this message translates to:
+  /// **'wide'**
+  String get faceWide;
+
+  /// No description provided for @faceSquare.
+  ///
+  /// In en, this message translates to:
+  /// **'square'**
+  String get faceSquare;
+
+  /// No description provided for @hairShort.
+  ///
+  /// In en, this message translates to:
+  /// **'short'**
+  String get hairShort;
+
+  /// No description provided for @hairLong.
+  ///
+  /// In en, this message translates to:
+  /// **'long'**
+  String get hairLong;
+
+  /// No description provided for @hairCurly.
+  ///
+  /// In en, this message translates to:
+  /// **'curly'**
+  String get hairCurly;
+
+  /// No description provided for @hairBun.
+  ///
+  /// In en, this message translates to:
+  /// **'bun'**
+  String get hairBun;
+
+  /// No description provided for @hairSpiky.
+  ///
+  /// In en, this message translates to:
+  /// **'spiky'**
+  String get hairSpiky;
+
+  /// No description provided for @hairPigtails.
+  ///
+  /// In en, this message translates to:
+  /// **'pigtails'**
+  String get hairPigtails;
+
+  /// No description provided for @hairBob.
+  ///
+  /// In en, this message translates to:
+  /// **'bob'**
+  String get hairBob;
+
+  /// No description provided for @hairBraids.
+  ///
+  /// In en, this message translates to:
+  /// **'braids'**
+  String get hairBraids;
+
+  /// No description provided for @hairCap.
+  ///
+  /// In en, this message translates to:
+  /// **'cap'**
+  String get hairCap;
+
+  /// No description provided for @hairBald.
+  ///
+  /// In en, this message translates to:
+  /// **'bald'**
+  String get hairBald;
+
+  /// No description provided for @eyesRound.
+  ///
+  /// In en, this message translates to:
+  /// **'round'**
+  String get eyesRound;
+
+  /// No description provided for @eyesHappy.
+  ///
+  /// In en, this message translates to:
+  /// **'happy'**
+  String get eyesHappy;
+
+  /// No description provided for @eyesWink.
+  ///
+  /// In en, this message translates to:
+  /// **'winking'**
+  String get eyesWink;
+
+  /// No description provided for @eyesSleepy.
+  ///
+  /// In en, this message translates to:
+  /// **'sleepy'**
+  String get eyesSleepy;
+
+  /// No description provided for @eyesWide.
+  ///
+  /// In en, this message translates to:
+  /// **'wide open'**
+  String get eyesWide;
+
+  /// No description provided for @eyesLashes.
+  ///
+  /// In en, this message translates to:
+  /// **'with lashes'**
+  String get eyesLashes;
+
+  /// No description provided for @mouthSmile.
+  ///
+  /// In en, this message translates to:
+  /// **'smile'**
+  String get mouthSmile;
+
+  /// No description provided for @mouthOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'open'**
+  String get mouthOpen;
+
+  /// No description provided for @mouthFlat.
+  ///
+  /// In en, this message translates to:
+  /// **'straight'**
+  String get mouthFlat;
+
+  /// No description provided for @mouthGrin.
+  ///
+  /// In en, this message translates to:
+  /// **'grin'**
+  String get mouthGrin;
+
+  /// No description provided for @mouthTongue.
+  ///
+  /// In en, this message translates to:
+  /// **'tongue out'**
+  String get mouthTongue;
+
+  /// No description provided for @mouthSurprised.
+  ///
+  /// In en, this message translates to:
+  /// **'surprised'**
+  String get mouthSurprised;
+
+  /// No description provided for @hairColorBlack.
+  ///
+  /// In en, this message translates to:
+  /// **'black'**
+  String get hairColorBlack;
+
+  /// No description provided for @hairColorBrown.
+  ///
+  /// In en, this message translates to:
+  /// **'brown'**
+  String get hairColorBrown;
+
+  /// No description provided for @hairColorChestnut.
+  ///
+  /// In en, this message translates to:
+  /// **'chestnut'**
+  String get hairColorChestnut;
+
+  /// No description provided for @hairColorBlond.
+  ///
+  /// In en, this message translates to:
+  /// **'blond'**
+  String get hairColorBlond;
+
+  /// No description provided for @hairColorPlatinum.
+  ///
+  /// In en, this message translates to:
+  /// **'platinum'**
+  String get hairColorPlatinum;
+
+  /// No description provided for @hairColorRed.
+  ///
+  /// In en, this message translates to:
+  /// **'red'**
+  String get hairColorRed;
+
+  /// No description provided for @hairColorGrey.
+  ///
+  /// In en, this message translates to:
+  /// **'grey'**
+  String get hairColorGrey;
+
+  /// No description provided for @hairColorBlue.
+  ///
+  /// In en, this message translates to:
+  /// **'blue'**
+  String get hairColorBlue;
+
+  /// No description provided for @skinTone.
+  ///
+  /// In en, this message translates to:
+  /// **'Skin tone {n}'**
+  String skinTone(int n);
+
+  /// No description provided for @backgroundColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Background {n}'**
+  String backgroundColor(int n);
 }
 
 class _AppLocalizationsDelegate

@@ -53,4 +53,152 @@ class AppLocalizationsCs extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get avatarEditorTitle => 'Můj avatar';
+
+  @override
+  String get avatarEdit => 'Upravit avatar';
+
+  @override
+  String get avatarSave => 'Uložit';
+
+  @override
+  String get avatarRandom => 'Náhodně';
+
+  @override
+  String get back => 'Zpět';
+
+  @override
+  String get avatarTabFace => 'Obličej';
+
+  @override
+  String get avatarTabSkin => 'Pleť';
+
+  @override
+  String get avatarTabHair => 'Vlasy';
+
+  @override
+  String get avatarTabEyes => 'Oči';
+
+  @override
+  String get avatarTabMouth => 'Ústa';
+
+  @override
+  String get avatarTabBackground => 'Pozadí';
+
+  @override
+  String get avatarHairColor => 'Barva vlasů';
+
+  @override
+  String get faceOval => 'oválný';
+
+  @override
+  String get faceRound => 'kulatý';
+
+  @override
+  String get faceWide => 'široký';
+
+  @override
+  String get faceSquare => 'hranatý';
+
+  @override
+  String get hairShort => 'krátké';
+
+  @override
+  String get hairLong => 'dlouhé';
+
+  @override
+  String get hairCurly => 'kudrny';
+
+  @override
+  String get hairBun => 'drdol';
+
+  @override
+  String get hairSpiky => 'ježek';
+
+  @override
+  String get hairPigtails => 'culíky';
+
+  @override
+  String get hairBob => 'mikádo';
+
+  @override
+  String get hairBraids => 'copánky';
+
+  @override
+  String get hairCap => 'kšiltovka';
+
+  @override
+  String get hairBald => 'bez vlasů';
+
+  @override
+  String get eyesRound => 'kulaté';
+
+  @override
+  String get eyesHappy => 'veselé';
+
+  @override
+  String get eyesWink => 'mrkající';
+
+  @override
+  String get eyesSleepy => 'ospalé';
+
+  @override
+  String get eyesWide => 'vykulené';
+
+  @override
+  String get eyesLashes => 's řasami';
+
+  @override
+  String get mouthSmile => 'úsměv';
+
+  @override
+  String get mouthOpen => 'otevřená';
+
+  @override
+  String get mouthFlat => 'rovná';
+
+  @override
+  String get mouthGrin => 'úsměv se zuby';
+
+  @override
+  String get mouthTongue => 'jazyk';
+
+  @override
+  String get mouthSurprised => 'překvapená';
+
+  @override
+  String get hairColorBlack => 'černá';
+
+  @override
+  String get hairColorBrown => 'hnědá';
+
+  @override
+  String get hairColorChestnut => 'kaštanová';
+
+  @override
+  String get hairColorBlond => 'blond';
+
+  @override
+  String get hairColorPlatinum => 'platinová';
+
+  @override
+  String get hairColorRed => 'zrzavá';
+
+  @override
+  String get hairColorGrey => 'šedá';
+
+  @override
+  String get hairColorBlue => 'modrá';
+
+  @override
+  String skinTone(int n) {
+    return 'Pleť $n';
+  }
+
+  @override
+  String backgroundColor(int n) {
+    return 'Pozadí $n';
+  }
 }
