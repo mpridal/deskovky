@@ -56,4 +56,11 @@ Flutter není v PATH starších terminálů – v případě potřeby `export PA
 - Testy widgetů používají `testDatabase()` (`test/helpers/test_database.dart`, proudy se zavírají synchronně); zápisy do DB přímo v těle `testWidgets` jen přes `tester.runAsync`.
 - V Git Bash na Windows při `adb shell … /sdcard/…` nastavit `MSYS_NO_PATHCONV=1`, jinak se cesta přepíše.
 
+## Hry a testy her
+
+- Nová hra = `GameModule` + `GameRules` + `AiPlayer` + deska ve `lib/games/<id>/`, registrace v `lib/games/registry.dart` (podrobný návod `docs/GAME_MODULE_GUIDE.md` v milníku 10). Vzor: `lib/games/_sample/`.
+- Každá akce hráče je `Move` přes `GameBoardView.submit`; deska nikdy nemění stav sama.
+- Testy, které otevřou herní obrazovku: `pumpApp(..., disableAnimations: true)` (pulzování hráče na tahu je nekonečné → `pumpAndSettle` by nikdy neskončil). Roboti v testech běží přes `InlineAiRunner` (nastavuje `pumpApp`).
+- Ruční průchod na emulátoru skriptem přes `uiautomator dump`: na herní obrazovce dočasně `adb shell settings put global animator_duration_scale 0` (a transition/window), jinak uiautomator nečeká na klid; po skončení vrátit na 1.
+
 Pravidla paralelní práce (kap. 13.2 zadání) se doplní v milníku 9.
