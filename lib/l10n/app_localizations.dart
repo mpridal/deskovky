@@ -567,6 +567,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cancel'**
   String get cancel;
+
+  /// No description provided for @homeHello.
+  ///
+  /// In en, this message translates to:
+  /// **'Hi,'**
+  String get homeHello;
+
+  /// No description provided for @homeSwitchPlayer.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch player'**
+  String get homeSwitchPlayer;
+
+  /// No description provided for @homeCreatePlayer.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a player'**
+  String get homeCreatePlayer;
 }
 
 class _AppLocalizationsDelegate

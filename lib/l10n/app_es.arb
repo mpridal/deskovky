@@ -77,5 +77,8 @@
   "discardTitle": "¿Descartar cambios?",
   "discardMessage": "Los cambios del avatar y del nombre no se guardarán.",
   "discardConfirm": "Descartar",
-  "cancel": "Cancelar"
+  "cancel": "Cancelar",
+  "homeHello": "¡Hola,",
+  "homeSwitchPlayer": "Cambiar de jugador",
+  "homeCreatePlayer": "Crear un jugador"
 }

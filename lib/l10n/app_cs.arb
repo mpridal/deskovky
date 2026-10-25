@@ -77,5 +77,8 @@
   "discardTitle": "Zahodit změny?",
   "discardMessage": "Úpravy avatara a jména se neuloží.",
   "discardConfirm": "Zahodit",
-  "cancel": "Zrušit"
+  "cancel": "Zrušit",
+  "homeHello": "Ahoj,",
+  "homeSwitchPlayer": "Přepnout hráče",
+  "homeCreatePlayer": "Vytvořit hráče"
 }

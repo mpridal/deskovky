@@ -126,5 +126,8 @@
   "discardTitle": "Discard changes?",
   "discardMessage": "Your avatar and name changes will not be saved.",
   "discardConfirm": "Discard",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "homeHello": "Hi,",
+  "homeSwitchPlayer": "Switch player",
+  "homeCreatePlayer": "Create a player"
 }

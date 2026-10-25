@@ -263,4 +263,13 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get cancel => 'Zrušit';
+
+  @override
+  String get homeHello => 'Ahoj,';
+
+  @override
+  String get homeSwitchPlayer => 'Přepnout hráče';
+
+  @override
+  String get homeCreatePlayer => 'Vytvořit hráče';
 }

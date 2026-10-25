@@ -264,4 +264,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cancel => 'Cancel';
+
+  @override
+  String get homeHello => 'Hi,';
+
+  @override
+  String get homeSwitchPlayer => 'Switch player';
+
+  @override
+  String get homeCreatePlayer => 'Create a player';
 }
