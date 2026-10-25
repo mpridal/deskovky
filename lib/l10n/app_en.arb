@@ -184,5 +184,40 @@
   "difficultyEasy": "Easy",
   "difficultyMedium": "Medium",
   "difficultyHard": "Hard",
-  "sampleOptionRange": "Number range"
+  "sampleOptionRange": "Number range",
+  "setupPlayers": "Number of players",
+  "seatsHumans": "{count, plural, one{{count} person} other{{count} people}}",
+  "@seatsHumans": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "seatsRobots": "{count, plural, one{{count} robot} other{{count} robots}}",
+  "@seatsRobots": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "setupDifficulty": "Robot difficulty",
+  "setupSpeed": "Robot speed",
+  "speedSlow": "Slow",
+  "speedNormal": "Normal",
+  "speedFast": "Fast",
+  "seatHuman": "Human",
+  "seatRobot": "🤖 Robot",
+  "setupLoaded": "↺ Settings loaded from your last game",
+  "setupFilled": "free seats filled with robots",
+  "setupNoFreeProfile": "All players are already at the table.",
+  "seatMoveUp": "Move up",
+  "seatMoveDown": "Move down",
+  "setupPlay": "Play!",
+  "setupNeedPlayer": "Create a player first.",
+  "robotName0": "Robo",
+  "robotName1": "Chip",
+  "robotName2": "Bolt",
+  "robotName3": "Buzz"
 }

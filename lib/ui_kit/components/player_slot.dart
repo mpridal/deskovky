@@ -13,6 +13,7 @@ class PlayerSlot extends StatelessWidget {
     required this.avatar,
     required this.name,
     required this.tag,
+    this.detail,
     this.trailing,
   }) : assert(seat >= 0 && seat < 4);
 
@@ -20,6 +21,9 @@ class PlayerSlot extends StatelessWidget {
   final Widget avatar;
   final String name;
   final String tag;
+
+  /// Small line under the name, e.g. a robot's difficulty dots.
+  final Widget? detail;
   final Widget? trailing;
 
   @override
@@ -35,14 +39,18 @@ class PlayerSlot extends StatelessWidget {
               ColoredBox(key: const Key('playerSlotStripe'), color: AppColors.players[seat], child: const SizedBox(width: 8)),
               Padding(padding: const EdgeInsets.fromLTRB(10, 8, 10, 8), child: Center(child: avatar)),
               Expanded(
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTypography.button(color: AppColors.ink),
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.button(color: AppColors.ink),
+                    ),
+                    ?detail,
+                  ],
                 ),
               ),
               Center(child: TagPill(label: tag, background: AppColors.paper2, foreground: AppColors.ink)),

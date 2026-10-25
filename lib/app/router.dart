@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../core/game/game_config.dart';
+import '../features/game_setup/game_setup_screen.dart';
 import '../features/home/home_screen.dart';
 import '../features/leaderboards/leaderboards_screen.dart';
 import '../features/players/players_screen.dart';
@@ -20,7 +22,10 @@ GoRouter buildRouter() {
       // setup and game screens exist (milestone 4, tasks 5–6).
       GoRoute(
         path: '/play/:gameId/setup',
-        builder: (_, state) => _PlayStub(label: 'setup ${state.pathParameters['gameId']}'),
+        builder: (_, state) => GameSetupScreen(
+          gameId: state.pathParameters['gameId']!,
+          initialConfig: state.extra is GameConfig ? state.extra! as GameConfig : null,
+        ),
       ),
       GoRoute(
         path: '/play/:gameId',
@@ -29,7 +34,9 @@ GoRouter buildRouter() {
       StatefulShellRoute.indexedStack(
         builder: (context, state, shell) => AppShell(shell: shell),
         branches: [
-          StatefulShellBranch(routes: [GoRoute(path: '/games', builder: (_, _) => const HomeScreen())]),
+          StatefulShellBranch(
+            routes: [GoRoute(path: '/games', builder: (_, _) => const HomeScreen())],
+          ),
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -37,11 +44,7 @@ GoRouter buildRouter() {
                 builder: (_, _) => const PlayersScreen(),
                 routes: [
                   // Full screen above the navigation, like the mockup.
-                  GoRoute(
-                    path: 'new',
-                    parentNavigatorKey: rootKey,
-                    builder: (_, _) => const ProfileEditorRoute(),
-                  ),
+                  GoRoute(path: 'new', parentNavigatorKey: rootKey, builder: (_, _) => const ProfileEditorRoute()),
                   GoRoute(
                     path: ':id/edit',
                     parentNavigatorKey: rootKey,
@@ -61,11 +64,7 @@ GoRouter buildRouter() {
                 builder: (_, _) => const SettingsScreen(),
                 routes: [
                   if (kDebugMode)
-                    GoRoute(
-                      path: 'ui-kit',
-                      parentNavigatorKey: rootKey,
-                      builder: (_, _) => const UiKitCatalogScreen(),
-                    ),
+                    GoRoute(path: 'ui-kit', parentNavigatorKey: rootKey, builder: (_, _) => const UiKitCatalogScreen()),
                 ],
               ),
             ],

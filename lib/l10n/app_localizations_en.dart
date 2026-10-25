@@ -327,4 +327,83 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sampleOptionRange => 'Number range';
+
+  @override
+  String get setupPlayers => 'Number of players';
+
+  @override
+  String seatsHumans(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count people',
+      one: '$count person',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String seatsRobots(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count robots',
+      one: '$count robot',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get setupDifficulty => 'Robot difficulty';
+
+  @override
+  String get setupSpeed => 'Robot speed';
+
+  @override
+  String get speedSlow => 'Slow';
+
+  @override
+  String get speedNormal => 'Normal';
+
+  @override
+  String get speedFast => 'Fast';
+
+  @override
+  String get seatHuman => 'Human';
+
+  @override
+  String get seatRobot => '🤖 Robot';
+
+  @override
+  String get setupLoaded => '↺ Settings loaded from your last game';
+
+  @override
+  String get setupFilled => 'free seats filled with robots';
+
+  @override
+  String get setupNoFreeProfile => 'All players are already at the table.';
+
+  @override
+  String get seatMoveUp => 'Move up';
+
+  @override
+  String get seatMoveDown => 'Move down';
+
+  @override
+  String get setupPlay => 'Play!';
+
+  @override
+  String get setupNeedPlayer => 'Create a player first.';
+
+  @override
+  String get robotName0 => 'Robo';
+
+  @override
+  String get robotName1 => 'Chip';
+
+  @override
+  String get robotName2 => 'Bolt';
+
+  @override
+  String get robotName3 => 'Buzz';
 }

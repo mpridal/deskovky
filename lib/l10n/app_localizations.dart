@@ -675,6 +675,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Number range'**
   String get sampleOptionRange;
+
+  /// No description provided for @setupPlayers.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of players'**
+  String get setupPlayers;
+
+  /// No description provided for @seatsHumans.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{{count} person} other{{count} people}}'**
+  String seatsHumans(int count);
+
+  /// No description provided for @seatsRobots.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{{count} robot} other{{count} robots}}'**
+  String seatsRobots(int count);
+
+  /// No description provided for @setupDifficulty.
+  ///
+  /// In en, this message translates to:
+  /// **'Robot difficulty'**
+  String get setupDifficulty;
+
+  /// No description provided for @setupSpeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Robot speed'**
+  String get setupSpeed;
+
+  /// No description provided for @speedSlow.
+  ///
+  /// In en, this message translates to:
+  /// **'Slow'**
+  String get speedSlow;
+
+  /// No description provided for @speedNormal.
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get speedNormal;
+
+  /// No description provided for @speedFast.
+  ///
+  /// In en, this message translates to:
+  /// **'Fast'**
+  String get speedFast;
+
+  /// No description provided for @seatHuman.
+  ///
+  /// In en, this message translates to:
+  /// **'Human'**
+  String get seatHuman;
+
+  /// No description provided for @seatRobot.
+  ///
+  /// In en, this message translates to:
+  /// **'🤖 Robot'**
+  String get seatRobot;
+
+  /// No description provided for @setupLoaded.
+  ///
+  /// In en, this message translates to:
+  /// **'↺ Settings loaded from your last game'**
+  String get setupLoaded;
+
+  /// No description provided for @setupFilled.
+  ///
+  /// In en, this message translates to:
+  /// **'free seats filled with robots'**
+  String get setupFilled;
+
+  /// No description provided for @setupNoFreeProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'All players are already at the table.'**
+  String get setupNoFreeProfile;
+
+  /// No description provided for @seatMoveUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Move up'**
+  String get seatMoveUp;
+
+  /// No description provided for @seatMoveDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Move down'**
+  String get seatMoveDown;
+
+  /// No description provided for @setupPlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Play!'**
+  String get setupPlay;
+
+  /// No description provided for @setupNeedPlayer.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a player first.'**
+  String get setupNeedPlayer;
+
+  /// No description provided for @robotName0.
+  ///
+  /// In en, this message translates to:
+  /// **'Robo'**
+  String get robotName0;
+
+  /// No description provided for @robotName1.
+  ///
+  /// In en, this message translates to:
+  /// **'Chip'**
+  String get robotName1;
+
+  /// No description provided for @robotName2.
+  ///
+  /// In en, this message translates to:
+  /// **'Bolt'**
+  String get robotName2;
+
+  /// No description provided for @robotName3.
+  ///
+  /// In en, this message translates to:
+  /// **'Buzz'**
+  String get robotName3;
 }
 
 class _AppLocalizationsDelegate

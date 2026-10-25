@@ -333,4 +333,85 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get sampleOptionRange => 'Rozsah čísel';
+
+  @override
+  String get setupPlayers => 'Počet hráčů';
+
+  @override
+  String seatsHumans(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lidí',
+      few: '$count lidé',
+      one: '$count člověk',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String seatsRobots(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count robotů',
+      few: '$count roboti',
+      one: '$count robot',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get setupDifficulty => 'Obtížnost robotů';
+
+  @override
+  String get setupSpeed => 'Rychlost robotů';
+
+  @override
+  String get speedSlow => 'Pomalu';
+
+  @override
+  String get speedNormal => 'Normálně';
+
+  @override
+  String get speedFast => 'Rychle';
+
+  @override
+  String get seatHuman => 'Člověk';
+
+  @override
+  String get seatRobot => '🤖 Robot';
+
+  @override
+  String get setupLoaded => '↺ Nastavení načteno z minulé hry';
+
+  @override
+  String get setupFilled => 'volné sloty doplněny roboty';
+
+  @override
+  String get setupNoFreeProfile => 'Všichni hráči už sedí u stolu.';
+
+  @override
+  String get seatMoveUp => 'Posunout výš';
+
+  @override
+  String get seatMoveDown => 'Posunout níž';
+
+  @override
+  String get setupPlay => 'Hrát!';
+
+  @override
+  String get setupNeedPlayer => 'Nejdřív vytvoř hráče.';
+
+  @override
+  String get robotName0 => 'Robík';
+
+  @override
+  String get robotName1 => 'Čipík';
+
+  @override
+  String get robotName2 => 'Šroubek';
+
+  @override
+  String get robotName3 => 'Bzučák';
 }
