@@ -116,5 +116,20 @@
   "robotName0": "Robík",
   "robotName1": "Čipík",
   "robotName2": "Šroubek",
-  "robotName3": "Bzučák"
+  "robotName3": "Bzučák",
+  "hudExit": "Konec",
+  "hudPause": "Pauza",
+  "hudMusic": "Hudba",
+  "hudSfx": "Efekty",
+  "exitTitle": "Opravdu ukončit?",
+  "exitSaved": "Rozehraná hra se uloží.",
+  "exitNotSaved": "Rozehraná hra se neuloží.",
+  "exitConfirm": "Ukončit",
+  "pauseResume": "Pokračovat",
+  "pauseRestart": "Začít znovu",
+  "pauseRules": "Pravidla",
+  "close": "Zavřít",
+  "turnOf": "Na tahu: {name}",
+  "robotThinking": "🤖 {name} přemýšlí…",
+  "resumeFailed": "Rozehranou hru nejde obnovit."
 }

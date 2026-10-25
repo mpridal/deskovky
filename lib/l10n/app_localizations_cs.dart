@@ -414,4 +414,53 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get robotName3 => 'Bzučák';
+
+  @override
+  String get hudExit => 'Konec';
+
+  @override
+  String get hudPause => 'Pauza';
+
+  @override
+  String get hudMusic => 'Hudba';
+
+  @override
+  String get hudSfx => 'Efekty';
+
+  @override
+  String get exitTitle => 'Opravdu ukončit?';
+
+  @override
+  String get exitSaved => 'Rozehraná hra se uloží.';
+
+  @override
+  String get exitNotSaved => 'Rozehraná hra se neuloží.';
+
+  @override
+  String get exitConfirm => 'Ukončit';
+
+  @override
+  String get pauseResume => 'Pokračovat';
+
+  @override
+  String get pauseRestart => 'Začít znovu';
+
+  @override
+  String get pauseRules => 'Pravidla';
+
+  @override
+  String get close => 'Zavřít';
+
+  @override
+  String turnOf(String name) {
+    return 'Na tahu: $name';
+  }
+
+  @override
+  String robotThinking(String name) {
+    return '🤖 $name přemýšlí…';
+  }
+
+  @override
+  String get resumeFailed => 'Rozehranou hru nejde obnovit.';
 }

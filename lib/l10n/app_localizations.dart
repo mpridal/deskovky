@@ -801,6 +801,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Buzz'**
   String get robotName3;
+
+  /// No description provided for @hudExit.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit'**
+  String get hudExit;
+
+  /// No description provided for @hudPause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get hudPause;
+
+  /// No description provided for @hudMusic.
+  ///
+  /// In en, this message translates to:
+  /// **'Music'**
+  String get hudMusic;
+
+  /// No description provided for @hudSfx.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound effects'**
+  String get hudSfx;
+
+  /// No description provided for @exitTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Really quit?'**
+  String get exitTitle;
+
+  /// No description provided for @exitSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'The game in progress will be saved.'**
+  String get exitSaved;
+
+  /// No description provided for @exitNotSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'The game in progress will not be saved.'**
+  String get exitNotSaved;
+
+  /// No description provided for @exitConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Quit'**
+  String get exitConfirm;
+
+  /// No description provided for @pauseResume.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get pauseResume;
+
+  /// No description provided for @pauseRestart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start again'**
+  String get pauseRestart;
+
+  /// No description provided for @pauseRules.
+  ///
+  /// In en, this message translates to:
+  /// **'Rules'**
+  String get pauseRules;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @turnOf.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}\'s turn'**
+  String turnOf(String name);
+
+  /// No description provided for @robotThinking.
+  ///
+  /// In en, this message translates to:
+  /// **'🤖 {name} is thinking…'**
+  String robotThinking(String name);
+
+  /// No description provided for @resumeFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The saved game cannot be continued.'**
+  String get resumeFailed;
 }
 
 class _AppLocalizationsDelegate

@@ -219,5 +219,34 @@
   "robotName0": "Robo",
   "robotName1": "Chip",
   "robotName2": "Bolt",
-  "robotName3": "Buzz"
+  "robotName3": "Buzz",
+  "hudExit": "Exit",
+  "hudPause": "Pause",
+  "hudMusic": "Music",
+  "hudSfx": "Sound effects",
+  "exitTitle": "Really quit?",
+  "exitSaved": "The game in progress will be saved.",
+  "exitNotSaved": "The game in progress will not be saved.",
+  "exitConfirm": "Quit",
+  "pauseResume": "Continue",
+  "pauseRestart": "Start again",
+  "pauseRules": "Rules",
+  "close": "Close",
+  "turnOf": "{name}'s turn",
+  "@turnOf": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "robotThinking": "🤖 {name} is thinking…",
+  "@robotThinking": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "resumeFailed": "The saved game cannot be continued."
 }

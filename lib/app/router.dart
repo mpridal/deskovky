@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/game/game_config.dart';
+import '../features/game_play/game_screen.dart';
 import '../features/game_setup/game_setup_screen.dart';
 import '../features/home/home_screen.dart';
 import '../features/leaderboards/leaderboards_screen.dart';
@@ -29,7 +30,11 @@ GoRouter buildRouter() {
       ),
       GoRoute(
         path: '/play/:gameId',
-        builder: (_, state) => _PlayStub(label: 'play ${state.pathParameters['gameId']}'),
+        builder: (_, state) => GameScreen(gameId: state.pathParameters['gameId']!, start: state.extra),
+      ),
+      GoRoute(
+        path: '/play/:gameId/results',
+        builder: (_, state) => _PlayStub(label: 'results ${state.pathParameters['gameId']}'),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, shell) => AppShell(shell: shell),

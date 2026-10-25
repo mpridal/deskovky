@@ -68,4 +68,8 @@ abstract class GameModule<S> {
 
   /// Optional hint for the bubble at the bottom, e.g. "Kuba, guess a number".
   String? turnHint(BuildContext context, S state, String playerName) => null;
+
+  /// Calls [use] with this module's state type, so framework code that only
+  /// knows `GameModule<Object?>` can build typed sessions and widgets.
+  R withType<R>(R Function<T>(GameModule<T> module) use) => use<S>(this);
 }

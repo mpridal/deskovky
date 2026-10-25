@@ -1,0 +1,119 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+
+import '../../core/game/ai_player.dart';
+import '../../core/game/game_config.dart';
+import '../../core/game/game_session.dart';
+import '../../core/game/move.dart';
+import '../../core/game/move_transport.dart';
+
+/// Turn order (spec 5.7.1, 9): humans move through [submitHuman]; when a
+/// robot is to move it waits [robotDelay], asks the AI and sends the move
+/// through the same transport. Paused or disposed, robots stay still.
+class TurnController<S> extends ChangeNotifier {
+  TurnController({
+    required this.session,
+    required this.transport,
+    required this.ai,
+    required this.runner,
+    required this.robotDelay,
+  });
+
+  final GameSession<S> session;
+  final MoveTransport transport;
+  final AiPlayer<S>? ai;
+  final AiRunner runner;
+  final Duration robotDelay;
+
+  Timer? _robotTimer;
+  bool _paused = false;
+  bool _disposed = false;
+  bool _robotBusy = false;
+
+  bool get isOver => session.rules.isOver(session.state);
+  bool get paused => _paused;
+  int? get currentSeat => session.rules.currentSeat(session.state);
+
+  bool isRobotSeat(int seat) => session.config.seats[seat] is RobotSeat;
+
+  /// A robot is to move (waiting for its delay or computing).
+  bool get robotThinking {
+    final seat = currentSeat;
+    return seat != null && isRobotSeat(seat);
+  }
+
+  /// The human seat that may act now, or null.
+  int? get humanSeatToAct {
+    final seat = currentSeat;
+    return seat == null || isRobotSeat(seat) || _paused ? null : seat;
+  }
+
+  void start() => _scheduleRobot();
+
+  Future<bool> submitHuman(Move move) async {
+    if (_disposed || _paused || move.seat != humanSeatToAct) return false;
+    return _send(move);
+  }
+
+  void pause() {
+    _paused = true;
+    _robotTimer?.cancel();
+    _notify();
+  }
+
+  void resume() {
+    _paused = false;
+    _notify();
+    _scheduleRobot();
+  }
+
+  Future<bool> _send(Move move) async {
+    final applied = await transport.submit(move);
+    if (applied) {
+      _notify();
+      _scheduleRobot();
+    }
+    return applied;
+  }
+
+  void _scheduleRobot() {
+    _robotTimer?.cancel();
+    final seat = currentSeat;
+    final robotAi = ai;
+    if (_disposed || _paused || seat == null || !isRobotSeat(seat) || robotAi == null) return;
+    _robotTimer = Timer(robotDelay, () => _playRobot(robotAi, seat));
+  }
+
+  Future<void> _playRobot(AiPlayer<S> robotAi, int seat) async {
+    if (_robotBusy) return;
+    _robotBusy = true;
+    try {
+      final movesBefore = session.moves.length;
+      final move = await runner.run(
+        robotAi,
+        session.state,
+        seat,
+        session.config.difficulty,
+        session.seed + movesBefore,
+      );
+      // The AI may finish after a pause, dispose or another move.
+      if (_disposed || _paused || session.moves.length != movesBefore || currentSeat != seat) return;
+      await _send(move);
+    } finally {
+      _robotBusy = false;
+    }
+  }
+
+  void _notify() {
+    if (!_disposed) notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    _robotTimer?.cancel();
+    transport.dispose();
+    super.dispose();
+  }
+}

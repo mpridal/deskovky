@@ -26,7 +26,7 @@ Future<List<int>> _players(WidgetTester tester, AppDatabase db, List<String> nam
     }))!;
 
 Future<void> _openSetup(WidgetTester tester, AppDatabase db) async {
-  await pumpApp(tester, size: const Size(412, 915), db: db);
+  await pumpApp(tester, size: const Size(412, 915), db: db, disableAnimations: true);
   await tester.tap(find.text('Hádej číslo'));
   await tester.pumpAndSettle();
   expect(find.byType(GameSetupScreen), findsOneWidget);

@@ -407,4 +407,53 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get robotName3 => 'Zumbi';
+
+  @override
+  String get hudExit => 'Salir';
+
+  @override
+  String get hudPause => 'Pausa';
+
+  @override
+  String get hudMusic => 'Música';
+
+  @override
+  String get hudSfx => 'Efectos';
+
+  @override
+  String get exitTitle => '¿Seguro que quieres salir?';
+
+  @override
+  String get exitSaved => 'La partida en curso se guardará.';
+
+  @override
+  String get exitNotSaved => 'La partida en curso no se guardará.';
+
+  @override
+  String get exitConfirm => 'Salir';
+
+  @override
+  String get pauseResume => 'Continuar';
+
+  @override
+  String get pauseRestart => 'Empezar de nuevo';
+
+  @override
+  String get pauseRules => 'Reglas';
+
+  @override
+  String get close => 'Cerrar';
+
+  @override
+  String turnOf(String name) {
+    return 'Turno de $name';
+  }
+
+  @override
+  String robotThinking(String name) {
+    return '🤖 $name está pensando…';
+  }
+
+  @override
+  String get resumeFailed => 'No se puede continuar la partida guardada.';
 }

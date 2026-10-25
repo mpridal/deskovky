@@ -116,5 +116,20 @@
   "robotName0": "Robi",
   "robotName1": "Chispa",
   "robotName2": "Tornillo",
-  "robotName3": "Zumbi"
+  "robotName3": "Zumbi",
+  "hudExit": "Salir",
+  "hudPause": "Pausa",
+  "hudMusic": "Música",
+  "hudSfx": "Efectos",
+  "exitTitle": "¿Seguro que quieres salir?",
+  "exitSaved": "La partida en curso se guardará.",
+  "exitNotSaved": "La partida en curso no se guardará.",
+  "exitConfirm": "Salir",
+  "pauseResume": "Continuar",
+  "pauseRestart": "Empezar de nuevo",
+  "pauseRules": "Reglas",
+  "close": "Cerrar",
+  "turnOf": "Turno de {name}",
+  "robotThinking": "🤖 {name} está pensando…",
+  "resumeFailed": "No se puede continuar la partida guardada."
 }

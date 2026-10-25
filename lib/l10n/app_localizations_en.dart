@@ -406,4 +406,53 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get robotName3 => 'Buzz';
+
+  @override
+  String get hudExit => 'Exit';
+
+  @override
+  String get hudPause => 'Pause';
+
+  @override
+  String get hudMusic => 'Music';
+
+  @override
+  String get hudSfx => 'Sound effects';
+
+  @override
+  String get exitTitle => 'Really quit?';
+
+  @override
+  String get exitSaved => 'The game in progress will be saved.';
+
+  @override
+  String get exitNotSaved => 'The game in progress will not be saved.';
+
+  @override
+  String get exitConfirm => 'Quit';
+
+  @override
+  String get pauseResume => 'Continue';
+
+  @override
+  String get pauseRestart => 'Start again';
+
+  @override
+  String get pauseRules => 'Rules';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String turnOf(String name) {
+    return '$name\'s turn';
+  }
+
+  @override
+  String robotThinking(String name) {
+    return '🤖 $name is thinking…';
+  }
+
+  @override
+  String get resumeFailed => 'The saved game cannot be continued.';
 }
