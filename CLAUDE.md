@@ -30,5 +30,18 @@ Flutter není v PATH starších terminálů – v případě potřeby `export PA
 - Žádné texty natvrdo v UI: vše přes `lib/l10n/app_{cs,en,es}.arb` (šablona `app_en.arb`).
 - Barvy a písmo jen z `lib/ui_kit/tokens`.
 - Sourozenecké widgety v seznamech/mřížkách musí mít **unikátní** klíče.
+- `Container` s `alignment` se roztáhne na celou šířku rodiče – v `Wrap`/`Row` ho nepoužívat pro „pilulky“.
+
+## UI kit a avatary
+
+- Komponenty jsou v `lib/ui_kit/components/` (`PaperCard`, `PrimaryButton`, `RoundIconButton`, `SegmentedControl`, `ColorSwatchPicker`, `TagPill`, `PlayerSlot`, `showAppConfirmDialog`, `showAppToast`), plsť v `lib/ui_kit/surfaces/felt_background.dart`. Hry i obrazovky používají jen je – nové komponenty patří sem.
+- Avatar člověka: model `AvatarSpec` (`lib/core/avatar`, JSON s `v`, tolerantní `fromJson`) + `AvatarView` / `AnimatedAvatarView`. Robot: `RobotAvatar(color: barva slotu)`. Jinak se avatary nekreslí.
+- Debug build má v Nastavení tlačítko „UI kit“ s katalogem všech komponent.
+
+## Golden testy
+
+- Referenční obrázky jsou v `test/**/goldens/`; porovnání toleruje 1 % pixelů (`test/flutter_test_config.dart`, Windows × Linux v CI).
+- Po změně kresby: `flutter test --update-goldens <soubor>` a **vygenerovaný PNG vždy prohlédnout** dřív, než se commitne.
+- Text v testech měří skutečnými fonty jen tam, kde se volá `setUpAll(loadAppFonts)` (`test/helpers/app_fonts.dart`); jinak se kreslí testovacím písmem.
 
 Pravidla paralelní práce (kap. 13.2 zadání) se doplní v milníku 9.
