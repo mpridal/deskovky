@@ -55,6 +55,27 @@ void main() {
                 reason: 'badge $i $badgeRect sticks out of card $cardRect');
           }
         });
+
+        testWidgets('avatar editor labels fit on one line: $name', (tester) async {
+          await pumpApp(tester, size: size, locale: locale, textScale: scale);
+          await tester.tap(find.text(l10n.navPlayers).last);
+          await tester.pumpAndSettle();
+          await tester.tap(find.text(l10n.avatarEdit));
+          await tester.pumpAndSettle();
+          for (final label in [
+            l10n.avatarEditorTitle,
+            l10n.avatarTabFace,
+            l10n.avatarTabSkin,
+            l10n.avatarTabHair,
+            l10n.avatarTabEyes,
+            l10n.avatarTabMouth,
+            l10n.avatarTabBackground,
+            l10n.avatarHairColor.toUpperCase(),
+            l10n.avatarSave,
+          ]) {
+            expect(_fitsOnOneLine(tester, find.text(label)), isTrue, reason: '"$label" wraps or is clipped');
+          }
+        });
       }
     }
   }

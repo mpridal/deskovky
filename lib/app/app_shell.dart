@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../l10n/app_localizations.dart';
 import '../ui_kit/layout/window_size.dart';
+import '../ui_kit/surfaces/felt_background.dart';
 import '../ui_kit/tokens/app_colors.dart';
 import '../ui_kit/tokens/app_typography.dart';
 
@@ -28,7 +29,7 @@ class AppShell extends StatelessWidget {
 
     if (sizeClass == WindowSizeClass.compact) {
       return Scaffold(
-        body: shell,
+        body: FeltBackground(child: shell),
         bottomNavigationBar: NavigationBar(
           selectedIndex: shell.currentIndex,
           onDestinationSelected: _select,
@@ -59,7 +60,7 @@ class AppShell extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(child: shell),
+          Expanded(child: FeltBackground(child: shell)),
           if (sizeClass == WindowSizeClass.expanded) const _RightPanel(key: Key('rightPanel')),
         ],
       ),
