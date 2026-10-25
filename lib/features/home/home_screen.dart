@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
+import '../../ui_kit/components/paper_card.dart';
+import '../../ui_kit/components/tag_pill.dart';
 import '../../ui_kit/layout/window_size.dart';
 import '../../ui_kit/tokens/app_colors.dart';
 import '../../ui_kit/tokens/app_typography.dart';
@@ -73,47 +75,26 @@ class _PlaceholderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: AppColors.paper,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: const [
-          BoxShadow(color: AppColors.paper2, offset: Offset(0, 5)),
-          BoxShadow(color: Color(0x59000000), offset: Offset(0, 8), blurRadius: 16),
+    return PaperCard(
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: Color.alphaBlend(tint.withValues(alpha: 0.25), AppColors.paper),
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+          // The badge may use the whole card width; TagPill scales down
+          // rather than being clipped on narrow cards or large text.
+          Positioned(
+            top: 6,
+            left: 6,
+            right: 6,
+            child: Align(alignment: Alignment.topRight, child: TagPill(label: label)),
+          ),
         ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: Color.alphaBlend(tint.withValues(alpha: 0.25), AppColors.paper),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            ),
-            // Badge may use the whole card width and scales down rather than
-            // being clipped by the Stack on narrow cards or large text.
-            Positioned(
-              top: 6,
-              left: 6,
-              right: 6,
-              child: Align(
-                alignment: Alignment.topRight,
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                    decoration: BoxDecoration(color: AppColors.walnut, borderRadius: BorderRadius.circular(999)),
-                    child: Text(label, style: AppTypography.caption(color: AppColors.paper).copyWith(fontSize: 11)),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
