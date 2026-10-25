@@ -13,6 +13,7 @@ import '../core/players/active_player.dart';
 import '../core/players/player_profile.dart';
 import '../core/players/player_repository.dart';
 import '../core/settings/settings_repository.dart';
+import '../core/stats/match_record.dart';
 import '../core/stats/stats_repository.dart';
 import 'stats_service.dart';
 
@@ -66,3 +67,13 @@ final audioServiceProvider = Provider<AudioService>((ref) {
 final statsRepositoryProvider = Provider<StatsRepository>((ref) => StatsRepository(ref.watch(databaseProvider)));
 
 final statsServiceProvider = Provider<StatsService>((ref) => StatsService(ref.watch(statsRepositoryProvider)));
+
+/// Every finished game, refreshed after each new one.
+final allMatchesProvider = StreamProvider<List<MatchRecord>>((ref) => ref.watch(statsRepositoryProvider).watchAllMatches());
+
+final earnedBadgesProvider = StreamProvider.family<Map<String, DateTime>, int>(
+  (ref, playerId) => ref.watch(statsRepositoryProvider).watchEarnedBadges(playerId),
+);
+
+/// The latest badge earned on this device (tablet "Poslední odměna").
+final lastBadgeProvider = StreamProvider<(int, String)?>((ref) => ref.watch(statsRepositoryProvider).watchLastBadge());

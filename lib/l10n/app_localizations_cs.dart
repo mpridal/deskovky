@@ -577,4 +577,83 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get resultNewBadges => 'Nové odznaky';
+
+  @override
+  String get leaderboardWeek => 'Týden';
+
+  @override
+  String get leaderboardMonth => 'Měsíc';
+
+  @override
+  String get leaderboardAllTime => 'Vše';
+
+  @override
+  String get leaderboardAllGames => 'Všechny hry';
+
+  @override
+  String get leaderboardAnyDifficulty => 'Každá obtížnost';
+
+  @override
+  String get leaderboardEmpty => 'Zatím tu nikdo není. Dohrajte hru!';
+
+  @override
+  String leaderboardWins(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count výher',
+      few: '$count výhry',
+      one: '$count výhra',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String leaderboardDetail(int played, int rate) {
+    return '$played her · $rate %';
+  }
+
+  @override
+  String playerStats(String name) {
+    return 'Statistiky: $name';
+  }
+
+  @override
+  String get statsPlayed => 'Odehráno';
+
+  @override
+  String get statsWins => 'Výhry';
+
+  @override
+  String get statsWinRate => 'Úspěšnost';
+
+  @override
+  String get statsBestStreak => 'Nejlepší série';
+
+  @override
+  String get statsCurrentStreak => 'Aktuální série';
+
+  @override
+  String get statsByGame => 'Podle her';
+
+  @override
+  String statsBestScore(int score) {
+    return 'Nejlepší skóre: $score';
+  }
+
+  @override
+  String statsFastestWin(String time) {
+    return 'Nejrychlejší výhra: $time';
+  }
+
+  @override
+  String get statsBadges => 'Odznaky';
+
+  @override
+  String statsBadgeEarned(String date) {
+    return 'Získáno $date';
+  }
+
+  @override
+  String get statsNoGames => 'Zatím žádná dohraná hra.';
 }

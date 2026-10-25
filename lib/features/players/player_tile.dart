@@ -9,7 +9,8 @@ import '../../ui_kit/components/tag_pill.dart';
 import '../../ui_kit/tokens/app_colors.dart';
 import '../../ui_kit/tokens/app_typography.dart';
 
-/// One profile in the Players list: tap to play as them, edit, delete.
+/// One profile in the Players list: tap to play as them, statistics, edit,
+/// delete.
 class PlayerTile extends StatelessWidget {
   const PlayerTile({
     super.key,
@@ -18,6 +19,7 @@ class PlayerTile extends StatelessWidget {
     required this.onSelect,
     required this.onEdit,
     required this.onDelete,
+    required this.onStats,
   });
 
   final PlayerProfile player;
@@ -25,6 +27,7 @@ class PlayerTile extends StatelessWidget {
   final VoidCallback onSelect;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
+  final VoidCallback onStats;
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +60,12 @@ class PlayerTile extends StatelessWidget {
                   TagPill(label: l10n.playerActiveTag, background: AppColors.gold, foreground: AppColors.ink),
               ],
             ),
+          ),
+          RoundIconButton(
+            icon: Icons.bar_chart,
+            tooltip: l10n.playerStats(player.name),
+            onPressed: onStats,
+            size: 44,
           ),
           RoundIconButton(icon: Icons.edit, tooltip: l10n.playerEdit(player.name), onPressed: onEdit, size: 44),
           RoundIconButton(

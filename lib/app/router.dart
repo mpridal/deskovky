@@ -8,6 +8,7 @@ import '../features/game_play/game_screen.dart';
 import '../features/game_setup/game_setup_screen.dart';
 import '../features/home/home_screen.dart';
 import '../features/leaderboards/leaderboards_screen.dart';
+import '../features/players/player_stats_screen.dart';
 import '../features/players/players_screen.dart';
 import '../features/results/results_screen.dart';
 import '../features/players/profile_editor_route.dart';
@@ -59,6 +60,11 @@ GoRouter buildRouter() {
                     path: ':id/edit',
                     parentNavigatorKey: rootKey,
                     builder: (_, state) => ProfileEditorRoute(playerId: int.tryParse(state.pathParameters['id'] ?? '')),
+                  ),
+                  GoRoute(
+                    path: ':id/stats',
+                    parentNavigatorKey: rootKey,
+                    builder: (_, state) => PlayerStatsScreen(playerId: int.tryParse(state.pathParameters['id'] ?? '') ?? -1),
                   ),
                 ],
               ),

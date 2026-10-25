@@ -1101,6 +1101,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New badges'**
   String get resultNewBadges;
+
+  /// No description provided for @leaderboardWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get leaderboardWeek;
+
+  /// No description provided for @leaderboardMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get leaderboardMonth;
+
+  /// No description provided for @leaderboardAllTime.
+  ///
+  /// In en, this message translates to:
+  /// **'All time'**
+  String get leaderboardAllTime;
+
+  /// No description provided for @leaderboardAllGames.
+  ///
+  /// In en, this message translates to:
+  /// **'All games'**
+  String get leaderboardAllGames;
+
+  /// No description provided for @leaderboardAnyDifficulty.
+  ///
+  /// In en, this message translates to:
+  /// **'Any difficulty'**
+  String get leaderboardAnyDifficulty;
+
+  /// No description provided for @leaderboardEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody here yet. Finish a game!'**
+  String get leaderboardEmpty;
+
+  /// No description provided for @leaderboardWins.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{{count} win} other{{count} wins}}'**
+  String leaderboardWins(int count);
+
+  /// No description provided for @leaderboardDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'{played} games · {rate}%'**
+  String leaderboardDetail(int played, int rate);
+
+  /// No description provided for @playerStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Stats: {name}'**
+  String playerStats(String name);
+
+  /// No description provided for @statsPlayed.
+  ///
+  /// In en, this message translates to:
+  /// **'Played'**
+  String get statsPlayed;
+
+  /// No description provided for @statsWins.
+  ///
+  /// In en, this message translates to:
+  /// **'Wins'**
+  String get statsWins;
+
+  /// No description provided for @statsWinRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Win rate'**
+  String get statsWinRate;
+
+  /// No description provided for @statsBestStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Best streak'**
+  String get statsBestStreak;
+
+  /// No description provided for @statsCurrentStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Current streak'**
+  String get statsCurrentStreak;
+
+  /// No description provided for @statsByGame.
+  ///
+  /// In en, this message translates to:
+  /// **'By game'**
+  String get statsByGame;
+
+  /// No description provided for @statsBestScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Best score: {score}'**
+  String statsBestScore(int score);
+
+  /// No description provided for @statsFastestWin.
+  ///
+  /// In en, this message translates to:
+  /// **'Fastest win: {time}'**
+  String statsFastestWin(String time);
+
+  /// No description provided for @statsBadges.
+  ///
+  /// In en, this message translates to:
+  /// **'Badges'**
+  String get statsBadges;
+
+  /// No description provided for @statsBadgeEarned.
+  ///
+  /// In en, this message translates to:
+  /// **'Earned {date}'**
+  String statsBadgeEarned(String date);
+
+  /// No description provided for @statsNoGames.
+  ///
+  /// In en, this message translates to:
+  /// **'No finished games yet.'**
+  String get statsNoGames;
 }
 
 class _AppLocalizationsDelegate

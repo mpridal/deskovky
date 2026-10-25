@@ -320,5 +320,70 @@
   "badgeAllGamesDescription": "Play every game.",
   "sampleBadgeBullseyeTitle": "Bullseye!",
   "sampleBadgeBullseyeDescription": "Guess the number with your first tip.",
-  "resultNewBadges": "New badges"
+  "resultNewBadges": "New badges",
+  "leaderboardWeek": "Week",
+  "leaderboardMonth": "Month",
+  "leaderboardAllTime": "All time",
+  "leaderboardAllGames": "All games",
+  "leaderboardAnyDifficulty": "Any difficulty",
+  "leaderboardEmpty": "Nobody here yet. Finish a game!",
+  "leaderboardWins": "{count, plural, one{{count} win} other{{count} wins}}",
+  "@leaderboardWins": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "leaderboardDetail": "{played} games · {rate}%",
+  "@leaderboardDetail": {
+    "placeholders": {
+      "played": {
+        "type": "int"
+      },
+      "rate": {
+        "type": "int"
+      }
+    }
+  },
+  "playerStats": "Stats: {name}",
+  "@playerStats": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "statsPlayed": "Played",
+  "statsWins": "Wins",
+  "statsWinRate": "Win rate",
+  "statsBestStreak": "Best streak",
+  "statsCurrentStreak": "Current streak",
+  "statsByGame": "By game",
+  "statsBestScore": "Best score: {score}",
+  "@statsBestScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "statsFastestWin": "Fastest win: {time}",
+  "@statsFastestWin": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "statsBadges": "Badges",
+  "statsBadgeEarned": "Earned {date}",
+  "@statsBadgeEarned": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "statsNoGames": "No finished games yet."
 }

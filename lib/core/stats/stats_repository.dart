@@ -71,10 +71,17 @@ class StatsRepository {
   Future<List<MatchRecord>> allMatches() =>
       _load((_db.select(_db.matches)..orderBy([(m) => OrderingTerm.asc(m.playedAt), (m) => OrderingTerm.asc(m.id)])).get());
 
-  /// Emits whenever matches or badges change (screens recompute then).
-  Stream<void> watchChanges() => _db
-      .tableUpdates(TableUpdateQuery.onAllTables([_db.matches, _db.matchParticipants, _db.earnedBadges]))
-      .map((_) {});
+  /// All matches now and after every change (participants are written in
+  /// the same transaction as their match).
+  Stream<List<MatchRecord>> watchAllMatches() => _db.select(_db.matches).watch().asyncMap((_) => allMatches());
+
+  Stream<Map<String, DateTime>> watchEarnedBadges(int playerId) =>
+      (_db.select(_db.earnedBadges)..where((b) => b.playerId.equals(playerId))).watch().asyncMap(
+        (_) => earnedBadges(playerId),
+      );
+
+  Stream<(int playerId, String badgeId)?> watchLastBadge() =>
+      _db.select(_db.earnedBadges).watch().asyncMap((_) => lastBadge());
 
   Future<List<MatchRecord>> _load(Future<List<MatchRow>> rows) async {
     final matches = await rows;

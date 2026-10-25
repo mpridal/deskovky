@@ -569,4 +569,82 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get resultNewBadges => 'New badges';
+
+  @override
+  String get leaderboardWeek => 'Week';
+
+  @override
+  String get leaderboardMonth => 'Month';
+
+  @override
+  String get leaderboardAllTime => 'All time';
+
+  @override
+  String get leaderboardAllGames => 'All games';
+
+  @override
+  String get leaderboardAnyDifficulty => 'Any difficulty';
+
+  @override
+  String get leaderboardEmpty => 'Nobody here yet. Finish a game!';
+
+  @override
+  String leaderboardWins(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count wins',
+      one: '$count win',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String leaderboardDetail(int played, int rate) {
+    return '$played games · $rate%';
+  }
+
+  @override
+  String playerStats(String name) {
+    return 'Stats: $name';
+  }
+
+  @override
+  String get statsPlayed => 'Played';
+
+  @override
+  String get statsWins => 'Wins';
+
+  @override
+  String get statsWinRate => 'Win rate';
+
+  @override
+  String get statsBestStreak => 'Best streak';
+
+  @override
+  String get statsCurrentStreak => 'Current streak';
+
+  @override
+  String get statsByGame => 'By game';
+
+  @override
+  String statsBestScore(int score) {
+    return 'Best score: $score';
+  }
+
+  @override
+  String statsFastestWin(String time) {
+    return 'Fastest win: $time';
+  }
+
+  @override
+  String get statsBadges => 'Badges';
+
+  @override
+  String statsBadgeEarned(String date) {
+    return 'Earned $date';
+  }
+
+  @override
+  String get statsNoGames => 'No finished games yet.';
 }
