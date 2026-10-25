@@ -8,7 +8,9 @@ part 'app_database.g.dart';
 
 /// Local SQLite database. Every schema change bumps [schemaVersion], adds a
 /// migration step and a schema snapshot in `drift_schemas/` (see CLAUDE.md).
-@DriftDatabase(tables: [Players, AppSettings, GameSettingsLast, SavedSessions])
+@DriftDatabase(
+  tables: [Players, AppSettings, GameSettingsLast, SavedSessions, Matches, MatchParticipants, PlayerCounters, EarnedBadges],
+)
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
@@ -26,7 +28,7 @@ class AppDatabase extends _$AppDatabase {
       );
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -36,6 +38,13 @@ class AppDatabase extends _$AppDatabase {
           if (from < 2) {
             await m.createTable(gameSettingsLast);
             await m.createTable(savedSessions);
+          }
+          // v3: finished games, event counters and badges (milestone 6).
+          if (from < 3) {
+            await m.createTable(matches);
+            await m.createTable(matchParticipants);
+            await m.createTable(playerCounters);
+            await m.createTable(earnedBadges);
           }
         },
         beforeOpen: (details) async => customStatement('PRAGMA foreign_keys = ON'),
