@@ -14,6 +14,7 @@ import '../core/players/player_profile.dart';
 import '../core/players/player_repository.dart';
 import '../core/settings/settings_repository.dart';
 import '../core/stats/match_record.dart';
+import '../core/stats/player_stats.dart';
 import '../core/stats/stats_repository.dart';
 import 'stats_service.dart';
 
@@ -77,3 +78,11 @@ final earnedBadgesProvider = StreamProvider.family<Map<String, DateTime>, int>(
 
 /// The latest badge earned on this device (tablet "Poslední odměna").
 final lastBadgeProvider = StreamProvider<(int, String)?>((ref) => ref.watch(statsRepositoryProvider).watchLastBadge());
+
+/// The active player's best stars per game (home cards, spec 5.1).
+final activeBestStarsProvider = Provider<Map<String, int>>((ref) {
+  final player = ref.watch(activePlayerProvider).value;
+  if (player == null) return const {};
+  final stats = computePlayerStats(player.id, ref.watch(allMatchesProvider).value ?? const []);
+  return {for (final MapEntry(:key, :value) in stats.byGame.entries) key: value.bestStars};
+});

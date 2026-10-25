@@ -656,4 +656,9 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get statsNoGames => 'Zatím žádná dohraná hra.';
+
+  @override
+  String homeBestStars(int stars) {
+    return 'Nejlepší hodnocení: $stars ze 3 hvězd';
+  }
 }

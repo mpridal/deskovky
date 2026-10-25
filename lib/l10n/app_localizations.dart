@@ -1221,6 +1221,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No finished games yet.'**
   String get statsNoGames;
+
+  /// No description provided for @homeBestStars.
+  ///
+  /// In en, this message translates to:
+  /// **'Best rating: {stars} of 3 stars'**
+  String homeBestStars(int stars);
 }
 
 class _AppLocalizationsDelegate

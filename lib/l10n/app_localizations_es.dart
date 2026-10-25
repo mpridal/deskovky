@@ -649,4 +649,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get statsNoGames => 'Aún no hay partidas terminadas.';
+
+  @override
+  String homeBestStars(int stars) {
+    return 'Mejor valoración: $stars de 3 estrellas';
+  }
 }

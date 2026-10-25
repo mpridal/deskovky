@@ -186,5 +186,6 @@
   "statsFastestWin": "Nejrychlejší výhra: {time}",
   "statsBadges": "Odznaky",
   "statsBadgeEarned": "Získáno {date}",
-  "statsNoGames": "Zatím žádná dohraná hra."
+  "statsNoGames": "Zatím žádná dohraná hra.",
+  "homeBestStars": "Nejlepší hodnocení: {stars} ze 3 hvězd"
 }

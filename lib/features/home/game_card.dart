@@ -8,14 +8,18 @@ import '../../ui_kit/components/tag_pill.dart';
 import '../../ui_kit/tokens/app_colors.dart';
 import '../../ui_kit/tokens/app_typography.dart';
 
-/// Home-grid card (spec 5.1): icon, title, players and a "Brzy" tag for games
+/// Home-grid card (spec 5.1): icon, title, players, the active player's best
+/// stars and a "Brzy" tag for games
 /// that are not available yet. [module] null = an unnamed placeholder.
 class GameCard extends StatelessWidget {
-  const GameCard({super.key, required this.module, required this.tint, this.onTap});
+  const GameCard({super.key, required this.module, required this.tint, this.onTap, this.bestStars});
 
   final GameModule<Object?>? module;
   final Color tint;
   final VoidCallback? onTap;
+
+  /// The active player's best rating in this game; null if never played.
+  final int? bestStars;
 
   @override
   Widget build(BuildContext context) {
@@ -64,13 +68,28 @@ class GameCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: AppTypography.h2(color: AppColors.ink).copyWith(fontSize: 18, height: 1.1),
               ),
-              Text(
-                game.minPlayers == game.maxPlayers
-                    ? l10n.playersCount(game.maxPlayers)
-                    : l10n.gamePlayersRange(game.minPlayers, game.maxPlayers),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTypography.caption(color: AppColors.wood),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      game.minPlayers == game.maxPlayers
+                          ? l10n.playersCount(game.maxPlayers)
+                          : l10n.gamePlayersRange(game.minPlayers, game.maxPlayers),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.caption(color: AppColors.wood),
+                    ),
+                  ),
+                  if (bestStars case final stars?)
+                    Semantics(
+                      label: l10n.homeBestStars(stars),
+                      excludeSemantics: true,
+                      child: Text(
+                        '${'★' * stars}${'☆' * (3 - stars)}',
+                        style: AppTypography.caption(color: AppColors.gold),
+                      ),
+                    ),
+                ],
               ),
             ],
           ],

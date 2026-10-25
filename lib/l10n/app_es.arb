@@ -186,5 +186,6 @@
   "statsFastestWin": "Victoria más rápida: {time}",
   "statsBadges": "Insignias",
   "statsBadgeEarned": "Conseguida el {date}",
-  "statsNoGames": "Aún no hay partidas terminadas."
+  "statsNoGames": "Aún no hay partidas terminadas.",
+  "homeBestStars": "Mejor valoración: {stars} de 3 estrellas"
 }

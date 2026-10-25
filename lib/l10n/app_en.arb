@@ -385,5 +385,13 @@
       }
     }
   },
-  "statsNoGames": "No finished games yet."
+  "statsNoGames": "No finished games yet.",
+  "homeBestStars": "Best rating: {stars} of 3 stars",
+  "@homeBestStars": {
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  }
 }

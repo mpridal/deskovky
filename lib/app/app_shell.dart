@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../core/players/player_profile.dart';
 import '../core/players/player_repository.dart';
+import '../core/stats/leaderboard.dart';
+import '../games/badge_texts.dart';
 import '../l10n/app_localizations.dart';
 import '../ui_kit/avatar/avatar_view.dart';
 import '../ui_kit/layout/window_size.dart';
@@ -136,15 +139,96 @@ class _RightPanel extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 24),
-            for (final title in [l10n.panelLeaderboardWeek, l10n.panelLastReward]) ...[
-              Text(title, style: AppTypography.h2(color: AppColors.paper)),
-              const SizedBox(height: 4),
-              Text(l10n.screenEmpty, style: AppTypography.caption(color: AppColors.woodLight)),
-              const SizedBox(height: 24),
-            ],
+            Text(l10n.panelLeaderboardWeek, style: AppTypography.h2(color: AppColors.paper)),
+            const SizedBox(height: 4),
+            const _WeekLeaderboard(),
+            const SizedBox(height: 24),
+            Text(l10n.panelLastReward, style: AppTypography.h2(color: AppColors.paper)),
+            const SizedBox(height: 4),
+            const _LastReward(),
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Top four people this week (mockup "Žebříček · tento týden").
+class _WeekLeaderboard extends ConsumerWidget {
+  const _WeekLeaderboard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final players = {for (final p in ref.watch(playersProvider).value ?? const <PlayerProfile>[]) p.id: p};
+    final rows = leaderboard(
+      ref.watch(allMatchesProvider).value ?? const [],
+      const LeaderboardQuery(period: StatsPeriod.week),
+      now: ref.read(statsRepositoryProvider).now(),
+    ).where((r) => players.containsKey(r.playerId)).take(4).toList();
+    if (rows.isEmpty) return Text(l10n.screenEmpty, style: AppTypography.caption(color: AppColors.woodLight));
+    return Column(
+      children: [
+        for (final row in rows)
+          Padding(
+            key: ValueKey('weekRow${row.playerId}'),
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(
+              children: [
+                SizedBox(width: 24, child: Text('${row.rank}', style: AppTypography.button(color: AppColors.gold))),
+                AvatarView(spec: players[row.playerId]!.avatar, size: 28),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    players[row.playerId]!.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.body(color: AppColors.paper),
+                  ),
+                ),
+                Text(l10n.leaderboardWins(row.wins), style: AppTypography.caption(color: AppColors.paper)),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+/// The badge earned most recently on this device.
+class _LastReward extends ConsumerWidget {
+  const _LastReward();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final last = ref.watch(lastBadgeProvider).value;
+    final badge = last == null
+        ? null
+        : ref.read(statsServiceProvider).allBadges.where((b) => b.id == last.$2).firstOrNull;
+    final player = (ref.watch(playersProvider).value ?? const <PlayerProfile>[])
+        .where((p) => p.id == last?.$1)
+        .firstOrNull;
+    if (badge == null || player == null) {
+      return Text(l10n.screenEmpty, style: AppTypography.caption(color: AppColors.woodLight));
+    }
+    return Row(
+      children: [
+        CircleAvatar(radius: 22, backgroundColor: AppColors.gold, child: Icon(badge.icon, color: AppColors.ink)),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(badgeText(l10n, badge.titleKey), style: AppTypography.button(color: AppColors.paper)),
+              Text(
+                '${player.name} · ${badgeText(l10n, badge.descriptionKey)}',
+                style: AppTypography.caption(color: AppColors.woodLight),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

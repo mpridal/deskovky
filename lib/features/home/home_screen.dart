@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../app/providers.dart';
 
 import '../../games/registry.dart';
 import '../../ui_kit/layout/window_size.dart';
@@ -10,7 +13,7 @@ import 'game_card.dart';
 
 /// Home screen (spec 5.1): active player, "Pokračovat" and the game grid –
 /// registered games first, the rest of the grid "coming soon".
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   static const _spacing = 14.0;
@@ -20,7 +23,8 @@ class HomeScreen extends StatelessWidget {
   static const _minCardWidth = 140.0;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bestStars = ref.watch(activeBestStarsProvider);
     final windowColumns = gameGridColumns(MediaQuery.sizeOf(context).width);
 
     return SafeArea(
@@ -29,13 +33,13 @@ class HomeScreen extends StatelessWidget {
           final gridWidth = constraints.maxWidth - 32;
           final fittingColumns = ((gridWidth + _spacing) / (_minCardWidth + _spacing)).floor();
           final columns = fittingColumns.clamp(1, windowColumns);
-          return _buildGrid(context, columns);
+          return _buildGrid(context, columns, bestStars);
         },
       ),
     );
   }
 
-  Widget _buildGrid(BuildContext context, int columns) {
+  Widget _buildGrid(BuildContext context, int columns, Map<String, int> bestStars) {
     return CustomScrollView(
       slivers: [
         const SliverPadding(
@@ -59,6 +63,7 @@ class HomeScreen extends StatelessWidget {
                   key: ValueKey('gameCard$i'),
                   module: i < gameModules.length ? gameModules[i] : null,
                   tint: AppColors.players[i % AppColors.players.length],
+                  bestStars: i < gameModules.length ? bestStars[gameModules[i].id] : null,
                   onTap: i < gameModules.length ? () => context.push('/play/${gameModules[i].id}/setup') : null,
                 ),
             ],
