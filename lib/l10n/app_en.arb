@@ -1,0 +1,20 @@
+{
+  "@@locale": "en",
+  "appTitle": "Deskovky",
+  "navGames": "Games",
+  "navPlayers": "Players",
+  "navLeaderboards": "Leaderboards",
+  "navSettings": "Settings",
+  "comingSoon": "Soon",
+  "panelPlayersOnDevice": "Players on this device",
+  "panelLeaderboardWeek": "This week's leaderboard",
+  "panelLastReward": "Latest reward",
+  "screenEmpty": "Nothing here yet.",
+  "fontSample": "The quick brown fox jumps over the lazy dog",
+  "playersCount": "{count, plural, one{{count} player} other{{count} players}}",
+  "@playersCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  }
+}
