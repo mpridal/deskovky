@@ -121,7 +121,7 @@ abstract class AppLocalizations {
   /// No description provided for @navLeaderboards.
   ///
   /// In en, this message translates to:
-  /// **'Leaderboards'**
+  /// **'Rankings'**
   String get navLeaderboards;
 
   /// No description provided for @navSettings.
