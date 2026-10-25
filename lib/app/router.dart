@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -7,6 +8,7 @@ import '../features/home/home_screen.dart';
 import '../features/leaderboards/leaderboards_screen.dart';
 import '../features/players/players_screen.dart';
 import '../features/settings/settings_screen.dart';
+import '../features/settings/ui_kit_catalog_screen.dart';
 import 'app_shell.dart';
 
 GoRouter buildRouter() {
@@ -39,7 +41,22 @@ GoRouter buildRouter() {
           StatefulShellBranch(
             routes: [GoRoute(path: '/leaderboards', builder: (_, _) => const LeaderboardsScreen())],
           ),
-          StatefulShellBranch(routes: [GoRoute(path: '/settings', builder: (_, _) => const SettingsScreen())]),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/settings',
+                builder: (_, _) => const SettingsScreen(),
+                routes: [
+                  if (kDebugMode)
+                    GoRoute(
+                      path: 'ui-kit',
+                      parentNavigatorKey: rootKey,
+                      builder: (_, _) => const UiKitCatalogScreen(),
+                    ),
+                ],
+              ),
+            ],
+          ),
         ],
       ),
     ],
