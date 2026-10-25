@@ -319,5 +319,6 @@
   "badgeAllGamesTitle": "Explorer",
   "badgeAllGamesDescription": "Play every game.",
   "sampleBadgeBullseyeTitle": "Bullseye!",
-  "sampleBadgeBullseyeDescription": "Guess the number with your first tip."
+  "sampleBadgeBullseyeDescription": "Guess the number with your first tip.",
+  "resultNewBadges": "New badges"
 }

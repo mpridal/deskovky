@@ -1,12 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/providers.dart';
 import '../../core/game/game_config.dart';
+import '../../app/stats_service.dart';
+import '../../games/badge_texts.dart';
 import '../../games/game_texts.dart';
 import '../../games/registry.dart';
 import '../../l10n/app_localizations.dart';
+import '../../ui_kit/components/paper_card.dart';
 import '../../ui_kit/components/player_slot.dart';
 import '../../ui_kit/components/primary_button.dart';
 import '../../ui_kit/surfaces/felt_background.dart';
@@ -82,6 +87,7 @@ class ResultsScreen extends StatelessWidget {
                                 ),
                         ),
                       ),
+                    if (outcome.newBadges.isNotEmpty) _NewBadges(outcome: outcome),
                     const SizedBox(height: 16),
                     PrimaryButton(
                       label: l10n.resultPlayAgain,
@@ -126,6 +132,14 @@ class _Jingle extends ConsumerStatefulWidget {
 }
 
 class _JingleState extends ConsumerState<_Jingle> {
+  Timer? _fanfare;
+
+  @override
+  void dispose() {
+    _fanfare?.cancel();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -138,8 +152,73 @@ class _JingleState extends ConsumerState<_Jingle> {
     final audio = ref.read(audioServiceProvider);
     // Music dips only when the jingle is actually heard.
     if (audio.playSfx(humanWon ? 'jingle_win' : 'jingle_lose')) audio.duck(const Duration(seconds: 3));
+    // One fanfare for all new badges, after the jingle (spec 5.5).
+    if (widget.outcome.newBadges.isNotEmpty) {
+      _fanfare = Timer(const Duration(milliseconds: 1200), () {
+        if (audio.playSfx('achievement')) audio.duck(const Duration(seconds: 2));
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) => const SizedBox.shrink();
+}
+
+/// New badges slide up from below (spec 5.5); still with reduced motion.
+class _NewBadges extends StatelessWidget {
+  const _NewBadges({required this.outcome});
+
+  final GameOutcomeView outcome;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final animate = !MediaQuery.disableAnimationsOf(context);
+    String nameOf(EarnedBadge e) =>
+        outcome.seats.where((s) => s.profile?.id == e.playerId).firstOrNull?.name ?? '';
+    return Column(
+      key: const ValueKey('newBadges'),
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SizedBox(height: 8),
+        Text(l10n.resultNewBadges, style: AppTypography.h2(color: AppColors.paper)),
+        const SizedBox(height: 8),
+        for (final (i, e) in outcome.newBadges.indexed)
+          TweenAnimationBuilder<double>(
+            tween: Tween(begin: animate ? 1 : 0, end: 0),
+            duration: Duration(milliseconds: 300 + 120 * i),
+            curve: Curves.easeOutBack,
+            builder: (context, t, child) =>
+                Transform.translate(offset: Offset(0, 80 * t), child: Opacity(opacity: 1 - t.clamp(0, 1), child: child)),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: PaperCard(
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 22,
+                      backgroundColor: AppColors.gold,
+                      child: Icon(e.badge.icon, color: AppColors.ink),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(badgeText(l10n, e.badge.titleKey), style: AppTypography.button(color: AppColors.ink)),
+                          Text(
+                            '${nameOf(e)} · ${badgeText(l10n, e.badge.descriptionKey)}',
+                            style: AppTypography.caption(color: AppColors.ink),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
 }

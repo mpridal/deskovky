@@ -109,6 +109,11 @@ class StatsRepository {
     ];
   }
 
+  /// Which of [ids] still have a profile.
+  Future<Set<int>> existingPlayerIds(Iterable<int> ids) async => {
+    for (final p in await (_db.select(_db.players)..where((p) => p.id.isIn(ids))).get()) p.id,
+  };
+
   Future<int> counter(int playerId, String key) async =>
       (await (_db.select(_db.playerCounters)..where((c) => c.playerId.equals(playerId) & c.key.equals(key)))
               .getSingleOrNull())

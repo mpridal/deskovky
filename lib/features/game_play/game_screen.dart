@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/providers.dart';
+import '../../app/stats_service.dart';
 import '../../core/game/game_config.dart';
 import '../../core/game/game_module.dart';
 import '../../core/game/game_session.dart';
@@ -151,6 +152,9 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
     sfx: (id) => ref.read(audioServiceProvider).playSfx(id),
   );
   int? _lastSeat;
+
+  /// Playing time without pauses and background (spec 5.4 "délka").
+  final _clock = Stopwatch();
   Timer? _finishTimer;
   bool _finished = false;
   bool _pauseOpen = false;
@@ -170,6 +174,7 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
       robotDelay: _session.config.robotSpeed.delay,
     )..addListener(_onTurn);
     _lastSeat = _turns.currentSeat;
+    _clock.start();
     _turns.start();
     _checkFinished();
   }
@@ -186,7 +191,12 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused || state == AppLifecycleState.detached) _save();
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.detached) {
+      _clock.stop();
+      _save();
+    } else if (state == AppLifecycleState.resumed && !_turns.paused) {
+      _clock.start();
+    }
   }
 
   void _onTurn() {
@@ -212,8 +222,23 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
       result: _session.rules.result(_session.state),
       seats: SeatIdentity.forConfig(_session.config, widget.profiles, AppLocalizations.of(context)),
     );
-    _finishTimer = Timer(const Duration(milliseconds: 600), () {
-      if (mounted) context.pushReplacement('/play/${_module.id}/results', extra: outcome);
+    _clock.stop();
+    final recording = ref
+        .read(statsServiceProvider)
+        .recordFinished(
+          config: _session.config,
+          result: outcome.result,
+          events: List.of(_host.events),
+          duration: _clock.elapsed,
+        )
+        .catchError((Object e) {
+          // Statistics must never keep the results away.
+          debugPrint('GameScreen: cannot record the game: $e');
+          return <EarnedBadge>[];
+        });
+    _finishTimer = Timer(const Duration(milliseconds: 600), () async {
+      final badges = await recording;
+      if (mounted) context.pushReplacement('/play/${_module.id}/results', extra: outcome.withBadges(badges));
     });
   }
 
@@ -248,6 +273,7 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
     if (_pauseOpen) return;
     _pauseOpen = true;
     _turns.pause();
+    _clock.stop();
     final l10n = AppLocalizations.of(context);
     final action = await showDialog<String>(
       context: context,
@@ -298,6 +324,7 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
         await _confirmExit();
       default:
         _turns.resume();
+        _clock.start();
     }
   }
 

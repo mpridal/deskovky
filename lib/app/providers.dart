@@ -13,6 +13,8 @@ import '../core/players/active_player.dart';
 import '../core/players/player_profile.dart';
 import '../core/players/player_repository.dart';
 import '../core/settings/settings_repository.dart';
+import '../core/stats/stats_repository.dart';
+import 'stats_service.dart';
 
 /// The app database. Overridden in `main()` with [AppDatabase.open] and in
 /// tests with an in-memory database.
@@ -60,3 +62,7 @@ final audioServiceProvider = Provider<AudioService>((ref) {
   ref.onDispose(service.dispose);
   return service;
 });
+
+final statsRepositoryProvider = Provider<StatsRepository>((ref) => StatsRepository(ref.watch(databaseProvider)));
+
+final statsServiceProvider = Provider<StatsService>((ref) => StatsService(ref.watch(statsRepositoryProvider)));

@@ -568,4 +568,7 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get sampleBadgeBullseyeDescription =>
       'Adivina el número a la primera.';
+
+  @override
+  String get resultNewBadges => 'Insignias nuevas';
 }

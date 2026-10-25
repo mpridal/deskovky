@@ -1095,6 +1095,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Guess the number with your first tip.'**
   String get sampleBadgeBullseyeDescription;
+
+  /// No description provided for @resultNewBadges.
+  ///
+  /// In en, this message translates to:
+  /// **'New badges'**
+  String get resultNewBadges;
 }
 
 class _AppLocalizationsDelegate

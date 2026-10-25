@@ -165,5 +165,6 @@
   "badgeAllGamesTitle": "Explorador",
   "badgeAllGamesDescription": "Juega a todos los juegos.",
   "sampleBadgeBullseyeTitle": "¡En el blanco!",
-  "sampleBadgeBullseyeDescription": "Adivina el número a la primera."
+  "sampleBadgeBullseyeDescription": "Adivina el número a la primera.",
+  "resultNewBadges": "Insignias nuevas"
 }

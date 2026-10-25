@@ -574,4 +574,7 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get sampleBadgeBullseyeDescription =>
       'Uhádni číslo hned prvním tipem.';
+
+  @override
+  String get resultNewBadges => 'Nové odznaky';
 }
