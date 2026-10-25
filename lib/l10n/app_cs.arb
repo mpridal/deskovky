@@ -1,0 +1,15 @@
+{
+  "@@locale": "cs",
+  "appTitle": "Deskovky",
+  "navGames": "Hry",
+  "navPlayers": "Hráči",
+  "navLeaderboards": "Žebříčky",
+  "navSettings": "Nastavení",
+  "comingSoon": "Brzy",
+  "panelPlayersOnDevice": "Hráči na zařízení",
+  "panelLeaderboardWeek": "Žebříček tento týden",
+  "panelLastReward": "Poslední odměna",
+  "screenEmpty": "Tady zatím nic není.",
+  "fontSample": "Příliš žluťoučký kůň úpěl ďábelské ódy",
+  "playersCount": "{count, plural, one{{count} hráč} few{{count} hráči} other{{count} hráčů}}"
+}
