@@ -5,8 +5,9 @@ import 'player_profile.dart';
 import 'player_repository.dart';
 
 /// The player currently playing on this device: the remembered one if it
-/// still exists, otherwise the oldest profile (which then becomes the
-/// remembered one), or null when there are no profiles.
+/// still exists, otherwise the oldest profile, or null when there are no
+/// profiles. Read-only: [PlayerRepository] keeps the remembered id valid
+/// inside its own transactions, so this stream never races a user's choice.
 Stream<PlayerProfile?> watchActivePlayer(PlayerRepository players, SettingsRepository settings) {
   late final StreamController<PlayerProfile?> controller;
   StreamSubscription<List<PlayerProfile>>? playersSub;
@@ -22,13 +23,7 @@ Stream<PlayerProfile?> watchActivePlayer(PlayerRepository players, SettingsRepos
       controller.add(null);
       return;
     }
-    final remembered = list.where((p) => p.id == activeId).firstOrNull;
-    if (remembered != null) {
-      controller.add(remembered);
-    } else {
-      controller.add(list.first);
-      unawaited(settings.setActivePlayerId(list.first.id));
-    }
+    controller.add(list.where((p) => p.id == activeId).firstOrNull ?? list.first);
   }
 
   controller = StreamController<PlayerProfile?>(

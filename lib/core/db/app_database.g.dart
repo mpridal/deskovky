@@ -29,7 +29,7 @@ class $PlayersTable extends Players with TableInfo<$PlayersTable, Player> {
     false,
     additionalChecks: GeneratedColumn.checkTextLength(
       minTextLength: 1,
-      maxTextLength: 64,
+      maxTextLength: 256,
     ),
     type: DriftSqlType.string,
     requiredDuringInsert: true,

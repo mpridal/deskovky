@@ -1,7 +1,9 @@
 import 'package:deskovky/core/avatar/avatar_spec.dart';
 import 'package:deskovky/core/db/app_database.dart';
 import 'package:deskovky/core/players/player_profile.dart';
+import 'package:deskovky/core/players/active_player.dart';
 import 'package:deskovky/core/players/player_repository.dart';
+import 'package:deskovky/core/settings/settings_repository.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -117,5 +119,37 @@ void main() {
       ['Anička', 'Bára'],
       ['Bára'],
     ]);
+  });
+
+  test('16 compound emoji are a valid name and are stored', () async {
+    final name = '🧑🏽‍🚀' * 16;
+    expect((await repo.create(name: name, avatar: avatar)).name, name);
+  });
+
+  test('creating the first player makes them active; deleting the active one moves to the oldest', () async {
+    final settings = SettingsRepository(db);
+    final a = await repo.create(name: 'Anna', avatar: avatar);
+    expect(await settings.watchActivePlayerId().first, a.id);
+    final b = await repo.create(name: 'Bára', avatar: avatar);
+    expect(await settings.watchActivePlayerId().first, a.id, reason: 'a later profile does not take over');
+    final c = await repo.create(name: 'Cyril', avatar: avatar);
+    await settings.setActivePlayerId(c.id);
+    await repo.delete(c.id);
+    expect(await settings.watchActivePlayerId().first, a.id);
+    await repo.delete(a.id);
+    expect(await settings.watchActivePlayerId().first, b.id);
+    await repo.delete(b.id);
+    expect(await settings.watchActivePlayerId().first, isNull);
+  });
+
+  test('a player chosen right after creation stays chosen while the active stream is listened to', () async {
+    final settings = SettingsRepository(db);
+    final sub = watchActivePlayer(repo, settings).listen((_) {});
+    addTearDown(sub.cancel);
+    await repo.create(name: 'Anna', avatar: avatar);
+    final b = await repo.create(name: 'Bára', avatar: avatar);
+    await settings.setActivePlayerId(b.id);
+    await pumpEventQueue();
+    expect(await settings.watchActivePlayerId().first, b.id);
   });
 }

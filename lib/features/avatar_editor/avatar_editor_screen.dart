@@ -84,12 +84,15 @@ class _AvatarEditorScreenState extends State<AvatarEditorScreen> {
       return;
     }
     setState(() => _saving = true);
-    final error = await widget.onSave!(result);
+    ProfileError? error;
+    try {
+      error = await widget.onSave!(result);
+    } finally {
+      // Never leave Save disabled, even if saving failed unexpectedly.
+      if (mounted) setState(() => _saving = false);
+    }
     if (!mounted) return;
-    setState(() {
-      _saving = false;
-      _error = error;
-    });
+    setState(() => _error = error);
     // Navigator.pop skips PopScope, so a saved edit closes without asking.
     if (error == null) navigator.pop(result);
   }

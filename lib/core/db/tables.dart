@@ -4,7 +4,9 @@ import 'package:drift/drift.dart';
 /// enforces uniqueness regardless of letter case.
 class Players extends Table {
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get name => text().withLength(min: 1, max: 64)();
+  // The 16-character rule counts visible characters in PlayerRepository; a
+  // compound emoji is up to ~11 UTF-16 units, so the column limit is generous.
+  TextColumn get name => text().withLength(min: 1, max: 256)();
   TextColumn get nameKey => text().unique()();
   TextColumn get avatarJson => text()();
   IntColumn get favoriteSeat => integer().nullable()();

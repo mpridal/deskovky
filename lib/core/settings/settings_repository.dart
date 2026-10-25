@@ -9,12 +9,13 @@ class SettingsRepository {
 
   final AppDatabase _db;
 
-  static const _activePlayerKey = 'activePlayerId';
+  /// Also written by [PlayerRepository] inside its transactions.
+  static const activePlayerKey = 'activePlayerId';
   static const _localeKey = 'locale';
 
-  Stream<int?> watchActivePlayerId() => _watch(_activePlayerKey).map((v) => v == null ? null : int.tryParse(v));
+  Stream<int?> watchActivePlayerId() => _watch(activePlayerKey).map((v) => v == null ? null : int.tryParse(v));
 
-  Future<void> setActivePlayerId(int? id) => _set(_activePlayerKey, id?.toString());
+  Future<void> setActivePlayerId(int? id) => _set(activePlayerKey, id?.toString());
 
   /// The chosen language, or null to follow the system (spec 1).
   Stream<Locale?> watchLocale() => _watch(_localeKey).map(

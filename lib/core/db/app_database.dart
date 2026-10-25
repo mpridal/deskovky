@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'tables.dart';
 
@@ -11,9 +12,18 @@ part 'app_database.g.dart';
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
-  /// The app's database file in the application support directory, which an
-  /// APK update keeps.
-  factory AppDatabase.open() => AppDatabase(driftDatabase(name: 'deskovky'));
+  /// Database file name and directory. Both are pinned on purpose: an APK
+  /// update keeps the app documents directory (`app_flutter/`), and the
+  /// location must never follow a library default that could change.
+  static const fileName = 'deskovky';
+  static const databaseDirectory = getApplicationDocumentsDirectory;
+
+  factory AppDatabase.open() => AppDatabase(
+        driftDatabase(
+          name: fileName,
+          native: const DriftNativeOptions(databaseDirectory: databaseDirectory),
+        ),
+      );
 
   @override
   int get schemaVersion => 1;

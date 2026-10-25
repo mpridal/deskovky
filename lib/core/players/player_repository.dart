@@ -5,6 +5,7 @@ import 'package:drift/drift.dart';
 
 import '../avatar/avatar_spec.dart';
 import '../db/app_database.dart';
+import '../settings/settings_repository.dart';
 import 'player_profile.dart';
 
 /// Player profiles with the rules of spec 5.2: 1–16 characters, unique name
@@ -39,6 +40,9 @@ class PlayerRepository {
             favoriteSeat: Value(favoriteSeat),
             createdAt: DateTime.now().toUtc(),
           ));
+      // The first player (or the first after the active one vanished) plays.
+      final active = await _activeId();
+      if (active == null || await byId(active) == null) await _setActive(id);
       return (await byId(id))!;
     });
   }
@@ -58,10 +62,27 @@ class PlayerRepository {
     });
   }
 
-  Future<void> delete(int id) async {
-    final deleted = await (_db.delete(_db.players)..where((p) => p.id.equals(id))).go();
-    if (deleted == 0) throw const ProfileException(ProfileError.notFound);
+  Future<void> delete(int id) => _db.transaction(() async {
+        final deleted = await (_db.delete(_db.players)..where((p) => p.id.equals(id))).go();
+        if (deleted == 0) throw const ProfileException(ProfileError.notFound);
+        // Deleting the active player hands the turn to the oldest one left.
+        if (await _activeId() == id) {
+          final remaining = await _ordered().get();
+          await _setActive(remaining.isEmpty ? null : remaining.first.id);
+        }
+      });
+
+  Future<int?> _activeId() async {
+    final row = await (_db.select(_db.appSettings)..where((s) => s.key.equals(SettingsRepository.activePlayerKey)))
+        .getSingleOrNull();
+    return row == null ? null : int.tryParse(row.value);
   }
+
+  Future<void> _setActive(int? id) => id == null
+      ? (_db.delete(_db.appSettings)..where((s) => s.key.equals(SettingsRepository.activePlayerKey))).go()
+      : _db.into(_db.appSettings).insertOnConflictUpdate(
+          AppSettingsCompanion.insert(key: SettingsRepository.activePlayerKey, value: '$id'),
+        );
 
   SimpleSelectStatement<$PlayersTable, Player> _ordered() =>
       _db.select(_db.players)..orderBy([(p) => OrderingTerm.asc(p.createdAt), (p) => OrderingTerm.asc(p.id)]);
