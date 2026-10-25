@@ -585,6 +585,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create a player'**
   String get homeCreatePlayer;
+
+  /// No description provided for @settingsLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get settingsLanguage;
+
+  /// No description provided for @settingsLanguageSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone setting'**
+  String get settingsLanguageSystem;
 }
 
 class _AppLocalizationsDelegate

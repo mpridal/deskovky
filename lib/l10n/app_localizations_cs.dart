@@ -272,4 +272,10 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get homeCreatePlayer => 'Vytvořit hráče';
+
+  @override
+  String get settingsLanguage => 'Jazyk';
+
+  @override
+  String get settingsLanguageSystem => 'Podle telefonu';
 }

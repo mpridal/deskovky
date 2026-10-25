@@ -80,5 +80,7 @@
   "cancel": "Cancelar",
   "homeHello": "¡Hola,",
   "homeSwitchPlayer": "Cambiar de jugador",
-  "homeCreatePlayer": "Crear un jugador"
+  "homeCreatePlayer": "Crear un jugador",
+  "settingsLanguage": "Idioma",
+  "settingsLanguageSystem": "Según el teléfono"
 }

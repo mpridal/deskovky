@@ -129,5 +129,7 @@
   "cancel": "Cancel",
   "homeHello": "Hi,",
   "homeSwitchPlayer": "Switch player",
-  "homeCreatePlayer": "Create a player"
+  "homeCreatePlayer": "Create a player",
+  "settingsLanguage": "Language",
+  "settingsLanguageSystem": "Phone setting"
 }

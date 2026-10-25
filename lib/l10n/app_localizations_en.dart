@@ -273,4 +273,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get homeCreatePlayer => 'Create a player';
+
+  @override
+  String get settingsLanguage => 'Language';
+
+  @override
+  String get settingsLanguageSystem => 'Phone setting';
 }

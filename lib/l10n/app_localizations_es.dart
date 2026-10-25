@@ -274,4 +274,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get homeCreatePlayer => 'Crear un jugador';
+
+  @override
+  String get settingsLanguage => 'Idioma';
+
+  @override
+  String get settingsLanguageSystem => 'Según el teléfono';
 }

@@ -80,5 +80,7 @@
   "cancel": "Zrušit",
   "homeHello": "Ahoj,",
   "homeSwitchPlayer": "Přepnout hráče",
-  "homeCreatePlayer": "Vytvořit hráče"
+  "homeCreatePlayer": "Vytvořit hráče",
+  "settingsLanguage": "Jazyk",
+  "settingsLanguageSystem": "Podle telefonu"
 }
