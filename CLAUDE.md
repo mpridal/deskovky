@@ -14,4 +14,21 @@ Tato pravidla mají přednost před běžným výchozím chováním a platí vž
 - GitHub: `mpridal/deskovky` (veřejný). Push a vydání verzí (tagy `v*`) jen na výslovný pokyn.
 - Flutter SDK: `C:\dev\flutter`.
 
-Konvence projektu a pravidla paralelní práce (kap. 11 a 13.2 zadání) se doplní během fáze 1.
+## Jak spustit a ověřit
+
+Flutter není v PATH starších terminálů – v případě potřeby `export PATH=/c/dev/flutter/bin:$PATH` (bash).
+
+- `flutter analyze --fatal-infos` a `flutter test` – musí projít před každým commitem (totéž běží v CI).
+- `flutter run -d <emulátor>` – vývoj s hot reloadem.
+- Emulátory: `Deskovky_Phone` (Pixel 7, 412×915 dp) a `Deskovky_Tablet` (Pixel Tablet, 1280×800 dp).
+- Screenshoty mimo `flutter run`: instalovat **release** APK (`flutter build apk --release`); ladicí APK spuštěné samostatně nenastartuje engine.
+- Jazyk aplikace na emulátoru: `adb shell cmd locale set-app-locales cz.mpridal.deskovky --locales es-ES`.
+
+## Konvence
+
+- Kód Dartu je pod `lib/` (`lib/app`, `lib/core`, `lib/ui_kit`, `lib/features`, `lib/games`) – viz `docs/ARCHITECTURE.md`.
+- Žádné texty natvrdo v UI: vše přes `lib/l10n/app_{cs,en,es}.arb` (šablona `app_en.arb`).
+- Barvy a písmo jen z `lib/ui_kit/tokens`.
+- Sourozenecké widgety v seznamech/mřížkách musí mít **unikátní** klíče.
+
+Pravidla paralelní práce (kap. 13.2 zadání) se doplní v milníku 9.
