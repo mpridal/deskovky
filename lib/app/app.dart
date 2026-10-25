@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/l10n/locale_resolution.dart';
 import '../l10n/app_localizations.dart';
 import '../ui_kit/tokens/app_theme.dart';
+import 'providers.dart';
 import 'router.dart';
 
-class DeskovkyApp extends StatefulWidget {
+class DeskovkyApp extends ConsumerStatefulWidget {
   const DeskovkyApp({super.key});
 
   @override
-  State<DeskovkyApp> createState() => _DeskovkyAppState();
+  ConsumerState<DeskovkyApp> createState() => _DeskovkyAppState();
 }
 
-class _DeskovkyAppState extends State<DeskovkyApp> {
+class _DeskovkyAppState extends ConsumerState<DeskovkyApp> {
   late final GoRouter _router = buildRouter();
 
   @override
@@ -29,6 +31,8 @@ class _DeskovkyAppState extends State<DeskovkyApp> {
       routerConfig: _router,
       theme: buildAppTheme(),
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
+      // A language chosen in Settings wins; null lets the system decide.
+      locale: ref.watch(localeSettingProvider).value,
       supportedLocales: supportedAppLocales,
       localizationsDelegates: const [
         AppLocalizations.delegate,
