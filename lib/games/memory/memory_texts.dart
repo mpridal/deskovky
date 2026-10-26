@@ -23,8 +23,7 @@ const memoryTexts = GameTexts(
     'memory.step2': 'Stejné? Jsou tvoje a hraješ znovu.',
     'memory.step3': 'Různé? Otočí se zpět a hraje další.',
     'memory.badge.elephant.title': 'Paměť jako slon',
-    'memory.badge.elephant.description':
-        'Dohraj pexeso aspoň se 16 kartami a ani jednou nezapomeň, kde už jsi obrázek viděl.',
+    'memory.badge.elephant.description': 'Dohraj pexeso aspoň se 16 kartami a ani jednou nezapomeň, kde už jsi obrázek viděl. S ostatními najdi aspoň polovinu dvojic.',
     'memory.badge.speed.title': 'Rychlík',
     'memory.badge.speed.description': 'Najdi sám všech 16 karet za méně než 40 sekund.',
     'memory.badge.streak.title': 'Série',
@@ -53,8 +52,7 @@ const memoryTexts = GameTexts(
     'memory.step2': 'A match? Keep them and go again.',
     'memory.step3': 'Different? They turn back, next player.',
     'memory.badge.elephant.title': 'Memory of an elephant',
-    'memory.badge.elephant.description':
-        'Finish a game of 16 or more cards without forgetting where you saw a picture.',
+    'memory.badge.elephant.description': 'Finish a game of 16 or more cards without forgetting where you saw a picture. With others, find at least half of the pairs.',
     'memory.badge.speed.title': 'Speedy',
     'memory.badge.speed.description': 'Clear 16 cards on your own in under 40 seconds.',
     'memory.badge.streak.title': 'On a roll',
@@ -83,7 +81,7 @@ const memoryTexts = GameTexts(
     'memory.step2': '¿Iguales? Son tuyas y vuelves a jugar.',
     'memory.step3': '¿Distintas? Se tapan y juega el siguiente.',
     'memory.badge.elephant.title': 'Memoria de elefante',
-    'memory.badge.elephant.description': 'Termina una partida de 16 cartas o más sin olvidar dónde viste un dibujo.',
+    'memory.badge.elephant.description': 'Termina una partida de 16 cartas o más sin olvidar dónde viste un dibujo. Con otros, encuentra al menos la mitad de las parejas.',
     'memory.badge.speed.title': 'Rapidísimo',
     'memory.badge.speed.description': 'Encuentra solo las 16 cartas en menos de 40 segundos.',
     'memory.badge.streak.title': 'Racha',

@@ -73,6 +73,44 @@ void main() {
         expect(motifs.toSet(), hasLength(memoryMotifs));
       }
     });
+
+    test('no set has two look-alike motifs a child would take for a pair', () {
+      // Noto Emoji families that look the same on a small card.
+      const families = {
+        'star': {'2b50', '1f31f', '1f4ab', '2728', '1f320'},
+        'moon': {
+          '1f311',
+          '1f312',
+          '1f313',
+          '1f314',
+          '1f315',
+          '1f316',
+          '1f317',
+          '1f318',
+          '1f319',
+          '1f31a',
+          '1f31b',
+          '1f31c',
+          '1f31d',
+        },
+        'sun': {'2600', '1f31e', '1f324', '26c5'},
+        'earth': {'1f30d', '1f30e', '1f30f', '1f310'},
+        'astronaut': {'1f9d1_200d_1f680', '1f468_200d_1f680', '1f469_200d_1f680'},
+        'boat': {'26f5', '1f6a4', '1f6f6'},
+        'police': {'1f693', '1f694'},
+        'taxi': {'1f695', '1f696'},
+        'bus': {'1f68c', '1f68d', '1f690'},
+        'apple': {'1f34e', '1f34f'},
+        'citrus': {'1f34a', '1f34b'},
+        'monkey': {'1f435', '1f412', '1f648', '1f649', '1f64a'},
+        'bird': {'1f414', '1f413', '1f424', '1f425', '1f426'},
+      };
+      for (final MapEntry(key: set, value: motifs) in memorySets.entries) {
+        for (final MapEntry(key: family, value: members) in families.entries) {
+          expect(motifs.where(members.contains).length, lessThanOrEqualTo(1), reason: '$set: two from "$family"');
+        }
+      }
+    });
   });
 
   group('turns', () {
@@ -302,6 +340,32 @@ void main() {
       }
     });
 
+    test('elephant with others: only who found at least half of the pairs', () {
+      var s = rules.initialState(config(seats: 2), 6);
+      final faces = s.faces.toSet().toList();
+      s = findPair(s, faces[0]); // Seat 0: one pair, then a blind miss.
+      final (a, b) = twoDifferent(s);
+      s = play(play(s, a), b);
+      for (final face in faces.skip(1).take(6)) {
+        s = findPair(s, face); // Seat 1: six pairs.
+      }
+      expect(s.pairsLeft, 1);
+      expect(s.mistakes, [0, 0]);
+      expect(MemoryRules.elephants(s), [1], reason: 'one or two lucky turns are not enough');
+
+      var even = rules.initialState(config(seats: 2), 6);
+      for (final face in faces.take(4)) {
+        even = findPair(even, face); // Seat 0: four of eight pairs.
+      }
+      final (c, d) = twoDifferent(even);
+      even = play(play(even, c), d);
+      for (final face in faces.skip(4).take(3)) {
+        even = findPair(even, face);
+      }
+      // Exactly half is enough; seat 1 has three of eight before the last pair.
+      expect(MemoryRules.elephants(even), [0]);
+    });
+
     test('elephant: no mistake by the time one pair is left, 16+ cards', () {
       var s = rules.initialState(config(seats: 2), 6);
       final faces = s.faces.toSet().toList();
@@ -312,7 +376,8 @@ void main() {
         expect(MemoryRules.elephants(s), isEmpty);
         s = findPair(s, face);
       }
-      expect(MemoryRules.elephants(s), [0, 1]);
+      // Seat 1 found every pair without a mistake; seat 0 found none.
+      expect(MemoryRules.elephants(s), [1]);
       final small = rules.initialState(config(seats: 1, cards: 12), 6);
       var t = small;
       for (final face in t.faces.toSet().take(5)) {

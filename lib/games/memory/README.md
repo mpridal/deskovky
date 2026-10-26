@@ -17,7 +17,7 @@ Hra pro 1–4 hráče (lidé i roboti v libovolných místech) podle zadání, k
   - sólo: tahy ≤ 1,5 × páry ★★★, ≤ 2 × páry ★★, jinak ★;
   - více hráčů: 1. místo ★★★, 2. místo ★★, jinak ★.
 - **Odznaky:**
-  - `memory.elephant` Paměť jako slon: celá partie bez chyby paměti, aspoň 16 karet;
+  - `memory.elephant` Paměť jako slon: celá partie bez chyby paměti, aspoň 16 karet; s ostatními navíc aspoň polovina všech dvojic;
   - `memory.speed` Rychlík: sám 16 karet pod 40 s;
   - `memory.streak` Série: 5 párů v jednom tahu;
   - `memory.collector` Sběratel párů: celkem 200 párů (počítadlo `memory.pairs`).
@@ -25,12 +25,13 @@ Hra pro 1–4 hráče (lidé i roboti v libovolných místech) podle zadání, k
 
 ### Rozhodnutí, která zadání nechávalo otevřená
 
-- **„Bez chyby“ (slon)** nemůže znamenat „bez neshody“ – první karty jsou vždy naslepo. Chyba = neshoda, kdy hráč už viděl partnera první karty, nebo jako druhou otočil kartu, kterou už znal (taková se shodovat nemůže). Hráč musí odehrát aspoň jeden tah.
+- **„Bez chyby“ (slon)** nemůže znamenat „bez neshody“ – první karty jsou vždy naslepo. Chyba = neshoda, kdy hráč už viděl partnera první karty, nebo jako druhou otočil kartu, kterou už znal (taková se shodovat nemůže). Hráč musí odehrát aspoň jeden tah a ve hře s ostatními najít aspoň polovinu dvojic – jinak by odznak dostal i ten, kdo měl jen jeden nebo dva šťastné tahy.
 - **Rychlík** platí jen pro hru jednoho hráče. U více hráčů čas měří celou partii, ne jednoho hráče.
 - **48 karet je i na telefonu.** Volby jsou pro všechna zařízení stejné. Na 360×740 se 48 karet vejde ve velikosti 49 dp, takže není potřeba posun ani zoom. Kdyby byla plocha menší, deska se posouvá (karty nikdy pod 48 dp).
 - **Prohazování (Těžká sólo)** nebere dvě karty právě ukázané neshody (`neodkryté karty` ze zadání) a vždy prohodí dva různé obrázky. Animace začne, až se neshoda zakryje.
 - **Neshoda robota** zůstane vidět celých 1,2 s, i když další robot už otáčí. Lidé si tak karty stihnou zapamatovat. Rámeček karty má barvu hráče, který ji otočil.
 - **Začíná vždy hráč na 1. místě.** Pořadí určuje nastavení.
+- **Žádné dva podobné motivy v jedné sadě.** Na malé kartě se různé hvězdy, měsíce nebo slunce slijí a dítě je vezme jako pár. Proto má každá sada nejvýš jeden motiv z „rodiny“ (hvězdy, měsíce, slunce, zeměkoule, lodě, citrusy…). Hlídá to test `no set has two look-alike motifs`. Vesmír má místo dalších hvězd a měsíců například kámen (meteorit), duhu, blesk, sopku, kompas nebo baterii.
 - **Karty jsou čtvercové.** Obrázky jsou čtvercové a čtverec dává na všech poměrech stran největší obrázek.
 
 ## Architektura
@@ -61,7 +62,7 @@ Hra pro 1–4 hráče (lidé i roboti v libovolných místech) podle zadání, k
 - **Odznaky** hlásí deska:
   - před odesláním tahu člověka: páry, série, rychlík (`MemoryRules.eventsAfter`);
   - ve chvíli, kdy zbývá poslední dvojice: slon (`MemoryRules.elephants`);
-  - při obnovení partie: páry nalezené předtím. Proč takhle, vysvětluje `FRAMEWORK_REQUESTS.md`.
+  - při obnovení partie: páry nalezené předtím a sérii 5 párů, pokud už padla. Proč takhle, vysvětluje `FRAMEWORK_REQUESTS.md`.
 
 ## AI
 

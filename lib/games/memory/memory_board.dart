@@ -68,11 +68,14 @@ class _MemoryBoardState extends State<MemoryBoard> with TickerProviderStateMixin
     }
     if (s.miss.isNotEmpty) _showMiss(s.miss, (s.current - 1 + s.seats) % s.seats);
     // A restored game: what was found before the app closed was never
-    // recorded (events are kept only until the game ends), so count it now.
+    // recorded (events are kept only until the game ends), so report it now.
     if (s.reveals.isNotEmpty) {
       for (var seat = 0; seat < s.seats; seat++) {
         final pairs = s.pairsOf(seat);
         if (pairs > 0) widget.view.host.reportEvent('memory.pairs', {'seat': seat, 'count': pairs});
+        if (s.bestStreak[seat] >= MemoryRules.streakBadge) {
+          widget.view.host.reportEvent('memory.streak', {'seat': seat});
+        }
       }
     }
     _reportElephants();

@@ -383,6 +383,18 @@ void main() {
     });
   });
 
+  testWidgets('a restored game reports a streak of five already played', (tester) async {
+    var s = rules.initialState(config(cards: 24), 6);
+    for (final face in s.faces.toSet().take(5)) {
+      for (final c in pairOf(s, face)) {
+        s = rules.apply(s, MemoryRules.flip(0, c));
+      }
+    }
+    final host = GameTestHost();
+    await pumpBoard(tester, s, host: host);
+    expect(events(host, 'memory.streak'), ['memory.streak {seat: 0}']);
+  });
+
   group('one player', () {
     testWidgets('easy: all cards shown for 2 s', (tester) async {
       await pumpBoard(tester, rules.initialState(config(seats: 1, difficulty: Difficulty.easy), 3));
