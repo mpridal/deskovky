@@ -46,6 +46,13 @@ void main() {
     expect(_rules.isLegal(s, _guess(0, 25)), isTrue);
   });
 
+  test('legal moves are exactly the numbers still possible, for the seat to move only', () {
+    final s = _rules.initialState(_config(), 1);
+    expect([for (final m in _rules.legalMoves(s, 0)) m.data['value']], [for (var v = s.low; v <= s.high; v++) v]);
+    expect(_rules.legalMoves(s, 0).every((m) => _rules.isLegal(s, m)), isTrue);
+    expect(_rules.legalMoves(s, 1), isEmpty);
+  });
+
   test('a miss narrows the shared bounds and passes the turn around the table', () {
     final session = GameSession.start(_rules, _config(seats: 3, range: 100), 3);
     final secret = session.state.secret;

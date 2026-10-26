@@ -60,6 +60,12 @@ class FakeRules implements GameRules<FakeState> {
   int score(FakeState state, int seat) => seat == state.winner ? 1 : 0;
 
   @override
+  List<Move> legalMoves(FakeState state, int seat) => [
+    if (state.winner == null && seat == state.current)
+      for (final n in [1, 2]) Move(seat: seat, type: 'add', data: {'n': n}),
+  ];
+
+  @override
   Map<String, Object?> stateToJson(FakeState s) =>
       {'count': s.count, 'current': s.current, 'seats': s.seats, 'winner': s.winner};
 
@@ -87,3 +93,17 @@ GameConfig fakeConfig({int seats = 2}) => GameConfig(
       robotSpeed: RobotSpeed.fast,
       options: const {},
     );
+
+/// An AI that fails: it throws, or (with [illegal]) answers a move the rules
+/// reject.
+class BrokenAi implements AiPlayer<FakeState> {
+  const BrokenAi({this.illegal = false});
+
+  final bool illegal;
+
+  @override
+  Move chooseMove(FakeState state, int seat, Difficulty difficulty, SeededRandom random) {
+    if (illegal) return Move(seat: seat, type: 'add', data: const {'n': 99});
+    throw StateError('AI bug');
+  }
+}

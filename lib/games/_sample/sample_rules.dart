@@ -74,6 +74,12 @@ class SampleRules implements GameRules<SampleState> {
   int? currentSeat(SampleState state) => state.winner == null ? state.current : null;
 
   @override
+  List<Move> legalMoves(SampleState state, int seat) => [
+    if (state.winner == null && seat == state.current)
+      for (var v = state.low; v <= state.high; v++) Move(seat: seat, type: 'guess', data: {'value': v}),
+  ];
+
+  @override
   bool isLegal(SampleState state, Move move) {
     final value = move.data['value'];
     return state.winner == null &&

@@ -58,6 +58,8 @@ Flutter není v PATH starších terminálů – v případě potřeby `export PA
 
 ## Hry a testy her
 
+- `GameRules.legalMoves(state, seat)` je povinný: když AI spadne nebo vrátí neplatný tah, `TurnController` zahraje legální tah vybraný ze seedu – robot nikdy „nepřemýšlí“ navždy.
+
 - Nová hra = `GameModule` + `GameRules` + `AiPlayer` + deska ve `lib/games/<id>/`, registrace v `lib/games/registry.dart` (podrobný návod `docs/GAME_MODULE_GUIDE.md` v milníku 10). Vzor: `lib/games/_sample/`.
 - Každá akce hráče je `Move` přes `GameBoardView.submit`; deska nikdy nemění stav sama.
 - Testy, které otevřou herní obrazovku: `pumpApp(..., disableAnimations: true)` (pulzování hráče na tahu je nekonečné → `pumpAndSettle` by nikdy neskončil). Roboti v testech běží přes `InlineAiRunner` (nastavuje `pumpApp`).

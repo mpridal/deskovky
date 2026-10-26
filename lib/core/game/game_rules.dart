@@ -12,6 +12,10 @@ abstract class GameRules<S> {
 
   bool isLegal(S state, Move move);
 
+  /// Every legal move of [seat] now (spec 8); empty when it is not their
+  /// turn. The framework falls back to these when an AI fails.
+  List<Move> legalMoves(S state, int seat);
+
   /// Applies a legal move and returns the new state.
   S apply(S state, Move move);
 
