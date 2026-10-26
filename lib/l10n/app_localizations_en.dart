@@ -1123,4 +1123,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shopFailed => 'That didn\'t work. Try again.';
+
+  @override
+  String get updatePreparing => 'Preparing the update…';
 }

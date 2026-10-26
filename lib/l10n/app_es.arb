@@ -321,5 +321,6 @@
   "shopNewBadgeReward": "{description} Premio +{points} ●.",
   "shopHooray": "¡Bien!",
   "shopNotEnough": "Ahora no tienes puntos suficientes.",
-  "shopFailed": "No ha funcionado. Inténtalo otra vez."
+  "shopFailed": "No ha funcionado. Inténtalo otra vez.",
+  "updatePreparing": "Preparando la actualización…"
 }

@@ -1134,4 +1134,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get shopFailed => 'To teď nejde. Zkus to znovu.';
+
+  @override
+  String get updatePreparing => 'Připravuji aktualizaci…';
 }

@@ -2031,6 +2031,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'That didn\'t work. Try again.'**
   String get shopFailed;
+
+  /// No description provided for @updatePreparing.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing the update…'**
+  String get updatePreparing;
 }
 
 class _AppLocalizationsDelegate
