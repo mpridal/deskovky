@@ -64,6 +64,7 @@ class _LeaderboardsScreenState extends ConsumerState<LeaderboardsScreen> {
             ],
             selected: _query.gameId,
             onChanged: (id) => setState(() => _query = _query.copyWith(gameId: () => id)),
+            scrollable: true,
           ),
           const SizedBox(height: 8),
           ChoicePills<Difficulty?>(

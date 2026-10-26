@@ -5,20 +5,26 @@ import '../tokens/app_typography.dart';
 import 'ui_feedback.dart';
 
 /// Single-choice pills that wrap onto more rows instead of shrinking text –
-/// for choices whose labels are too long for a [SegmentedControl].
+/// for choices whose labels are too long for a [SegmentedControl]. With
+/// [scrollable] they stay on one row that scrolls sideways (long lists, such
+/// as one pill per game).
 class ChoicePills<T> extends StatelessWidget {
-  const ChoicePills({super.key, required this.choices, required this.selected, required this.onChanged});
+  const ChoicePills({
+    super.key,
+    required this.choices,
+    required this.selected,
+    required this.onChanged,
+    this.scrollable = false,
+  });
 
   final List<(T value, String label)> choices;
   final T selected;
   final ValueChanged<T> onChanged;
+  final bool scrollable;
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 6,
-      runSpacing: 6,
-      children: [
+    final pills = [
         for (final (value, label) in choices)
           Semantics(
             button: true,
@@ -48,7 +54,15 @@ class ChoicePills<T> extends StatelessWidget {
               ),
             ),
           ),
-      ],
+    ];
+    if (!scrollable) return Wrap(spacing: 6, runSpacing: 6, children: pills);
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          for (final (i, pill) in pills.indexed) Padding(padding: EdgeInsets.only(left: i == 0 ? 0 : 6), child: pill),
+        ],
+      ),
     );
   }
 }
