@@ -9,6 +9,7 @@ import 'package:deskovky/features/game_play/game_screen.dart';
 import 'package:deskovky/features/game_setup/game_setup_screen.dart';
 import 'package:deskovky/features/home/active_player_bar.dart';
 import 'package:deskovky/games/_sample/sample_rules.dart';
+import 'package:deskovky/ui_kit/components/thinking_dots.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -136,6 +137,9 @@ void main() {
     final t = await _player(tester, db, 'Tereza');
     await _startGame(tester, db, _config([const RobotSeat(), HumanSeat(t)], speed: RobotSpeed.slow));
     expect(find.text('🤖 Robík přemýšlí…'), findsOneWidget);
+    // Desktop-wide chips show the thinking dots next to the robot's name.
+    expect(find.descendant(of: find.byKey(const ValueKey('chip0')), matching: find.byType(ThinkingDots)), findsOneWidget);
+    expect(find.descendant(of: find.byKey(const ValueKey('chip1')), matching: find.byType(ThinkingDots)), findsNothing);
     await tester.tap(find.byKey(const ValueKey('number1')), warnIfMissed: false);
     await tester.pump();
     expect(_screen(tester).debugSession!.moves, isEmpty);

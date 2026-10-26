@@ -34,8 +34,9 @@ class SeatIdentity {
   bool get isRobot => profile == null;
   Color get color => AppColors.players[seat];
 
-  Widget avatar(double size) => isRobot
-      ? RobotAvatar(color: color, size: size, semanticLabel: name)
+  /// [thinking] makes a robot blink its eyes (spec 5.7.1).
+  Widget avatar(double size, {bool thinking = false}) => isRobot
+      ? RobotAvatar(color: color, size: size, semanticLabel: name, blinking: thinking)
       : AvatarView(spec: profile!.avatar, size: size, semanticLabel: name);
 
   static List<SeatIdentity> forConfig(GameConfig config, List<PlayerProfile> profiles, AppLocalizations l10n) => [
