@@ -56,6 +56,8 @@ void main() {
     Future<void> showSound(WidgetTester tester) async {
       await _openSettings(tester, db);
       await tester.scrollUntilVisible(find.byKey(const ValueKey('vibrationOn')), 120);
+      // Fully on screen, not just its top edge (more settings follow below).
+      await tester.ensureVisible(find.byKey(const ValueKey('vibrationOn')));
       await tester.pumpAndSettle();
     }
 
@@ -63,6 +65,8 @@ void main() {
       await showSound(tester);
       expect(find.text('Zvuk'), findsOneWidget);
       for (final key in ['musicOn', 'sfxOn', 'vibrationOn']) {
+        await tester.ensureVisible(find.byKey(ValueKey(key)));
+        await tester.pumpAndSettle();
         await tester.tap(find.byKey(ValueKey(key)));
         await tester.pumpAndSettle();
       }

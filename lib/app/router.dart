@@ -13,6 +13,7 @@ import '../features/players/players_screen.dart';
 import '../features/results/results_screen.dart';
 import '../features/players/profile_editor_route.dart';
 import '../features/settings/credits_screen.dart';
+import '../features/settings/parents_screen.dart';
 import '../features/settings/settings_screen.dart';
 import '../features/settings/ui_kit_catalog_screen.dart';
 import 'app_shell.dart';
@@ -80,6 +81,7 @@ GoRouter buildRouter() {
                 builder: (_, _) => const SettingsScreen(),
                 routes: [
                   GoRoute(path: 'credits', parentNavigatorKey: rootKey, builder: (_, _) => const CreditsScreen()),
+                  GoRoute(path: 'parents', parentNavigatorKey: rootKey, builder: (_, _) => const ParentsScreen()),
                   if (kDebugMode)
                     GoRoute(path: 'ui-kit', parentNavigatorKey: rootKey, builder: (_, _) => const UiKitCatalogScreen()),
                 ],

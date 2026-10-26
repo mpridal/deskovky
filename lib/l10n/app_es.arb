@@ -210,5 +210,14 @@
   "levelMax": "¡Nivel máximo!",
   "statsBalance": "Saldo",
   "statsTotalEarned": "Total ganado",
-  "statsPointsHistory": "Historial de puntos"
+  "statsPointsHistory": "Historial de puntos",
+  "settingsParents": "Zona de padres",
+  "parentsGateTitle": "Solo para padres",
+  "parentsGateQuestion": "¿Cuánto es {a} × {b}?",
+  "parentsGateWrong": "No es correcto.",
+  "parentsGateOpen": "Abrir",
+  "parentsGiftTitle": "Regalar puntos",
+  "parentsGiftConfirm": "¿Regalar {points} ● a {name}?",
+  "parentsGiftAction": "Regalar",
+  "parentsGiftDone": "Regalado: {points} ● – {name}"
 }

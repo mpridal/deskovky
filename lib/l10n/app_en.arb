@@ -482,5 +482,44 @@
   "levelMax": "Top level!",
   "statsBalance": "Balance",
   "statsTotalEarned": "Total earned",
-  "statsPointsHistory": "Points history"
+  "statsPointsHistory": "Points history",
+  "settingsParents": "Parents' corner",
+  "parentsGateTitle": "Parents only",
+  "parentsGateQuestion": "What is {a} × {b}?",
+  "@parentsGateQuestion": {
+    "placeholders": {
+      "a": {
+        "type": "int"
+      },
+      "b": {
+        "type": "int"
+      }
+    }
+  },
+  "parentsGateWrong": "That is not right.",
+  "parentsGateOpen": "Open",
+  "parentsGiftTitle": "Give points",
+  "parentsGiftConfirm": "Give {points} ● to {name}?",
+  "@parentsGiftConfirm": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "parentsGiftAction": "Give",
+  "parentsGiftDone": "Given: {points} ● – {name}",
+  "@parentsGiftDone": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

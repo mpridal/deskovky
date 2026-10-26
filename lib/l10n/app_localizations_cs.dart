@@ -755,4 +755,37 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get statsPointsHistory => 'Historie bodů';
+
+  @override
+  String get settingsParents => 'Rodičovská zóna';
+
+  @override
+  String get parentsGateTitle => 'Jen pro rodiče';
+
+  @override
+  String parentsGateQuestion(int a, int b) {
+    return 'Kolik je $a × $b?';
+  }
+
+  @override
+  String get parentsGateWrong => 'To není správně.';
+
+  @override
+  String get parentsGateOpen => 'Otevřít';
+
+  @override
+  String get parentsGiftTitle => 'Darovat body';
+
+  @override
+  String parentsGiftConfirm(int points, String name) {
+    return 'Darovat $points ● hráči $name?';
+  }
+
+  @override
+  String get parentsGiftAction => 'Darovat';
+
+  @override
+  String parentsGiftDone(int points, String name) {
+    return 'Darováno: $points ● – $name';
+  }
 }

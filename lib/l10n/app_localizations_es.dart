@@ -747,4 +747,37 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get statsPointsHistory => 'Historial de puntos';
+
+  @override
+  String get settingsParents => 'Zona de padres';
+
+  @override
+  String get parentsGateTitle => 'Solo para padres';
+
+  @override
+  String parentsGateQuestion(int a, int b) {
+    return '¿Cuánto es $a × $b?';
+  }
+
+  @override
+  String get parentsGateWrong => 'No es correcto.';
+
+  @override
+  String get parentsGateOpen => 'Abrir';
+
+  @override
+  String get parentsGiftTitle => 'Regalar puntos';
+
+  @override
+  String parentsGiftConfirm(int points, String name) {
+    return '¿Regalar $points ● a $name?';
+  }
+
+  @override
+  String get parentsGiftAction => 'Regalar';
+
+  @override
+  String parentsGiftDone(int points, String name) {
+    return 'Regalado: $points ● – $name';
+  }
 }

@@ -10,6 +10,7 @@ import '../../ui_kit/components/primary_button.dart';
 import '../../ui_kit/components/ui_feedback.dart';
 import '../../ui_kit/tokens/app_colors.dart';
 import '../../ui_kit/tokens/app_typography.dart';
+import 'parents_screen.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -48,6 +49,19 @@ class SettingsScreen extends ConsumerWidget {
               icon: Icons.info_outline,
               secondary: true,
               onPressed: () => context.push('/settings/credits'),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: PrimaryButton(
+              key: const ValueKey('parentsLink'),
+              label: l10n.settingsParents,
+              icon: Icons.family_restroom,
+              secondary: true,
+              onPressed: () async {
+                if (await showParentsGate(context) && context.mounted) await context.push('/settings/parents');
+              },
             ),
           ),
           // Visual check of bundled fonts with diacritics (milestone 1).

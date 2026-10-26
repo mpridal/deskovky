@@ -210,5 +210,14 @@
   "levelMax": "Nejvyšší úroveň!",
   "statsBalance": "Zůstatek",
   "statsTotalEarned": "Celkem získáno",
-  "statsPointsHistory": "Historie bodů"
+  "statsPointsHistory": "Historie bodů",
+  "settingsParents": "Rodičovská zóna",
+  "parentsGateTitle": "Jen pro rodiče",
+  "parentsGateQuestion": "Kolik je {a} × {b}?",
+  "parentsGateWrong": "To není správně.",
+  "parentsGateOpen": "Otevřít",
+  "parentsGiftTitle": "Darovat body",
+  "parentsGiftConfirm": "Darovat {points} ● hráči {name}?",
+  "parentsGiftAction": "Darovat",
+  "parentsGiftDone": "Darováno: {points} ● – {name}"
 }

@@ -1365,6 +1365,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Points history'**
   String get statsPointsHistory;
+
+  /// No description provided for @settingsParents.
+  ///
+  /// In en, this message translates to:
+  /// **'Parents\' corner'**
+  String get settingsParents;
+
+  /// No description provided for @parentsGateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Parents only'**
+  String get parentsGateTitle;
+
+  /// No description provided for @parentsGateQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What is {a} × {b}?'**
+  String parentsGateQuestion(int a, int b);
+
+  /// No description provided for @parentsGateWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'That is not right.'**
+  String get parentsGateWrong;
+
+  /// No description provided for @parentsGateOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get parentsGateOpen;
+
+  /// No description provided for @parentsGiftTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Give points'**
+  String get parentsGiftTitle;
+
+  /// No description provided for @parentsGiftConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Give {points} ● to {name}?'**
+  String parentsGiftConfirm(int points, String name);
+
+  /// No description provided for @parentsGiftAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Give'**
+  String get parentsGiftAction;
+
+  /// No description provided for @parentsGiftDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Given: {points} ● – {name}'**
+  String parentsGiftDone(int points, String name);
 }
 
 class _AppLocalizationsDelegate
