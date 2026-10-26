@@ -18,13 +18,15 @@ import '../features/wardrobe/wardrobe_screen.dart';
 import '../features/settings/parents_screen.dart';
 import '../features/settings/settings_screen.dart';
 import '../features/settings/ui_kit_catalog_screen.dart';
+import '../games/registry.dart';
 import 'app_shell.dart';
 
-GoRouter buildRouter() {
+/// [startGame]: a game id whose setup opens first (development, spec 8 bod 5).
+GoRouter buildRouter({String? startGame}) {
   final rootKey = GlobalKey<NavigatorState>();
   return GoRouter(
     navigatorKey: rootKey,
-    initialLocation: '/games',
+    initialLocation: startGame != null && moduleById(startGame) != null ? '/play/$startGame/setup' : '/games',
     routes: [
       // Games run full screen above the navigation. Placeholders until the
       // setup and game screens exist (milestone 4, tasks 5–6).

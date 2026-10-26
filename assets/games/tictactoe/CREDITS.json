@@ -1,0 +1,26 @@
+[
+  {
+    "file": "music/tictactoe.ogg",
+    "title": "Local Forecast - Elevator",
+    "author": "Kevin MacLeod",
+    "source_url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Local%20Forecast%20-%20Elevator.mp3",
+    "license": "CC BY 4.0",
+    "attribution_text": "\"Local Forecast - Elevator\" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0, http://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+    "file": "games/tictactoe/sfx/draw.ogg",
+    "title": "Zástupný efekt tictactoe.draw",
+    "author": "Deskovky (vygenerováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "license": "CC0 1.0",
+    "attribution_text": "„Zástupný efekt tictactoe.draw“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  },
+  {
+    "file": "games/tictactoe/sfx/line.ogg",
+    "title": "Zástupný efekt tictactoe.line",
+    "author": "Deskovky (vygenerováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "license": "CC0 1.0",
+    "attribution_text": "„Zástupný efekt tictactoe.line“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  }
+]

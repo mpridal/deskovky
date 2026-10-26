@@ -131,9 +131,6 @@
   "homeCreatePlayer": "Create a player",
   "settingsLanguage": "Language",
   "settingsLanguageSystem": "Phone setting",
-  "sampleTitle": "Guess the number",
-  "sampleDescription": "Who guesses the secret number first?",
-  "sampleRules": "The game hides a number. Players take turns guessing. After each guess you learn whether the secret number is higher or lower. Whoever hits it wins!",
   "gamePlayersRange": "{min}–{max} players",
   "@gamePlayersRange": {
     "placeholders": {
@@ -183,7 +180,6 @@
   "difficultyEasy": "Easy",
   "difficultyMedium": "Medium",
   "difficultyHard": "Hard",
-  "sampleOptionRange": "Number range",
   "setupPlayers": "Number of players",
   "seatsHumans": "{count, plural, one{{count} person} other{{count} people}}",
   "@seatsHumans": {
@@ -272,22 +268,6 @@
       }
     }
   },
-  "sampleHigher": "Higher!",
-  "sampleLower": "Lower!",
-  "sampleTurnHint": "{name}, guess a number from {low} to {high}",
-  "@sampleTurnHint": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      },
-      "low": {
-        "type": "int"
-      },
-      "high": {
-        "type": "int"
-      }
-    }
-  },
   "seatReplacedByRobot": "Missing players were replaced by robots.",
   "settingsSound": "Sound",
   "settingsMusic": "Music",
@@ -317,8 +297,6 @@
   "badgeHardWinDescription": "Beat the robots on Hard.",
   "badgeAllGamesTitle": "Explorer",
   "badgeAllGamesDescription": "Play every game.",
-  "sampleBadgeBullseyeTitle": "Bullseye!",
-  "sampleBadgeBullseyeDescription": "Guess the number with your first tip.",
   "resultNewBadges": "New badges",
   "leaderboardWeek": "Week",
   "leaderboardMonth": "Month",
@@ -771,5 +749,6 @@
   "shopHooray": "Hooray!",
   "shopNotEnough": "You don't have enough points for that now.",
   "shopFailed": "That didn't work. Try again.",
-  "updatePreparing": "Preparing the update…"
+  "updatePreparing": "Preparing the update…",
+  "setupDifficultySolo": "Difficulty"
 }

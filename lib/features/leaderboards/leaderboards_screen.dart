@@ -59,7 +59,8 @@ class _LeaderboardsScreenState extends ConsumerState<LeaderboardsScreen> {
           ChoicePills<String?>(
             choices: [
               (null, l10n.leaderboardAllGames),
-              for (final m in gameModules) (m.id, gameText(l10n, m.titleKey)),
+              for (final m in gameModules)
+                if (m.available) (m.id, gameText(l10n, m.titleKey)),
             ],
             selected: _query.gameId,
             onChanged: (id) => setState(() => _query = _query.copyWith(gameId: () => id)),

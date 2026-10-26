@@ -279,16 +279,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settingsLanguageSystem => 'Según el teléfono';
 
   @override
-  String get sampleTitle => 'Adivina el número';
-
-  @override
-  String get sampleDescription => '¿Quién adivina primero el número secreto?';
-
-  @override
-  String get sampleRules =>
-      'El juego esconde un número. Los jugadores adivinan por turnos. Después de cada intento sabréis si el número secreto es mayor o menor. ¡Gana quien lo acierte!';
-
-  @override
   String gamePlayersRange(int min, int max) {
     return '$min–$max jugadores';
   }
@@ -322,9 +312,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get difficultyHard => 'Difícil';
-
-  @override
-  String get sampleOptionRange => 'Rango de números';
 
   @override
   String get setupPlayers => 'Número de jugadores';
@@ -480,17 +467,6 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get sampleHigher => '¡Más!';
-
-  @override
-  String get sampleLower => '¡Menos!';
-
-  @override
-  String sampleTurnHint(String name, int low, int high) {
-    return '$name, adivina un número del $low al $high';
-  }
-
-  @override
   String get seatReplacedByRobot =>
       'Los jugadores que faltan han sido sustituidos por robots.';
 
@@ -558,13 +534,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get badgeAllGamesDescription => 'Juega a todos los juegos.';
-
-  @override
-  String get sampleBadgeBullseyeTitle => '¡En el blanco!';
-
-  @override
-  String get sampleBadgeBullseyeDescription =>
-      'Adivina el número a la primera.';
 
   @override
   String get resultNewBadges => 'Insignias nuevas';
@@ -1129,4 +1098,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get updatePreparing => 'Preparando la actualización…';
+
+  @override
+  String get setupDifficultySolo => 'Dificultad';
 }

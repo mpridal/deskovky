@@ -21,4 +21,13 @@ void main() {
       expect(path, startsWith('sfx/'));
     }
   });
+
+  test('game effects join the catalog; every music track is OGG named after its id', () {
+    final catalog = AudioCatalog.standard.withSfx({'demo.boing': 'games/demo/sfx/boing.ogg'});
+    expect(catalog.sfx['demo.boing'], 'games/demo/sfx/boing.ogg');
+    expect(catalog.sfx['tap'], AudioCatalog.standard.sfx['tap']);
+    for (final MapEntry(key: id, value: path) in AudioCatalog.standard.music.entries) {
+      expect(path, 'music/$id.ogg');
+    }
+  });
 }

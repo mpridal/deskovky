@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../core/audio/credits.dart';
+import '../games/registry.dart';
 
 bool _registered = false;
 
@@ -14,7 +15,7 @@ void registerAppLicenses() {
     for (final (name, file) in [('Baloo 2', 'OFL-Baloo2.txt'), ('Nunito', 'OFL-Nunito.txt')]) {
       yield LicenseEntryWithLineBreaks([name], await rootBundle.loadString('assets/fonts/$file'));
     }
-    for (final credit in await loadCredits(rootBundle)) {
+    for (final credit in await loadCredits(rootBundle, games: [for (final m in gameModules) m.id])) {
       yield LicenseEntryWithLineBreaks([credit.title], '${credit.attribution}\n${credit.license}\n${credit.sourceUrl}');
     }
   });

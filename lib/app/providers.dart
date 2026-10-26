@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/audio/audio_catalog.dart';
@@ -22,6 +23,7 @@ import '../core/stats/leaderboard.dart';
 import '../core/stats/match_record.dart';
 import '../core/stats/player_stats.dart';
 import '../core/stats/stats_repository.dart';
+import '../games/registry.dart';
 import 'stats_service.dart';
 
 /// The app database. Overridden in `main()` with [AppDatabase.open] and in
@@ -66,7 +68,10 @@ final vibrationOnProvider = StreamProvider<bool>((ref) => ref.watch(settingsRepo
 
 /// Music and effects; tests override it with a fake backend.
 final audioServiceProvider = Provider<AudioService>((ref) {
-  final service = AudioService(backend: JustAudioBackend(), catalog: AudioCatalog.standard);
+  final service = AudioService(
+    backend: JustAudioBackend(),
+    catalog: AudioCatalog.standard.withSfx({for (final m in gameModules) ...m.sfx}),
+  );
   ref.onDispose(service.dispose);
   return service;
 });
@@ -164,3 +169,10 @@ final triedItemsProvider = StreamProvider.autoDispose.family<Set<String>, int>(
 final ownedItemsProvider = StreamProvider.autoDispose.family<Set<String>, int>(
   (ref, playerId) => ref.watch(shopRepositoryProvider).watchOwned(playerId),
 );
+
+/// For game development (spec 8 bod 5): `flutter run --dart-define=GAME=memory`
+/// opens that game's setup straight away. Debug builds only.
+final startGameProvider = Provider<String?>((ref) {
+  const game = String.fromEnvironment('GAME');
+  return kDebugMode && game.isNotEmpty ? game : null;
+});

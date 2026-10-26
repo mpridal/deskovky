@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/audio/credits.dart';
+import '../../games/registry.dart';
 import '../../l10n/app_localizations.dart';
 import '../../ui_kit/components/paper_card.dart';
 import '../../ui_kit/components/primary_button.dart';
@@ -23,7 +24,10 @@ class CreditsScreen extends StatefulWidget {
 }
 
 class _CreditsScreenState extends State<CreditsScreen> {
-  late final Future<List<Credit>> _credits = loadCredits(DefaultAssetBundle.of(context));
+  late final Future<List<Credit>> _credits = loadCredits(
+    DefaultAssetBundle.of(context),
+    games: [for (final m in gameModules) m.id],
+  );
 
   @override
   Widget build(BuildContext context) {

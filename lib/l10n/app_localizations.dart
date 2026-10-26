@@ -592,24 +592,6 @@ abstract class AppLocalizations {
   /// **'Phone setting'**
   String get settingsLanguageSystem;
 
-  /// No description provided for @sampleTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Guess the number'**
-  String get sampleTitle;
-
-  /// No description provided for @sampleDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'Who guesses the secret number first?'**
-  String get sampleDescription;
-
-  /// No description provided for @sampleRules.
-  ///
-  /// In en, this message translates to:
-  /// **'The game hides a number. Players take turns guessing. After each guess you learn whether the secret number is higher or lower. Whoever hits it wins!'**
-  String get sampleRules;
-
   /// No description provided for @gamePlayersRange.
   ///
   /// In en, this message translates to:
@@ -663,12 +645,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hard'**
   String get difficultyHard;
-
-  /// No description provided for @sampleOptionRange.
-  ///
-  /// In en, this message translates to:
-  /// **'Number range'**
-  String get sampleOptionRange;
 
   /// No description provided for @setupPlayers.
   ///
@@ -928,24 +904,6 @@ abstract class AppLocalizations {
   /// **'{game} · {difficulty}'**
   String resultSubtitle(String game, String difficulty);
 
-  /// No description provided for @sampleHigher.
-  ///
-  /// In en, this message translates to:
-  /// **'Higher!'**
-  String get sampleHigher;
-
-  /// No description provided for @sampleLower.
-  ///
-  /// In en, this message translates to:
-  /// **'Lower!'**
-  String get sampleLower;
-
-  /// No description provided for @sampleTurnHint.
-  ///
-  /// In en, this message translates to:
-  /// **'{name}, guess a number from {low} to {high}'**
-  String sampleTurnHint(String name, int low, int high);
-
   /// No description provided for @seatReplacedByRobot.
   ///
   /// In en, this message translates to:
@@ -1077,18 +1035,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Play every game.'**
   String get badgeAllGamesDescription;
-
-  /// No description provided for @sampleBadgeBullseyeTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Bullseye!'**
-  String get sampleBadgeBullseyeTitle;
-
-  /// No description provided for @sampleBadgeBullseyeDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'Guess the number with your first tip.'**
-  String get sampleBadgeBullseyeDescription;
 
   /// No description provided for @resultNewBadges.
   ///
@@ -2037,6 +1983,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Preparing the update…'**
   String get updatePreparing;
+
+  /// No description provided for @setupDifficultySolo.
+  ///
+  /// In en, this message translates to:
+  /// **'Difficulty'**
+  String get setupDifficultySolo;
 }
 
 class _AppLocalizationsDelegate

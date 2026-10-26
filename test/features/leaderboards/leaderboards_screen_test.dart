@@ -63,6 +63,12 @@ void main() {
     expect(find.text('Zatím tu nikdo není. Dohrajte hru!'), findsOneWidget);
   });
 
+  testWidgets('the game filter lists only games you can play, not the "Brzy" ones', (tester) async {
+    await _open(tester, db);
+    expect(find.text('Hádej číslo'), findsOneWidget);
+    expect(find.text('Piškvorky'), findsNothing);
+  });
+
   testWidgets('all time: people ranked by wins, robots never listed', (tester) async {
     await _seed(tester, db);
     await _open(tester, db);

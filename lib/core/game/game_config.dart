@@ -130,16 +130,20 @@ class GameConfig {
 /// A game in progress as config + seed + moves; restoring replays the moves.
 @immutable
 class SavedGame {
-  const SavedGame({required this.config, required this.seed, required this.moves});
+  const SavedGame({required this.config, required this.seed, required this.moves, this.elapsedMs = 0});
 
   final GameConfig config;
   final int seed;
   final List<Move> moves;
 
+  /// Playing time so far, without pauses (spec 13.4: saved with the game).
+  final int elapsedMs;
+
   Map<String, Object?> toJson() => {
     'config': config.toJson(),
     'seed': seed,
     'moves': [for (final m in moves) m.toJson()],
+    'elapsedMs': elapsedMs,
   };
 
   static SavedGame? fromJson(Object? json) {
@@ -150,13 +154,18 @@ class SavedGame {
     if (config == null || seed is! int || rawMoves is! List) return null;
     final moves = [for (final m in rawMoves) Move.fromJson(m)];
     if (moves.contains(null)) return null;
-    return SavedGame(config: config, seed: seed, moves: moves.cast<Move>());
+    final elapsed = json['elapsedMs'];
+    return SavedGame(config: config, seed: seed, moves: moves.cast<Move>(), elapsedMs: elapsed is int && elapsed > 0 ? elapsed : 0);
   }
 
   @override
   bool operator ==(Object other) =>
-      other is SavedGame && other.config == config && other.seed == seed && listEquals(other.moves, moves);
+      other is SavedGame &&
+      other.config == config &&
+      other.seed == seed &&
+      other.elapsedMs == elapsedMs &&
+      listEquals(other.moves, moves);
 
   @override
-  int get hashCode => Object.hash(config, seed, Object.hashAll(moves));
+  int get hashCode => Object.hash(config, seed, elapsedMs, Object.hashAll(moves));
 }

@@ -278,16 +278,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsLanguageSystem => 'Phone setting';
 
   @override
-  String get sampleTitle => 'Guess the number';
-
-  @override
-  String get sampleDescription => 'Who guesses the secret number first?';
-
-  @override
-  String get sampleRules =>
-      'The game hides a number. Players take turns guessing. After each guess you learn whether the secret number is higher or lower. Whoever hits it wins!';
-
-  @override
   String gamePlayersRange(int min, int max) {
     return '$min–$max players';
   }
@@ -321,9 +311,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get difficultyHard => 'Hard';
-
-  @override
-  String get sampleOptionRange => 'Number range';
 
   @override
   String get setupPlayers => 'Number of players';
@@ -479,17 +466,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get sampleHigher => 'Higher!';
-
-  @override
-  String get sampleLower => 'Lower!';
-
-  @override
-  String sampleTurnHint(String name, int low, int high) {
-    return '$name, guess a number from $low to $high';
-  }
-
-  @override
   String get seatReplacedByRobot => 'Missing players were replaced by robots.';
 
   @override
@@ -556,13 +532,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get badgeAllGamesDescription => 'Play every game.';
-
-  @override
-  String get sampleBadgeBullseyeTitle => 'Bullseye!';
-
-  @override
-  String get sampleBadgeBullseyeDescription =>
-      'Guess the number with your first tip.';
 
   @override
   String get resultNewBadges => 'New badges';
@@ -1126,4 +1095,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get updatePreparing => 'Preparing the update…';
+
+  @override
+  String get setupDifficultySolo => 'Difficulty';
 }

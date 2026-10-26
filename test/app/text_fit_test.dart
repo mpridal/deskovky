@@ -1,5 +1,6 @@
 import 'package:deskovky/core/avatar/avatar_spec.dart';
 import 'package:deskovky/core/players/player_repository.dart';
+import 'package:deskovky/games/game_texts.dart';
 import 'package:deskovky/l10n/app_localizations.dart';
 import 'package:deskovky/ui_kit/components/primary_button.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +77,7 @@ void main() {
           addTearDown(db.close);
           await tester.runAsync(() => PlayerRepository(db).create(name: 'Maximiliánek123', avatar: AvatarSpec.defaults));
           await pumpApp(tester, size: size, locale: locale, textScale: scale, db: db, disableAnimations: true);
-          await tester.tap(find.text(l10n.sampleTitle).first);
+          await tester.tap(find.text(gameText(l10n, 'sample.title')).first);
           await tester.pumpAndSettle();
           for (final label in [l10n.setupPlayers, l10n.setupDifficulty, l10n.speedSlow, l10n.speedNormal, l10n.speedFast]) {
             await tester.scrollUntilVisible(find.text(label), 100, scrollable: find.byType(Scrollable).first);

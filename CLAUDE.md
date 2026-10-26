@@ -60,12 +60,18 @@ Flutter není v PATH starších terminálů – v případě potřeby `export PA
 
 - `GameRules.legalMoves(state, seat)` je povinný: když AI spadne nebo vrátí neplatný tah, `TurnController` zahraje legální tah vybraný ze seedu – robot nikdy „nepřemýšlí“ navždy.
 
-- Nová hra = `GameModule` + `GameRules` + `AiPlayer` + deska ve `lib/games/<id>/`, registrace v `lib/games/registry.dart` (podrobný návod `docs/GAME_MODULE_GUIDE.md` v milníku 10). Vzor: `lib/games/_sample/`.
+- Nová hra = `GameModule` + `GameRules` + `AiPlayer` + deska ve `lib/games/<id>/`, texty v `<id>_texts.dart` (`GameTexts`, cs/en/es). Návod: `docs/GAME_MODULE_GUIDE.md`. Vzor: `lib/games/_sample/`. Všech 5 her fáze 2 je zaregistrovaných jako kostry (`available: false` → „Brzy“).
 - Každá akce hráče je `Move` přes `GameBoardView.submit`; deska nikdy nemění stav sama.
 - Testy, které otevřou herní obrazovku: `pumpApp(..., disableAnimations: true)` (pulzování hráče na tahu je nekonečné → `pumpAndSettle` by nikdy neskončil). Roboti v testech běží přes `InlineAiRunner` (nastavuje `pumpApp`).
 - Ruční průchod na emulátoru skriptem přes `uiautomator dump`: na herní obrazovce dočasně `adb shell settings put global animator_duration_scale 0` (a transition/window), jinak uiautomator nečeká na klid; po skončení vrátit na 1.
 
-Pravidla paralelní práce (kap. 13.2 zadání) se doplní v milníku 9.
+### Paralelní vývoj her (kap. 13.2, milník 9)
+- 1 hra = 1 větev `game/<id>` = 1 worktree = 1 session. Session mění **jen** `lib/games/<id>/**`, `assets/games/<id>/**`, `test/games/<id>/**` a `assets/audio/music/<id>.ogg`; CI to hlídá (`dart run tool/check_scope.dart <větev>`).
+- Framework, `registry.dart`, sdílené ARB, `pubspec.yaml` a CI se v herní větvi nemění; potřeby frameworku → `lib/games/<id>/FRAMEWORK_REQUESTS.md`.
+- Každá hra projde `runGameContract(<id>Module)` z `test/games/contract.dart`.
+- API v1.0 (`GameModule`, `GameRules`, `GameBoardView`, `GameHost`, `GameResult`, `GameTexts`, game kit) je zmrazené tagem `framework-v1` – tag `v0.9.0-framework` ze zadání se nepoužívá, protože tagy `v*` spouštějí vydání.
+- Game kit: `lib/core/game_kit/` (`BoardGrid`, `PieceToken`/`HoppingPiece`, `FlipCard`, `Dice`, `GameSearch`); herní čas je `GameBoardView.elapsed()` a ukládá se s partií.
+- `flutter run --dart-define=GAME=<id>` otevře v debug buildu rovnou nastavení dané hry.
 
 ## Zvuk (milník 5)
 
@@ -73,7 +79,7 @@ Pravidla paralelní práce (kap. 13.2 zadání) se doplní v milníku 9.
 - Hudbu vybírá `AudioDirector` (`lib/app/audio_director.dart`) podle trasy: `/play/<id>` a jeho výsledky → `module.musicTrack`, jinde `menu`. Hry samy hudbu nespouštějí, jen efekty přes `GameHost.playSfx(id)`; zvuk `turn` hraje framework při změně hráče.
 - Tlačítka ui_kitu cvakají přes `UiFeedback` (tap/back/toggle); zpětné tlačítko dostane `sound: UiSound.back`.
 - **Výměna zástupných zvuků za skutečné:** 1) soubor do `assets/audio/music/` nebo `sfx/` (OGG nebo MP3 – just_audio hraje obojí; bez ffmpeg necháváme MP3 tak, jak je), 2) cesta v `AudioCatalog.standard` (`lib/core/audio/audio_catalog.dart`), 3) záznam v `assets/audio/CREDITS.json` (`file, title, author, source_url, license, attribution_text`; u CC BY přesný text uvedení). Test `audio_assets_test.dart` hlídá, že každý soubor existuje, má záznam a hudba je ≤ 15 MB. Zástupné WAV znovu vygeneruje `python tool/generate_placeholder_audio.py` (záznamy skutečných nahrávek v CREDITS.json ponechá; vyměněnou stopu z jeho seznamu `MUSIC`/`SFX` smaž).
-- Skutečná hudba zatím: menu = „Carefree“, Hádej číslo = „Quirky Dog“ (obě Kevin MacLeod, incompetech.com, CC BY 4.0, MP3 256 kb/s).
+- Hudba je OGG (`music/<id>.ogg`, převod `C:/dev/tools/ffmpeg/bin/ffmpeg.exe -i x.mp3 -c:a libvorbis -b:a 96k x.ogg`); efekty her jsou v `assets/games/<id>/sfx/` a jejich licence v `assets/games/<id>/CREDITS.json`. Skutečná hudba: menu „Carefree“, Hádej číslo „Quirky Dog“, Piškvorky „Local Forecast – Elevator“, Pexeso „Monkeys Spinning Monkeys“, Miny „Sneaky Snitch“, Člověče „Fluffing a Duck“ (Kevin MacLeod, CC BY 4.0); Dáma zatím zástupná.
 - `dart format` spouštěj jen na nové soubory, ne na celý strom (přeformátoval by stovky řádků).
 
 ## Statistiky a odznaky (milník 6)

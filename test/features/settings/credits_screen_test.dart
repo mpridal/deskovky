@@ -17,9 +17,12 @@ Future<void> _openCredits(WidgetTester tester, {Locale locale = const Locale('cs
   await tester.scrollUntilVisible(link, 200);
   await tester.tap(link);
   await tester.pumpAndSettle();
-  // CREDITS.json is read from the asset bundle with real file I/O.
-  await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
-  await tester.pumpAndSettle();
+  // The credits (shared and the games' own) are read with real file I/O;
+  // under load it takes a few rounds.
+  for (var i = 0; i < 20 && find.text('Carefree').evaluate().isEmpty; i++) {
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+    await tester.pumpAndSettle();
+  }
   expect(find.byType(CreditsScreen), findsOneWidget);
 }
 
@@ -35,11 +38,17 @@ void main() {
     expect(credits.single.attribution, '"Wallpaper" Kevin MacLeod (incompetech.com)');
   });
 
+  test("games' own credits join the shared ones; a game without a file is fine", () async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    final credits = await loadCredits(rootBundle, games: ['ludo', 'nothing']);
+    expect(credits.map((c) => c.title), containsAll(['Carefree', 'Fluffing a Duck', 'Zástupný efekt ludo.boing']));
+  });
+
   test('the bundled CREDITS.json loads', () async {
     TestWidgetsFlutterBinding.ensureInitialized();
     final credits = await loadCredits(rootBundle);
     expect(credits, isNotEmpty);
-    expect(credits.map((c) => c.file), contains('music/menu.mp3'));
+    expect(credits.map((c) => c.file), contains('music/menu.ogg'));
   });
 
   testWidgets('settings lead to credits with sounds, fonts and library licences', (tester) async {
@@ -54,7 +63,12 @@ void main() {
     await tester.ensureVisible(find.text('Licence knihoven'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Licence knihoven'));
-    await tester.pumpAndSettle();
+    // The licence page reads fonts and credits with real I/O; let it finish,
+    // or the cached half-done reads would hang later tests.
+    for (var i = 0; i < 6; i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+      await tester.pumpAndSettle();
+    }
     expect(find.byType(LicensePage), findsOneWidget);
   });
 
