@@ -154,3 +154,8 @@ final shopRepositoryProvider = Provider<ShopRepository>(
     stats: ref.watch(statsRepositoryProvider),
   ),
 );
+
+/// A player's owned upgrades (bought and badge-unlocked).
+final ownedItemsProvider = StreamProvider.autoDispose.family<Set<String>, int>(
+  (ref, playerId) => ref.watch(shopRepositoryProvider).watchOwned(playerId),
+);

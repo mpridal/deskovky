@@ -961,4 +961,89 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get badgeCollectorDescription => 'Buy 10 avatar upgrades.';
+
+  @override
+  String get shopTitle => 'Shop';
+
+  @override
+  String shopTryOn(String name) {
+    return 'Trying on: $name';
+  }
+
+  @override
+  String get shopAll => 'All';
+
+  @override
+  String get slotHead => 'Head';
+
+  @override
+  String get slotFace => 'Face';
+
+  @override
+  String get slotHand => 'Hand';
+
+  @override
+  String get slotPet => 'Pet';
+
+  @override
+  String get slotFrame => 'Frame';
+
+  @override
+  String get slotEffect => 'Effect';
+
+  @override
+  String shopBuy(int price) {
+    return 'Buy for $price ●';
+  }
+
+  @override
+  String shopBuyConfirm(String name, int price) {
+    return 'Buy $name for $price ●?';
+  }
+
+  @override
+  String get shopBuyAction => 'Buy';
+
+  @override
+  String shopMissing(int points) {
+    return 'You need $points more ●';
+  }
+
+  @override
+  String shopLevelLock(int level) {
+    return '🔒 Level $level';
+  }
+
+  @override
+  String shopBadgeLock(String name) {
+    return '🔒 Badge: $name';
+  }
+
+  @override
+  String get shopOwned => 'Owned';
+
+  @override
+  String get shopEquipped => 'Wearing';
+
+  @override
+  String get shopEquipNow => 'Wear it now?';
+
+  @override
+  String get shopEquip => 'Wear';
+
+  @override
+  String get shopUnequip => 'Take off';
+
+  @override
+  String get shopNotNow => 'Not now';
+
+  @override
+  String shopNextLevel(int level, int next, int points) {
+    return 'Level $level → $next · $points points to go';
+  }
+
+  @override
+  String shopPlayerLevel(String name, int level) {
+    return '$name · Level $level';
+  }
 }

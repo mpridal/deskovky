@@ -600,5 +600,96 @@
   "badgeAllHardTitle": "Master of all games",
   "badgeAllHardDescription": "Beat the robots on Hard in every game. Reward: a star frame.",
   "badgeCollectorTitle": "Collector",
-  "badgeCollectorDescription": "Buy 10 avatar upgrades."
+  "badgeCollectorDescription": "Buy 10 avatar upgrades.",
+  "shopTitle": "Shop",
+  "shopTryOn": "Trying on: {name}",
+  "@shopTryOn": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shopAll": "All",
+  "slotHead": "Head",
+  "slotFace": "Face",
+  "slotHand": "Hand",
+  "slotPet": "Pet",
+  "slotFrame": "Frame",
+  "slotEffect": "Effect",
+  "shopBuy": "Buy for {price} ●",
+  "@shopBuy": {
+    "placeholders": {
+      "price": {
+        "type": "int"
+      }
+    }
+  },
+  "shopBuyConfirm": "Buy {name} for {price} ●?",
+  "@shopBuyConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "price": {
+        "type": "int"
+      }
+    }
+  },
+  "shopBuyAction": "Buy",
+  "shopMissing": "You need {points} more ●",
+  "@shopMissing": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "shopLevelLock": "🔒 Level {level}",
+  "@shopLevelLock": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "shopBadgeLock": "🔒 Badge: {name}",
+  "@shopBadgeLock": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shopOwned": "Owned",
+  "shopEquipped": "Wearing",
+  "shopEquipNow": "Wear it now?",
+  "shopEquip": "Wear",
+  "shopUnequip": "Take off",
+  "shopNotNow": "Not now",
+  "shopNextLevel": "Level {level} → {next} · {points} points to go",
+  "@shopNextLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      },
+      "next": {
+        "type": "int"
+      },
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "shopPlayerLevel": "{name} · Level {level}",
+  "@shopPlayerLevel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "level": {
+        "type": "int"
+      }
+    }
+  }
 }

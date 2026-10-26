@@ -972,4 +972,89 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get badgeCollectorDescription => 'Kup si 10 vylepšení avatara.';
+
+  @override
+  String get shopTitle => 'Obchod';
+
+  @override
+  String shopTryOn(String name) {
+    return 'Zkouška: $name';
+  }
+
+  @override
+  String get shopAll => 'Vše';
+
+  @override
+  String get slotHead => 'Na hlavu';
+
+  @override
+  String get slotFace => 'Obličej';
+
+  @override
+  String get slotHand => 'Do ruky';
+
+  @override
+  String get slotPet => 'Mazlíček';
+
+  @override
+  String get slotFrame => 'Rámeček';
+
+  @override
+  String get slotEffect => 'Efekt';
+
+  @override
+  String shopBuy(int price) {
+    return 'Koupit za $price ●';
+  }
+
+  @override
+  String shopBuyConfirm(String name, int price) {
+    return 'Koupit $name za $price ●?';
+  }
+
+  @override
+  String get shopBuyAction => 'Koupit';
+
+  @override
+  String shopMissing(int points) {
+    return 'Chybí ti $points ●';
+  }
+
+  @override
+  String shopLevelLock(int level) {
+    return '🔒 Úroveň $level';
+  }
+
+  @override
+  String shopBadgeLock(String name) {
+    return '🔒 Odznak: $name';
+  }
+
+  @override
+  String get shopOwned => 'Máš';
+
+  @override
+  String get shopEquipped => 'Nasazeno';
+
+  @override
+  String get shopEquipNow => 'Nasadit hned?';
+
+  @override
+  String get shopEquip => 'Nasadit';
+
+  @override
+  String get shopUnequip => 'Sundat';
+
+  @override
+  String get shopNotNow => 'Teď ne';
+
+  @override
+  String shopNextLevel(int level, int next, int points) {
+    return 'Úroveň $level → $next · ještě $points bodů';
+  }
+
+  @override
+  String shopPlayerLevel(String name, int level) {
+    return '$name · Úroveň $level';
+  }
 }

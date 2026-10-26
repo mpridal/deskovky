@@ -52,6 +52,12 @@ class ShopRepository {
     };
   }
 
+  /// Owned items now and after every purchase or reset.
+  Stream<Set<String>> watchOwned(int playerId) => (_db.select(_db.playerItems)
+        ..where((i) => i.playerId.equals(playerId)))
+      .watch()
+      .asyncMap((_) => owned(playerId));
+
   Future<BuyResult> buy(int playerId, String itemId) => _db.transaction(() async {
     final item = catalog.byId(itemId);
     if (item == null) return const BuyResult(BuyOutcome.unknown);

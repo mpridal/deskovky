@@ -1767,6 +1767,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Buy 10 avatar upgrades.'**
   String get badgeCollectorDescription;
+
+  /// No description provided for @shopTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop'**
+  String get shopTitle;
+
+  /// No description provided for @shopTryOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Trying on: {name}'**
+  String shopTryOn(String name);
+
+  /// No description provided for @shopAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get shopAll;
+
+  /// No description provided for @slotHead.
+  ///
+  /// In en, this message translates to:
+  /// **'Head'**
+  String get slotHead;
+
+  /// No description provided for @slotFace.
+  ///
+  /// In en, this message translates to:
+  /// **'Face'**
+  String get slotFace;
+
+  /// No description provided for @slotHand.
+  ///
+  /// In en, this message translates to:
+  /// **'Hand'**
+  String get slotHand;
+
+  /// No description provided for @slotPet.
+  ///
+  /// In en, this message translates to:
+  /// **'Pet'**
+  String get slotPet;
+
+  /// No description provided for @slotFrame.
+  ///
+  /// In en, this message translates to:
+  /// **'Frame'**
+  String get slotFrame;
+
+  /// No description provided for @slotEffect.
+  ///
+  /// In en, this message translates to:
+  /// **'Effect'**
+  String get slotEffect;
+
+  /// No description provided for @shopBuy.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy for {price} ●'**
+  String shopBuy(int price);
+
+  /// No description provided for @shopBuyConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy {name} for {price} ●?'**
+  String shopBuyConfirm(String name, int price);
+
+  /// No description provided for @shopBuyAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy'**
+  String get shopBuyAction;
+
+  /// No description provided for @shopMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'You need {points} more ●'**
+  String shopMissing(int points);
+
+  /// No description provided for @shopLevelLock.
+  ///
+  /// In en, this message translates to:
+  /// **'🔒 Level {level}'**
+  String shopLevelLock(int level);
+
+  /// No description provided for @shopBadgeLock.
+  ///
+  /// In en, this message translates to:
+  /// **'🔒 Badge: {name}'**
+  String shopBadgeLock(String name);
+
+  /// No description provided for @shopOwned.
+  ///
+  /// In en, this message translates to:
+  /// **'Owned'**
+  String get shopOwned;
+
+  /// No description provided for @shopEquipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Wearing'**
+  String get shopEquipped;
+
+  /// No description provided for @shopEquipNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Wear it now?'**
+  String get shopEquipNow;
+
+  /// No description provided for @shopEquip.
+  ///
+  /// In en, this message translates to:
+  /// **'Wear'**
+  String get shopEquip;
+
+  /// No description provided for @shopUnequip.
+  ///
+  /// In en, this message translates to:
+  /// **'Take off'**
+  String get shopUnequip;
+
+  /// No description provided for @shopNotNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get shopNotNow;
+
+  /// No description provided for @shopNextLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Level {level} → {next} · {points} points to go'**
+  String shopNextLevel(int level, int next, int points);
+
+  /// No description provided for @shopPlayerLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} · Level {level}'**
+  String shopPlayerLevel(String name, int level);
 }
 
 class _AppLocalizationsDelegate
