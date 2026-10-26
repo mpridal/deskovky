@@ -122,3 +122,6 @@ final statsNowProvider = StreamProvider<DateTime>((ref) {
   });
   return controller.stream;
 });
+
+/// Every points movement of every player (leaderboards, balances).
+final pointsLedgerProvider = StreamProvider<List<PointsEntry>>((ref) => ref.watch(pointsRepositoryProvider).watchAll());

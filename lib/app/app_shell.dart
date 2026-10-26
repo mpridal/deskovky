@@ -166,6 +166,7 @@ class _WeekLeaderboard extends ConsumerWidget {
       const LeaderboardQuery(period: StatsPeriod.week),
       now: ref.watch(statsNowProvider).value ?? ref.read(statsRepositoryProvider).now(),
       players: players.keys.toSet(),
+      points: ref.watch(pointsLedgerProvider).value ?? const [],
     ).take(4).toList();
     if (rows.isEmpty) return Text(l10n.screenEmpty, style: AppTypography.caption(color: AppColors.woodLight));
     return Column(
@@ -187,7 +188,7 @@ class _WeekLeaderboard extends ConsumerWidget {
                     style: AppTypography.body(color: AppColors.paper),
                   ),
                 ),
-                Text(l10n.leaderboardWins(row.wins), style: AppTypography.caption(color: AppColors.paper)),
+                Text('● ${row.points}', style: AppTypography.button(color: AppColors.gold)),
               ],
             ),
           ),

@@ -33,7 +33,13 @@ class _LeaderboardsScreenState extends ConsumerState<LeaderboardsScreen> {
     final matches = ref.watch(allMatchesProvider).value ?? const [];
     final players = {for (final p in ref.watch(playersProvider).value ?? const <PlayerProfile>[]) p.id: p};
     final now = ref.watch(statsNowProvider).value ?? ref.read(statsRepositoryProvider).now();
-    final rows = leaderboard(matches, _query, now: now, players: players.keys.toSet());
+    final rows = leaderboard(
+      matches,
+      _query,
+      now: now,
+      players: players.keys.toSet(),
+      points: ref.watch(pointsLedgerProvider).value ?? const [],
+    );
     return SafeArea(
       child: ListView(
         padding: const EdgeInsets.all(16),
@@ -110,14 +116,14 @@ class _Row extends StatelessWidget {
                   style: AppTypography.button(color: AppColors.ink),
                 ),
                 Text(
-                  l10n.leaderboardDetail(entry.played, (entry.winRate * 100).round()),
+                  '${l10n.leaderboardWins(entry.wins)} · ${l10n.leaderboardDetail(entry.played, (entry.winRate * 100).round())}',
                   style: AppTypography.caption(color: AppColors.ink),
                 ),
               ],
             ),
           ),
           const SizedBox(width: 8),
-          Text(l10n.leaderboardWins(entry.wins), style: AppTypography.button(color: AppColors.ink)),
+          Text('● ${entry.points}', style: AppTypography.button(color: AppColors.wood)),
         ],
       ),
     );
