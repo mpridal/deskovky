@@ -35,6 +35,14 @@ Future<void> _startGame(WidgetTester tester, AppDatabase db, Object extra) async
   expect(find.byType(GameScreen), findsOneWidget);
 }
 
+/// Lets real database I/O started inside fake time finish, then settles.
+Future<void> _settleIo(WidgetTester tester) async {
+  for (var i = 0; i < 4; i++) {
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 30)));
+    await tester.pumpAndSettle();
+  }
+}
+
 GameScreenState _screen(WidgetTester tester) => tester.state<GameScreenState>(find.byType(GameScreen));
 
 Future<void> _tapNumber(WidgetTester tester, int n) async {
@@ -101,12 +109,8 @@ void main() {
     expect(find.text('Opravdu ukončit?'), findsOneWidget);
     expect(find.text('Rozehraná hra se uloží.'), findsOneWidget);
     await tester.tap(find.text('Ukončit'));
-    await tester.pumpAndSettle();
-    // The home bar waits for the players from the database (real I/O).
-    for (var i = 0; i < 4 && find.byType(ActivePlayerBar).evaluate().isEmpty; i++) {
-      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 30)));
-      await tester.pumpAndSettle();
-    }
+    // Saving the game and the home bar's players are real database I/O.
+    await _settleIo(tester);
     expect(find.byType(GameScreen), findsNothing);
     expect(find.byType(ActivePlayerBar), findsOneWidget);
     expect(await tester.runAsync(() => GameStore(db).savedSession('sample')), isNotNull);
@@ -114,8 +118,9 @@ void main() {
     // "Restart" the app with the same database and continue.
     await tester.pumpWidget(const SizedBox());
     await pumpApp(tester, size: const Size(800, 1280), db: db, disableAnimations: true);
+    await _settleIo(tester);
     await tester.tap(find.text('Pokračovat: Hádej číslo'));
-    await tester.pumpAndSettle();
+    await _settleIo(tester);
     final restored = _screen(tester).debugSession!;
     expect(restored.hash, hash);
     expect(restored.rules.currentSeat(restored.state), seat);

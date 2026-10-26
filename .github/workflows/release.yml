@@ -11,6 +11,7 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
@@ -37,7 +38,8 @@ jobs:
 
       - run: flutter pub get
       - run: flutter analyze --fatal-infos
-      - run: flutter test
+      # A stuck test fails after 90 s instead of hanging the whole run.
+      - run: flutter test --timeout 90s
 
       - name: Signing key from GitHub Secrets
         env:
