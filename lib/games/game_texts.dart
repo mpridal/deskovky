@@ -1,15 +1,16 @@
 import '../core/game/difficulty.dart';
 import '../l10n/app_localizations.dart';
+import 'registry.dart';
 
-/// Translates a game's text key. Milestone 9 replaces this switch by merging
-/// ARB files from each game's own folder.
-String gameText(AppLocalizations l10n, String key) => switch (key) {
-  'sampleTitle' => l10n.sampleTitle,
-  'sampleDescription' => l10n.sampleDescription,
-  'sampleRules' => l10n.sampleRules,
-  'sampleOptionRange' => l10n.sampleOptionRange,
-  _ => key,
-};
+/// Translates a game's text key from the games' own texts (spec 8), in the
+/// app's language with English as fallback; unknown keys stay as they are.
+String gameText(AppLocalizations l10n, String key, [Map<String, Object?> args = const {}]) {
+  for (final module in gameModules) {
+    final text = module.texts.lookup(l10n.localeName, key, args);
+    if (text != null) return text;
+  }
+  return key;
+}
 
 String difficultyLabel(AppLocalizations l10n, Difficulty difficulty) => switch (difficulty) {
   Difficulty.easy => l10n.difficultyEasy,

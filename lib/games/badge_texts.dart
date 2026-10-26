@@ -1,7 +1,8 @@
 import '../l10n/app_localizations.dart';
+import 'game_texts.dart';
 
-/// Translates a badge's title or description key (framework and game
-/// badges). Milestone 9 moves game keys into each game's own ARB files.
+/// Translates a badge's title or description key: framework badges from the
+/// shared ARB files, game badges from each game's own texts.
 String badgeText(AppLocalizations l10n, String key) => switch (key) {
   'badgeFirstWinTitle' => l10n.badgeFirstWinTitle,
   'badgeFirstWinDescription' => l10n.badgeFirstWinDescription,
@@ -13,13 +14,11 @@ String badgeText(AppLocalizations l10n, String key) => switch (key) {
   'badgeHardWinDescription' => l10n.badgeHardWinDescription,
   'badgeAllGamesTitle' => l10n.badgeAllGamesTitle,
   'badgeAllGamesDescription' => l10n.badgeAllGamesDescription,
-  'sampleBadgeBullseyeTitle' => l10n.sampleBadgeBullseyeTitle,
-  'sampleBadgeBullseyeDescription' => l10n.sampleBadgeBullseyeDescription,
   'badgeWins50Title' => l10n.badgeWins50Title,
   'badgeWins50Description' => l10n.badgeWins50Description,
   'badgeAllHardTitle' => l10n.badgeAllHardTitle,
   'badgeAllHardDescription' => l10n.badgeAllHardDescription,
   'badgeCollectorTitle' => l10n.badgeCollectorTitle,
   'badgeCollectorDescription' => l10n.badgeCollectorDescription,
-  _ => key,
+  _ => gameText(l10n, key),
 };

@@ -277,16 +277,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get settingsLanguageSystem => 'Podle telefonu';
 
   @override
-  String get sampleTitle => 'Hádej číslo';
-
-  @override
-  String get sampleDescription => 'Kdo dřív uhodne tajné číslo?';
-
-  @override
-  String get sampleRules =>
-      'Hra skryje číslo. Hráči se střídají v tipování. Po každém tipu se dozvíte, jestli je tajné číslo větší, nebo menší. Kdo ho trefí, vyhrává!';
-
-  @override
   String gamePlayersRange(int min, int max) {
     String _temp0 = intl.Intl.pluralLogic(
       max,
@@ -327,9 +317,6 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get difficultyHard => 'Těžká';
-
-  @override
-  String get sampleOptionRange => 'Rozsah čísel';
 
   @override
   String get setupPlayers => 'Počet hráčů';
@@ -487,17 +474,6 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
-  String get sampleHigher => 'Víc!';
-
-  @override
-  String get sampleLower => 'Míň!';
-
-  @override
-  String sampleTurnHint(String name, int low, int high) {
-    return '$name, tipni číslo od $low do $high';
-  }
-
-  @override
   String get seatReplacedByRobot => 'Chybějící hráče nahradili roboti.';
 
   @override
@@ -564,13 +540,6 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get badgeAllGamesDescription => 'Zahraj si každou hru.';
-
-  @override
-  String get sampleBadgeBullseyeTitle => 'Trefa!';
-
-  @override
-  String get sampleBadgeBullseyeDescription =>
-      'Uhádni číslo hned prvním tipem.';
 
   @override
   String get resultNewBadges => 'Nové odznaky';

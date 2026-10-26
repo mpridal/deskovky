@@ -5,6 +5,7 @@ import 'ai_player.dart';
 import 'difficulty.dart';
 import 'game_option.dart';
 import 'game_rules.dart';
+import 'game_texts.dart';
 import 'move.dart';
 
 enum GameOrientation { any, portrait, landscape }
@@ -51,6 +52,9 @@ abstract class GameModule<S> {
   String get titleKey;
   String get descriptionKey;
   String get rulesKey;
+
+  /// The game's own texts (titles, rules, options, badges), keys prefixed `<id>.`.
+  GameTexts get texts => const GameTexts();
   int get minPlayers;
   int get maxPlayers;
   bool get supportsAi;

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../core/game/game_module.dart';
 import '../../core/game/move.dart';
-import '../../l10n/app_localizations.dart';
 import '../../ui_kit/tokens/app_colors.dart';
 import '../../ui_kit/tokens/app_typography.dart';
 import 'sample_rules.dart';
+import 'sample_texts.dart';
 
 /// Board of "Guess the number": the range still possible, the last tip with
 /// "Higher!"/"Lower!", and one paper tile per possible number (≥ 56 dp).
@@ -16,7 +16,6 @@ class SampleBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
     final s = view.state;
     final last = s.guesses.isEmpty ? null : s.guesses.last;
     final seat = view.mySeat;
@@ -36,7 +35,7 @@ class SampleBoard extends StatelessWidget {
                   Icon(last.verdict > 0 ? Icons.arrow_upward : Icons.arrow_downward, color: Colors.white),
                   const SizedBox(width: 6),
                   Text(
-                    '${last.value} → ${last.verdict > 0 ? l10n.sampleHigher : l10n.sampleLower}',
+                    '${last.value} → ${sampleTexts.of(context, last.verdict > 0 ? 'sample.higher' : 'sample.lower')}',
                     style: AppTypography.button(color: Colors.white),
                   ),
                 ],

@@ -5,11 +5,12 @@ import '../../core/game/ai_player.dart';
 import '../../core/game/game_module.dart';
 import '../../core/game/game_option.dart';
 import '../../core/game/game_rules.dart';
-import '../../l10n/app_localizations.dart';
+import '../../core/game/game_texts.dart';
 import 'sample_ai.dart';
 import 'sample_board.dart';
 import 'sample_icon.dart';
 import 'sample_rules.dart';
+import 'sample_texts.dart';
 
 /// Manifest of the sample game that proves the whole game API (spec 8, 12).
 class SampleModule extends GameModule<SampleState> {
@@ -18,11 +19,11 @@ class SampleModule extends GameModule<SampleState> {
   @override
   String get id => 'sample';
   @override
-  String get titleKey => 'sampleTitle';
+  String get titleKey => 'sample.title';
   @override
-  String get descriptionKey => 'sampleDescription';
+  String get descriptionKey => 'sample.description';
   @override
-  String get rulesKey => 'sampleRules';
+  String get rulesKey => 'sample.rules';
   @override
   int get minPlayers => 1;
   @override
@@ -38,7 +39,7 @@ class SampleModule extends GameModule<SampleState> {
   List<GameOption> get options => const [
     ChoiceOption(
       id: 'range',
-      labelKey: 'sampleOptionRange',
+      labelKey: 'sample.option.range',
       choices: [(20, '1–20'), (50, '1–50'), (100, '1–100')],
       defaultValue: SampleRules.defaultRange,
     ),
@@ -48,13 +49,16 @@ class SampleModule extends GameModule<SampleState> {
   List<BadgeDef> get badges => const [
     BadgeDef(
       id: 'sample.bullseye',
-      titleKey: 'sampleBadgeBullseyeTitle',
-      descriptionKey: 'sampleBadgeBullseyeDescription',
+      titleKey: 'sample.badge.bullseye.title',
+      descriptionKey: 'sample.badge.bullseye.description',
       icon: Icons.gps_fixed,
       reward: 15,
       condition: BadgeCondition.all([BadgeCondition.won(), BadgeCondition.event('sample.bullseye')]),
     ),
   ];
+
+  @override
+  GameTexts get texts => sampleTexts;
 
   @override
   GameRules<SampleState> get rules => const SampleRules();
@@ -70,7 +74,7 @@ class SampleModule extends GameModule<SampleState> {
 
   @override
   String? turnHint(BuildContext context, SampleState state, String playerName) =>
-      AppLocalizations.of(context).sampleTurnHint(playerName, state.low, state.high);
+      sampleTexts.of(context, 'sample.turnHint', {'name': playerName, 'low': state.low, 'high': state.high});
 }
 
 const sampleModule = SampleModule();
