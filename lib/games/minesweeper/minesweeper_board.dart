@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -23,13 +24,13 @@ class MinesweeperBoard extends StatefulWidget {
 
   final GameBoardView<MinesweeperState> view;
 
-  /// Smallest square before the board zooms: easy and medium fit a phone,
-  /// hard is pinch-zoomed there (spec 13.7) but fits a tablet.
-  static double minCell(MinesweeperLevel level, {bool tablet = false}) => switch (level) {
-    MinesweeperLevel.easy => 34,
-    MinesweeperLevel.medium => 26,
-    MinesweeperLevel.hard => tablet ? 32 : 40,
-  };
+  /// Every square is a 48 dp target (spec 13.4); a board that does not fit
+  /// is pinch-zoomed instead and gets the "centre" button.
+  static const minCell = 48.0;
+
+  /// Height of the counters row and of the first-game hint above the board.
+  static const toolbarHeight = 48.0;
+  static const hintHeight = 50.0;
 
   @override
   State<MinesweeperBoard> createState() => _MinesweeperBoardState();
@@ -123,7 +124,9 @@ class _MinesweeperBoardState extends State<MinesweeperBoard> with SingleTickerPr
 
   void _send(Move move) {
     if (!_rules.isLegal(s, move)) return;
-    _reportEvents(_rules.apply(s, move), move.seat);
+    // The first tap never ends a game, and applying it here would build the
+    // board a second time (the framework applies the move too).
+    if (s.started) _reportEvents(_rules.apply(s, move), move.seat);
     view.submit(move);
   }
 
@@ -200,7 +203,28 @@ class _MinesweeperBoardState extends State<MinesweeperBoard> with SingleTickerPr
     if (view.canAct && !s.isRevealed(cell)) {
       child = GestureDetector(onLongPress: () => _mark(c, r), child: child);
     }
-    return KeyedSubtree(key: ValueKey('cell$c,$r'), child: child);
+    return KeyedSubtree(
+      key: ValueKey('cell$c,$r'),
+      child: Semantics(
+        label: _label(c, r, look, painter.number),
+        button: view.canAct && !s.isRevealed(cell),
+        excludeSemantics: true,
+        child: child,
+      ),
+    );
+  }
+
+  /// "C4, 2" or "C4, vlajka" for screen readers.
+  String _label(int c, int r, CellLook look, int number) {
+    String t(String key) => minesweeperTexts.of(context, 'minesweeper.cell.$key');
+    final what = switch (look) {
+      CellLook.hidden => t('hidden'),
+      CellLook.flag || CellLook.wrongFlag => t('flag'),
+      CellLook.question => t('question'),
+      CellLook.open => number == 0 ? t('empty') : '$number',
+      CellLook.mine || CellLook.exploded => t('mine'),
+    };
+    return '${String.fromCharCode(65 + c)}${r + 1}, $what';
   }
 
   @override
@@ -220,15 +244,26 @@ class _MinesweeperBoardState extends State<MinesweeperBoard> with SingleTickerPr
           children: [
             _toolbar(context, zoomed: _zoomed(box, columns, rows, context)),
             if (_hint(context) case final hint?)
-              Padding(
-                padding: const EdgeInsets.only(top: 6),
-                child: Text(
-                  hint,
-                  key: const ValueKey('minesweeperHint'),
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTypography.button(color: AppColors.gold),
+              // A fixed height, so the board knows its space (see _zoomed).
+              SizedBox(
+                height: MinesweeperBoard.hintHeight,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 6),
+                  child: Center(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: box.maxWidth),
+                        child: Text(
+                          hint,
+                          key: const ValueKey('minesweeperHint'),
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          style: AppTypography.button(color: AppColors.gold),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             const SizedBox(height: 8),
@@ -239,7 +274,7 @@ class _MinesweeperBoardState extends State<MinesweeperBoard> with SingleTickerPr
                   key: ValueKey('grid$turned'),
                   columns: columns,
                   rows: rows,
-                  minCellSize: MinesweeperBoard.minCell(level, tablet: MediaQuery.sizeOf(context).shortestSide >= 600),
+                  minCellSize: MinesweeperBoard.minCell,
                   controller: _grid,
                   highlighted: {if (lastCell != null) turned ? (lastCell.$2, lastCell.$1) : lastCell},
                   onTap: view.canAct ? ((p) => turned ? _tap(p.$2, p.$1) : _tap(p.$1, p.$2)) : null,
@@ -265,12 +300,12 @@ class _MinesweeperBoardState extends State<MinesweeperBoard> with SingleTickerPr
     return null;
   }
 
-  /// Roughly what BoardGrid decides: the squares do not fit, so the board
-  /// zooms and needs the "centre" button.
+  /// What BoardGrid decides in the space under the toolbar: the squares
+  /// do not fit, so the board zooms and needs the "centre" button.
   bool _zoomed(BoxConstraints box, int columns, int rows, BuildContext context) {
-    final height = box.maxHeight - 56 - (_hint(context) == null ? 0 : 50);
-    final fit = (box.maxWidth / columns) < (height / rows) ? box.maxWidth / columns : height / rows;
-    return fit < MinesweeperBoard.minCell(s.level, tablet: MediaQuery.sizeOf(context).shortestSide >= 600);
+    final height =
+        box.maxHeight - MinesweeperBoard.toolbarHeight - 8 - (_hint(context) == null ? 0 : MinesweeperBoard.hintHeight);
+    return min(box.maxWidth / columns, height / rows) < MinesweeperBoard.minCell;
   }
 
   Widget _toolbar(BuildContext context, {required bool zoomed}) {
@@ -278,7 +313,7 @@ class _MinesweeperBoardState extends State<MinesweeperBoard> with SingleTickerPr
     final ms = s.over && s.finishMs != null ? s.finishMs! : view.elapsed().inMilliseconds;
     final seconds = s.started ? ms ~/ 1000 : 0;
     return SizedBox(
-      height: 48,
+      height: MinesweeperBoard.toolbarHeight,
       child: Row(
         children: [
           // Counters shrink rather than overflow next to the switch.

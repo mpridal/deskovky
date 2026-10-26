@@ -54,11 +54,13 @@ Klasické Miny pro jednoho hráče a „Střídačka“ pro 2–4 hráče (zadá
   - Vlajka: dlouhý stisk (vlastní `GestureDetector` v `cellBuilder`) nebo přepínač ⛏/🚩, podle volby. Dlouhý stisk funguje i s přepínačem.
   - Při vlajce haptika.
 - **Velikost polí:**
-  - Minimum: Lehká 34 dp, Střední 26 dp, Těžká 40 dp na telefonu / 32 dp na tabletu.
-  - Lehká a Střední se vejdou na telefon na výšku i na tablet. Těžká se na telefonu zvětšuje (pinch-zoom) a má tlačítko „vycentrovat“. Tlačítko se ukáže, jen když se deska nevejde.
+  - Každé pole má aspoň 48 dp (zadání 13.4).
+  - Když se deska nevejde, zvětšuje se prsty (pinch-zoom), začíná vycentrovaná a v liště je tlačítko „vycentrovat“. Tlačítko se ukáže, jen když se deska nevejde.
+  - Na telefonu se tak zvětšují všechny tři desky. Na tabletu se Lehká a Střední vejdou celé, Těžká se zvětšuje.
   - Deska je na výšku; na širokém prostoru (tablet na šířku, telefon na šířku) se zobrazí otočená. Otočení displeje uprostřed hry jen přepočítá zobrazení, stav se nemění.
+- **Čtečka obrazovky:** každé pole má popisek, např. „C4, 2“, „A1, vlajka“, „B7, skryté pole“ (sloupec písmenem, řádek číslem).
 - **Zvuky:** `minesweeper.dig` (odkrytí), `.flag` (změna vlajek), `.puff` (mina). Hraje je deska při každé změně stavu, tedy i u tahů robotů. Soubory jsou zatím zástupné.
-- **Odznaky:** deska je hlásí těsně před tahem, který hru ukončí:
+- **Odznaky:** deska je hlásí těsně před tahem, který hru ukončí (u prvního tahu kontrolu přeskakuje, aby se deska nestavěla dvakrát; první tah hru prakticky nikdy neukončí – kdyby jedno ťuknutí vyčistilo celou desku, odznaky z té partie se nezapočítají):
   - `minesweeper.defuser` – výhra na Těžkou;
   - `.noflag` – výhra bez jediné vlajky;
   - `.blitz` – Lehká pod 20 s;
