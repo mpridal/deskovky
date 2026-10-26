@@ -7,6 +7,7 @@ import '../../core/game/game_config.dart';
 import '../../core/game/game_session.dart';
 import '../../core/game/move.dart';
 import '../../core/game/move_transport.dart';
+import '../../core/game/seeded_random.dart';
 
 /// Turn order (spec 5.7.1, 9): humans move through [submitHuman]; when a
 /// robot is to move it waits [robotDelay], asks the AI and sends the move
@@ -90,16 +91,28 @@ class TurnController<S> extends ChangeNotifier {
     _robotBusy = true;
     try {
       final movesBefore = session.moves.length;
-      final move = await runner.run(
-        robotAi,
-        session.state,
-        seat,
-        session.config.difficulty,
-        session.seed + movesBefore,
-      );
+      Move? move;
+      try {
+        move = await runner.run(robotAi, session.state, seat, session.config.difficulty, session.seed + movesBefore);
+      } catch (e) {
+        debugPrint('TurnController: AI failed, playing a legal move instead: $e');
+      }
       // The AI may finish after a pause, dispose or another move.
       if (_disposed || _paused || session.moves.length != movesBefore || currentSeat != seat) return;
-      await _send(move);
+      if (move != null) {
+        if (await _send(move)) return;
+        debugPrint('TurnController: AI answered an illegal move $move, playing a legal move instead');
+        // A slower transport (phase 3) may have let the game move on meanwhile.
+        if (_disposed || _paused || session.moves.length != movesBefore || currentSeat != seat) return;
+      }
+      // A broken AI must never leave the robot "thinking" forever: play a
+      // legal move picked from the seed, so a replay picks the same one.
+      final legal = session.rules.legalMoves(session.state, seat);
+      if (legal.isEmpty) {
+        debugPrint('TurnController: no legal move for robot seat $seat – GameRules.legalMoves breaks its contract');
+        return;
+      }
+      await _send(legal[SeededRandom(session.seed + movesBefore).nextInt(legal.length)]);
     } finally {
       _robotBusy = false;
     }

@@ -43,7 +43,8 @@ class MatchRecord {
   final DateTime playedAt;
   final Duration duration;
 
-  /// Robots' difficulty; null when only people played.
+  /// Robots' difficulty, or the level of a one-person game; null when two or
+  /// more people played without robots.
   final Difficulty? difficulty;
   final List<MatchParticipant> participants;
 

@@ -1,6 +1,8 @@
 import 'package:deskovky/core/avatar/avatar_spec.dart';
 import 'package:deskovky/core/db/app_database.dart';
 import 'package:deskovky/core/players/player_repository.dart';
+import 'package:deskovky/core/points/points_math.dart';
+import 'package:deskovky/core/points/points_repository.dart';
 import 'package:deskovky/core/stats/match_record.dart';
 import 'package:deskovky/core/stats/stats_repository.dart';
 import 'package:deskovky/features/players/player_stats_screen.dart';
@@ -46,6 +48,7 @@ void main() {
   tearDown(() => db.close());
 
   testWidgets('shows totals, the game records and badges earned and still locked', (tester) async {
+    final handle = tester.ensureSemantics();
     final id = await _seed(tester, db);
     await _open(tester, db, id);
     expect(find.text('Statistiky: Tereza'), findsOneWidget);
@@ -56,10 +59,12 @@ void main() {
     expect(find.descendant(of: tile('statBestStreak'), matching: find.text('2')), findsOneWidget);
     await tester.scrollUntilVisible(find.text('Nejrychlejší výhra: 1:02'), 200);
     expect(find.text('Nejlepší skóre: 7'), findsOneWidget);
+    expect(find.bySemanticsLabel(RegExp('Nejlepší hodnocení: 3 ze 3 hvězd')), findsOneWidget);
     await tester.scrollUntilVisible(find.byKey(const ValueKey('badge_first_win')), 200);
     expect(find.byKey(const ValueKey('badge_first_win_earned')), findsOneWidget);
     await tester.scrollUntilVisible(find.byKey(const ValueKey('badge_streak5')), 200);
     expect(find.byKey(const ValueKey('badge_streak5_earned')), findsNothing);
+    handle.dispose();
   });
 
   testWidgets('players list leads to statistics', (tester) async {
@@ -93,5 +98,24 @@ void main() {
         expect(tester.takeException(), isNull);
       });
     }
+  });
+
+  testWidgets('level with progress, balance, total earned and the points history', (tester) async {
+    final id = await _seed(tester, db);
+    await tester.runAsync(() async {
+      final points = PointsRepository(db);
+      await points.addGameLines(id, const [PointsLine(PointsReason.win, 20), PointsLine(PointsReason.stars, 6, count: 3)]);
+      await points.gift(id, 74);
+      await points.spend(id, 30, itemId: 'glasses');
+    });
+    await _open(tester, db, id);
+    expect(find.text('Úroveň 1'), findsOneWidget);
+    expect(find.text('50 / 100 ● do další úrovně'), findsOneWidget);
+    expect(find.descendant(of: find.byKey(const ValueKey('statBalance')), matching: find.text('70')), findsOneWidget);
+    expect(find.descendant(of: find.byKey(const ValueKey('statTotalEarned')), matching: find.text('100')), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('Historie bodů'), 200);
+    await tester.scrollUntilVisible(find.text('Hodnocení 3 ★'), 200);
+    expect(find.text('Dárek od rodiče'), findsOneWidget);
+    expect(find.text('−30'), findsOneWidget);
   });
 }

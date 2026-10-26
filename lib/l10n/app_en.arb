@@ -393,5 +393,133 @@
         "type": "int"
       }
     }
+  },
+  "resultPoints": "Points",
+  "pointsWin": "Win",
+  "pointsDraw": "Draw",
+  "pointsSecond": "2nd place",
+  "pointsParticipation": "Taking part",
+  "pointsStars": "Rating {count} ★",
+  "@pointsStars": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pointsStreak": "{count} wins in a row",
+  "@pointsStreak": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pointsFirstToday": "First game today",
+  "pointsRecord": "New personal best",
+  "pointsBadge": "Badge: {name}",
+  "@pointsBadge": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pointsCapped": "Lots of Easy wins today",
+  "pointsGift": "Gift from a parent",
+  "pointsPurchase": "Purchase",
+  "pointsTotal": "Total +{points} ●",
+  "@pointsTotal": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "levelUp": "New level {level}!",
+  "@levelUp": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "homePointsBalance": "Points: {points}",
+  "@homePointsBalance": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "levelShort": "Lv {level}",
+  "@levelShort": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "levelLabel": "Level {level}",
+  "@levelLabel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "levelNext": "{current} / {needed} ● to the next level",
+  "@levelNext": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "needed": {
+        "type": "int"
+      }
+    }
+  },
+  "levelMax": "Top level!",
+  "statsBalance": "Balance",
+  "statsTotalEarned": "Total earned",
+  "statsPointsHistory": "Points history",
+  "settingsParents": "Parents' corner",
+  "parentsGateTitle": "Parents only",
+  "parentsGateQuestion": "What is {a} × {b}?",
+  "@parentsGateQuestion": {
+    "placeholders": {
+      "a": {
+        "type": "int"
+      },
+      "b": {
+        "type": "int"
+      }
+    }
+  },
+  "parentsGateWrong": "That is not right.",
+  "parentsGateOpen": "Open",
+  "parentsGiftTitle": "Give points",
+  "parentsGiftConfirm": "Give {points} ● to {name}?",
+  "@parentsGiftConfirm": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "parentsGiftAction": "Give",
+  "parentsGiftDone": "Given: {points} ● – {name}",
+  "@parentsGiftDone": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
   }
 }

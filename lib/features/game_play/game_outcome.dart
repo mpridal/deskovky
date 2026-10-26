@@ -8,15 +8,22 @@ import 'seat_identity.dart';
 /// What the results screen gets when a game ends.
 @immutable
 class GameOutcomeView {
-  const GameOutcomeView({required this.config, required this.result, required this.seats, this.newBadges = const []});
+  const GameOutcomeView({
+    required this.config,
+    required this.result,
+    required this.seats,
+    this.rewards = MatchRewards.none,
+  });
 
   final GameConfig config;
   final GameResult result;
   final List<SeatIdentity> seats;
 
-  /// Badges people earned with this game (spec 5.9).
-  final List<EarnedBadge> newBadges;
+  /// Badges and points people earned with this game (spec 5.6, 5.9).
+  final MatchRewards rewards;
 
-  GameOutcomeView withBadges(List<EarnedBadge> badges) =>
-      GameOutcomeView(config: config, result: result, seats: seats, newBadges: badges);
+  List<EarnedBadge> get newBadges => rewards.badges;
+
+  GameOutcomeView withRewards(MatchRewards rewards) =>
+      GameOutcomeView(config: config, result: result, seats: seats, rewards: rewards);
 }

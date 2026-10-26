@@ -58,6 +58,8 @@ Flutter není v PATH starších terminálů – v případě potřeby `export PA
 
 ## Hry a testy her
 
+- `GameRules.legalMoves(state, seat)` je povinný: když AI spadne nebo vrátí neplatný tah, `TurnController` zahraje legální tah vybraný ze seedu – robot nikdy „nepřemýšlí“ navždy.
+
 - Nová hra = `GameModule` + `GameRules` + `AiPlayer` + deska ve `lib/games/<id>/`, registrace v `lib/games/registry.dart` (podrobný návod `docs/GAME_MODULE_GUIDE.md` v milníku 10). Vzor: `lib/games/_sample/`.
 - Každá akce hráče je `Move` přes `GameBoardView.submit`; deska nikdy nemění stav sama.
 - Testy, které otevřou herní obrazovku: `pumpApp(..., disableAnimations: true)` (pulzování hráče na tahu je nekonečné → `pumpAndSettle` by nikdy neskončil). Roboti v testech běží přes `InlineAiRunner` (nastavuje `pumpApp`).
@@ -79,3 +81,11 @@ Pravidla paralelní práce (kap. 13.2 zadání) se doplní v milníku 9.
 - **Výhra** = samostatně 1. místo; sdílené 1. místo = remíza. **Hra pro 1 hráče:** úspěšné dokončení = místo 1, neúspěch = místo 2 (zadání 5.6). Roboti nikdy nejsou v žebříčcích ani nedostávají odznaky.
 - **Jak přidat odznak hry:** v manifestu `List<BadgeDef> get badges` s id `<hra>.<nazev>`, podmínka ze stavebnice `BadgeCondition` (`wins`, `winStreak`, `played`, `counter`, `wonAgainst`, `won`, `event`, `allGames`, `all`), odměna +15 až +50 (vyplácí m7). Událost hlásí hra `view.host.reportEvent('<hra>.<udalost>', {'seat': seat, 'count': n})` – se `seat` platí jen pro hráče na tom místě. Texty: klíče do ARB + řádek do `badgeText` (`lib/games/badge_texts.dart`); test `badge_texts_test.dart` hlídá všechny 3 jazyky.
 - Widget testy, které dohrají partii, musí dát databázi reálný čas (`tester.runAsync`) – viz `_letRecord` v `test/features/game_play/game_stats_test.dart`.
+
+## Body a úrovně (milník 7a)
+
+- **Ladění bodů:** jen `assets/config/rewards.json` (základ Lehká/Střední/Těžká, bonusy, ochrana proti farmení, rozsah násobiče). Čte se jednou při startu (`main()` → `rewardsConfigProvider`); chybné pole = výchozí hodnota z `RewardsConfig.defaults`. Test hlídá, že soubor a výchozí hodnoty v kódu se shodují – při změně souboru uprav i `defaults`.
+- Výpočet je čistá funkce `computeMatchPoints` (`lib/core/points/points_math.dart`); `StatsService.recordFinished` ji volá v transakci se zápisem partie a odznaků a každý řádek zapíše do `points_ledger`. Zůstatek = součet knihy, „celkem získáno“ = součet kladných záznamů (úroveň), žebříček = body z partií v období (dárky ne).
+- Hra může upravit základ přes `GameModule.pointsMultiplier` (0,5–2).
+- Partie jen lidí = sloupec Střední. Po ochraně proti farmení (11. výhra dne na Lehkou sám s roboty) je celá partie za 1 bod, odměny za odznaky zůstávají.
+- Rodičovská zóna: Nastavení → Rodičovská zóna (příklad z násobilky) → dárek bodů.

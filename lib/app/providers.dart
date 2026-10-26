@@ -13,6 +13,8 @@ import '../core/game/game_store.dart';
 import '../core/players/active_player.dart';
 import '../core/players/player_profile.dart';
 import '../core/players/player_repository.dart';
+import '../core/points/points_repository.dart';
+import '../core/points/rewards_config.dart';
 import '../core/settings/settings_repository.dart';
 import '../core/stats/leaderboard.dart';
 import '../core/stats/match_record.dart';
@@ -69,7 +71,19 @@ final audioServiceProvider = Provider<AudioService>((ref) {
 
 final statsRepositoryProvider = Provider<StatsRepository>((ref) => StatsRepository(ref.watch(databaseProvider)));
 
-final statsServiceProvider = Provider<StatsService>((ref) => StatsService(ref.watch(statsRepositoryProvider)));
+final pointsRepositoryProvider = Provider<PointsRepository>((ref) => PointsRepository(ref.watch(databaseProvider)));
+
+/// Point values from `rewards.json`; `main()` overrides it with the file
+/// read at start, tests use the defaults.
+final rewardsConfigProvider = Provider<RewardsConfig>((ref) => RewardsConfig.defaults);
+
+final statsServiceProvider = Provider<StatsService>(
+  (ref) => StatsService(
+    ref.watch(statsRepositoryProvider),
+    points: ref.watch(pointsRepositoryProvider),
+    rewards: ref.watch(rewardsConfigProvider),
+  ),
+);
 
 /// Every finished game, refreshed after each new one.
 final allMatchesProvider = StreamProvider<List<MatchRecord>>((ref) => ref.watch(statsRepositoryProvider).watchAllMatches());
@@ -107,4 +121,17 @@ final statsNowProvider = StreamProvider<DateTime>((ref) {
     controller.close();
   });
   return controller.stream;
+});
+
+/// Every points movement of every player (leaderboards, balances).
+final pointsLedgerProvider = StreamProvider<List<PointsEntry>>((ref) => ref.watch(pointsRepositoryProvider).watchAll());
+
+/// Balance and total earned per player, from the ledger (spec 5.6).
+final pointsSummaryProvider = Provider<Map<int, ({int balance, int earned})>>((ref) {
+  final totals = <int, ({int balance, int earned})>{};
+  for (final e in ref.watch(pointsLedgerProvider).value ?? const <PointsEntry>[]) {
+    final t = totals[e.playerId] ?? (balance: 0, earned: 0);
+    totals[e.playerId] = (balance: t.balance + e.amount, earned: t.earned + (e.amount > 0 ? e.amount : 0));
+  }
+  return totals;
 });

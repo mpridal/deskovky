@@ -660,4 +660,124 @@ class AppLocalizationsEs extends AppLocalizations {
   String homeBestStars(int stars) {
     return 'Mejor valoración: $stars de 3 estrellas';
   }
+
+  @override
+  String get resultPoints => 'Puntos';
+
+  @override
+  String get pointsWin => 'Victoria';
+
+  @override
+  String get pointsDraw => 'Empate';
+
+  @override
+  String get pointsSecond => '2.º puesto';
+
+  @override
+  String get pointsParticipation => 'Participación';
+
+  @override
+  String pointsStars(int count) {
+    return 'Valoración $count ★';
+  }
+
+  @override
+  String pointsStreak(int count) {
+    return 'Racha de $count victorias';
+  }
+
+  @override
+  String get pointsFirstToday => 'Primera partida del día';
+
+  @override
+  String get pointsRecord => 'Nuevo récord personal';
+
+  @override
+  String pointsBadge(String name) {
+    return 'Insignia: $name';
+  }
+
+  @override
+  String get pointsCapped => 'Muchas victorias en Fácil hoy';
+
+  @override
+  String get pointsGift => 'Regalo de un padre';
+
+  @override
+  String get pointsPurchase => 'Compra';
+
+  @override
+  String pointsTotal(int points) {
+    return 'Total +$points ●';
+  }
+
+  @override
+  String levelUp(int level) {
+    return '¡Nuevo nivel $level!';
+  }
+
+  @override
+  String homePointsBalance(int points) {
+    return 'Puntos: $points';
+  }
+
+  @override
+  String levelShort(int level) {
+    return 'Nv. $level';
+  }
+
+  @override
+  String levelLabel(int level) {
+    return 'Nivel $level';
+  }
+
+  @override
+  String levelNext(int current, int needed) {
+    return '$current / $needed ● para el siguiente nivel';
+  }
+
+  @override
+  String get levelMax => '¡Nivel máximo!';
+
+  @override
+  String get statsBalance => 'Saldo';
+
+  @override
+  String get statsTotalEarned => 'Total ganado';
+
+  @override
+  String get statsPointsHistory => 'Historial de puntos';
+
+  @override
+  String get settingsParents => 'Zona de padres';
+
+  @override
+  String get parentsGateTitle => 'Solo para padres';
+
+  @override
+  String parentsGateQuestion(int a, int b) {
+    return '¿Cuánto es $a × $b?';
+  }
+
+  @override
+  String get parentsGateWrong => 'No es correcto.';
+
+  @override
+  String get parentsGateOpen => 'Abrir';
+
+  @override
+  String get parentsGiftTitle => 'Regalar puntos';
+
+  @override
+  String parentsGiftConfirm(int points, String name) {
+    return '¿Regalar $points ● a $name?';
+  }
+
+  @override
+  String get parentsGiftAction => 'Regalar';
+
+  @override
+  String parentsGiftDone(int points, String name) {
+    return 'Regalado: $points ● – $name';
+  }
 }

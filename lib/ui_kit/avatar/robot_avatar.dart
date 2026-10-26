@@ -6,16 +6,57 @@ import '../tokens/app_typography.dart';
 /// Computer player avatar (spec 5.7.1): grey square head, antenna and LED
 /// eyes in the slot [color]. Below 64 dp an "AI" badge marks it as a robot
 /// even without colors.
-class RobotAvatar extends StatelessWidget {
-  const RobotAvatar({super.key, required this.color, required this.size, this.semanticLabel})
+class RobotAvatar extends StatefulWidget {
+  const RobotAvatar({super.key, required this.color, required this.size, this.semanticLabel, this.blinking = false})
       : assert(size >= 28 && size <= 160);
 
   final Color color;
   final double size;
   final String? semanticLabel;
 
+  /// The robot is thinking: its LED eyes blink (spec 5.7.1), unless the
+  /// system asks to reduce motion.
+  final bool blinking;
+
+  @override
+  State<RobotAvatar> createState() => _RobotAvatarState();
+}
+
+class _RobotAvatarState extends State<RobotAvatar> with SingleTickerProviderStateMixin {
+  late final AnimationController _blink = AnimationController(vsync: this, duration: const Duration(milliseconds: 900));
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _sync();
+  }
+
+  @override
+  void didUpdateWidget(RobotAvatar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _sync();
+  }
+
+  void _sync() {
+    final animate = widget.blinking && !MediaQuery.disableAnimationsOf(context);
+    if (animate && !_blink.isAnimating) {
+      _blink.repeat(reverse: true);
+    } else if (!animate && _blink.isAnimating) {
+      _blink.stop();
+    }
+  }
+
+  @override
+  void dispose() {
+    _blink.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final size = widget.size;
+    final color = widget.color;
+    final semanticLabel = widget.semanticLabel;
     final badge = size * 0.38;
     return Semantics(
       image: true,
@@ -25,7 +66,14 @@ class RobotAvatar extends StatelessWidget {
         child: Stack(
           clipBehavior: Clip.none,
           children: [
-            Positioned.fill(child: CustomPaint(painter: _RobotPainter(color))),
+            Positioned.fill(
+              child: AnimatedBuilder(
+                animation: _blink,
+                builder: (context, _) => CustomPaint(
+                  painter: RobotPainter(color, eyeLevel: _blink.isAnimating ? 0.25 + 0.75 * _blink.value : 1),
+                ),
+              ),
+            ),
             if (size < 64)
               Positioned(
                 right: 0,
@@ -55,10 +103,12 @@ class RobotAvatar extends StatelessWidget {
   }
 }
 
-class _RobotPainter extends CustomPainter {
-  _RobotPainter(this.color);
+/// Paints the robot; [eyeLevel] 0–1 dims the LED eyes for blinking.
+class RobotPainter extends CustomPainter {
+  RobotPainter(this.color, {this.eyeLevel = 1});
 
   final Color color;
+  final double eyeLevel;
 
   static const _metal = Color(0xFFC9D1D8);
   static const _metalDark = Color(0xFF7C8791);
@@ -109,9 +159,10 @@ class _RobotPainter extends CustomPainter {
     // Display with LED eyes.
     canvas.drawRRect(RRect.fromLTRBR(30, 33, 70, 53, const Radius.circular(8)), Paint()..color = AppColors.ink);
     final glint = Paint()..color = Colors.white.withValues(alpha: 0.8);
+    final eye = Paint()..color = Color.lerp(AppColors.ink, color, eyeLevel)!;
     for (final x in [41.0, 59.0]) {
-      canvas.drawCircle(Offset(x, 43), 5, slot);
-      canvas.drawCircle(Offset(x, 43), 2, glint);
+      canvas.drawCircle(Offset(x, 43), 5, eye);
+      if (eyeLevel > 0.6) canvas.drawCircle(Offset(x, 43), 2, glint);
     }
     // Mouth grille.
     canvas.drawRRect(RRect.fromLTRBR(36, 59, 64, 67, const Radius.circular(3)), Paint()..color = _metalDark);
@@ -125,5 +176,5 @@ class _RobotPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_RobotPainter oldDelegate) => oldDelegate.color != color;
+  bool shouldRepaint(RobotPainter oldDelegate) => oldDelegate.color != color || oldDelegate.eyeLevel != eyeLevel;
 }

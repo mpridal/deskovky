@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../game/difficulty.dart';
+import '../points/points_repository.dart';
 import 'match_record.dart';
 import 'player_stats.dart';
 
@@ -32,12 +33,21 @@ class LeaderboardQuery {
 
 @immutable
 class LeaderboardEntry {
-  const LeaderboardEntry({required this.rank, required this.playerId, required this.wins, required this.played});
+  const LeaderboardEntry({
+    required this.rank,
+    required this.playerId,
+    required this.wins,
+    required this.played,
+    this.points = 0,
+  });
 
   final int rank;
   final int playerId;
   final int wins;
   final int played;
+
+  /// Points earned in the counted games (gifts and purchases excluded).
+  final int points;
 
   double get winRate => played == 0 ? 0 : wins / played;
 }
@@ -58,14 +68,15 @@ DateTime nextPeriodBoundary(DateTime now) {
   return monday.isBefore(month) ? monday : month;
 }
 
-/// People ranked by wins, then win rate, then fewer games (spec 5.4). Robots,
+/// People ranked by points earned in the selected games (spec 5.4, 5.6),
+/// then wins, win rate and fewer games. Robots,
 /// deleted players and anyone outside [players] (when given) never appear.
-/// Points join in milestone 7.
 List<LeaderboardEntry> leaderboard(
   Iterable<MatchRecord> matches,
   LeaderboardQuery query, {
   required DateTime now,
   Set<int>? players,
+  List<PointsEntry> points = const [],
 }) {
   final start = periodStart(query.period, now);
   final selected = matches.where(
@@ -79,13 +90,20 @@ List<LeaderboardEntry> leaderboard(
       for (final p in m.participants)
         if (!p.robot && (players == null || players.contains(p.playerId))) ?p.playerId,
   };
+  final counted = {for (final m in selected) ?m.id};
+  final earned = <int, int>{};
+  for (final e in points) {
+    if (e.amount > 0 && counted.contains(e.matchId)) earned[e.playerId] = (earned[e.playerId] ?? 0) + e.amount;
+  }
   final rows = [
     for (final id in ranked)
       () {
         final s = computePlayerStats(id, selected);
-        return (id: id, wins: s.wins, played: s.played, rate: s.winRate);
+        return (id: id, wins: s.wins, played: s.played, rate: s.winRate, points: earned[id] ?? 0);
       }(),
   ]..sort((a, b) {
+      final byPoints = b.points.compareTo(a.points);
+      if (byPoints != 0) return byPoints;
       final byWins = b.wins.compareTo(a.wins);
       if (byWins != 0) return byWins;
       final byRate = b.rate.compareTo(a.rate);
@@ -96,9 +114,15 @@ List<LeaderboardEntry> leaderboard(
   final result = <LeaderboardEntry>[];
   for (var i = 0; i < rows.length; i++) {
     final r = rows[i];
-    final tied = i > 0 && rows[i - 1].wins == r.wins && rows[i - 1].played == r.played;
+    final tied = i > 0 && rows[i - 1].points == r.points && rows[i - 1].wins == r.wins && rows[i - 1].played == r.played;
     result.add(
-      LeaderboardEntry(rank: tied ? result[i - 1].rank : i + 1, playerId: r.id, wins: r.wins, played: r.played),
+      LeaderboardEntry(
+        rank: tied ? result[i - 1].rank : i + 1,
+        playerId: r.id,
+        wins: r.wins,
+        played: r.played,
+        points: r.points,
+      ),
     );
   }
   return result;

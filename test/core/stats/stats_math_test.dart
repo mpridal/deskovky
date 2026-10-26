@@ -1,4 +1,6 @@
 import 'package:deskovky/core/game/difficulty.dart';
+import 'package:deskovky/core/points/points_math.dart';
+import 'package:deskovky/core/points/points_repository.dart';
 import 'package:deskovky/core/stats/leaderboard.dart';
 import 'package:deskovky/core/stats/match_record.dart';
 import 'package:deskovky/core/stats/player_stats.dart';
@@ -183,6 +185,34 @@ void main() {
       expect(nextPeriodBoundary(DateTime(2026, 10, 25, 23, 59)), DateTime(2026, 10, 26));
       expect(nextPeriodBoundary(DateTime(2026, 10, 28, 12)), DateTime(2026, 11, 1));
       expect(nextPeriodBoundary(DateTime(2026, 11, 1, 0, 0)), DateTime(2026, 11, 2));
+    });
+  });
+
+  group('points (milestone 7)', () {
+    final now = DateTime(2026, 10, 26, 10);
+    MatchRecord withId(int id, MatchRecord m) => MatchRecord(
+      id: id,
+      gameId: m.gameId,
+      playedAt: m.playedAt,
+      duration: m.duration,
+      difficulty: m.difficulty,
+      participants: m.participants,
+    );
+
+    test('people are ranked by points earned in the selected games, then by wins', () {
+      final matches = [withId(1, _m([(_t, 1), (_k, 2)])), withId(2, _m([(_k, 1), (_b, 2)]))];
+      final points = [
+        PointsEntry(playerId: _t, amount: 20, reason: PointsReason.win, at: now, matchId: 1),
+        PointsEntry(playerId: _k, amount: 3, reason: PointsReason.participation, at: now, matchId: 1),
+        PointsEntry(playerId: _k, amount: 35, reason: PointsReason.win, at: now, matchId: 2),
+        PointsEntry(playerId: _b, amount: 4, reason: PointsReason.participation, at: now, matchId: 2),
+        PointsEntry(playerId: _b, amount: 500, reason: PointsReason.gift, at: now),
+        PointsEntry(playerId: _k, amount: -30, reason: PointsReason.purchase, at: now),
+      ];
+      final rows = leaderboard(matches, const LeaderboardQuery(), now: now, points: points);
+      expect([for (final r in rows) (r.playerId, r.points)], [(_k, 38), (_t, 20), (_b, 4)]);
+      final memoryOnly = leaderboard(matches, const LeaderboardQuery(gameId: 'memory'), now: now, points: points);
+      expect(memoryOnly, isEmpty);
     });
   });
 }

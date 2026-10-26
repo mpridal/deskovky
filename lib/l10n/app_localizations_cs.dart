@@ -668,4 +668,124 @@ class AppLocalizationsCs extends AppLocalizations {
   String homeBestStars(int stars) {
     return 'Nejlepší hodnocení: $stars ze 3 hvězd';
   }
+
+  @override
+  String get resultPoints => 'Body';
+
+  @override
+  String get pointsWin => 'Výhra';
+
+  @override
+  String get pointsDraw => 'Remíza';
+
+  @override
+  String get pointsSecond => '2. místo';
+
+  @override
+  String get pointsParticipation => 'Účast';
+
+  @override
+  String pointsStars(int count) {
+    return 'Hodnocení $count ★';
+  }
+
+  @override
+  String pointsStreak(int count) {
+    return 'Série $count výher';
+  }
+
+  @override
+  String get pointsFirstToday => 'První hra dne';
+
+  @override
+  String get pointsRecord => 'Nový osobní rekord';
+
+  @override
+  String pointsBadge(String name) {
+    return 'Odznak: $name';
+  }
+
+  @override
+  String get pointsCapped => 'Dnes už hodně výher na Lehkou';
+
+  @override
+  String get pointsGift => 'Dárek od rodiče';
+
+  @override
+  String get pointsPurchase => 'Nákup';
+
+  @override
+  String pointsTotal(int points) {
+    return 'Celkem +$points ●';
+  }
+
+  @override
+  String levelUp(int level) {
+    return 'Nová úroveň $level!';
+  }
+
+  @override
+  String homePointsBalance(int points) {
+    return 'Body: $points';
+  }
+
+  @override
+  String levelShort(int level) {
+    return 'Úr. $level';
+  }
+
+  @override
+  String levelLabel(int level) {
+    return 'Úroveň $level';
+  }
+
+  @override
+  String levelNext(int current, int needed) {
+    return '$current / $needed ● do další úrovně';
+  }
+
+  @override
+  String get levelMax => 'Nejvyšší úroveň!';
+
+  @override
+  String get statsBalance => 'Zůstatek';
+
+  @override
+  String get statsTotalEarned => 'Celkem získáno';
+
+  @override
+  String get statsPointsHistory => 'Historie bodů';
+
+  @override
+  String get settingsParents => 'Rodičovská zóna';
+
+  @override
+  String get parentsGateTitle => 'Jen pro rodiče';
+
+  @override
+  String parentsGateQuestion(int a, int b) {
+    return 'Kolik je $a × $b?';
+  }
+
+  @override
+  String get parentsGateWrong => 'To není správně.';
+
+  @override
+  String get parentsGateOpen => 'Otevřít';
+
+  @override
+  String get parentsGiftTitle => 'Darovat body';
+
+  @override
+  String parentsGiftConfirm(int points, String name) {
+    return 'Darovat $points ● hráči $name?';
+  }
+
+  @override
+  String get parentsGiftAction => 'Darovat';
+
+  @override
+  String parentsGiftDone(int points, String name) {
+    return 'Darováno: $points ● – $name';
+  }
 }

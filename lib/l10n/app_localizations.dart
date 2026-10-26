@@ -1227,6 +1227,198 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Best rating: {stars} of 3 stars'**
   String homeBestStars(int stars);
+
+  /// No description provided for @resultPoints.
+  ///
+  /// In en, this message translates to:
+  /// **'Points'**
+  String get resultPoints;
+
+  /// No description provided for @pointsWin.
+  ///
+  /// In en, this message translates to:
+  /// **'Win'**
+  String get pointsWin;
+
+  /// No description provided for @pointsDraw.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw'**
+  String get pointsDraw;
+
+  /// No description provided for @pointsSecond.
+  ///
+  /// In en, this message translates to:
+  /// **'2nd place'**
+  String get pointsSecond;
+
+  /// No description provided for @pointsParticipation.
+  ///
+  /// In en, this message translates to:
+  /// **'Taking part'**
+  String get pointsParticipation;
+
+  /// No description provided for @pointsStars.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating {count} ★'**
+  String pointsStars(int count);
+
+  /// No description provided for @pointsStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} wins in a row'**
+  String pointsStreak(int count);
+
+  /// No description provided for @pointsFirstToday.
+  ///
+  /// In en, this message translates to:
+  /// **'First game today'**
+  String get pointsFirstToday;
+
+  /// No description provided for @pointsRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'New personal best'**
+  String get pointsRecord;
+
+  /// No description provided for @pointsBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Badge: {name}'**
+  String pointsBadge(String name);
+
+  /// No description provided for @pointsCapped.
+  ///
+  /// In en, this message translates to:
+  /// **'Lots of Easy wins today'**
+  String get pointsCapped;
+
+  /// No description provided for @pointsGift.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift from a parent'**
+  String get pointsGift;
+
+  /// No description provided for @pointsPurchase.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase'**
+  String get pointsPurchase;
+
+  /// No description provided for @pointsTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total +{points} ●'**
+  String pointsTotal(int points);
+
+  /// No description provided for @levelUp.
+  ///
+  /// In en, this message translates to:
+  /// **'New level {level}!'**
+  String levelUp(int level);
+
+  /// No description provided for @homePointsBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Points: {points}'**
+  String homePointsBalance(int points);
+
+  /// No description provided for @levelShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Lv {level}'**
+  String levelShort(int level);
+
+  /// No description provided for @levelLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Level {level}'**
+  String levelLabel(int level);
+
+  /// No description provided for @levelNext.
+  ///
+  /// In en, this message translates to:
+  /// **'{current} / {needed} ● to the next level'**
+  String levelNext(int current, int needed);
+
+  /// No description provided for @levelMax.
+  ///
+  /// In en, this message translates to:
+  /// **'Top level!'**
+  String get levelMax;
+
+  /// No description provided for @statsBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance'**
+  String get statsBalance;
+
+  /// No description provided for @statsTotalEarned.
+  ///
+  /// In en, this message translates to:
+  /// **'Total earned'**
+  String get statsTotalEarned;
+
+  /// No description provided for @statsPointsHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Points history'**
+  String get statsPointsHistory;
+
+  /// No description provided for @settingsParents.
+  ///
+  /// In en, this message translates to:
+  /// **'Parents\' corner'**
+  String get settingsParents;
+
+  /// No description provided for @parentsGateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Parents only'**
+  String get parentsGateTitle;
+
+  /// No description provided for @parentsGateQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What is {a} × {b}?'**
+  String parentsGateQuestion(int a, int b);
+
+  /// No description provided for @parentsGateWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'That is not right.'**
+  String get parentsGateWrong;
+
+  /// No description provided for @parentsGateOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get parentsGateOpen;
+
+  /// No description provided for @parentsGiftTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Give points'**
+  String get parentsGiftTitle;
+
+  /// No description provided for @parentsGiftConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Give {points} ● to {name}?'**
+  String parentsGiftConfirm(int points, String name);
+
+  /// No description provided for @parentsGiftAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Give'**
+  String get parentsGiftAction;
+
+  /// No description provided for @parentsGiftDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Given: {points} ● – {name}'**
+  String parentsGiftDone(int points, String name);
 }
 
 class _AppLocalizationsDelegate

@@ -658,4 +658,124 @@ class AppLocalizationsEn extends AppLocalizations {
   String homeBestStars(int stars) {
     return 'Best rating: $stars of 3 stars';
   }
+
+  @override
+  String get resultPoints => 'Points';
+
+  @override
+  String get pointsWin => 'Win';
+
+  @override
+  String get pointsDraw => 'Draw';
+
+  @override
+  String get pointsSecond => '2nd place';
+
+  @override
+  String get pointsParticipation => 'Taking part';
+
+  @override
+  String pointsStars(int count) {
+    return 'Rating $count ★';
+  }
+
+  @override
+  String pointsStreak(int count) {
+    return '$count wins in a row';
+  }
+
+  @override
+  String get pointsFirstToday => 'First game today';
+
+  @override
+  String get pointsRecord => 'New personal best';
+
+  @override
+  String pointsBadge(String name) {
+    return 'Badge: $name';
+  }
+
+  @override
+  String get pointsCapped => 'Lots of Easy wins today';
+
+  @override
+  String get pointsGift => 'Gift from a parent';
+
+  @override
+  String get pointsPurchase => 'Purchase';
+
+  @override
+  String pointsTotal(int points) {
+    return 'Total +$points ●';
+  }
+
+  @override
+  String levelUp(int level) {
+    return 'New level $level!';
+  }
+
+  @override
+  String homePointsBalance(int points) {
+    return 'Points: $points';
+  }
+
+  @override
+  String levelShort(int level) {
+    return 'Lv $level';
+  }
+
+  @override
+  String levelLabel(int level) {
+    return 'Level $level';
+  }
+
+  @override
+  String levelNext(int current, int needed) {
+    return '$current / $needed ● to the next level';
+  }
+
+  @override
+  String get levelMax => 'Top level!';
+
+  @override
+  String get statsBalance => 'Balance';
+
+  @override
+  String get statsTotalEarned => 'Total earned';
+
+  @override
+  String get statsPointsHistory => 'Points history';
+
+  @override
+  String get settingsParents => 'Parents\' corner';
+
+  @override
+  String get parentsGateTitle => 'Parents only';
+
+  @override
+  String parentsGateQuestion(int a, int b) {
+    return 'What is $a × $b?';
+  }
+
+  @override
+  String get parentsGateWrong => 'That is not right.';
+
+  @override
+  String get parentsGateOpen => 'Open';
+
+  @override
+  String get parentsGiftTitle => 'Give points';
+
+  @override
+  String parentsGiftConfirm(int points, String name) {
+    return 'Give $points ● to $name?';
+  }
+
+  @override
+  String get parentsGiftAction => 'Give';
+
+  @override
+  String parentsGiftDone(int points, String name) {
+    return 'Given: $points ● – $name';
+  }
 }

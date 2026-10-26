@@ -58,7 +58,8 @@ class _GameSetupScreenState extends ConsumerState<GameSetupScreen> {
     final profiles = await ref.read(playerRepositoryProvider).all();
     final active = await ref.read(activePlayerProvider.future);
     final remembered = widget.initialConfig ?? await ref.read(gameStoreProvider).lastConfig(module.id);
-    if (!mounted || active == null) {
+    if (!mounted) return;
+    if (active == null) {
       setState(() {});
       return;
     }

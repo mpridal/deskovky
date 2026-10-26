@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/providers.dart';
+import '../../core/players/player_profile.dart';
+import '../../core/points/levels.dart';
 import '../../l10n/app_localizations.dart';
 import '../../ui_kit/avatar/avatar_view.dart';
 import '../../ui_kit/components/primary_button.dart';
@@ -12,7 +14,8 @@ import 'player_switcher_sheet.dart';
 
 /// Top bar of the home screen (spec 5.1, mockup `.bar`): who is playing;
 /// tap to switch. Without profiles it offers to create the first one.
-/// Points and the sound button join this row in milestones 5 and 7.
+/// The coin pill shows the balance and opens the player's statistics (the
+/// shop joins in milestone 7b).
 class ActivePlayerBar extends ConsumerWidget {
   const ActivePlayerBar({super.key});
 
@@ -23,6 +26,7 @@ class ActivePlayerBar extends ConsumerWidget {
     final active = ref.watch(activePlayerProvider).value;
 
     if (!players.hasValue) return const SizedBox(height: 56);
+    final points = active == null ? null : ref.watch(pointsSummaryProvider)[active.id];
     if (active == null) {
       return Align(
         alignment: Alignment.centerLeft,
@@ -33,9 +37,41 @@ class ActivePlayerBar extends ConsumerWidget {
         ),
       );
     }
+    final balance = points?.balance ?? 0;
+    final level = levelFor(points?.earned ?? 0);
+    return Row(
+      children: [
+        Expanded(child: _switcher(context, l10n, active, level)),
+        const SizedBox(width: 8),
+        Semantics(
+          button: true,
+          label: l10n.homePointsBalance(balance),
+          excludeSemantics: true,
+          onTap: () => context.push('/players/${active.id}/stats'),
+          child: InkWell(
+            onTap: () => context.push('/players/${active.id}/stats'),
+            borderRadius: BorderRadius.circular(999),
+            child: Container(
+              constraints: const BoxConstraints(minHeight: 48),
+              padding: const EdgeInsets.symmetric(horizontal: 14),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: const Color(0x40000000),
+                borderRadius: BorderRadius.circular(999),
+                border: Border.all(color: AppColors.gold, width: 2),
+              ),
+              child: Text('● $balance', style: AppTypography.button(color: AppColors.gold)),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _switcher(BuildContext context, AppLocalizations l10n, PlayerProfile active, int level) {
     return Semantics(
       button: true,
-      label: '${l10n.homeSwitchPlayer}: ${active.name}',
+      label: '${l10n.homeSwitchPlayer}: ${active.name}, ${l10n.levelLabel(level)}',
       excludeSemantics: true,
       onTap: () => showPlayerSwitcher(context),
       child: InkWell(
@@ -52,7 +88,28 @@ class ActivePlayerBar extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(l10n.homeHello, maxLines: 1, style: AppTypography.caption(color: AppColors.woodLight)),
+                    // Narrow phones with large text: both shrink rather than overflow.
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            l10n.homeHello,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTypography.caption(color: AppColors.woodLight),
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Flexible(
+                          child: Text(
+                            l10n.levelShort(level),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTypography.caption(color: AppColors.gold),
+                          ),
+                        ),
+                      ],
+                    ),
                     Text(
                       active.name,
                       maxLines: 1,

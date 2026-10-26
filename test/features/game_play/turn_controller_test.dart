@@ -11,7 +11,7 @@ import '../../core/game/fake_game.dart';
 
 const _delay = Duration(milliseconds: 250);
 
-TurnController<FakeState> _controller({required List<SeatConfig> seats, int target = 100}) {
+TurnController<FakeState> _controller({required List<SeatConfig> seats, int target = 100, AiPlayer<FakeState> ai = const FakeAi()}) {
   final config = GameConfig(
     gameId: 'fake',
     seats: seats,
@@ -23,7 +23,7 @@ TurnController<FakeState> _controller({required List<SeatConfig> seats, int targ
   return TurnController<FakeState>(
     session: session,
     transport: LocalTransport(session),
-    ai: const FakeAi(),
+    ai: ai,
     runner: const InlineAiRunner(),
     robotDelay: _delay,
   );
@@ -106,5 +106,30 @@ void main() {
     final moves = c.session.moves.length;
     await tester.pump(const Duration(seconds: 2));
     expect(c.session.moves.length, moves);
+  });
+
+  for (final (name, ai) in [('throws', const BrokenAi()), ('answers an illegal move', const BrokenAi(illegal: true))]) {
+    testWidgets('a robot whose AI $name still plays a legal move instead of thinking forever', (tester) async {
+      final c = _controller(seats: const [RobotSeat(), HumanSeat(1)], ai: ai);
+      addTearDown(c.dispose);
+      c.start();
+      await tester.pump(_delay + const Duration(milliseconds: 10));
+      await tester.pump();
+      expect(c.session.moves, hasLength(1));
+      expect(c.session.moves.single.seat, 0);
+      expect(c.session.moves.single.data['n'], anyOf(1, 2), reason: 'a legal move, not the broken one');
+      expect(c.humanSeatToAct, 1);
+    });
+  }
+
+  test('the sample game lists every number still possible as a legal move', () {
+    // Covered in sample_rules_test; here only the fake game contract.
+    const rules = FakeRules();
+    final s = rules.initialState(
+      const GameConfig(gameId: 'fake', seats: [RobotSeat(), RobotSeat()], difficulty: Difficulty.easy, robotSpeed: RobotSpeed.fast, options: {}),
+      1,
+    );
+    expect(rules.legalMoves(s, 0).every((m) => rules.isLegal(s, m)), isTrue);
+    expect(rules.legalMoves(s, 1), isEmpty, reason: 'not their turn');
   });
 }

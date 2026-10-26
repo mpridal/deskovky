@@ -8,6 +8,8 @@ import 'package:deskovky/core/settings/settings_repository.dart';
 import 'package:deskovky/features/game_play/game_screen.dart';
 import 'package:deskovky/features/game_setup/game_setup_screen.dart';
 import 'package:deskovky/features/home/active_player_bar.dart';
+import 'package:deskovky/games/_sample/sample_rules.dart';
+import 'package:deskovky/ui_kit/components/thinking_dots.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -71,7 +73,8 @@ void main() {
   testWidgets('system back opens the pause; robots wait while paused', (tester) async {
     final t = await _player(tester, db, 'Tereza');
     await _startGame(tester, db, _config([HumanSeat(t), const RobotSeat()]));
-    await _tapNumber(tester, 1);
+    final secret = (_screen(tester).debugSession!.state as SampleState).secret;
+    await _tapNumber(tester, secret == 1 ? 2 : 1);
     await tester.binding.handlePopRoute();
     await tester.pumpAndSettle();
     expect(find.text('Pokračovat'), findsOneWidget);
@@ -86,7 +89,9 @@ void main() {
   testWidgets('exit asks, saves the game and returns home; resume restores the same game', (tester) async {
     final t = await _player(tester, db, 'Tereza');
     await _startGame(tester, db, _config([HumanSeat(t), const RobotSeat()]));
-    await _tapNumber(tester, 1);
+    // A miss on purpose: hitting the secret would end the game (seeds vary).
+    final secret = (_screen(tester).debugSession!.state as SampleState).secret;
+    await _tapNumber(tester, secret == 1 ? 2 : 1);
     await tester.pumpAndSettle(const Duration(milliseconds: 300));
     final hash = _screen(tester).debugSession!.hash;
     final seat = _screen(tester).debugSession!.rules.currentSeat(_screen(tester).debugSession!.state);
@@ -96,9 +101,6 @@ void main() {
     expect(find.text('Opravdu ukončit?'), findsOneWidget);
     expect(find.text('Rozehraná hra se uloží.'), findsOneWidget);
     await tester.tap(find.text('Ukončit'));
-    await tester.pumpAndSettle();
-    // The save is real database I/O; under a busy test run it needs real time.
-    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
     await tester.pumpAndSettle();
     expect(find.byType(GameScreen), findsNothing);
     expect(find.byType(ActivePlayerBar), findsOneWidget);
@@ -135,6 +137,9 @@ void main() {
     final t = await _player(tester, db, 'Tereza');
     await _startGame(tester, db, _config([const RobotSeat(), HumanSeat(t)], speed: RobotSpeed.slow));
     expect(find.text('🤖 Robík přemýšlí…'), findsOneWidget);
+    // Desktop-wide chips show the thinking dots next to the robot's name.
+    expect(find.descendant(of: find.byKey(const ValueKey('chip0')), matching: find.byType(ThinkingDots)), findsOneWidget);
+    expect(find.descendant(of: find.byKey(const ValueKey('chip1')), matching: find.byType(ThinkingDots)), findsNothing);
     await tester.tap(find.byKey(const ValueKey('number1')), warnIfMissed: false);
     await tester.pump();
     expect(_screen(tester).debugSession!.moves, isEmpty);

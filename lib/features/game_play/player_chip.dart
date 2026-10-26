@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../ui_kit/components/thinking_dots.dart';
 import '../../ui_kit/tokens/app_colors.dart';
 import '../../ui_kit/tokens/app_typography.dart';
 import 'seat_identity.dart';
@@ -77,19 +78,20 @@ class _PlayerChipState extends State<PlayerChip> with SingleTickerProviderStateM
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            id.avatar(widget.compact ? 32 : 40),
+            id.avatar(widget.compact ? 32 : 40, thinking: widget.thinking),
             const SizedBox(width: 8),
             if (!widget.compact) ...[
               ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 110),
                 child: Text(
-                  widget.thinking ? '${id.name} …' : id.name,
+                  id.name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTypography.button(color: fg).copyWith(fontSize: 14),
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 6),
+              if (widget.thinking) ...[ThinkingDots(color: fg), const SizedBox(width: 6)],
             ],
             Text('${widget.score}', style: AppTypography.h2(color: fg).copyWith(fontSize: 20, height: 1)),
           ],

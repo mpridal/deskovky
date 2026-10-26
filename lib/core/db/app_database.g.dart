@@ -2514,6 +2514,452 @@ class EarnedBadgesCompanion extends UpdateCompanion<EarnedBadge> {
   }
 }
 
+class $PointsLedgerTable extends PointsLedger
+    with TableInfo<$PointsLedgerTable, PointsEntryRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PointsLedgerTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _playerIdMeta = const VerificationMeta(
+    'playerId',
+  );
+  @override
+  late final GeneratedColumn<int> playerId = GeneratedColumn<int>(
+    'player_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES players (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<int> amount = GeneratedColumn<int>(
+    'amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _reasonMeta = const VerificationMeta('reason');
+  @override
+  late final GeneratedColumn<String> reason = GeneratedColumn<String>(
+    'reason',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _detailMeta = const VerificationMeta('detail');
+  @override
+  late final GeneratedColumn<String> detail = GeneratedColumn<String>(
+    'detail',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _matchIdMeta = const VerificationMeta(
+    'matchId',
+  );
+  @override
+  late final GeneratedColumn<int> matchId = GeneratedColumn<int>(
+    'match_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES matches (id) ON DELETE SET NULL',
+    ),
+  );
+  static const VerificationMeta _atMeta = const VerificationMeta('at');
+  @override
+  late final GeneratedColumn<int> at = GeneratedColumn<int>(
+    'at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    playerId,
+    amount,
+    reason,
+    detail,
+    matchId,
+    at,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'points_ledger';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PointsEntryRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('player_id')) {
+      context.handle(
+        _playerIdMeta,
+        playerId.isAcceptableOrUnknown(data['player_id']!, _playerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_playerIdMeta);
+    }
+    if (data.containsKey('amount')) {
+      context.handle(
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    if (data.containsKey('reason')) {
+      context.handle(
+        _reasonMeta,
+        reason.isAcceptableOrUnknown(data['reason']!, _reasonMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_reasonMeta);
+    }
+    if (data.containsKey('detail')) {
+      context.handle(
+        _detailMeta,
+        detail.isAcceptableOrUnknown(data['detail']!, _detailMeta),
+      );
+    }
+    if (data.containsKey('match_id')) {
+      context.handle(
+        _matchIdMeta,
+        matchId.isAcceptableOrUnknown(data['match_id']!, _matchIdMeta),
+      );
+    }
+    if (data.containsKey('at')) {
+      context.handle(_atMeta, at.isAcceptableOrUnknown(data['at']!, _atMeta));
+    } else if (isInserting) {
+      context.missing(_atMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PointsEntryRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PointsEntryRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      playerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}player_id'],
+      )!,
+      amount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount'],
+      )!,
+      reason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reason'],
+      )!,
+      detail: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}detail'],
+      ),
+      matchId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}match_id'],
+      ),
+      at: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}at'],
+      )!,
+    );
+  }
+
+  @override
+  $PointsLedgerTable createAlias(String alias) {
+    return $PointsLedgerTable(attachedDatabase, alias);
+  }
+}
+
+class PointsEntryRow extends DataClass implements Insertable<PointsEntryRow> {
+  final int id;
+  final int playerId;
+  final int amount;
+
+  /// `PointsReason.name`, or `purchase`.
+  final String reason;
+  final String? detail;
+  final int? matchId;
+  final int at;
+  const PointsEntryRow({
+    required this.id,
+    required this.playerId,
+    required this.amount,
+    required this.reason,
+    this.detail,
+    this.matchId,
+    required this.at,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['player_id'] = Variable<int>(playerId);
+    map['amount'] = Variable<int>(amount);
+    map['reason'] = Variable<String>(reason);
+    if (!nullToAbsent || detail != null) {
+      map['detail'] = Variable<String>(detail);
+    }
+    if (!nullToAbsent || matchId != null) {
+      map['match_id'] = Variable<int>(matchId);
+    }
+    map['at'] = Variable<int>(at);
+    return map;
+  }
+
+  PointsLedgerCompanion toCompanion(bool nullToAbsent) {
+    return PointsLedgerCompanion(
+      id: Value(id),
+      playerId: Value(playerId),
+      amount: Value(amount),
+      reason: Value(reason),
+      detail: detail == null && nullToAbsent
+          ? const Value.absent()
+          : Value(detail),
+      matchId: matchId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(matchId),
+      at: Value(at),
+    );
+  }
+
+  factory PointsEntryRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PointsEntryRow(
+      id: serializer.fromJson<int>(json['id']),
+      playerId: serializer.fromJson<int>(json['playerId']),
+      amount: serializer.fromJson<int>(json['amount']),
+      reason: serializer.fromJson<String>(json['reason']),
+      detail: serializer.fromJson<String?>(json['detail']),
+      matchId: serializer.fromJson<int?>(json['matchId']),
+      at: serializer.fromJson<int>(json['at']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'playerId': serializer.toJson<int>(playerId),
+      'amount': serializer.toJson<int>(amount),
+      'reason': serializer.toJson<String>(reason),
+      'detail': serializer.toJson<String?>(detail),
+      'matchId': serializer.toJson<int?>(matchId),
+      'at': serializer.toJson<int>(at),
+    };
+  }
+
+  PointsEntryRow copyWith({
+    int? id,
+    int? playerId,
+    int? amount,
+    String? reason,
+    Value<String?> detail = const Value.absent(),
+    Value<int?> matchId = const Value.absent(),
+    int? at,
+  }) => PointsEntryRow(
+    id: id ?? this.id,
+    playerId: playerId ?? this.playerId,
+    amount: amount ?? this.amount,
+    reason: reason ?? this.reason,
+    detail: detail.present ? detail.value : this.detail,
+    matchId: matchId.present ? matchId.value : this.matchId,
+    at: at ?? this.at,
+  );
+  PointsEntryRow copyWithCompanion(PointsLedgerCompanion data) {
+    return PointsEntryRow(
+      id: data.id.present ? data.id.value : this.id,
+      playerId: data.playerId.present ? data.playerId.value : this.playerId,
+      amount: data.amount.present ? data.amount.value : this.amount,
+      reason: data.reason.present ? data.reason.value : this.reason,
+      detail: data.detail.present ? data.detail.value : this.detail,
+      matchId: data.matchId.present ? data.matchId.value : this.matchId,
+      at: data.at.present ? data.at.value : this.at,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PointsEntryRow(')
+          ..write('id: $id, ')
+          ..write('playerId: $playerId, ')
+          ..write('amount: $amount, ')
+          ..write('reason: $reason, ')
+          ..write('detail: $detail, ')
+          ..write('matchId: $matchId, ')
+          ..write('at: $at')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, playerId, amount, reason, detail, matchId, at);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PointsEntryRow &&
+          other.id == this.id &&
+          other.playerId == this.playerId &&
+          other.amount == this.amount &&
+          other.reason == this.reason &&
+          other.detail == this.detail &&
+          other.matchId == this.matchId &&
+          other.at == this.at);
+}
+
+class PointsLedgerCompanion extends UpdateCompanion<PointsEntryRow> {
+  final Value<int> id;
+  final Value<int> playerId;
+  final Value<int> amount;
+  final Value<String> reason;
+  final Value<String?> detail;
+  final Value<int?> matchId;
+  final Value<int> at;
+  const PointsLedgerCompanion({
+    this.id = const Value.absent(),
+    this.playerId = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.reason = const Value.absent(),
+    this.detail = const Value.absent(),
+    this.matchId = const Value.absent(),
+    this.at = const Value.absent(),
+  });
+  PointsLedgerCompanion.insert({
+    this.id = const Value.absent(),
+    required int playerId,
+    required int amount,
+    required String reason,
+    this.detail = const Value.absent(),
+    this.matchId = const Value.absent(),
+    required int at,
+  }) : playerId = Value(playerId),
+       amount = Value(amount),
+       reason = Value(reason),
+       at = Value(at);
+  static Insertable<PointsEntryRow> custom({
+    Expression<int>? id,
+    Expression<int>? playerId,
+    Expression<int>? amount,
+    Expression<String>? reason,
+    Expression<String>? detail,
+    Expression<int>? matchId,
+    Expression<int>? at,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (playerId != null) 'player_id': playerId,
+      if (amount != null) 'amount': amount,
+      if (reason != null) 'reason': reason,
+      if (detail != null) 'detail': detail,
+      if (matchId != null) 'match_id': matchId,
+      if (at != null) 'at': at,
+    });
+  }
+
+  PointsLedgerCompanion copyWith({
+    Value<int>? id,
+    Value<int>? playerId,
+    Value<int>? amount,
+    Value<String>? reason,
+    Value<String?>? detail,
+    Value<int?>? matchId,
+    Value<int>? at,
+  }) {
+    return PointsLedgerCompanion(
+      id: id ?? this.id,
+      playerId: playerId ?? this.playerId,
+      amount: amount ?? this.amount,
+      reason: reason ?? this.reason,
+      detail: detail ?? this.detail,
+      matchId: matchId ?? this.matchId,
+      at: at ?? this.at,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (playerId.present) {
+      map['player_id'] = Variable<int>(playerId.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<int>(amount.value);
+    }
+    if (reason.present) {
+      map['reason'] = Variable<String>(reason.value);
+    }
+    if (detail.present) {
+      map['detail'] = Variable<String>(detail.value);
+    }
+    if (matchId.present) {
+      map['match_id'] = Variable<int>(matchId.value);
+    }
+    if (at.present) {
+      map['at'] = Variable<int>(at.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PointsLedgerCompanion(')
+          ..write('id: $id, ')
+          ..write('playerId: $playerId, ')
+          ..write('amount: $amount, ')
+          ..write('reason: $reason, ')
+          ..write('detail: $detail, ')
+          ..write('matchId: $matchId, ')
+          ..write('at: $at')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -2528,6 +2974,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $MatchParticipantsTable(this);
   late final $PlayerCountersTable playerCounters = $PlayerCountersTable(this);
   late final $EarnedBadgesTable earnedBadges = $EarnedBadgesTable(this);
+  late final $PointsLedgerTable pointsLedger = $PointsLedgerTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2541,6 +2988,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     matchParticipants,
     playerCounters,
     earnedBadges,
+    pointsLedger,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -2571,6 +3019,20 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('earned_badges', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'players',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('points_ledger', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'matches',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('points_ledger', kind: UpdateKind.update)],
     ),
   ]);
 }
@@ -2648,6 +3110,24 @@ final class $$PlayersTableReferences
     ).filter((f) => f.playerId.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_earnedBadgesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$PointsLedgerTable, List<PointsEntryRow>>
+  _pointsLedgerRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.pointsLedger,
+    aliasName: 'players__id__points_ledger__player_id',
+  );
+
+  $$PointsLedgerTableProcessedTableManager get pointsLedgerRefs {
+    final manager = $$PointsLedgerTableTableManager(
+      $_db,
+      $_db.pointsLedger,
+    ).filter((f) => f.playerId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_pointsLedgerRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -2759,6 +3239,31 @@ class $$PlayersTableFilterComposer
           }) => $$EarnedBadgesTableFilterComposer(
             $db: $db,
             $table: $db.earnedBadges,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> pointsLedgerRefs(
+    Expression<bool> Function($$PointsLedgerTableFilterComposer f) f,
+  ) {
+    final $$PointsLedgerTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.pointsLedger,
+      getReferencedColumn: (t) => t.playerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PointsLedgerTableFilterComposer(
+            $db: $db,
+            $table: $db.pointsLedger,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -2915,6 +3420,31 @@ class $$PlayersTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> pointsLedgerRefs<T extends Object>(
+    Expression<T> Function($$PointsLedgerTableAnnotationComposer a) f,
+  ) {
+    final $$PointsLedgerTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.pointsLedger,
+      getReferencedColumn: (t) => t.playerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PointsLedgerTableAnnotationComposer(
+            $db: $db,
+            $table: $db.pointsLedger,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$PlayersTableTableManager
@@ -2934,6 +3464,7 @@ class $$PlayersTableTableManager
             bool matchParticipantsRefs,
             bool playerCountersRefs,
             bool earnedBadgesRefs,
+            bool pointsLedgerRefs,
           })
         > {
   $$PlayersTableTableManager(_$AppDatabase db, $PlayersTable table)
@@ -2992,6 +3523,7 @@ class $$PlayersTableTableManager
                 matchParticipantsRefs = false,
                 playerCountersRefs = false,
                 earnedBadgesRefs = false,
+                pointsLedgerRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -2999,6 +3531,7 @@ class $$PlayersTableTableManager
                     if (matchParticipantsRefs) db.matchParticipants,
                     if (playerCountersRefs) db.playerCounters,
                     if (earnedBadgesRefs) db.earnedBadges,
+                    if (pointsLedgerRefs) db.pointsLedger,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -3063,6 +3596,26 @@ class $$PlayersTableTableManager
                           referencedColumn: 'player_id',
                           typedResults: items,
                         ),
+                      if (pointsLedgerRefs)
+                        await $_getPrefetchedDataByColumns<
+                          Player,
+                          $PlayersTable,
+                          PointsEntryRow,
+                          $PointsLedgerTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$PlayersTableReferences
+                              ._pointsLedgerRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$PlayersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).pointsLedgerRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'player_id',
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -3087,6 +3640,7 @@ typedef $$PlayersTableProcessedTableManager =
         bool matchParticipantsRefs,
         bool playerCountersRefs,
         bool earnedBadgesRefs,
+        bool pointsLedgerRefs,
       })
     >;
 typedef $$AppSettingsTableCreateCompanionBuilder =
@@ -3631,6 +4185,24 @@ final class $$MatchesTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$PointsLedgerTable, List<PointsEntryRow>>
+  _pointsLedgerRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.pointsLedger,
+    aliasName: 'matches__id__points_ledger__match_id',
+  );
+
+  $$PointsLedgerTableProcessedTableManager get pointsLedgerRefs {
+    final manager = $$PointsLedgerTableTableManager(
+      $_db,
+      $_db.pointsLedger,
+    ).filter((f) => f.matchId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_pointsLedgerRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$MatchesTableFilterComposer
@@ -3683,6 +4255,31 @@ class $$MatchesTableFilterComposer
           }) => $$MatchParticipantsTableFilterComposer(
             $db: $db,
             $table: $db.matchParticipants,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> pointsLedgerRefs(
+    Expression<bool> Function($$PointsLedgerTableFilterComposer f) f,
+  ) {
+    final $$PointsLedgerTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.pointsLedger,
+      getReferencedColumn: (t) => t.matchId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PointsLedgerTableFilterComposer(
+            $db: $db,
+            $table: $db.pointsLedger,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -3781,6 +4378,31 @@ class $$MatchesTableAnnotationComposer
         );
     return f(composer);
   }
+
+  Expression<T> pointsLedgerRefs<T extends Object>(
+    Expression<T> Function($$PointsLedgerTableAnnotationComposer a) f,
+  ) {
+    final $$PointsLedgerTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.pointsLedger,
+      getReferencedColumn: (t) => t.matchId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PointsLedgerTableAnnotationComposer(
+            $db: $db,
+            $table: $db.pointsLedger,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$MatchesTableTableManager
@@ -3796,7 +4418,10 @@ class $$MatchesTableTableManager
           $$MatchesTableUpdateCompanionBuilder,
           (MatchRow, $$MatchesTableReferences),
           MatchRow,
-          PrefetchHooks Function({bool matchParticipantsRefs})
+          PrefetchHooks Function({
+            bool matchParticipantsRefs,
+            bool pointsLedgerRefs,
+          })
         > {
   $$MatchesTableTableManager(_$AppDatabase db, $MatchesTable table)
     : super(
@@ -3845,38 +4470,61 @@ class $$MatchesTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({matchParticipantsRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (matchParticipantsRefs) db.matchParticipants,
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (matchParticipantsRefs)
-                    await $_getPrefetchedDataByColumns<
-                      MatchRow,
-                      $MatchesTable,
-                      MatchParticipantRow,
-                      $MatchParticipantsTable
-                    >(
-                      currentTable: table,
-                      referencedTable: $$MatchesTableReferences
-                          ._matchParticipantsRefsTable(db),
-                      managerFromTypedResult: (p0) => $$MatchesTableReferences(
-                        db,
-                        table,
-                        p0,
-                      ).matchParticipantsRefs,
-                      currentColumn: 'id',
-                      referencedColumn: 'match_id',
-                      typedResults: items,
-                    ),
-                ];
+          prefetchHooksCallback:
+              ({matchParticipantsRefs = false, pointsLedgerRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (matchParticipantsRefs) db.matchParticipants,
+                    if (pointsLedgerRefs) db.pointsLedger,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (matchParticipantsRefs)
+                        await $_getPrefetchedDataByColumns<
+                          MatchRow,
+                          $MatchesTable,
+                          MatchParticipantRow,
+                          $MatchParticipantsTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$MatchesTableReferences
+                              ._matchParticipantsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$MatchesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).matchParticipantsRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'match_id',
+                          typedResults: items,
+                        ),
+                      if (pointsLedgerRefs)
+                        await $_getPrefetchedDataByColumns<
+                          MatchRow,
+                          $MatchesTable,
+                          PointsEntryRow,
+                          $PointsLedgerTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$MatchesTableReferences
+                              ._pointsLedgerRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$MatchesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).pointsLedgerRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'match_id',
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
               },
-            );
-          },
         ),
       );
 }
@@ -3893,7 +4541,10 @@ typedef $$MatchesTableProcessedTableManager =
       $$MatchesTableUpdateCompanionBuilder,
       (MatchRow, $$MatchesTableReferences),
       MatchRow,
-      PrefetchHooks Function({bool matchParticipantsRefs})
+      PrefetchHooks Function({
+        bool matchParticipantsRefs,
+        bool pointsLedgerRefs,
+      })
     >;
 typedef $$MatchParticipantsTableCreateCompanionBuilder =
     MatchParticipantsCompanion Function({
@@ -4908,6 +5559,437 @@ typedef $$EarnedBadgesTableProcessedTableManager =
       EarnedBadge,
       PrefetchHooks Function({bool playerId})
     >;
+typedef $$PointsLedgerTableCreateCompanionBuilder =
+    PointsLedgerCompanion Function({
+      Value<int> id,
+      required int playerId,
+      required int amount,
+      required String reason,
+      Value<String?> detail,
+      Value<int?> matchId,
+      required int at,
+    });
+typedef $$PointsLedgerTableUpdateCompanionBuilder =
+    PointsLedgerCompanion Function({
+      Value<int> id,
+      Value<int> playerId,
+      Value<int> amount,
+      Value<String> reason,
+      Value<String?> detail,
+      Value<int?> matchId,
+      Value<int> at,
+    });
+
+final class $$PointsLedgerTableReferences
+    extends BaseReferences<_$AppDatabase, $PointsLedgerTable, PointsEntryRow> {
+  $$PointsLedgerTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $PlayersTable _playerIdTable(_$AppDatabase db) =>
+      db.players.createAlias('points_ledger__player_id__players__id');
+
+  $$PlayersTableProcessedTableManager get playerId {
+    final $_column = $_itemColumn<int>('player_id')!;
+
+    final manager = $$PlayersTableTableManager(
+      $_db,
+      $_db.players,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_playerIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $MatchesTable _matchIdTable(_$AppDatabase db) =>
+      db.matches.createAlias('points_ledger__match_id__matches__id');
+
+  $$MatchesTableProcessedTableManager? get matchId {
+    final $_column = $_itemColumn<int>('match_id');
+    if ($_column == null) return null;
+    final manager = $$MatchesTableTableManager(
+      $_db,
+      $_db.matches,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_matchIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$PointsLedgerTableFilterComposer
+    extends Composer<_$AppDatabase, $PointsLedgerTable> {
+  $$PointsLedgerTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get detail => $composableBuilder(
+    column: $table.detail,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get at => $composableBuilder(
+    column: $table.at,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$PlayersTableFilterComposer get playerId {
+    final $$PlayersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.playerId,
+      referencedTable: $db.players,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlayersTableFilterComposer(
+            $db: $db,
+            $table: $db.players,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$MatchesTableFilterComposer get matchId {
+    final $$MatchesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.matchId,
+      referencedTable: $db.matches,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MatchesTableFilterComposer(
+            $db: $db,
+            $table: $db.matches,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PointsLedgerTableOrderingComposer
+    extends Composer<_$AppDatabase, $PointsLedgerTable> {
+  $$PointsLedgerTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get detail => $composableBuilder(
+    column: $table.detail,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get at => $composableBuilder(
+    column: $table.at,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$PlayersTableOrderingComposer get playerId {
+    final $$PlayersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.playerId,
+      referencedTable: $db.players,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlayersTableOrderingComposer(
+            $db: $db,
+            $table: $db.players,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$MatchesTableOrderingComposer get matchId {
+    final $$MatchesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.matchId,
+      referencedTable: $db.matches,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MatchesTableOrderingComposer(
+            $db: $db,
+            $table: $db.matches,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PointsLedgerTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PointsLedgerTable> {
+  $$PointsLedgerTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumn<String> get reason =>
+      $composableBuilder(column: $table.reason, builder: (column) => column);
+
+  GeneratedColumn<String> get detail =>
+      $composableBuilder(column: $table.detail, builder: (column) => column);
+
+  GeneratedColumn<int> get at =>
+      $composableBuilder(column: $table.at, builder: (column) => column);
+
+  $$PlayersTableAnnotationComposer get playerId {
+    final $$PlayersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.playerId,
+      referencedTable: $db.players,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlayersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.players,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$MatchesTableAnnotationComposer get matchId {
+    final $$MatchesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.matchId,
+      referencedTable: $db.matches,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MatchesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.matches,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PointsLedgerTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $PointsLedgerTable,
+          PointsEntryRow,
+          $$PointsLedgerTableFilterComposer,
+          $$PointsLedgerTableOrderingComposer,
+          $$PointsLedgerTableAnnotationComposer,
+          $$PointsLedgerTableCreateCompanionBuilder,
+          $$PointsLedgerTableUpdateCompanionBuilder,
+          (PointsEntryRow, $$PointsLedgerTableReferences),
+          PointsEntryRow,
+          PrefetchHooks Function({bool playerId, bool matchId})
+        > {
+  $$PointsLedgerTableTableManager(_$AppDatabase db, $PointsLedgerTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PointsLedgerTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PointsLedgerTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PointsLedgerTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> playerId = const Value.absent(),
+                Value<int> amount = const Value.absent(),
+                Value<String> reason = const Value.absent(),
+                Value<String?> detail = const Value.absent(),
+                Value<int?> matchId = const Value.absent(),
+                Value<int> at = const Value.absent(),
+              }) => PointsLedgerCompanion(
+                id: id,
+                playerId: playerId,
+                amount: amount,
+                reason: reason,
+                detail: detail,
+                matchId: matchId,
+                at: at,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int playerId,
+                required int amount,
+                required String reason,
+                Value<String?> detail = const Value.absent(),
+                Value<int?> matchId = const Value.absent(),
+                required int at,
+              }) => PointsLedgerCompanion.insert(
+                id: id,
+                playerId: playerId,
+                amount: amount,
+                reason: reason,
+                detail: detail,
+                matchId: matchId,
+                at: at,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$PointsLedgerTable, PointsEntryRow>(table),
+                  $$PointsLedgerTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({playerId = false, matchId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (playerId) {
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.playerId,
+                        referencedTable: $$PointsLedgerTableReferences
+                            ._playerIdTable(db),
+                        referencedColumn: $$PointsLedgerTableReferences
+                            ._playerIdTable(db)
+                            .id,
+                      ) as T;
+                    }
+                    if (matchId) {
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.matchId,
+                        referencedTable: $$PointsLedgerTableReferences
+                            ._matchIdTable(db),
+                        referencedColumn: $$PointsLedgerTableReferences
+                            ._matchIdTable(db)
+                            .id,
+                      ) as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$PointsLedgerTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $PointsLedgerTable,
+      PointsEntryRow,
+      $$PointsLedgerTableFilterComposer,
+      $$PointsLedgerTableOrderingComposer,
+      $$PointsLedgerTableAnnotationComposer,
+      $$PointsLedgerTableCreateCompanionBuilder,
+      $$PointsLedgerTableUpdateCompanionBuilder,
+      (PointsEntryRow, $$PointsLedgerTableReferences),
+      PointsEntryRow,
+      PrefetchHooks Function({bool playerId, bool matchId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -4928,4 +6010,6 @@ class $AppDatabaseManager {
       $$PlayerCountersTableTableManager(_db, _db.playerCounters);
   $$EarnedBadgesTableTableManager get earnedBadges =>
       $$EarnedBadgesTableTableManager(_db, _db.earnedBadges);
+  $$PointsLedgerTableTableManager get pointsLedger =>
+      $$PointsLedgerTableTableManager(_db, _db.pointsLedger);
 }
