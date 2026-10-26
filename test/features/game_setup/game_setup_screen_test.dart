@@ -140,4 +140,15 @@ void main() {
     final slots = tester.widgetList<PlayerSlot>(find.byType(PlayerSlot)).toList();
     expect([for (final s in slots) s.seat], [0, 1]);
   });
+
+  testWidgets('leaving the setup before it has loaded does not crash', (tester) async {
+    await pumpApp(tester, size: const Size(412, 915), db: db);
+    final router = GoRouter.of(tester.element(find.byType(Navigator).first));
+    router.push('/play/sample/setup');
+    await tester.pump();
+    router.go('/games');
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+  });
 }
