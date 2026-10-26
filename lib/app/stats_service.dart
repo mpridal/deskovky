@@ -94,6 +94,18 @@ class StatsService {
     required GameResult result,
     required List<GameEvent> events,
     required Duration duration,
+  }) async {
+    // Spec 5.6: a game ended early (e.g. Člověče "Ukončit a seřadit") earns
+    // nothing – like leaving a game, it is not recorded at all.
+    if (result.stats['endedEarly'] == true) return MatchRewards.none;
+    return _record(config: config, result: result, events: events, duration: duration);
+  }
+
+  Future<MatchRewards> _record({
+    required GameConfig config,
+    required GameResult result,
+    required List<GameEvent> events,
+    required Duration duration,
   }) => _repo.transaction(() async {
     final humanIds = {
       for (final s in config.seats)
