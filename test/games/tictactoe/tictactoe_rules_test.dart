@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:deskovky/core/game/difficulty.dart';
 import 'package:deskovky/core/game/game_config.dart';
+import 'package:deskovky/core/game/game_option.dart';
 import 'package:deskovky/core/game/move.dart';
+import 'package:deskovky/games/tictactoe/tictactoe_module.dart';
 import 'package:deskovky/games/tictactoe/tictactoe_rules.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -47,11 +49,24 @@ void main() {
       }
     });
 
-    test('random and alternate start differ by seed but are deterministic', () {
-      for (final start in [TictactoeStart.random, TictactoeStart.alternate]) {
-        final starters = {for (var seed = 0; seed < 40; seed++) rules.initialState(config(start: start), seed).starter};
-        expect(starters, {0, 1}, reason: start);
-        expect(rules.initialState(config(start: start), 5).starter, rules.initialState(config(start: start), 5).starter);
+    test('random start differs by seed but is deterministic', () {
+      final starters = {for (var seed = 0; seed < 40; seed++) rules.initialState(config(start: TictactoeStart.random), seed).starter};
+      expect(starters, {0, 1});
+      expect(
+        rules.initialState(config(start: TictactoeStart.random), 5).starter,
+        rules.initialState(config(start: TictactoeStart.random), 5).starter,
+      );
+    });
+
+    test('"take turns" is not offered until the framework tells the round; old saves with it start like random', () {
+      final start = tictactoeModule.options.whereType<ChoiceOption>().singleWhere((o) => o.id == 'start');
+      expect([for (final (v, _) in start.choices) v], [TictactoeStart.random, TictactoeStart.first]);
+      expect(start.defaultValue, TictactoeStart.random);
+      // A remembered setup with 'alternate' falls back to the default.
+      expect(normalizeOptions(tictactoeModule.options, {'start': 'alternate'})['start'], TictactoeStart.random);
+      // A saved game with 'alternate' replays as before: the starter from the seed.
+      for (var seed = 0; seed < 20; seed++) {
+        expect(rules.initialState(config(start: 'alternate'), seed).starter, rules.initialState(config(start: TictactoeStart.random), seed).starter);
       }
     });
 

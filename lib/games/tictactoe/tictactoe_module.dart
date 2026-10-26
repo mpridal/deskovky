@@ -63,11 +63,10 @@ class TictactoeModule extends GameModule<TictactoeState> {
       id: 'start',
       labelKey: 'tictactoe.option.start',
       choices: [
-        (TictactoeStart.alternate, 'tictactoe.option.start.alternate'),
         (TictactoeStart.random, 'tictactoe.option.start.random'),
         (TictactoeStart.first, 'tictactoe.option.start.first'),
       ],
-      defaultValue: TictactoeStart.alternate,
+      defaultValue: TictactoeStart.random,
     ),
     ToggleOption(id: 'confirm', labelKey: 'tictactoe.option.confirm', defaultValue: false),
   ];

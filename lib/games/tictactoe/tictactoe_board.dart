@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import '../../core/game/game_module.dart';
@@ -35,6 +37,13 @@ class _TictactoeBoardState extends State<TictactoeBoard> with TickerProviderStat
   /// The stroke over the winning row.
   late final _strike = AnimationController(vsync: this, duration: const Duration(milliseconds: 520));
 
+  /// Glides a zoomed board to a move outside the view.
+  late final _pan = AnimationController(vsync: this, duration: const Duration(milliseconds: 350))..addListener(_onPan);
+  Matrix4Tween? _panTween;
+
+  /// The space the grid gets (without its padding), from the last layout.
+  Size _viewport = Size.zero;
+
   /// The cell waiting for a confirming second tap.
   int? _pending;
 
@@ -61,7 +70,61 @@ class _TictactoeBoardState extends State<TictactoeBoard> with TickerProviderStat
     } else if (now.winner == null) {
       _strike.value = 0;
     }
+    final last = now.lastCell;
+    if (last != null && now.history.length > before.history.length) {
+      // After this frame's layout, so a rotation's new size counts too.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _reveal(now.line.isNotEmpty ? now.line : [last]);
+      });
+    }
   }
+
+  /// Moves a zoomed board (keeping its zoom) just enough that [cells] are in
+  /// view with half a cell to spare; a row too long for the view centres on
+  /// its last cell.
+  void _reveal(List<int> cells) {
+    final s = _state, view = _viewport;
+    if (!_zooms(view, s.size)) return;
+    const cell = 48.0;
+    final matrix = _grid.transform.value;
+    final scale = matrix.getMaxScaleOnAxis();
+    final shift = matrix.getTranslation();
+    var target = Rect.fromLTRB(
+      cells.map((i) => i % s.size).reduce(min) * cell,
+      cells.map((i) => i ~/ s.size).reduce(min) * cell,
+      (cells.map((i) => i % s.size).reduce(max) + 1) * cell,
+      (cells.map((i) => i ~/ s.size).reduce(max) + 1) * cell,
+    );
+    const margin = cell / 2;
+    if (target.width * scale > view.width - 2 * margin || target.height * scale > view.height - 2 * margin) {
+      final i = cells.last;
+      target = Rect.fromLTWH(i % s.size * cell, i ~/ s.size * cell, cell, cell);
+    }
+    double fit(double offset, double start, double end, double space) {
+      if (scale * start + offset < margin) return margin - scale * start;
+      if (scale * end + offset > space - margin) return space - margin - scale * end;
+      return offset;
+    }
+
+    final dx = fit(shift.x, target.left, target.right, view.width);
+    final dy = fit(shift.y, target.top, target.bottom, view.height);
+    if (dx == shift.x && dy == shift.y) return;
+    final goal = matrix.clone()..setTranslationRaw(dx, dy, shift.z);
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _grid.transform.value = goal;
+      return;
+    }
+    _panTween = Matrix4Tween(begin: matrix.clone(), end: goal);
+    _pan.forward(from: 0);
+  }
+
+  void _onPan() {
+    final tween = _panTween;
+    if (tween != null) _grid.transform.value = tween.transform(Curves.easeInOut.transform(_pan.value));
+  }
+
+  /// Whether [BoardGrid] keeps 48 dp cells and zooms (as it decides).
+  static bool _zooms(Size view, int size) => min(view.width, view.height) / size < 48;
 
   void _animate(AnimationController c) {
     if (MediaQuery.disableAnimationsOf(context)) {
@@ -75,6 +138,7 @@ class _TictactoeBoardState extends State<TictactoeBoard> with TickerProviderStat
   void dispose() {
     _pen.dispose();
     _strike.dispose();
+    _pan.dispose();
     _grid.dispose();
     super.dispose();
   }
@@ -120,12 +184,14 @@ class _TictactoeBoardState extends State<TictactoeBoard> with TickerProviderStat
 
     return LayoutBuilder(
       builder: (context, box) {
-        final zooms = box.biggest.shortestSide / s.size < 48;
+        final pad = s.bigBoard ? 4.0 : 12.0;
+        _viewport = Size(box.maxWidth - 2 * pad, box.maxHeight - 2 * pad);
+        final zooms = _zooms(_viewport, s.size);
         return Stack(
           children: [
             Positioned.fill(
               child: Padding(
-                padding: EdgeInsets.all(s.bigBoard ? 4 : 12),
+                padding: EdgeInsets.all(pad),
                 child: BoardGrid(
                   key: ValueKey('tictactoeGrid${s.size}'),
                   columns: s.size,
@@ -142,7 +208,12 @@ class _TictactoeBoardState extends State<TictactoeBoard> with TickerProviderStat
                     final strikeIndex = winning[i];
                     return Semantics(
                       key: ValueKey('cell$column,$row'),
-                      label: owner == 0 ? '✕' : (owner == 1 ? '◯' : '${column + 1}, ${row + 1}'),
+                      container: true,
+                      label: tictactoeTexts.of(context, 'tictactoe.cell', {
+                        'mark': owner == 0 ? '✕' : (owner == 1 ? '◯' : tictactoeTexts.of(context, 'tictactoe.cell.empty')),
+                        'column': column + 1,
+                        'row': row + 1,
+                      }),
                       button: owner < 0 && view.canAct,
                       excludeSemantics: true,
                       onTap: owner < 0 && view.canAct ? () => _tap((column, row)) : null,
