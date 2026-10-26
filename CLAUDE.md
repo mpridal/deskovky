@@ -90,6 +90,14 @@ Pravidla paralelní práce (kap. 13.2 zadání) se doplní v milníku 9.
 - Partie jen lidí = sloupec Střední. Po ochraně proti farmení (11. výhra dne na Lehkou sám s roboty) je celá partie za 1 bod, odměny za odznaky zůstávají.
 - Rodičovská zóna: Nastavení → Rodičovská zóna (příklad z násobilky) → dárek bodů.
 
+## Obchod, šatník a vylepšení avatara (milník 7b)
+
+- **Přidání položky:** (1) záznam v `assets/config/shop_items.json` (`id`, `slot` head/face/hand/pet/frame/effect, `rarity`, `price` nebo `unlock: "badge:<id>"`, volitelně `minLevel`, `colorVariants`, `animated`); (2) kresba v `lib/ui_kit/avatar/accessories/<slot>_arts.dart` v prostoru 100×100 (klobouky s `hairLine`, barvy přes `Art.variant`); (3) název `item<Id>` ve všech 3 ARB a větev v `lib/games/item_texts.dart`; (4) `flutter test test/ui_kit/avatar test/core/shop` – testy hlídají, že každá položka má kresbu i text a nic nepřesahuje kruh; vzorník obnov `--update-goldens` a zkontroluj očima.
+- Vlastnictví = tabulka `player_items` (schéma v5) ∪ položky odemčené odznakem; nasazené jsou v `AvatarSpec.equipped` (JSON klíč `eq`), neznámé položky se tiše ignorují. Vše přes `ShopRepository` (`buy` v transakci, `equip`, `unequip`, `reset`).
+- Mazlíček a efekt se kreslí až od 40 dp, animace jen od 64 dp a bez omezení pohybu.
+- Vyzkoušené položky (pro „Teď si můžeš koupit…“ ve výsledcích) jsou v `app_settings` pod `triedItems.<id hráče>`.
+- Rodičovská zóna má i „Vynulovat“ (zůstatek 0, koupené položky pryč, úroveň a odznaky zůstanou).
+
 ## Vydání a aktualizace (milník 8)
 
 - Vydání = tag `vX.Y.Z` (podrobně `docs/INSTALACE.md`): `pubspec.yaml` `version: X.Y.Z+kód` (kód = X·10000 + Y·100 + Z) a sekce v `CHANGELOG.md` (cs/en/es) – obojí hlídá `test/tool/latest_json_test.dart`. `release.yml` staví jen arm64.
