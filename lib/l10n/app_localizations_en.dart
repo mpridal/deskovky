@@ -40,9 +40,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get screenEmpty => 'Nothing here yet.';
 
   @override
-  String get fontSample => 'The quick brown fox jumps over the lazy dog';
-
-  @override
   String playersCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -830,4 +827,303 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get updateCheckFailed => 'The check failed – is the device online?';
+
+  @override
+  String get itemCap => 'Cap';
+
+  @override
+  String get itemEarsHeadband => 'Ear headband';
+
+  @override
+  String get itemFlowerWreath => 'Flower wreath';
+
+  @override
+  String get itemTopHat => 'Top hat';
+
+  @override
+  String get itemVikingHelmet => 'Viking helmet';
+
+  @override
+  String get itemPirateBandana => 'Pirate bandana';
+
+  @override
+  String get itemWizardHat => 'Wizard hat';
+
+  @override
+  String get itemCrown => 'Crown';
+
+  @override
+  String get itemHalo => 'Halo';
+
+  @override
+  String get itemGlasses => 'Glasses';
+
+  @override
+  String get itemMustache => 'Moustache';
+
+  @override
+  String get itemFacePaintStar => 'Star face paint';
+
+  @override
+  String get itemSunglasses => 'Sunglasses';
+
+  @override
+  String get itemHeroMask => 'Hero mask';
+
+  @override
+  String get itemMonocle => 'Monocle';
+
+  @override
+  String get itemCarnivalMask => 'Carnival mask';
+
+  @override
+  String get itemLollipop => 'Lollipop';
+
+  @override
+  String get itemBalloon => 'Balloon';
+
+  @override
+  String get itemIceCream => 'Ice cream';
+
+  @override
+  String get itemPhone => 'Phone';
+
+  @override
+  String get itemMicrophone => 'Microphone';
+
+  @override
+  String get itemMagicWand => 'Magic wand';
+
+  @override
+  String get itemTrophy => 'Trophy';
+
+  @override
+  String get itemKitten => 'Kitten';
+
+  @override
+  String get itemChick => 'Chick';
+
+  @override
+  String get itemPuppy => 'Puppy';
+
+  @override
+  String get itemParrot => 'Parrot';
+
+  @override
+  String get itemDragon => 'Little dragon';
+
+  @override
+  String get itemWoodFrame => 'Wooden frame';
+
+  @override
+  String get itemGoldFrame => 'Gold frame';
+
+  @override
+  String get itemRainbowFrame => 'Rainbow frame';
+
+  @override
+  String get itemFlameFrame => 'Flame frame';
+
+  @override
+  String get itemStarFrame => 'Star frame';
+
+  @override
+  String get itemSparkles => 'Sparkles';
+
+  @override
+  String get itemBubbles => 'Bubbles';
+
+  @override
+  String get itemSnow => 'Snowfall';
+
+  @override
+  String get pointsReset => 'A parent reset the points';
+
+  @override
+  String get badgeWins50Title => 'Fifty';
+
+  @override
+  String get badgeWins50Description =>
+      'Win 50 games. Reward: a trophy to hold.';
+
+  @override
+  String get badgeAllHardTitle => 'Master of all games';
+
+  @override
+  String get badgeAllHardDescription =>
+      'Beat the robots on Hard in every game. Reward: a star frame.';
+
+  @override
+  String get badgeCollectorTitle => 'Collector';
+
+  @override
+  String get badgeCollectorDescription => 'Buy 10 avatar upgrades.';
+
+  @override
+  String get shopTitle => 'Shop';
+
+  @override
+  String shopTryOn(String name) {
+    return 'Trying on: $name';
+  }
+
+  @override
+  String get shopAll => 'All';
+
+  @override
+  String get slotHead => 'Head';
+
+  @override
+  String get slotFace => 'Face';
+
+  @override
+  String get slotHand => 'Hand';
+
+  @override
+  String get slotPet => 'Pet';
+
+  @override
+  String get slotFrame => 'Frame';
+
+  @override
+  String get slotEffect => 'Effect';
+
+  @override
+  String shopBuy(int price) {
+    return 'Buy for $price ●';
+  }
+
+  @override
+  String shopBuyConfirm(String name, int price) {
+    return 'Buy $name for $price ●?';
+  }
+
+  @override
+  String get shopBuyAction => 'Buy';
+
+  @override
+  String shopMissing(int points) {
+    return 'You need $points more ●';
+  }
+
+  @override
+  String shopLevelLock(int level) {
+    return '🔒 Level $level';
+  }
+
+  @override
+  String shopBadgeLock(String name) {
+    return '🔒 Badge: $name';
+  }
+
+  @override
+  String get shopOwned => 'Owned';
+
+  @override
+  String get shopEquipped => 'Wearing';
+
+  @override
+  String get shopEquipNow => 'Wear it now?';
+
+  @override
+  String get shopEquip => 'Wear';
+
+  @override
+  String get shopUnequip => 'Take off';
+
+  @override
+  String get shopNotNow => 'Not now';
+
+  @override
+  String shopNextLevel(int level, int next, int points) {
+    return 'Level $level → $next · $points points to go';
+  }
+
+  @override
+  String shopPlayerLevel(String name, int level) {
+    return '$name · Level $level';
+  }
+
+  @override
+  String get wardrobeTitle => 'Wardrobe';
+
+  @override
+  String get wardrobeEmpty => 'Nothing here yet. Buy upgrades in the shop.';
+
+  @override
+  String get wardrobeToShop => 'To the shop';
+
+  @override
+  String wardrobeColour(String name) {
+    return 'Colour: $name';
+  }
+
+  @override
+  String get colourGold => 'gold';
+
+  @override
+  String get colourSilver => 'silver';
+
+  @override
+  String get colourRed => 'red';
+
+  @override
+  String get colourBlue => 'blue';
+
+  @override
+  String get colourGreen => 'green';
+
+  @override
+  String get colourYellow => 'yellow';
+
+  @override
+  String get colourBrown => 'brown';
+
+  @override
+  String get parentsResetTitle => 'Reset points and upgrades';
+
+  @override
+  String get parentsReset => 'Reset';
+
+  @override
+  String parentsResetConfirm(String name, int points) {
+    return '$name will lose $points ● and all bought upgrades. Level and badges stay.';
+  }
+
+  @override
+  String parentsResetDone(String name) {
+    return '$name: points and upgrades reset.';
+  }
+
+  @override
+  String resultCanBuy(String name, String item) {
+    return '$name, now you can buy: $item!';
+  }
+
+  @override
+  String pointsPurchaseItem(String item) {
+    return 'Purchase: $item';
+  }
+
+  @override
+  String shopNewBadge(String badge) {
+    return 'New badge: $badge!';
+  }
+
+  @override
+  String shopNewBadgeReward(String description, int points) {
+    return '$description Reward +$points ●.';
+  }
+
+  @override
+  String get shopHooray => 'Hooray!';
+
+  @override
+  String get shopNotEnough => 'You don\'t have enough points for that now.';
+
+  @override
+  String get shopFailed => 'That didn\'t work. Try again.';
+
+  @override
+  String get updatePreparing => 'Preparing the update…';
 }

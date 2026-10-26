@@ -36,11 +36,14 @@ class ProfileEditorRoute extends ConsumerWidget {
     final players = ref.watch(playersProvider);
     final player = players.value?.where((p) => p.id == id).firstOrNull;
     if (player == null) return const Scaffold(body: SizedBox.shrink());
+    final catalog = ref.watch(shopCatalogProvider);
+    final owned = ref.watch(ownedItemsProvider(id)).value ?? const <String>{};
     return AvatarEditorScreen(
       key: ValueKey('edit$id'),
       showName: true,
       initial: player.avatar,
       initialName: player.name,
+      ownedItems: [for (final item in catalog.items) if (owned.contains(item.id)) item],
       onSave: (r) => _guard(() => repo.update(id, name: r.name, avatar: r.avatar)),
     );
   }

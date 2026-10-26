@@ -2,6 +2,15 @@
 
 Každá verze má sekci `## x.y.z` s poznámkami `### cs`, `### en`, `### es` – z nich se při vydání tvoří `latest.json` a karta „Je tu nová verze“. Volitelný řádek `Minimální verze: x.y.z` udělá aktualizaci povinnou pro starší verze.
 
+## 0.2.0
+
+### cs
+Obchod a šatník: za body si kup 36 vylepšení avatara – klobouky, brýle, mazlíčky, rámečky i kouzelné efekty – a zkoušej je v kabince. Nový odznak Sběratel. Skutečná hudba v menu a ve hře Hádej číslo, nová ikona aplikace a opravená aktualizace (čeština v poznámkách, viditelné stahování).
+### en
+Shop and wardrobe: spend points on 36 avatar upgrades – hats, glasses, pets, frames and magic effects – and try them on first. New Collector badge. Real music in the menu and in Guess the number, a new app icon and a fixed update (correct accents in the notes, visible download).
+### es
+Tienda y armario: gasta puntos en 36 mejoras del avatar – sombreros, gafas, mascotas, marcos y efectos mágicos – y pruébalas antes. Nueva insignia Coleccionista. Música de verdad en el menú y en Adivina el número, un icono nuevo y la actualización corregida (acentos correctos en las notas, descarga visible).
+
 ## 0.1.1
 
 ### cs

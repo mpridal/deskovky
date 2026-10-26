@@ -160,12 +160,6 @@ abstract class AppLocalizations {
   /// **'Nothing here yet.'**
   String get screenEmpty;
 
-  /// No description provided for @fontSample.
-  ///
-  /// In en, this message translates to:
-  /// **'The quick brown fox jumps over the lazy dog'**
-  String get fontSample;
-
   /// No description provided for @playersCount.
   ///
   /// In en, this message translates to:
@@ -1509,6 +1503,540 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The check failed – is the device online?'**
   String get updateCheckFailed;
+
+  /// No description provided for @itemCap.
+  ///
+  /// In en, this message translates to:
+  /// **'Cap'**
+  String get itemCap;
+
+  /// No description provided for @itemEarsHeadband.
+  ///
+  /// In en, this message translates to:
+  /// **'Ear headband'**
+  String get itemEarsHeadband;
+
+  /// No description provided for @itemFlowerWreath.
+  ///
+  /// In en, this message translates to:
+  /// **'Flower wreath'**
+  String get itemFlowerWreath;
+
+  /// No description provided for @itemTopHat.
+  ///
+  /// In en, this message translates to:
+  /// **'Top hat'**
+  String get itemTopHat;
+
+  /// No description provided for @itemVikingHelmet.
+  ///
+  /// In en, this message translates to:
+  /// **'Viking helmet'**
+  String get itemVikingHelmet;
+
+  /// No description provided for @itemPirateBandana.
+  ///
+  /// In en, this message translates to:
+  /// **'Pirate bandana'**
+  String get itemPirateBandana;
+
+  /// No description provided for @itemWizardHat.
+  ///
+  /// In en, this message translates to:
+  /// **'Wizard hat'**
+  String get itemWizardHat;
+
+  /// No description provided for @itemCrown.
+  ///
+  /// In en, this message translates to:
+  /// **'Crown'**
+  String get itemCrown;
+
+  /// No description provided for @itemHalo.
+  ///
+  /// In en, this message translates to:
+  /// **'Halo'**
+  String get itemHalo;
+
+  /// No description provided for @itemGlasses.
+  ///
+  /// In en, this message translates to:
+  /// **'Glasses'**
+  String get itemGlasses;
+
+  /// No description provided for @itemMustache.
+  ///
+  /// In en, this message translates to:
+  /// **'Moustache'**
+  String get itemMustache;
+
+  /// No description provided for @itemFacePaintStar.
+  ///
+  /// In en, this message translates to:
+  /// **'Star face paint'**
+  String get itemFacePaintStar;
+
+  /// No description provided for @itemSunglasses.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunglasses'**
+  String get itemSunglasses;
+
+  /// No description provided for @itemHeroMask.
+  ///
+  /// In en, this message translates to:
+  /// **'Hero mask'**
+  String get itemHeroMask;
+
+  /// No description provided for @itemMonocle.
+  ///
+  /// In en, this message translates to:
+  /// **'Monocle'**
+  String get itemMonocle;
+
+  /// No description provided for @itemCarnivalMask.
+  ///
+  /// In en, this message translates to:
+  /// **'Carnival mask'**
+  String get itemCarnivalMask;
+
+  /// No description provided for @itemLollipop.
+  ///
+  /// In en, this message translates to:
+  /// **'Lollipop'**
+  String get itemLollipop;
+
+  /// No description provided for @itemBalloon.
+  ///
+  /// In en, this message translates to:
+  /// **'Balloon'**
+  String get itemBalloon;
+
+  /// No description provided for @itemIceCream.
+  ///
+  /// In en, this message translates to:
+  /// **'Ice cream'**
+  String get itemIceCream;
+
+  /// No description provided for @itemPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get itemPhone;
+
+  /// No description provided for @itemMicrophone.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone'**
+  String get itemMicrophone;
+
+  /// No description provided for @itemMagicWand.
+  ///
+  /// In en, this message translates to:
+  /// **'Magic wand'**
+  String get itemMagicWand;
+
+  /// No description provided for @itemTrophy.
+  ///
+  /// In en, this message translates to:
+  /// **'Trophy'**
+  String get itemTrophy;
+
+  /// No description provided for @itemKitten.
+  ///
+  /// In en, this message translates to:
+  /// **'Kitten'**
+  String get itemKitten;
+
+  /// No description provided for @itemChick.
+  ///
+  /// In en, this message translates to:
+  /// **'Chick'**
+  String get itemChick;
+
+  /// No description provided for @itemPuppy.
+  ///
+  /// In en, this message translates to:
+  /// **'Puppy'**
+  String get itemPuppy;
+
+  /// No description provided for @itemParrot.
+  ///
+  /// In en, this message translates to:
+  /// **'Parrot'**
+  String get itemParrot;
+
+  /// No description provided for @itemDragon.
+  ///
+  /// In en, this message translates to:
+  /// **'Little dragon'**
+  String get itemDragon;
+
+  /// No description provided for @itemWoodFrame.
+  ///
+  /// In en, this message translates to:
+  /// **'Wooden frame'**
+  String get itemWoodFrame;
+
+  /// No description provided for @itemGoldFrame.
+  ///
+  /// In en, this message translates to:
+  /// **'Gold frame'**
+  String get itemGoldFrame;
+
+  /// No description provided for @itemRainbowFrame.
+  ///
+  /// In en, this message translates to:
+  /// **'Rainbow frame'**
+  String get itemRainbowFrame;
+
+  /// No description provided for @itemFlameFrame.
+  ///
+  /// In en, this message translates to:
+  /// **'Flame frame'**
+  String get itemFlameFrame;
+
+  /// No description provided for @itemStarFrame.
+  ///
+  /// In en, this message translates to:
+  /// **'Star frame'**
+  String get itemStarFrame;
+
+  /// No description provided for @itemSparkles.
+  ///
+  /// In en, this message translates to:
+  /// **'Sparkles'**
+  String get itemSparkles;
+
+  /// No description provided for @itemBubbles.
+  ///
+  /// In en, this message translates to:
+  /// **'Bubbles'**
+  String get itemBubbles;
+
+  /// No description provided for @itemSnow.
+  ///
+  /// In en, this message translates to:
+  /// **'Snowfall'**
+  String get itemSnow;
+
+  /// No description provided for @pointsReset.
+  ///
+  /// In en, this message translates to:
+  /// **'A parent reset the points'**
+  String get pointsReset;
+
+  /// No description provided for @badgeWins50Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Fifty'**
+  String get badgeWins50Title;
+
+  /// No description provided for @badgeWins50Description.
+  ///
+  /// In en, this message translates to:
+  /// **'Win 50 games. Reward: a trophy to hold.'**
+  String get badgeWins50Description;
+
+  /// No description provided for @badgeAllHardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Master of all games'**
+  String get badgeAllHardTitle;
+
+  /// No description provided for @badgeAllHardDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Beat the robots on Hard in every game. Reward: a star frame.'**
+  String get badgeAllHardDescription;
+
+  /// No description provided for @badgeCollectorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Collector'**
+  String get badgeCollectorTitle;
+
+  /// No description provided for @badgeCollectorDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy 10 avatar upgrades.'**
+  String get badgeCollectorDescription;
+
+  /// No description provided for @shopTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop'**
+  String get shopTitle;
+
+  /// No description provided for @shopTryOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Trying on: {name}'**
+  String shopTryOn(String name);
+
+  /// No description provided for @shopAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get shopAll;
+
+  /// No description provided for @slotHead.
+  ///
+  /// In en, this message translates to:
+  /// **'Head'**
+  String get slotHead;
+
+  /// No description provided for @slotFace.
+  ///
+  /// In en, this message translates to:
+  /// **'Face'**
+  String get slotFace;
+
+  /// No description provided for @slotHand.
+  ///
+  /// In en, this message translates to:
+  /// **'Hand'**
+  String get slotHand;
+
+  /// No description provided for @slotPet.
+  ///
+  /// In en, this message translates to:
+  /// **'Pet'**
+  String get slotPet;
+
+  /// No description provided for @slotFrame.
+  ///
+  /// In en, this message translates to:
+  /// **'Frame'**
+  String get slotFrame;
+
+  /// No description provided for @slotEffect.
+  ///
+  /// In en, this message translates to:
+  /// **'Effect'**
+  String get slotEffect;
+
+  /// No description provided for @shopBuy.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy for {price} ●'**
+  String shopBuy(int price);
+
+  /// No description provided for @shopBuyConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy {name} for {price} ●?'**
+  String shopBuyConfirm(String name, int price);
+
+  /// No description provided for @shopBuyAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy'**
+  String get shopBuyAction;
+
+  /// No description provided for @shopMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'You need {points} more ●'**
+  String shopMissing(int points);
+
+  /// No description provided for @shopLevelLock.
+  ///
+  /// In en, this message translates to:
+  /// **'🔒 Level {level}'**
+  String shopLevelLock(int level);
+
+  /// No description provided for @shopBadgeLock.
+  ///
+  /// In en, this message translates to:
+  /// **'🔒 Badge: {name}'**
+  String shopBadgeLock(String name);
+
+  /// No description provided for @shopOwned.
+  ///
+  /// In en, this message translates to:
+  /// **'Owned'**
+  String get shopOwned;
+
+  /// No description provided for @shopEquipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Wearing'**
+  String get shopEquipped;
+
+  /// No description provided for @shopEquipNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Wear it now?'**
+  String get shopEquipNow;
+
+  /// No description provided for @shopEquip.
+  ///
+  /// In en, this message translates to:
+  /// **'Wear'**
+  String get shopEquip;
+
+  /// No description provided for @shopUnequip.
+  ///
+  /// In en, this message translates to:
+  /// **'Take off'**
+  String get shopUnequip;
+
+  /// No description provided for @shopNotNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get shopNotNow;
+
+  /// No description provided for @shopNextLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Level {level} → {next} · {points} points to go'**
+  String shopNextLevel(int level, int next, int points);
+
+  /// No description provided for @shopPlayerLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} · Level {level}'**
+  String shopPlayerLevel(String name, int level);
+
+  /// No description provided for @wardrobeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Wardrobe'**
+  String get wardrobeTitle;
+
+  /// No description provided for @wardrobeEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing here yet. Buy upgrades in the shop.'**
+  String get wardrobeEmpty;
+
+  /// No description provided for @wardrobeToShop.
+  ///
+  /// In en, this message translates to:
+  /// **'To the shop'**
+  String get wardrobeToShop;
+
+  /// No description provided for @wardrobeColour.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour: {name}'**
+  String wardrobeColour(String name);
+
+  /// No description provided for @colourGold.
+  ///
+  /// In en, this message translates to:
+  /// **'gold'**
+  String get colourGold;
+
+  /// No description provided for @colourSilver.
+  ///
+  /// In en, this message translates to:
+  /// **'silver'**
+  String get colourSilver;
+
+  /// No description provided for @colourRed.
+  ///
+  /// In en, this message translates to:
+  /// **'red'**
+  String get colourRed;
+
+  /// No description provided for @colourBlue.
+  ///
+  /// In en, this message translates to:
+  /// **'blue'**
+  String get colourBlue;
+
+  /// No description provided for @colourGreen.
+  ///
+  /// In en, this message translates to:
+  /// **'green'**
+  String get colourGreen;
+
+  /// No description provided for @colourYellow.
+  ///
+  /// In en, this message translates to:
+  /// **'yellow'**
+  String get colourYellow;
+
+  /// No description provided for @colourBrown.
+  ///
+  /// In en, this message translates to:
+  /// **'brown'**
+  String get colourBrown;
+
+  /// No description provided for @parentsResetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset points and upgrades'**
+  String get parentsResetTitle;
+
+  /// No description provided for @parentsReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get parentsReset;
+
+  /// No description provided for @parentsResetConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} will lose {points} ● and all bought upgrades. Level and badges stay.'**
+  String parentsResetConfirm(String name, int points);
+
+  /// No description provided for @parentsResetDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}: points and upgrades reset.'**
+  String parentsResetDone(String name);
+
+  /// No description provided for @resultCanBuy.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, now you can buy: {item}!'**
+  String resultCanBuy(String name, String item);
+
+  /// No description provided for @pointsPurchaseItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase: {item}'**
+  String pointsPurchaseItem(String item);
+
+  /// No description provided for @shopNewBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'New badge: {badge}!'**
+  String shopNewBadge(String badge);
+
+  /// No description provided for @shopNewBadgeReward.
+  ///
+  /// In en, this message translates to:
+  /// **'{description} Reward +{points} ●.'**
+  String shopNewBadgeReward(String description, int points);
+
+  /// No description provided for @shopHooray.
+  ///
+  /// In en, this message translates to:
+  /// **'Hooray!'**
+  String get shopHooray;
+
+  /// No description provided for @shopNotEnough.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have enough points for that now.'**
+  String get shopNotEnough;
+
+  /// No description provided for @shopFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'That didn\'t work. Try again.'**
+  String get shopFailed;
+
+  /// No description provided for @updatePreparing.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing the update…'**
+  String get updatePreparing;
 }
 
 class _AppLocalizationsDelegate

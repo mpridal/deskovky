@@ -14,8 +14,7 @@ import 'player_switcher_sheet.dart';
 
 /// Top bar of the home screen (spec 5.1, mockup `.bar`): who is playing;
 /// tap to switch. Without profiles it offers to create the first one.
-/// The coin pill shows the balance and opens the player's statistics (the
-/// shop joins in milestone 7b).
+/// The coin pill shows the balance and opens the player's shop (spec 5.6).
 class ActivePlayerBar extends ConsumerWidget {
   const ActivePlayerBar({super.key});
 
@@ -47,9 +46,9 @@ class ActivePlayerBar extends ConsumerWidget {
           button: true,
           label: l10n.homePointsBalance(balance),
           excludeSemantics: true,
-          onTap: () => context.push('/players/${active.id}/stats'),
+          onTap: () => context.push('/players/${active.id}/shop'),
           child: InkWell(
-            onTap: () => context.push('/players/${active.id}/stats'),
+            onTap: () => context.push('/players/${active.id}/shop'),
             borderRadius: BorderRadius.circular(999),
             child: Container(
               constraints: const BoxConstraints(minHeight: 48),

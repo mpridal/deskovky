@@ -1,7 +1,11 @@
 import 'dart:math';
 import 'dart:ui' show Tristate;
 
+import 'dart:io';
+
 import 'package:deskovky/core/avatar/avatar_spec.dart';
+import 'package:deskovky/core/shop/random_look.dart';
+import 'package:deskovky/core/shop/shop_catalog.dart';
 import 'package:deskovky/features/avatar_editor/avatar_editor_screen.dart';
 import 'package:deskovky/l10n/app_localizations.dart';
 import 'package:deskovky/ui_kit/avatar/avatar_view.dart';
@@ -23,6 +27,7 @@ Future<_Harness> _pumpEditor(
   Size size = const Size(360, 740),
   Random? random,
   AvatarSpec initial = AvatarSpec.defaults,
+  List<ShopItem> ownedItems = const [],
 }) async {
   tester.view.devicePixelRatio = 1.0;
   tester.view.physicalSize = size;
@@ -43,7 +48,7 @@ Future<_Harness> _pumpEditor(
         body: TextButton(
           onPressed: () async {
             harness.result = await Navigator.of(context).push<AvatarSpec>(
-              MaterialPageRoute(builder: (_) => AvatarEditorScreen(initial: initial, random: random)),
+              MaterialPageRoute(builder: (_) => AvatarEditorScreen(initial: initial, random: random, ownedItems: ownedItems)),
             );
             harness.popped = true;
           },
@@ -112,6 +117,15 @@ void main() {
     await tester.tap(find.bySemanticsLabel('Náhodně'));
     await tester.pumpAndSettle();
     expect(_preview(tester), AvatarSpec.random(Random(1)));
+  });
+
+  testWidgets('random also puts on owned upgrades', (tester) async {
+    final catalog = ShopCatalog.parse(File(ShopCatalog.asset).readAsStringSync());
+    final owned = [catalog.byId('cap')!, catalog.byId('glasses')!];
+    await _pumpEditor(tester, random: Random(3), ownedItems: owned);
+    await tester.tap(find.bySemanticsLabel('Náhodně'));
+    await tester.pumpAndSettle();
+    expect(_preview(tester), randomLook(Random(3), owned));
   });
 
   testWidgets('rapid taps during the bounce keep the last choice', (tester) async {

@@ -21,6 +21,14 @@ void main() {
   setUp(() => db = testDatabase());
   tearDown(() => db.close());
 
+  testWidgets('no font sample sentence at the bottom any more', (tester) async {
+    await _openSettings(tester, db);
+    await tester.scrollUntilVisible(find.text('Automaticky kontrolovat'), 200);
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -2000));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('žluťoučký'), findsNothing);
+  });
+
   testWidgets('choosing Español switches the app and survives a restart', (tester) async {
     await _openSettings(tester, db);
     await tester.tap(find.text('Español'));

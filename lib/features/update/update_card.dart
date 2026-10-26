@@ -45,7 +45,11 @@ class UpdateCard extends ConsumerWidget {
               Text(notes, maxLines: 4, overflow: TextOverflow.ellipsis, style: AppTypography.caption(color: AppColors.ink)),
             if (state.failed) Text(l10n.updateFailed, style: AppTypography.caption(color: AppColors.players[0])),
             const SizedBox(height: 8),
-            if (progress != null) ...[
+            if (state.preparing && progress == null) ...[
+            const LinearProgressIndicator(color: AppColors.gold, backgroundColor: AppColors.paper2),
+            const SizedBox(height: 4),
+            Text(l10n.updatePreparing, style: AppTypography.caption(color: AppColors.ink)),
+          ] else if (progress != null) ...[
               LinearProgressIndicator(value: progress, color: AppColors.gold, backgroundColor: AppColors.paper2),
               const SizedBox(height: 4),
               Text(

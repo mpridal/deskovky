@@ -19,12 +19,11 @@ from pathlib import Path
 RATE = 22050
 ROOT = Path(__file__).resolve().parent.parent / "assets" / "audio"
 
+# Menu and Hádej číslo already have real music (see CREDITS.json).
 # Each track is a quiet 4 s chord loop; whole-Hz frequencies make 4 s an
 # exact number of periods, so the loop is seamless. Tremolo speed differs
 # per track so the tracks are told apart.
 MUSIC = {
-    "menu": ([196, 247, 294], 0.5),  # G major, calm
-    "sample": ([220, 277, 330], 1.0),  # A major, a bit livelier
     "tictactoe": ([175, 220, 262], 0.25),
     "memory": ([262, 330, 392], 2.0),
     "minesweeper": ([147, 175, 220], 0.75),
@@ -110,7 +109,10 @@ def credit(file, title):
 
 
 def main():
-    credits = []
+    # Keep the entries of real recordings that replaced placeholders.
+    path = ROOT / "CREDITS.json"
+    old = json.loads(path.read_text(encoding="utf-8")) if path.exists() else []
+    credits = [c for c in old if c["author"] != "Deskovky (vygenerováno)"]
     for name, (freqs, tremolo) in MUSIC.items():
         file = f"music/{name}.wav"
         write_wav(ROOT / file, music(freqs, tremolo))

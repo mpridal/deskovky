@@ -1,7 +1,7 @@
 name: deskovky
 description: "Rodinná kolekce deskových her pro Android."
 publish_to: 'none'
-version: 0.1.1+101
+version: 0.2.0+200
 
 environment:
   sdk: ^3.13.7
@@ -37,6 +37,7 @@ flutter:
     - assets/audio/sfx/
     - assets/audio/CREDITS.json
     - assets/config/rewards.json
+    - assets/config/shop_items.json
     - assets/fonts/OFL-Baloo2.txt
     - assets/fonts/OFL-Nunito.txt
   fonts:

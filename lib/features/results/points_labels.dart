@@ -1,10 +1,11 @@
 import '../../app/stats_service.dart';
 import '../../core/points/points_math.dart';
 import '../../games/badge_texts.dart';
+import '../../games/item_texts.dart';
 import '../../l10n/app_localizations.dart';
 
-/// The label of a points line or ledger entry; [detail] is the badge id or
-/// the stars/streak count.
+/// The label of a points line or ledger entry; [detail] is the badge id, the
+/// bought item id or the stars/streak count.
 String pointsLabel(AppLocalizations l10n, PointsReason reason, {String? detail}) {
   final count = int.tryParse(detail ?? '') ?? 0;
   return switch (reason) {
@@ -19,7 +20,8 @@ String pointsLabel(AppLocalizations l10n, PointsReason reason, {String? detail})
     PointsReason.badge => l10n.pointsBadge(_badgeTitle(l10n, detail)),
     PointsReason.capped => l10n.pointsCapped,
     PointsReason.gift => l10n.pointsGift,
-    PointsReason.purchase => l10n.pointsPurchase,
+    PointsReason.purchase => detail == null ? l10n.pointsPurchase : l10n.pointsPurchaseItem(itemName(l10n, detail)),
+    PointsReason.reset => l10n.pointsReset,
   };
 }
 

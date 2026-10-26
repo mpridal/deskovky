@@ -1,0 +1,43 @@
+[
+  { "id": "cap", "slot": "head", "rarity": "common", "price": 40, "colorVariants": ["red", "blue", "green"] },
+  { "id": "ears_headband", "slot": "head", "rarity": "common", "price": 50 },
+  { "id": "flower_wreath", "slot": "head", "rarity": "common", "price": 45 },
+  { "id": "top_hat", "slot": "head", "rarity": "rare", "price": 150 },
+  { "id": "viking_helmet", "slot": "head", "rarity": "rare", "price": 180 },
+  { "id": "pirate_bandana", "slot": "head", "rarity": "rare", "price": 120 },
+  { "id": "wizard_hat", "slot": "head", "rarity": "epic", "price": 400 },
+  { "id": "crown", "slot": "head", "rarity": "legendary", "price": 1000, "minLevel": 8, "colorVariants": ["gold", "silver"] },
+  { "id": "halo", "slot": "head", "rarity": "legendary", "price": 900, "minLevel": 8, "animated": true },
+
+  { "id": "glasses", "slot": "face", "rarity": "common", "price": 40, "colorVariants": ["brown", "red", "blue"] },
+  { "id": "mustache", "slot": "face", "rarity": "common", "price": 30 },
+  { "id": "face_paint_star", "slot": "face", "rarity": "common", "price": 35 },
+  { "id": "sunglasses", "slot": "face", "rarity": "rare", "price": 120 },
+  { "id": "hero_mask", "slot": "face", "rarity": "rare", "price": 180 },
+  { "id": "monocle", "slot": "face", "rarity": "rare", "price": 110 },
+  { "id": "carnival_mask", "slot": "face", "rarity": "epic", "price": 350 },
+
+  { "id": "lollipop", "slot": "hand", "rarity": "common", "price": 35 },
+  { "id": "balloon", "slot": "hand", "rarity": "common", "price": 45, "colorVariants": ["red", "blue", "yellow", "green"] },
+  { "id": "ice_cream", "slot": "hand", "rarity": "common", "price": 40 },
+  { "id": "phone", "slot": "hand", "rarity": "rare", "price": 160, "animated": true },
+  { "id": "microphone", "slot": "hand", "rarity": "rare", "price": 140 },
+  { "id": "magic_wand", "slot": "hand", "rarity": "epic", "price": 380, "animated": true },
+  { "id": "trophy", "slot": "hand", "rarity": "badge", "unlock": "badge:wins50" },
+
+  { "id": "kitten", "slot": "pet", "rarity": "rare", "price": 200 },
+  { "id": "chick", "slot": "pet", "rarity": "rare", "price": 150 },
+  { "id": "puppy", "slot": "pet", "rarity": "rare", "price": 190 },
+  { "id": "parrot", "slot": "pet", "rarity": "epic", "price": 450 },
+  { "id": "dragon", "slot": "pet", "rarity": "legendary", "price": 1200, "minLevel": 8 },
+
+  { "id": "wood_frame", "slot": "frame", "rarity": "common", "price": 50 },
+  { "id": "gold_frame", "slot": "frame", "rarity": "rare", "price": 150 },
+  { "id": "rainbow_frame", "slot": "frame", "rarity": "epic", "price": 400 },
+  { "id": "flame_frame", "slot": "frame", "rarity": "legendary", "price": 800, "minLevel": 8, "animated": true },
+  { "id": "star_frame", "slot": "frame", "rarity": "badge", "unlock": "badge:all_hard" },
+
+  { "id": "sparkles", "slot": "effect", "rarity": "epic", "price": 350, "animated": true },
+  { "id": "bubbles", "slot": "effect", "rarity": "epic", "price": 300, "animated": true },
+  { "id": "snow", "slot": "effect", "rarity": "epic", "price": 320, "animated": true }
+]

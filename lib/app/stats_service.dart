@@ -32,11 +32,14 @@ BadgeDef? badgeById(String id) =>
 /// One person's points from a game (spec 5.6 "Výsledky partie").
 @immutable
 class PlayerPoints {
-  const PlayerPoints({required this.lines, required this.levelBefore, required this.levelAfter});
+  const PlayerPoints({required this.lines, required this.levelBefore, required this.levelAfter, this.balanceBefore = 0});
 
   final List<PointsLine> lines;
   final int levelBefore;
   final int levelAfter;
+
+  /// The spendable points before this game.
+  final int balanceBefore;
 
   int get total => lines.fold(0, (s, l) => s + l.amount);
 }
@@ -159,11 +162,13 @@ class StatsService {
         _pointsInput(match, me, before, context.stats.currentStreak, mine),
       );
       final totalBefore = await _points.totalEarned(playerId);
+      final balanceBefore = await _points.balance(playerId);
       await _points.addGameLines(playerId, lines, matchId: matchId);
       points[playerId] = PlayerPoints(
         lines: lines,
         levelBefore: levelFor(totalBefore),
         levelAfter: levelFor(totalBefore + lines.fold<int>(0, (s, l) => s + (l.amount > 0 ? l.amount : 0))),
+        balanceBefore: balanceBefore,
       );
     }
     return MatchRewards(badges: earned, points: points);

@@ -107,4 +107,23 @@ void main() {
       expect(b.reward, inInclusiveRange(15, 50), reason: b.id);
     }
   });
+
+  test('50 wins earns the trophy badge (milestone 7b)', () {
+    expect(_ids(evaluateBadges(frameworkBadges, _ctx([for (var i = 0; i < 49; i++) _m(1)]), const {})), isNot(contains('wins50')));
+    expect(_ids(evaluateBadges(frameworkBadges, _ctx([for (var i = 0; i < 50; i++) _m(1)]), const {})), contains('wins50'));
+  });
+
+  test('a hard win in every available game (two or more) earns all_hard', () {
+    final both = [_m(1, difficulty: Difficulty.hard), _m(1, difficulty: Difficulty.hard, game: 'memory')];
+    expect(_ids(evaluateBadges(frameworkBadges, _ctx(both, games: {'sample', 'memory'}), const {})), contains('all_hard'));
+    final medium = [_m(1, difficulty: Difficulty.hard), _m(1, difficulty: Difficulty.medium, game: 'memory')];
+    expect(_ids(evaluateBadges(frameworkBadges, _ctx(medium, games: {'sample', 'memory'}), const {})), isNot(contains('all_hard')));
+    expect(_ids(evaluateBadges(frameworkBadges, _ctx([_m(1, difficulty: Difficulty.hard)]), const {})), isNot(contains('all_hard')));
+  });
+
+  test('"Sběratel" is never awarded by a game – the shop awards it', () {
+    final many = [for (var i = 0; i < 60; i++) _m(1, difficulty: Difficulty.hard)];
+    expect(_ids(evaluateBadges(frameworkBadges, _ctx(many), const {})), isNot(contains('collector')));
+    expect(frameworkBadges.map((b) => b.id), contains('collector'));
+  });
 }

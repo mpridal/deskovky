@@ -40,9 +40,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get screenEmpty => 'Tady zatím nic není.';
 
   @override
-  String get fontSample => 'Příliš žluťoučký kůň úpěl ďábelské ódy';
-
-  @override
   String playersCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -842,4 +839,302 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get updateCheckFailed =>
       'Kontrola se nepovedla – je zařízení připojené k internetu?';
+
+  @override
+  String get itemCap => 'Kšiltovka';
+
+  @override
+  String get itemEarsHeadband => 'Čelenka s oušky';
+
+  @override
+  String get itemFlowerWreath => 'Věneček';
+
+  @override
+  String get itemTopHat => 'Cylindr';
+
+  @override
+  String get itemVikingHelmet => 'Vikinská helma';
+
+  @override
+  String get itemPirateBandana => 'Pirátský šátek';
+
+  @override
+  String get itemWizardHat => 'Čarodějnický klobouk';
+
+  @override
+  String get itemCrown => 'Korunka';
+
+  @override
+  String get itemHalo => 'Svatozář';
+
+  @override
+  String get itemGlasses => 'Brýle';
+
+  @override
+  String get itemMustache => 'Knírek';
+
+  @override
+  String get itemFacePaintStar => 'Malování hvězda';
+
+  @override
+  String get itemSunglasses => 'Sluneční brýle';
+
+  @override
+  String get itemHeroMask => 'Maska hrdiny';
+
+  @override
+  String get itemMonocle => 'Monokl';
+
+  @override
+  String get itemCarnivalMask => 'Karnevalová maska';
+
+  @override
+  String get itemLollipop => 'Lízátko';
+
+  @override
+  String get itemBalloon => 'Balónek';
+
+  @override
+  String get itemIceCream => 'Zmrzlina';
+
+  @override
+  String get itemPhone => 'Mobil';
+
+  @override
+  String get itemMicrophone => 'Mikrofon';
+
+  @override
+  String get itemMagicWand => 'Kouzelná hůlka';
+
+  @override
+  String get itemTrophy => 'Trofej';
+
+  @override
+  String get itemKitten => 'Kočka';
+
+  @override
+  String get itemChick => 'Kuřátko';
+
+  @override
+  String get itemPuppy => 'Pejsek';
+
+  @override
+  String get itemParrot => 'Papoušek';
+
+  @override
+  String get itemDragon => 'Dráček';
+
+  @override
+  String get itemWoodFrame => 'Dřevěný rámeček';
+
+  @override
+  String get itemGoldFrame => 'Zlatý rámeček';
+
+  @override
+  String get itemRainbowFrame => 'Duhový rámeček';
+
+  @override
+  String get itemFlameFrame => 'Plamenný rámeček';
+
+  @override
+  String get itemStarFrame => 'Hvězdný rámeček';
+
+  @override
+  String get itemSparkles => 'Třpytky';
+
+  @override
+  String get itemBubbles => 'Bublinky';
+
+  @override
+  String get itemSnow => 'Sněžení';
+
+  @override
+  String get pointsReset => 'Rodič vynuloval body';
+
+  @override
+  String get badgeWins50Title => 'Padesátka';
+
+  @override
+  String get badgeWins50Description => 'Vyhraj 50 her. Odměna: trofej do ruky.';
+
+  @override
+  String get badgeAllHardTitle => 'Mistr všech her';
+
+  @override
+  String get badgeAllHardDescription =>
+      'Poraz roboty na Těžkou v každé hře. Odměna: hvězdný rámeček.';
+
+  @override
+  String get badgeCollectorTitle => 'Sběratel';
+
+  @override
+  String get badgeCollectorDescription => 'Kup si 10 vylepšení avatara.';
+
+  @override
+  String get shopTitle => 'Obchod';
+
+  @override
+  String shopTryOn(String name) {
+    return 'Zkouška: $name';
+  }
+
+  @override
+  String get shopAll => 'Vše';
+
+  @override
+  String get slotHead => 'Na hlavu';
+
+  @override
+  String get slotFace => 'Obličej';
+
+  @override
+  String get slotHand => 'Do ruky';
+
+  @override
+  String get slotPet => 'Mazlíček';
+
+  @override
+  String get slotFrame => 'Rámeček';
+
+  @override
+  String get slotEffect => 'Efekt';
+
+  @override
+  String shopBuy(int price) {
+    return 'Koupit za $price ●';
+  }
+
+  @override
+  String shopBuyConfirm(String name, int price) {
+    return 'Koupit $name za $price ●?';
+  }
+
+  @override
+  String get shopBuyAction => 'Koupit';
+
+  @override
+  String shopMissing(int points) {
+    return 'Chybí ti $points ●';
+  }
+
+  @override
+  String shopLevelLock(int level) {
+    return '🔒 Úroveň $level';
+  }
+
+  @override
+  String shopBadgeLock(String name) {
+    return '🔒 Odznak: $name';
+  }
+
+  @override
+  String get shopOwned => 'Máš';
+
+  @override
+  String get shopEquipped => 'Nasazeno';
+
+  @override
+  String get shopEquipNow => 'Nasadit hned?';
+
+  @override
+  String get shopEquip => 'Nasadit';
+
+  @override
+  String get shopUnequip => 'Sundat';
+
+  @override
+  String get shopNotNow => 'Teď ne';
+
+  @override
+  String shopNextLevel(int level, int next, int points) {
+    return 'Úroveň $level → $next · ještě $points bodů';
+  }
+
+  @override
+  String shopPlayerLevel(String name, int level) {
+    return '$name · Úroveň $level';
+  }
+
+  @override
+  String get wardrobeTitle => 'Šatník';
+
+  @override
+  String get wardrobeEmpty => 'Zatím tu nic není. Vylepšení koupíš v obchodě.';
+
+  @override
+  String get wardrobeToShop => 'Do obchodu';
+
+  @override
+  String wardrobeColour(String name) {
+    return 'Barva: $name';
+  }
+
+  @override
+  String get colourGold => 'zlatá';
+
+  @override
+  String get colourSilver => 'stříbrná';
+
+  @override
+  String get colourRed => 'červená';
+
+  @override
+  String get colourBlue => 'modrá';
+
+  @override
+  String get colourGreen => 'zelená';
+
+  @override
+  String get colourYellow => 'žlutá';
+
+  @override
+  String get colourBrown => 'hnědá';
+
+  @override
+  String get parentsResetTitle => 'Vynulovat body a vylepšení';
+
+  @override
+  String get parentsReset => 'Vynulovat';
+
+  @override
+  String parentsResetConfirm(String name, int points) {
+    return '$name přijde o $points ● a o všechna koupená vylepšení. Úroveň a odznaky zůstanou.';
+  }
+
+  @override
+  String parentsResetDone(String name) {
+    return '$name: body a vylepšení vynulovány.';
+  }
+
+  @override
+  String resultCanBuy(String name, String item) {
+    return '$name, teď si můžeš koupit: $item!';
+  }
+
+  @override
+  String pointsPurchaseItem(String item) {
+    return 'Nákup: $item';
+  }
+
+  @override
+  String shopNewBadge(String badge) {
+    return 'Nový odznak: $badge!';
+  }
+
+  @override
+  String shopNewBadgeReward(String description, int points) {
+    return '$description Odměna +$points ●.';
+  }
+
+  @override
+  String get shopHooray => 'Hurá!';
+
+  @override
+  String get shopNotEnough => 'Na to teď nemáš dost bodů.';
+
+  @override
+  String get shopFailed => 'To teď nejde. Zkus to znovu.';
+
+  @override
+  String get updatePreparing => 'Připravuji aktualizaci…';
 }

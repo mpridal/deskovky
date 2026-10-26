@@ -4,7 +4,7 @@ import '../game/difficulty.dart';
 import 'rewards_config.dart';
 
 /// Why points moved; also stored in the points ledger.
-enum PointsReason { win, draw, second, participation, stars, streak, firstToday, record, badge, capped, gift, purchase }
+enum PointsReason { win, draw, second, participation, stars, streak, firstToday, record, badge, capped, gift, purchase, reset }
 
 /// One line of the points breakdown (spec 5.6 "Výsledky partie").
 @immutable

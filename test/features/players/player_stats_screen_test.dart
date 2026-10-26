@@ -6,6 +6,8 @@ import 'package:deskovky/core/points/points_repository.dart';
 import 'package:deskovky/core/stats/match_record.dart';
 import 'package:deskovky/core/stats/stats_repository.dart';
 import 'package:deskovky/features/players/player_stats_screen.dart';
+import 'package:deskovky/features/shop/shop_screen.dart';
+import 'package:deskovky/features/wardrobe/wardrobe_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -46,6 +48,18 @@ void main() {
   late AppDatabase db;
   setUp(() => db = testDatabase());
   tearDown(() => db.close());
+
+  for (final (key, screen) in [('statsShop', ShopScreen), ('statsWardrobe', WardrobeScreen)]) {
+    testWidgets('the $key button opens its screen for this player', (tester) async {
+      final id = await _seed(tester, db);
+      await _open(tester, db, id);
+      await tester.ensureVisible(find.byKey(ValueKey(key)));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(ValueKey(key)));
+      await tester.pumpAndSettle();
+      expect(find.byType(screen), findsOneWidget);
+    });
+  }
 
   testWidgets('shows totals, the game records and badges earned and still locked', (tester) async {
     final handle = tester.ensureSemantics();
@@ -117,5 +131,6 @@ void main() {
     await tester.scrollUntilVisible(find.text('Hodnocení 3 ★'), 200);
     expect(find.text('Dárek od rodiče'), findsOneWidget);
     expect(find.text('−30'), findsOneWidget);
+    expect(find.text('Nákup: Brýle'), findsOneWidget);
   });
 }

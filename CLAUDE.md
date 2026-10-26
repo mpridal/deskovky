@@ -72,7 +72,8 @@ Pravidla paralelní práce (kap. 13.2 zadání) se doplní v milníku 9.
 - `AudioService` (`lib/core/audio/`) – hudba se prolíná 600 ms, efekty v poolu 6 slotů, ducking −8 dB, pauza v pozadí. Platformu obstarává `JustAudioBackend`, testy `FakeAudioBackend` (`test/core/audio/`); `pumpApp(audio: …)` ho předá aplikaci.
 - Hudbu vybírá `AudioDirector` (`lib/app/audio_director.dart`) podle trasy: `/play/<id>` a jeho výsledky → `module.musicTrack`, jinde `menu`. Hry samy hudbu nespouštějí, jen efekty přes `GameHost.playSfx(id)`; zvuk `turn` hraje framework při změně hráče.
 - Tlačítka ui_kitu cvakají přes `UiFeedback` (tap/back/toggle); zpětné tlačítko dostane `sound: UiSound.back`.
-- **Výměna zástupných zvuků za skutečné:** 1) soubor do `assets/audio/music/` nebo `sfx/` (OGG), 2) cesta v `AudioCatalog.standard` (`lib/core/audio/audio_catalog.dart`), 3) záznam v `assets/audio/CREDITS.json` (`file, title, author, source_url, license, attribution_text`; u CC BY přesný text uvedení). Test `audio_assets_test.dart` hlídá, že každý soubor existuje, má záznam a hudba je ≤ 15 MB. Zástupné WAV znovu vygeneruje `python tool/generate_placeholder_audio.py` (přepíše i CREDITS.json – po výměně za skutečné soubory ho už nespouštět).
+- **Výměna zástupných zvuků za skutečné:** 1) soubor do `assets/audio/music/` nebo `sfx/` (OGG nebo MP3 – just_audio hraje obojí; bez ffmpeg necháváme MP3 tak, jak je), 2) cesta v `AudioCatalog.standard` (`lib/core/audio/audio_catalog.dart`), 3) záznam v `assets/audio/CREDITS.json` (`file, title, author, source_url, license, attribution_text`; u CC BY přesný text uvedení). Test `audio_assets_test.dart` hlídá, že každý soubor existuje, má záznam a hudba je ≤ 15 MB. Zástupné WAV znovu vygeneruje `python tool/generate_placeholder_audio.py` (záznamy skutečných nahrávek v CREDITS.json ponechá; vyměněnou stopu z jeho seznamu `MUSIC`/`SFX` smaž).
+- Skutečná hudba zatím: menu = „Carefree“, Hádej číslo = „Quirky Dog“ (obě Kevin MacLeod, incompetech.com, CC BY 4.0, MP3 256 kb/s).
 - `dart format` spouštěj jen na nové soubory, ne na celý strom (přeformátoval by stovky řádků).
 
 ## Statistiky a odznaky (milník 6)
@@ -89,6 +90,14 @@ Pravidla paralelní práce (kap. 13.2 zadání) se doplní v milníku 9.
 - Hra může upravit základ přes `GameModule.pointsMultiplier` (0,5–2).
 - Partie jen lidí = sloupec Střední. Po ochraně proti farmení (11. výhra dne na Lehkou sám s roboty) je celá partie za 1 bod, odměny za odznaky zůstávají.
 - Rodičovská zóna: Nastavení → Rodičovská zóna (příklad z násobilky) → dárek bodů.
+
+## Obchod, šatník a vylepšení avatara (milník 7b)
+
+- **Přidání položky:** (1) záznam v `assets/config/shop_items.json` (`id`, `slot` head/face/hand/pet/frame/effect, `rarity`, `price` nebo `unlock: "badge:<id>"`, volitelně `minLevel`, `colorVariants`, `animated`); (2) kresba v `lib/ui_kit/avatar/accessories/<slot>_arts.dart` v prostoru 100×100 (klobouky s `hairLine`, barvy přes `Art.variant`); (3) název `item<Id>` ve všech 3 ARB a větev v `lib/games/item_texts.dart`; (4) `flutter test test/ui_kit/avatar test/core/shop` – testy hlídají, že každá položka má kresbu i text a nic nepřesahuje kruh; vzorník obnov `--update-goldens` a zkontroluj očima.
+- Vlastnictví = tabulka `player_items` (schéma v5) ∪ položky odemčené odznakem; nasazené jsou v `AvatarSpec.equipped` (JSON klíč `eq`), neznámé položky se tiše ignorují. Vše přes `ShopRepository` (`buy` v transakci, `equip`, `unequip`, `reset`).
+- Mazlíček a efekt se kreslí až od 40 dp, animace jen od 64 dp a bez omezení pohybu.
+- Vyzkoušené položky (pro „Teď si můžeš koupit…“ ve výsledcích) jsou v `app_settings` pod `triedItems.<id hráče>`.
+- Rodičovská zóna má i „Vynulovat“ (zůstatek 0, koupené položky pryč, úroveň a odznaky zůstanou).
 
 ## Vydání a aktualizace (milník 8)
 

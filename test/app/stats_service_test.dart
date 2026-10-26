@@ -109,6 +109,7 @@ void main() {
       ]);
       expect(mine.total, 89);
       expect((mine.levelBefore, mine.levelAfter), (0, 1));
+      expect(mine.balanceBefore, 0);
       expect(rewards.points.keys, [tereza]);
       expect(await PointsRepository(db).balance(tereza), 89);
     });

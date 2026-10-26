@@ -39,18 +39,20 @@ void main() {
     TestWidgetsFlutterBinding.ensureInitialized();
     final credits = await loadCredits(rootBundle);
     expect(credits, isNotEmpty);
-    expect(credits.map((c) => c.file), contains('music/menu.wav'));
+    expect(credits.map((c) => c.file), contains('music/menu.mp3'));
   });
 
   testWidgets('settings lead to credits with sounds, fonts and library licences', (tester) async {
     await _openCredits(tester);
     expect(find.text('Autoři a licence'), findsOneWidget);
     expect(find.text('Hudba a zvuky'), findsOneWidget);
-    expect(find.text('Zástupná hudba menu'), findsOneWidget);
+    expect(find.text('Carefree'), findsOneWidget);
     await tester.scrollUntilVisible(find.text('Baloo 2'), 300);
     await tester.scrollUntilVisible(find.text('Nunito'), 200);
     expect(find.textContaining('SIL Open Font License'), findsWidgets);
     await tester.scrollUntilVisible(find.text('Licence knihoven'), 300);
+    await tester.ensureVisible(find.text('Licence knihoven'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Licence knihoven'));
     await tester.pumpAndSettle();
     expect(find.byType(LicensePage), findsOneWidget);

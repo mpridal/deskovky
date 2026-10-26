@@ -11,8 +11,8 @@ class AudioCatalog {
   /// recordings arrive.
   static const standard = AudioCatalog(
     music: {
-      'menu': 'music/menu.wav',
-      'sample': 'music/sample.wav',
+      'menu': 'music/menu.mp3',
+      'sample': 'music/sample.mp3',
       'tictactoe': 'music/tictactoe.wav',
       'memory': 'music/memory.wav',
       'minesweeper': 'music/minesweeper.wav',

@@ -2960,6 +2960,275 @@ class PointsLedgerCompanion extends UpdateCompanion<PointsEntryRow> {
   }
 }
 
+class $PlayerItemsTable extends PlayerItems
+    with TableInfo<$PlayerItemsTable, PlayerItem> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PlayerItemsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _playerIdMeta = const VerificationMeta(
+    'playerId',
+  );
+  @override
+  late final GeneratedColumn<int> playerId = GeneratedColumn<int>(
+    'player_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES players (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _itemIdMeta = const VerificationMeta('itemId');
+  @override
+  late final GeneratedColumn<String> itemId = GeneratedColumn<String>(
+    'item_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _acquiredAtMeta = const VerificationMeta(
+    'acquiredAt',
+  );
+  @override
+  late final GeneratedColumn<int> acquiredAt = GeneratedColumn<int>(
+    'acquired_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [playerId, itemId, acquiredAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'player_items';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PlayerItem> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('player_id')) {
+      context.handle(
+        _playerIdMeta,
+        playerId.isAcceptableOrUnknown(data['player_id']!, _playerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_playerIdMeta);
+    }
+    if (data.containsKey('item_id')) {
+      context.handle(
+        _itemIdMeta,
+        itemId.isAcceptableOrUnknown(data['item_id']!, _itemIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_itemIdMeta);
+    }
+    if (data.containsKey('acquired_at')) {
+      context.handle(
+        _acquiredAtMeta,
+        acquiredAt.isAcceptableOrUnknown(data['acquired_at']!, _acquiredAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_acquiredAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {playerId, itemId};
+  @override
+  PlayerItem map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PlayerItem(
+      playerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}player_id'],
+      )!,
+      itemId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}item_id'],
+      )!,
+      acquiredAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}acquired_at'],
+      )!,
+    );
+  }
+
+  @override
+  $PlayerItemsTable createAlias(String alias) {
+    return $PlayerItemsTable(attachedDatabase, alias);
+  }
+}
+
+class PlayerItem extends DataClass implements Insertable<PlayerItem> {
+  final int playerId;
+  final String itemId;
+  final int acquiredAt;
+  const PlayerItem({
+    required this.playerId,
+    required this.itemId,
+    required this.acquiredAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['player_id'] = Variable<int>(playerId);
+    map['item_id'] = Variable<String>(itemId);
+    map['acquired_at'] = Variable<int>(acquiredAt);
+    return map;
+  }
+
+  PlayerItemsCompanion toCompanion(bool nullToAbsent) {
+    return PlayerItemsCompanion(
+      playerId: Value(playerId),
+      itemId: Value(itemId),
+      acquiredAt: Value(acquiredAt),
+    );
+  }
+
+  factory PlayerItem.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PlayerItem(
+      playerId: serializer.fromJson<int>(json['playerId']),
+      itemId: serializer.fromJson<String>(json['itemId']),
+      acquiredAt: serializer.fromJson<int>(json['acquiredAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'playerId': serializer.toJson<int>(playerId),
+      'itemId': serializer.toJson<String>(itemId),
+      'acquiredAt': serializer.toJson<int>(acquiredAt),
+    };
+  }
+
+  PlayerItem copyWith({int? playerId, String? itemId, int? acquiredAt}) =>
+      PlayerItem(
+        playerId: playerId ?? this.playerId,
+        itemId: itemId ?? this.itemId,
+        acquiredAt: acquiredAt ?? this.acquiredAt,
+      );
+  PlayerItem copyWithCompanion(PlayerItemsCompanion data) {
+    return PlayerItem(
+      playerId: data.playerId.present ? data.playerId.value : this.playerId,
+      itemId: data.itemId.present ? data.itemId.value : this.itemId,
+      acquiredAt: data.acquiredAt.present
+          ? data.acquiredAt.value
+          : this.acquiredAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlayerItem(')
+          ..write('playerId: $playerId, ')
+          ..write('itemId: $itemId, ')
+          ..write('acquiredAt: $acquiredAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(playerId, itemId, acquiredAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PlayerItem &&
+          other.playerId == this.playerId &&
+          other.itemId == this.itemId &&
+          other.acquiredAt == this.acquiredAt);
+}
+
+class PlayerItemsCompanion extends UpdateCompanion<PlayerItem> {
+  final Value<int> playerId;
+  final Value<String> itemId;
+  final Value<int> acquiredAt;
+  final Value<int> rowid;
+  const PlayerItemsCompanion({
+    this.playerId = const Value.absent(),
+    this.itemId = const Value.absent(),
+    this.acquiredAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PlayerItemsCompanion.insert({
+    required int playerId,
+    required String itemId,
+    required int acquiredAt,
+    this.rowid = const Value.absent(),
+  }) : playerId = Value(playerId),
+       itemId = Value(itemId),
+       acquiredAt = Value(acquiredAt);
+  static Insertable<PlayerItem> custom({
+    Expression<int>? playerId,
+    Expression<String>? itemId,
+    Expression<int>? acquiredAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (playerId != null) 'player_id': playerId,
+      if (itemId != null) 'item_id': itemId,
+      if (acquiredAt != null) 'acquired_at': acquiredAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PlayerItemsCompanion copyWith({
+    Value<int>? playerId,
+    Value<String>? itemId,
+    Value<int>? acquiredAt,
+    Value<int>? rowid,
+  }) {
+    return PlayerItemsCompanion(
+      playerId: playerId ?? this.playerId,
+      itemId: itemId ?? this.itemId,
+      acquiredAt: acquiredAt ?? this.acquiredAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (playerId.present) {
+      map['player_id'] = Variable<int>(playerId.value);
+    }
+    if (itemId.present) {
+      map['item_id'] = Variable<String>(itemId.value);
+    }
+    if (acquiredAt.present) {
+      map['acquired_at'] = Variable<int>(acquiredAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlayerItemsCompanion(')
+          ..write('playerId: $playerId, ')
+          ..write('itemId: $itemId, ')
+          ..write('acquiredAt: $acquiredAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -2975,6 +3244,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $PlayerCountersTable playerCounters = $PlayerCountersTable(this);
   late final $EarnedBadgesTable earnedBadges = $EarnedBadgesTable(this);
   late final $PointsLedgerTable pointsLedger = $PointsLedgerTable(this);
+  late final $PlayerItemsTable playerItems = $PlayerItemsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2989,6 +3259,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     playerCounters,
     earnedBadges,
     pointsLedger,
+    playerItems,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -3033,6 +3304,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('points_ledger', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'players',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('player_items', kind: UpdateKind.delete)],
     ),
   ]);
 }
@@ -3128,6 +3406,24 @@ final class $$PlayersTableReferences
     ).filter((f) => f.playerId.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_pointsLedgerRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$PlayerItemsTable, List<PlayerItem>>
+  _playerItemsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.playerItems,
+    aliasName: 'players__id__player_items__player_id',
+  );
+
+  $$PlayerItemsTableProcessedTableManager get playerItemsRefs {
+    final manager = $$PlayerItemsTableTableManager(
+      $_db,
+      $_db.playerItems,
+    ).filter((f) => f.playerId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_playerItemsRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -3264,6 +3560,31 @@ class $$PlayersTableFilterComposer
           }) => $$PointsLedgerTableFilterComposer(
             $db: $db,
             $table: $db.pointsLedger,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> playerItemsRefs(
+    Expression<bool> Function($$PlayerItemsTableFilterComposer f) f,
+  ) {
+    final $$PlayerItemsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.playerItems,
+      getReferencedColumn: (t) => t.playerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlayerItemsTableFilterComposer(
+            $db: $db,
+            $table: $db.playerItems,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -3445,6 +3766,31 @@ class $$PlayersTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> playerItemsRefs<T extends Object>(
+    Expression<T> Function($$PlayerItemsTableAnnotationComposer a) f,
+  ) {
+    final $$PlayerItemsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.playerItems,
+      getReferencedColumn: (t) => t.playerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlayerItemsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.playerItems,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$PlayersTableTableManager
@@ -3465,6 +3811,7 @@ class $$PlayersTableTableManager
             bool playerCountersRefs,
             bool earnedBadgesRefs,
             bool pointsLedgerRefs,
+            bool playerItemsRefs,
           })
         > {
   $$PlayersTableTableManager(_$AppDatabase db, $PlayersTable table)
@@ -3524,6 +3871,7 @@ class $$PlayersTableTableManager
                 playerCountersRefs = false,
                 earnedBadgesRefs = false,
                 pointsLedgerRefs = false,
+                playerItemsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -3532,6 +3880,7 @@ class $$PlayersTableTableManager
                     if (playerCountersRefs) db.playerCounters,
                     if (earnedBadgesRefs) db.earnedBadges,
                     if (pointsLedgerRefs) db.pointsLedger,
+                    if (playerItemsRefs) db.playerItems,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -3616,6 +3965,26 @@ class $$PlayersTableTableManager
                           referencedColumn: 'player_id',
                           typedResults: items,
                         ),
+                      if (playerItemsRefs)
+                        await $_getPrefetchedDataByColumns<
+                          Player,
+                          $PlayersTable,
+                          PlayerItem,
+                          $PlayerItemsTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$PlayersTableReferences
+                              ._playerItemsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$PlayersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).playerItemsRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'player_id',
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -3641,6 +4010,7 @@ typedef $$PlayersTableProcessedTableManager =
         bool playerCountersRefs,
         bool earnedBadgesRefs,
         bool pointsLedgerRefs,
+        bool playerItemsRefs,
       })
     >;
 typedef $$AppSettingsTableCreateCompanionBuilder =
@@ -5990,6 +6360,285 @@ typedef $$PointsLedgerTableProcessedTableManager =
       PointsEntryRow,
       PrefetchHooks Function({bool playerId, bool matchId})
     >;
+typedef $$PlayerItemsTableCreateCompanionBuilder =
+    PlayerItemsCompanion Function({
+      required int playerId,
+      required String itemId,
+      required int acquiredAt,
+      Value<int> rowid,
+    });
+typedef $$PlayerItemsTableUpdateCompanionBuilder =
+    PlayerItemsCompanion Function({
+      Value<int> playerId,
+      Value<String> itemId,
+      Value<int> acquiredAt,
+      Value<int> rowid,
+    });
+
+final class $$PlayerItemsTableReferences
+    extends BaseReferences<_$AppDatabase, $PlayerItemsTable, PlayerItem> {
+  $$PlayerItemsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $PlayersTable _playerIdTable(_$AppDatabase db) =>
+      db.players.createAlias('player_items__player_id__players__id');
+
+  $$PlayersTableProcessedTableManager get playerId {
+    final $_column = $_itemColumn<int>('player_id')!;
+
+    final manager = $$PlayersTableTableManager(
+      $_db,
+      $_db.players,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_playerIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$PlayerItemsTableFilterComposer
+    extends Composer<_$AppDatabase, $PlayerItemsTable> {
+  $$PlayerItemsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get itemId => $composableBuilder(
+    column: $table.itemId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get acquiredAt => $composableBuilder(
+    column: $table.acquiredAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$PlayersTableFilterComposer get playerId {
+    final $$PlayersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.playerId,
+      referencedTable: $db.players,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlayersTableFilterComposer(
+            $db: $db,
+            $table: $db.players,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PlayerItemsTableOrderingComposer
+    extends Composer<_$AppDatabase, $PlayerItemsTable> {
+  $$PlayerItemsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get itemId => $composableBuilder(
+    column: $table.itemId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get acquiredAt => $composableBuilder(
+    column: $table.acquiredAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$PlayersTableOrderingComposer get playerId {
+    final $$PlayersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.playerId,
+      referencedTable: $db.players,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlayersTableOrderingComposer(
+            $db: $db,
+            $table: $db.players,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PlayerItemsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PlayerItemsTable> {
+  $$PlayerItemsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get itemId =>
+      $composableBuilder(column: $table.itemId, builder: (column) => column);
+
+  GeneratedColumn<int> get acquiredAt => $composableBuilder(
+    column: $table.acquiredAt,
+    builder: (column) => column,
+  );
+
+  $$PlayersTableAnnotationComposer get playerId {
+    final $$PlayersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.playerId,
+      referencedTable: $db.players,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlayersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.players,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PlayerItemsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $PlayerItemsTable,
+          PlayerItem,
+          $$PlayerItemsTableFilterComposer,
+          $$PlayerItemsTableOrderingComposer,
+          $$PlayerItemsTableAnnotationComposer,
+          $$PlayerItemsTableCreateCompanionBuilder,
+          $$PlayerItemsTableUpdateCompanionBuilder,
+          (PlayerItem, $$PlayerItemsTableReferences),
+          PlayerItem,
+          PrefetchHooks Function({bool playerId})
+        > {
+  $$PlayerItemsTableTableManager(_$AppDatabase db, $PlayerItemsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PlayerItemsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PlayerItemsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PlayerItemsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> playerId = const Value.absent(),
+                Value<String> itemId = const Value.absent(),
+                Value<int> acquiredAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PlayerItemsCompanion(
+                playerId: playerId,
+                itemId: itemId,
+                acquiredAt: acquiredAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int playerId,
+                required String itemId,
+                required int acquiredAt,
+                Value<int> rowid = const Value.absent(),
+              }) => PlayerItemsCompanion.insert(
+                playerId: playerId,
+                itemId: itemId,
+                acquiredAt: acquiredAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$PlayerItemsTable, PlayerItem>(table),
+                  $$PlayerItemsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({playerId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (playerId) {
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.playerId,
+                        referencedTable: $$PlayerItemsTableReferences
+                            ._playerIdTable(db),
+                        referencedColumn: $$PlayerItemsTableReferences
+                            ._playerIdTable(db)
+                            .id,
+                      ) as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$PlayerItemsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $PlayerItemsTable,
+      PlayerItem,
+      $$PlayerItemsTableFilterComposer,
+      $$PlayerItemsTableOrderingComposer,
+      $$PlayerItemsTableAnnotationComposer,
+      $$PlayerItemsTableCreateCompanionBuilder,
+      $$PlayerItemsTableUpdateCompanionBuilder,
+      (PlayerItem, $$PlayerItemsTableReferences),
+      PlayerItem,
+      PrefetchHooks Function({bool playerId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -6012,4 +6661,6 @@ class $AppDatabaseManager {
       $$EarnedBadgesTableTableManager(_db, _db.earnedBadges);
   $$PointsLedgerTableTableManager get pointsLedger =>
       $$PointsLedgerTableTableManager(_db, _db.pointsLedger);
+  $$PlayerItemsTableTableManager get playerItems =>
+      $$PlayerItemsTableTableManager(_db, _db.playerItems);
 }

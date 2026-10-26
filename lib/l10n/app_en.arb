@@ -10,7 +10,6 @@
   "panelLeaderboardWeek": "This week's leaderboard",
   "panelLastReward": "Latest reward",
   "screenEmpty": "Nothing here yet.",
-  "fontSample": "The quick brown fox jumps over the lazy dog",
   "playersCount": "{count, plural, one{{count} player} other{{count} players}}",
   "@playersCount": {
     "placeholders": {
@@ -557,5 +556,220 @@
   "settingsCheckNow": "Check for updates now",
   "settingsAutoUpdate": "Check automatically",
   "updateUpToDate": "You have the newest version.",
-  "updateCheckFailed": "The check failed – is the device online?"
+  "updateCheckFailed": "The check failed – is the device online?",
+  "itemCap": "Cap",
+  "itemEarsHeadband": "Ear headband",
+  "itemFlowerWreath": "Flower wreath",
+  "itemTopHat": "Top hat",
+  "itemVikingHelmet": "Viking helmet",
+  "itemPirateBandana": "Pirate bandana",
+  "itemWizardHat": "Wizard hat",
+  "itemCrown": "Crown",
+  "itemHalo": "Halo",
+  "itemGlasses": "Glasses",
+  "itemMustache": "Moustache",
+  "itemFacePaintStar": "Star face paint",
+  "itemSunglasses": "Sunglasses",
+  "itemHeroMask": "Hero mask",
+  "itemMonocle": "Monocle",
+  "itemCarnivalMask": "Carnival mask",
+  "itemLollipop": "Lollipop",
+  "itemBalloon": "Balloon",
+  "itemIceCream": "Ice cream",
+  "itemPhone": "Phone",
+  "itemMicrophone": "Microphone",
+  "itemMagicWand": "Magic wand",
+  "itemTrophy": "Trophy",
+  "itemKitten": "Kitten",
+  "itemChick": "Chick",
+  "itemPuppy": "Puppy",
+  "itemParrot": "Parrot",
+  "itemDragon": "Little dragon",
+  "itemWoodFrame": "Wooden frame",
+  "itemGoldFrame": "Gold frame",
+  "itemRainbowFrame": "Rainbow frame",
+  "itemFlameFrame": "Flame frame",
+  "itemStarFrame": "Star frame",
+  "itemSparkles": "Sparkles",
+  "itemBubbles": "Bubbles",
+  "itemSnow": "Snowfall",
+  "pointsReset": "A parent reset the points",
+  "badgeWins50Title": "Fifty",
+  "badgeWins50Description": "Win 50 games. Reward: a trophy to hold.",
+  "badgeAllHardTitle": "Master of all games",
+  "badgeAllHardDescription": "Beat the robots on Hard in every game. Reward: a star frame.",
+  "badgeCollectorTitle": "Collector",
+  "badgeCollectorDescription": "Buy 10 avatar upgrades.",
+  "shopTitle": "Shop",
+  "shopTryOn": "Trying on: {name}",
+  "@shopTryOn": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shopAll": "All",
+  "slotHead": "Head",
+  "slotFace": "Face",
+  "slotHand": "Hand",
+  "slotPet": "Pet",
+  "slotFrame": "Frame",
+  "slotEffect": "Effect",
+  "shopBuy": "Buy for {price} ●",
+  "@shopBuy": {
+    "placeholders": {
+      "price": {
+        "type": "int"
+      }
+    }
+  },
+  "shopBuyConfirm": "Buy {name} for {price} ●?",
+  "@shopBuyConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "price": {
+        "type": "int"
+      }
+    }
+  },
+  "shopBuyAction": "Buy",
+  "shopMissing": "You need {points} more ●",
+  "@shopMissing": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "shopLevelLock": "🔒 Level {level}",
+  "@shopLevelLock": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "shopBadgeLock": "🔒 Badge: {name}",
+  "@shopBadgeLock": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shopOwned": "Owned",
+  "shopEquipped": "Wearing",
+  "shopEquipNow": "Wear it now?",
+  "shopEquip": "Wear",
+  "shopUnequip": "Take off",
+  "shopNotNow": "Not now",
+  "shopNextLevel": "Level {level} → {next} · {points} points to go",
+  "@shopNextLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      },
+      "next": {
+        "type": "int"
+      },
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "shopPlayerLevel": "{name} · Level {level}",
+  "@shopPlayerLevel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "wardrobeTitle": "Wardrobe",
+  "wardrobeEmpty": "Nothing here yet. Buy upgrades in the shop.",
+  "wardrobeToShop": "To the shop",
+  "wardrobeColour": "Colour: {name}",
+  "@wardrobeColour": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "colourGold": "gold",
+  "colourSilver": "silver",
+  "colourRed": "red",
+  "colourBlue": "blue",
+  "colourGreen": "green",
+  "colourYellow": "yellow",
+  "colourBrown": "brown",
+  "parentsResetTitle": "Reset points and upgrades",
+  "parentsReset": "Reset",
+  "parentsResetConfirm": "{name} will lose {points} ● and all bought upgrades. Level and badges stay.",
+  "@parentsResetConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "parentsResetDone": "{name}: points and upgrades reset.",
+  "@parentsResetDone": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "resultCanBuy": "{name}, now you can buy: {item}!",
+  "@resultCanBuy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "pointsPurchaseItem": "Purchase: {item}",
+  "@pointsPurchaseItem": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "shopNewBadge": "New badge: {badge}!",
+  "@shopNewBadge": {
+    "placeholders": {
+      "badge": {
+        "type": "String"
+      }
+    }
+  },
+  "shopNewBadgeReward": "{description} Reward +{points} ●.",
+  "@shopNewBadgeReward": {
+    "placeholders": {
+      "description": {
+        "type": "String"
+      },
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "shopHooray": "Hooray!",
+  "shopNotEnough": "You don't have enough points for that now.",
+  "shopFailed": "That didn't work. Try again.",
+  "updatePreparing": "Preparing the update…"
 }

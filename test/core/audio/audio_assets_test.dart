@@ -32,6 +32,17 @@ void main() {
     }
   });
 
+  test('the menu and Hádej číslo play real music, each its own track', () {
+    final byFile = {for (final c in credits) c['file']: c};
+    final menu = catalog.music['menu']!, sample = catalog.music['sample']!;
+    expect(menu, isNot(sample));
+    for (final path in [menu, sample]) {
+      expect(byFile[path]!['author'], 'Kevin MacLeod', reason: path);
+      expect(byFile[path]!['license'], 'CC BY 4.0', reason: path);
+      expect(byFile[path]!['attribution_text'], contains('Kevin MacLeod (incompetech.com)'), reason: path);
+    }
+  });
+
   test('CREDITS.json lists only files that exist', () {
     for (final c in credits) {
       expect(File('assets/audio/${c['file']}').existsSync(), isTrue, reason: '${c['file']}');
