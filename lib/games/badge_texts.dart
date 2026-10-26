@@ -15,5 +15,11 @@ String badgeText(AppLocalizations l10n, String key) => switch (key) {
   'badgeAllGamesDescription' => l10n.badgeAllGamesDescription,
   'sampleBadgeBullseyeTitle' => l10n.sampleBadgeBullseyeTitle,
   'sampleBadgeBullseyeDescription' => l10n.sampleBadgeBullseyeDescription,
+  'badgeWins50Title' => l10n.badgeWins50Title,
+  'badgeWins50Description' => l10n.badgeWins50Description,
+  'badgeAllHardTitle' => l10n.badgeAllHardTitle,
+  'badgeAllHardDescription' => l10n.badgeAllHardDescription,
+  'badgeCollectorTitle' => l10n.badgeCollectorTitle,
+  'badgeCollectorDescription' => l10n.badgeCollectorDescription,
   _ => key,
 };

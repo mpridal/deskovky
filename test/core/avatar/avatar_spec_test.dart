@@ -69,4 +69,36 @@ void main() {
     expect(changed.hair, HairStyle.bob);
     expect(changed.copyWith(hair: AvatarSpec.defaults.hair), AvatarSpec.defaults);
   });
+
+  group('equipped upgrades (milestone 7b)', () {
+    test('survive a JSON round trip with their colour variant', () {
+      final spec = AvatarSpec.defaults.copyWith(
+        equipped: const {
+          AccessorySlot.head: EquippedItem('crown', variant: 'silver'),
+          AccessorySlot.pet: EquippedItem('kitten'),
+        },
+      );
+      final back = AvatarSpec.fromJson(spec.toJson());
+      expect(back, spec);
+      expect(back.equipped[AccessorySlot.head], const EquippedItem('crown', variant: 'silver'));
+    });
+
+    test('an avatar without upgrades (milestone 2 JSON) has none; unknown slots are ignored', () {
+      expect(AvatarSpec.fromJson({'face': 'oval'}).equipped, isEmpty);
+      final spec = AvatarSpec.fromJson({
+        'eq': {
+          'tail': {'id': 'x'},
+          'face': {'id': 'glasses', 'v': 'red'},
+          'hand': 'broken',
+        },
+      });
+      expect(spec.equipped.keys, [AccessorySlot.face]);
+    });
+
+    test('equality and copyWith include the upgrades', () {
+      final a = AvatarSpec.defaults.copyWith(equipped: const {AccessorySlot.face: EquippedItem('glasses')});
+      expect(a == AvatarSpec.defaults, isFalse);
+      expect(a.copyWith(equipped: const {}), AvatarSpec.defaults);
+    });
+  });
 }

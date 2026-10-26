@@ -11,6 +11,7 @@ import 'generated/app/generated/schema.dart';
 import 'generated/app/generated/schema_v1.dart' as v1;
 import 'generated/app/generated/schema_v2.dart' as v2;
 import 'generated/app/generated/schema_v3.dart' as v3;
+import 'generated/app/generated/schema_v4.dart' as v4;
 
 /// Every schema version must have a snapshot in drift_schemas/app and a step
 /// here that migrates from each older version (see CLAUDE.md).
@@ -48,7 +49,7 @@ void main() {
     expect((await SettingsRepository(db).watchLocale().first)?.languageCode, 'es');
   });
 
-  for (final from in [1, 2, 3]) {
+  for (final from in [1, 2, 3, 4]) {
     test('a fresh v$from database migrates to the current version', () async {
       final connection = await verifier.startAt(from);
       final db = AppDatabase(connection);
@@ -97,11 +98,33 @@ void main() {
 
     final db = AppDatabase(schema.newConnection());
     addTearDown(db.close);
-    await verifier.migrateAndValidate(db, 4);
+    await verifier.migrateAndValidate(db, db.schemaVersion);
 
     final stats = StatsRepository(db);
     expect((await stats.allMatches()).single.participants.single.playerId, 1);
     expect((await stats.earnedBadges(1)).keys, ['first_win']);
     expect(await PointsRepository(db).balance(1), 0);
+  });
+
+  test('v4 → v5 keeps points and avatars; the inventory starts empty', () async {
+    final schema = await verifier.schemaAt(4);
+    final old = v4.DatabaseAtV4(schema.newConnection());
+    await old.customStatement(
+      "INSERT INTO players (name, name_key, avatar_json, favorite_seat, created_at) "
+      "VALUES ('Kuba', 'kuba', '{\"hair\":\"bob\"}', NULL, 1761400000)",
+    );
+    await old.customStatement(
+      "INSERT INTO points_ledger (player_id, amount, reason, detail, match_id, at) VALUES (1, 120, 'gift', NULL, NULL, 5)",
+    );
+    await old.close();
+
+    final db = AppDatabase(schema.newConnection());
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, 5);
+
+    expect(await PointsRepository(db).balance(1), 120);
+    final kuba = (await PlayerRepository(db).all()).single;
+    expect(kuba.avatar.equipped, isEmpty);
+    expect(await db.select(db.playerItems).get(), isEmpty);
   });
 }

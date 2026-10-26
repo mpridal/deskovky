@@ -45,4 +45,28 @@ const frameworkBadges = <BadgeDef>[
     reward: 20,
     condition: BadgeCondition.allGames(),
   ),
+  BadgeDef(
+    id: 'wins50',
+    titleKey: 'badgeWins50Title',
+    descriptionKey: 'badgeWins50Description',
+    icon: Icons.military_tech,
+    reward: 50,
+    condition: BadgeCondition.wins(50),
+  ),
+  BadgeDef(
+    id: 'all_hard',
+    titleKey: 'badgeAllHardTitle',
+    descriptionKey: 'badgeAllHardDescription',
+    icon: Icons.workspace_premium,
+    reward: 50,
+    condition: BadgeCondition.allGamesWonAgainst(Difficulty.hard),
+  ),
+  BadgeDef(
+    id: 'collector',
+    titleKey: 'badgeCollectorTitle',
+    descriptionKey: 'badgeCollectorDescription',
+    icon: Icons.checkroom,
+    reward: 30,
+    condition: BadgeCondition.awardedElsewhere(),
+  ),
 ];

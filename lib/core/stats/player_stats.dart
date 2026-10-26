@@ -34,6 +34,7 @@ class PlayerStats {
     required this.bestStreak,
     required this.byGame,
     required this.winsAgainst,
+    this.gamesWonAgainst = const {},
   });
 
   final int played;
@@ -48,6 +49,9 @@ class PlayerStats {
   /// Robot difficulties this player has beaten.
   final Set<Difficulty> winsAgainst;
 
+  /// Games won against robots on each difficulty.
+  final Map<Difficulty, Set<String>> gamesWonAgainst;
+
   double get winRate => played == 0 ? 0 : wins / played;
 
   Set<String> get gamesPlayed => byGame.keys.toSet();
@@ -58,6 +62,7 @@ PlayerStats computePlayerStats(int playerId, Iterable<MatchRecord> matches) {
   var played = 0, wins = 0, draws = 0, streak = 0, bestStreak = 0;
   final byGame = <String, GameBest>{};
   final winsAgainst = <Difficulty>{};
+  final gamesWonAgainst = <Difficulty, Set<String>>{};
   for (final match in matches) {
     final me = match.participants.where((p) => p.playerId == playerId && !p.robot).firstOrNull;
     if (me == null) continue;
@@ -69,7 +74,10 @@ PlayerStats computePlayerStats(int playerId, Iterable<MatchRecord> matches) {
       wins++;
       streak++;
       if (bestStreak < streak) bestStreak = streak;
-      if (match.difficulty != null && match.participants.any((p) => p.robot)) winsAgainst.add(match.difficulty!);
+      if (match.difficulty case final d? when match.participants.any((p) => p.robot)) {
+        winsAgainst.add(d);
+        (gamesWonAgainst[d] ??= {}).add(match.gameId);
+      }
     } else {
       if (match.isDraw(me)) draws++;
       streak = 0;
@@ -92,5 +100,6 @@ PlayerStats computePlayerStats(int playerId, Iterable<MatchRecord> matches) {
     bestStreak: bestStreak,
     byGame: byGame,
     winsAgainst: winsAgainst,
+    gamesWonAgainst: gamesWonAgainst,
   );
 }

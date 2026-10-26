@@ -20,6 +20,7 @@ String pointsLabel(AppLocalizations l10n, PointsReason reason, {String? detail})
     PointsReason.capped => l10n.pointsCapped,
     PointsReason.gift => l10n.pointsGift,
     PointsReason.purchase => l10n.pointsPurchase,
+    PointsReason.reset => l10n.pointsReset,
   };
 }
 

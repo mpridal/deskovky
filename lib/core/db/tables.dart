@@ -110,3 +110,14 @@ class PointsLedger extends Table {
   IntColumn get matchId => integer().nullable().references(Matches, #id, onDelete: KeyAction.setNull)();
   IntColumn get at => integer()();
 }
+
+/// Avatar upgrades a player has bought (spec 5.6); badge items are not stored
+/// here, they belong to whoever earned the badge.
+class PlayerItems extends Table {
+  IntColumn get playerId => integer().references(Players, #id, onDelete: KeyAction.cascade)();
+  TextColumn get itemId => text()();
+  IntColumn get acquiredAt => integer()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {playerId, itemId};
+}

@@ -593,5 +593,12 @@
   "itemStarFrame": "Star frame",
   "itemSparkles": "Sparkles",
   "itemBubbles": "Bubbles",
-  "itemSnow": "Snowfall"
+  "itemSnow": "Snowfall",
+  "pointsReset": "A parent reset the points",
+  "badgeWins50Title": "Fifty",
+  "badgeWins50Description": "Win 50 games. Reward: a trophy to hold.",
+  "badgeAllHardTitle": "Master of all games",
+  "badgeAllHardDescription": "Beat the robots on Hard in every game. Reward: a star frame.",
+  "badgeCollectorTitle": "Collector",
+  "badgeCollectorDescription": "Buy 10 avatar upgrades."
 }

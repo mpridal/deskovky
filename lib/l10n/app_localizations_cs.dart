@@ -950,4 +950,26 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get itemSnow => 'Sněžení';
+
+  @override
+  String get pointsReset => 'Rodič vynuloval body';
+
+  @override
+  String get badgeWins50Title => 'Padesátka';
+
+  @override
+  String get badgeWins50Description => 'Vyhraj 50 her. Odměna: trofej do ruky.';
+
+  @override
+  String get badgeAllHardTitle => 'Mistr všech her';
+
+  @override
+  String get badgeAllHardDescription =>
+      'Poraz roboty na Těžkou v každé hře. Odměna: hvězdný rámeček.';
+
+  @override
+  String get badgeCollectorTitle => 'Sběratel';
+
+  @override
+  String get badgeCollectorDescription => 'Kup si 10 vylepšení avatara.';
 }

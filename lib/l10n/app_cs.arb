@@ -270,5 +270,12 @@
   "itemStarFrame": "Hvězdný rámeček",
   "itemSparkles": "Třpytky",
   "itemBubbles": "Bublinky",
-  "itemSnow": "Sněžení"
+  "itemSnow": "Sněžení",
+  "pointsReset": "Rodič vynuloval body",
+  "badgeWins50Title": "Padesátka",
+  "badgeWins50Description": "Vyhraj 50 her. Odměna: trofej do ruky.",
+  "badgeAllHardTitle": "Mistr všech her",
+  "badgeAllHardDescription": "Poraz roboty na Těžkou v každé hře. Odměna: hvězdný rámeček.",
+  "badgeCollectorTitle": "Sběratel",
+  "badgeCollectorDescription": "Kup si 10 vylepšení avatara."
 }

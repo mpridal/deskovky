@@ -50,6 +50,10 @@ class PointsRepository {
     return _add(playerId, amount, PointsReason.gift);
   }
 
+  /// Parents' reset of the balance; a negative entry, so the total earned
+  /// (positive entries) stays.
+  Future<void> addReset(int playerId, int amount) => _add(playerId, amount, PointsReason.reset);
+
   Future<void> spend(int playerId, int amount, {required String itemId}) =>
       _add(playerId, -amount, PointsReason.purchase, detail: itemId);
 

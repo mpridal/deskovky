@@ -270,5 +270,12 @@
   "itemStarFrame": "Marco de estrellas",
   "itemSparkles": "Destellos",
   "itemBubbles": "Burbujas",
-  "itemSnow": "Nevada"
+  "itemSnow": "Nevada",
+  "pointsReset": "Un padre reinició los puntos",
+  "badgeWins50Title": "Cincuenta",
+  "badgeWins50Description": "Gana 50 partidas. Premio: un trofeo.",
+  "badgeAllHardTitle": "Maestro de todos los juegos",
+  "badgeAllHardDescription": "Vence a los robots en Difícil en todos los juegos. Premio: marco de estrellas.",
+  "badgeCollectorTitle": "Coleccionista",
+  "badgeCollectorDescription": "Compra 10 mejoras para tu avatar."
 }

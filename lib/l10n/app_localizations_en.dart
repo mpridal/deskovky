@@ -938,4 +938,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get itemSnow => 'Snowfall';
+
+  @override
+  String get pointsReset => 'A parent reset the points';
+
+  @override
+  String get badgeWins50Title => 'Fifty';
+
+  @override
+  String get badgeWins50Description =>
+      'Win 50 games. Reward: a trophy to hold.';
+
+  @override
+  String get badgeAllHardTitle => 'Master of all games';
+
+  @override
+  String get badgeAllHardDescription =>
+      'Beat the robots on Hard in every game. Reward: a star frame.';
+
+  @override
+  String get badgeCollectorTitle => 'Collector';
+
+  @override
+  String get badgeCollectorDescription => 'Buy 10 avatar upgrades.';
 }

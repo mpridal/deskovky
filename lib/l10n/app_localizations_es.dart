@@ -942,4 +942,26 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get itemSnow => 'Nevada';
+
+  @override
+  String get pointsReset => 'Un padre reinició los puntos';
+
+  @override
+  String get badgeWins50Title => 'Cincuenta';
+
+  @override
+  String get badgeWins50Description => 'Gana 50 partidas. Premio: un trofeo.';
+
+  @override
+  String get badgeAllHardTitle => 'Maestro de todos los juegos';
+
+  @override
+  String get badgeAllHardDescription =>
+      'Vence a los robots en Difícil en todos los juegos. Premio: marco de estrellas.';
+
+  @override
+  String get badgeCollectorTitle => 'Coleccionista';
+
+  @override
+  String get badgeCollectorDescription => 'Compra 10 mejoras para tu avatar.';
 }

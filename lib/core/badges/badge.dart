@@ -67,6 +67,13 @@ sealed class BadgeCondition {
 
   const factory BadgeCondition.all(List<BadgeCondition> conditions) = _All;
 
+  /// A win against robots on [difficulty] in every available game (needs
+  /// two or more games).
+  const factory BadgeCondition.allGamesWonAgainst(Difficulty difficulty) = _AllGamesWonAgainst;
+
+  /// Never met after a game: another part of the app awards it (the shop).
+  const factory BadgeCondition.awardedElsewhere() = _Elsewhere;
+
   bool test(BadgeContext c);
 }
 
@@ -124,6 +131,20 @@ class _AllGames extends BadgeCondition {
   const _AllGames();
   @override
   bool test(BadgeContext c) => c.availableGames.length > 1 && c.stats.gamesPlayed.containsAll(c.availableGames);
+}
+
+class _AllGamesWonAgainst extends BadgeCondition {
+  const _AllGamesWonAgainst(this.difficulty);
+  final Difficulty difficulty;
+  @override
+  bool test(BadgeContext c) =>
+      c.availableGames.length > 1 && (c.stats.gamesWonAgainst[difficulty] ?? const {}).containsAll(c.availableGames);
+}
+
+class _Elsewhere extends BadgeCondition {
+  const _Elsewhere();
+  @override
+  bool test(BadgeContext c) => false;
 }
 
 class _All extends BadgeCondition {

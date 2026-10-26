@@ -1725,6 +1725,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Snowfall'**
   String get itemSnow;
+
+  /// No description provided for @pointsReset.
+  ///
+  /// In en, this message translates to:
+  /// **'A parent reset the points'**
+  String get pointsReset;
+
+  /// No description provided for @badgeWins50Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Fifty'**
+  String get badgeWins50Title;
+
+  /// No description provided for @badgeWins50Description.
+  ///
+  /// In en, this message translates to:
+  /// **'Win 50 games. Reward: a trophy to hold.'**
+  String get badgeWins50Description;
+
+  /// No description provided for @badgeAllHardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Master of all games'**
+  String get badgeAllHardTitle;
+
+  /// No description provided for @badgeAllHardDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Beat the robots on Hard in every game. Reward: a star frame.'**
+  String get badgeAllHardDescription;
+
+  /// No description provided for @badgeCollectorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Collector'**
+  String get badgeCollectorTitle;
+
+  /// No description provided for @badgeCollectorDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy 10 avatar upgrades.'**
+  String get badgeCollectorDescription;
 }
 
 class _AppLocalizationsDelegate

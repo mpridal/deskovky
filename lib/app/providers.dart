@@ -17,6 +17,7 @@ import '../core/points/points_repository.dart';
 import '../core/points/rewards_config.dart';
 import '../core/settings/settings_repository.dart';
 import '../core/shop/shop_catalog.dart';
+import '../core/shop/shop_repository.dart';
 import '../core/stats/leaderboard.dart';
 import '../core/stats/match_record.dart';
 import '../core/stats/player_stats.dart';
@@ -144,3 +145,12 @@ final autoCheckUpdatesProvider = StreamProvider<bool>(
 /// Avatar upgrades from `shop_items.json`; `main()` overrides it with the file
 /// read at start, widget tests with the same file.
 final shopCatalogProvider = Provider<ShopCatalog>((ref) => ShopCatalog.empty);
+
+final shopRepositoryProvider = Provider<ShopRepository>(
+  (ref) => ShopRepository(
+    ref.watch(databaseProvider),
+    catalog: ref.watch(shopCatalogProvider),
+    points: ref.watch(pointsRepositoryProvider),
+    stats: ref.watch(statsRepositoryProvider),
+  ),
+);
