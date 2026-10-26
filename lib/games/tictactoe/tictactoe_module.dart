@@ -43,7 +43,7 @@ class TictactoeModule extends GameModule<TictactoeState> {
   @override
   bool get supportsSaveResume => true;
   @override
-  bool get available => false;
+  bool get available => true;
 
   @override
   Map<String, String> get sfx => const {

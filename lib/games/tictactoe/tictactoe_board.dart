@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../core/game/game_module.dart';
-import '../../core/game/move.dart';
 import '../../core/game_kit/board_grid.dart';
 import '../../ui_kit/components/round_icon_button.dart';
 import '../../ui_kit/tokens/app_colors.dart';
 import '../../ui_kit/tokens/app_typography.dart';
+import 'tictactoe_events.dart';
 import 'tictactoe_marks.dart';
 import 'tictactoe_rules.dart';
 import 'tictactoe_texts.dart';
@@ -97,29 +97,11 @@ class _TictactoeBoardState extends State<TictactoeBoard> with TickerProviderStat
     final move = TictactoeRules.place(seat, column, row);
     if (!_rules.isLegal(s, move)) return;
     view.host.haptic();
-    _reportEvents(s, move);
+    for (final (id, data) in tictactoeEvents(s, move)) {
+      view.host.reportEvent(id, data);
+    }
     setState(() => _pending = null);
     view.submit(move);
-  }
-
-  /// Badge events (spec 13.5), reported with the move that decides them:
-  /// a win on 15×15 (`five`, `master`), a big-board win within 9 own
-  /// stones (`blitz`) and a 3×3 draw against the hard robot (`wall`) –
-  /// also when the robot's last move is the only one left.
-  void _reportEvents(TictactoeState s, Move move) {
-    final host = widget.view.host;
-    final seat = move.seat;
-    final next = _rules.apply(s, move);
-    if (next.winner == seat && s.bigBoard) {
-      if (s.size == 15) host.reportEvent('tictactoe.win15', {'seat': seat});
-      if (next.movesOf(seat) <= 9) host.reportEvent('tictactoe.blitz', {'seat': seat});
-    }
-    final other = 1 - seat;
-    if (s.bigBoard || s.difficulty != 'hard' || !s.robots[other] || next.winner != null) return;
-    var end = next;
-    final left = _rules.legalMoves(next, other);
-    if (left.length == 1) end = _rules.apply(next, left.single);
-    if (end.full && end.winner == null) host.reportEvent('tictactoe.wall', {'seat': seat});
   }
 
   @override
