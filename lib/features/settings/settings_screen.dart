@@ -67,11 +67,6 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 24),
           const _AppSection(),
-          // Visual check of bundled fonts with diacritics (milestone 1).
-          const SizedBox(height: 32),
-          Text(l10n.fontSample, style: AppTypography.h2(color: AppColors.paper)),
-          const SizedBox(height: 8),
-          Text(l10n.fontSample, style: AppTypography.body(color: AppColors.paper)),
           if (kDebugMode) ...[
             const SizedBox(height: 24),
             // Developer tool, debug builds only – not localized on purpose.

@@ -13,7 +13,6 @@ import 'package:deskovky/features/shop/shop_screen.dart';
 import 'package:deskovky/ui_kit/avatar/avatar_view.dart';
 import 'package:deskovky/app/providers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -216,9 +215,8 @@ void main() {
 /// Refuses every purchase and fails to equip, like after a parent's reset in
 /// the meantime.
 class _RefusingShop extends ShopRepository {
-  _RefusingShop(AppDatabase db)
+  _RefusingShop(super.db)
     : super(
-        db,
         catalog: ShopCatalog.parse(File(ShopCatalog.asset).readAsStringSync()),
         points: PointsRepository(db),
         stats: StatsRepository(db),

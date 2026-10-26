@@ -160,12 +160,6 @@ abstract class AppLocalizations {
   /// **'Nothing here yet.'**
   String get screenEmpty;
 
-  /// No description provided for @fontSample.
-  ///
-  /// In en, this message translates to:
-  /// **'The quick brown fox jumps over the lazy dog'**
-  String get fontSample;
-
   /// No description provided for @playersCount.
   ///
   /// In en, this message translates to:

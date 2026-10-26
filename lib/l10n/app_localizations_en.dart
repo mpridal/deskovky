@@ -40,9 +40,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get screenEmpty => 'Nothing here yet.';
 
   @override
-  String get fontSample => 'The quick brown fox jumps over the lazy dog';
-
-  @override
   String playersCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

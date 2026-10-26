@@ -40,9 +40,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get screenEmpty => 'Tady zatím nic není.';
 
   @override
-  String get fontSample => 'Příliš žluťoučký kůň úpěl ďábelské ódy';
-
-  @override
   String playersCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

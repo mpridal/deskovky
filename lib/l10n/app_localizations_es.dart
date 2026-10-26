@@ -40,9 +40,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get screenEmpty => 'Aquí todavía no hay nada.';
 
   @override
-  String get fontSample => '¿Pingüino? ¡Ñandú! Pequeño café';
-
-  @override
   String playersCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

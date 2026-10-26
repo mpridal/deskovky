@@ -10,7 +10,6 @@
   "panelLeaderboardWeek": "Clasificación de esta semana",
   "panelLastReward": "Última recompensa",
   "screenEmpty": "Aquí todavía no hay nada.",
-  "fontSample": "¿Pingüino? ¡Ñandú! Pequeño café",
   "playersCount": "{count, plural, one{{count} jugador} other{{count} jugadores}}",
   "avatarEditorTitle": "Mi avatar",
   "avatarSave": "Guardar",
