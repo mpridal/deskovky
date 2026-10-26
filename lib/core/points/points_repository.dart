@@ -88,7 +88,7 @@ class PointsRepository {
   static PointsEntry _entry(PointsEntryRow r) => PointsEntry(
     playerId: r.playerId,
     amount: r.amount,
-    reason: PointsReason.values.where((p) => p.name == r.reason).firstOrNull ?? PointsReason.gift,
+    reason: PointsReason.values.where((p) => p.name == r.reason).firstOrNull ?? PointsReason.participation,
     at: DateTime.fromMillisecondsSinceEpoch(r.at),
     detail: r.detail,
     matchId: r.matchId,

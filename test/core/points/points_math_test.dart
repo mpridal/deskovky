@@ -43,6 +43,16 @@ void main() {
     expect(file, c);
   });
 
+  test('multipliers out of order or outside 0.5–2 fall back to the defaults', () {
+    final swapped = RewardsConfig.parse('{"multiplierMin": 3, "multiplierMax": 1}');
+    expect((swapped.multiplierMin, swapped.multiplierMax), (0.5, 2.0));
+    expect(computeMatchPoints(swapped, _in(multiplier: 1)).first.amount, 20, reason: 'no exception');
+  });
+
+  test('a partial streakBonus keeps the other defaults', () {
+    expect(RewardsConfig.parse('{"streakBonus": {"3": 7}}').streakBonus, {3: 7, 5: 10, 10: 25});
+  });
+
   test('a broken or partial rewards.json falls back to defaults per field', () {
     expect(RewardsConfig.parse('not json'), c);
     final partial = RewardsConfig.parse('{"starBonus": 3, "base": {"win": [1, 2]}}');

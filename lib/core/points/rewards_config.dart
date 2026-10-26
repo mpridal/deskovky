@@ -73,6 +73,8 @@ class RewardsConfig {
       for (final MapEntry(:key, :value) in rawStreak.entries)
         if (int.tryParse(key) case final n? when value is int && value >= 0) n: value,
     };
+    final min = doubleOr(j['multiplierMin'], d.multiplierMin), max = doubleOr(j['multiplierMax'], d.multiplierMax);
+    final multipliers = min >= 0.5 && max <= 2 && min <= max ? (min, max) : (d.multiplierMin, d.multiplierMax);
     return RewardsConfig(
       base: {
         for (final MapEntry(:key, :value) in d.base.entries)
@@ -82,13 +84,15 @@ class RewardsConfig {
           },
       },
       starBonus: intOr(j['starBonus'], d.starBonus),
-      streakBonus: streak.isEmpty ? d.streakBonus : streak,
+      streakBonus: {...d.streakBonus, ...streak},
       firstGameOfDay: intOr(j['firstGameOfDay'], d.firstGameOfDay),
       personalRecord: intOr(j['personalRecord'], d.personalRecord),
       easyDailyFullWins: intOr(j['easyDailyFullWins'], d.easyDailyFullWins),
       cappedMatchPoints: intOr(j['cappedMatchPoints'], d.cappedMatchPoints),
-      multiplierMin: doubleOr(j['multiplierMin'], d.multiplierMin),
-      multiplierMax: doubleOr(j['multiplierMax'], d.multiplierMax),
+      // Spec 5.6 allows 0.5–2; anything else (or min above max, which
+      // would make clamp throw) falls back to both defaults.
+      multiplierMin: multipliers.$1,
+      multiplierMax: multipliers.$2,
     );
   }
 

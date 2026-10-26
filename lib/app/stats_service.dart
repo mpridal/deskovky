@@ -101,7 +101,9 @@ class StatsService {
       gameId: config.gameId,
       playedAt: _repo.now(),
       duration: duration,
-      difficulty: config.robots > 0 ? config.difficulty : null,
+      // Robots' strength, or the game's own level when one person plays alone
+      // (spec 13.6, 13.7); null when two or more people play without robots.
+      difficulty: config.robots > 0 || config.seats.length == 1 ? config.difficulty : null,
       participants: [
         for (var seat = 0; seat < config.seats.length; seat++)
           switch (config.seats[seat]) {
@@ -186,7 +188,7 @@ class StatsService {
     return PointsInput(
       difficulty: match.difficulty,
       seats: match.participants.length,
-      humans: match.participants.where((p) => !p.robot).length,
+      humans: match.participants.where((p) => p.playerId != null).length,
       place: me.place,
       draw: match.isDraw(me),
       stars: me.stars,

@@ -71,7 +71,7 @@ class ActivePlayerBar extends ConsumerWidget {
   Widget _switcher(BuildContext context, AppLocalizations l10n, PlayerProfile active, int level) {
     return Semantics(
       button: true,
-      label: '${l10n.homeSwitchPlayer}: ${active.name}',
+      label: '${l10n.homeSwitchPlayer}: ${active.name}, ${l10n.levelLabel(level)}',
       excludeSemantics: true,
       onTap: () => showPlayerSwitcher(context),
       child: InkWell(

@@ -151,5 +151,21 @@ void main() {
       }
       expect(last.lines.first.reason, PointsReason.capped);
     });
+  
+    test('a one-player game uses its own difficulty and the anti-farming cap (spec 5.6, 13.7)', () async {
+      final solo = config([HumanSeat(tereza)], difficulty: Difficulty.easy);
+      final points = <PlayerPoints>[];
+      for (var i = 0; i < 11; i++) {
+        points.add((await service.recordFinished(
+          config: solo,
+          result: const GameResult(places: [1], scores: [1], stars: [0]),
+          events: const [],
+          duration: Duration.zero,
+        )).points[tereza]!);
+      }
+      expect(points.first.lines.first, const PointsLine(PointsReason.win, 10));
+      expect(points.last.lines.first.reason, PointsReason.capped);
+      expect((await repo.allMatches()).first.difficulty, Difficulty.easy);
+    });
   });
 }
