@@ -14,9 +14,11 @@ Framework se v herní větvi nemění; tyto body prosím zpracovat ve větvi `fr
   ```
 - **Dočasně:** Miny vracejí místo 2 podle zadání; tento jeden test kontraktu pro Miny do opravy padá.
 
-## 2. `test/games/skeletons_test.dart` čeká `available: false` u všech her
+## 2. Sdílené testy čekají `available: false` u všech her
 
-- **Co:** test „every phase-2 game is registered now, not yet available“ selže, jakmile hotová hra přepne `available: true` (Definition of Done to vyžaduje).
+- **Co:** selžou, jakmile hotová hra přepne `available: true` (Definition of Done to vyžaduje):
+  - `test/games/skeletons_test.dart`, test „every phase-2 game is registered now, not yet available“;
+  - `test/features/home/home_screen_test.dart`, test „the sample game comes first and is playable, the other five say "Brzy"“.
 - **Návrh:** testovat jen registraci a texty; `available` ověřovat jen u her, které ještě nejsou hotové (např. seznam `coming` zmenšovat při integraci).
 
 ## 3. Odznak „počet výher v jedné hře“
