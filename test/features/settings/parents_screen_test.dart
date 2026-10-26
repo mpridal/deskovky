@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:deskovky/core/avatar/avatar_spec.dart';
 import 'package:deskovky/core/db/app_database.dart';
 import 'package:deskovky/core/players/player_repository.dart';
 import 'package:deskovky/core/points/points_math.dart';
 import 'package:deskovky/core/points/points_repository.dart';
+import 'package:deskovky/core/shop/shop_catalog.dart';
+import 'package:deskovky/core/shop/shop_repository.dart';
+import 'package:deskovky/core/stats/stats_repository.dart';
 import 'package:deskovky/features/settings/parents_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -77,6 +82,57 @@ void main() {
     await tester.tap(find.text('Zrušit'));
     await tester.pumpAndSettle();
     expect(await tester.runAsync(() => PointsRepository(db).balance(kuba)), 0);
+  });
+
+  Future<int> shopper(WidgetTester tester) async => (await tester.runAsync(() async {
+    final id = (await PlayerRepository(db).create(name: 'Kuba', avatar: AvatarSpec.defaults)).id;
+    await PointsRepository(db).addGameLines(id, [PointsLine(PointsReason.win, 300)]);
+    final shop = ShopRepository(
+      db,
+      catalog: ShopCatalog.parse(File(ShopCatalog.asset).readAsStringSync()),
+      points: PointsRepository(db),
+      stats: StatsRepository(db),
+    );
+    await shop.buy(id, 'cap');
+    await shop.equip(id, 'cap');
+    return id;
+  }))!;
+
+  testWidgets('reset takes the balance and upgrades but keeps the level', (tester) async {
+    final kuba = await shopper(tester);
+    await _openGate(tester, db);
+    await _answer(tester);
+    final reset = find.byKey(ValueKey('reset_$kuba'));
+    await tester.ensureVisible(reset);
+    await tester.pumpAndSettle();
+    await tester.tap(reset);
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Kuba přijde o 260 ●'), findsOneWidget);
+    await tester.tap(find.descendant(of: find.byType(Dialog), matching: find.text('Vynulovat')));
+    await tester.pumpAndSettle();
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+    await tester.pumpAndSettle();
+    final points = PointsRepository(db);
+    expect(await tester.runAsync(() => points.balance(kuba)), 0);
+    expect(await tester.runAsync(() => points.totalEarned(kuba)), 300);
+    expect((await tester.runAsync(() => PlayerRepository(db).byId(kuba)))!.avatar.equipped, isEmpty);
+    expect(await tester.runAsync(() => db.select(db.playerItems).get()), isEmpty);
+    expect(find.text('Kuba: body a vylepšení vynulovány.'), findsOneWidget);
+  });
+
+  testWidgets('cancelling the reset keeps everything', (tester) async {
+    final kuba = await shopper(tester);
+    await _openGate(tester, db);
+    await _answer(tester);
+    final reset = find.byKey(ValueKey('reset_$kuba'));
+    await tester.ensureVisible(reset);
+    await tester.pumpAndSettle();
+    await tester.tap(reset);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Zrušit'));
+    await tester.pumpAndSettle();
+    expect(await tester.runAsync(() => PointsRepository(db).balance(kuba)), 260);
+    expect(await tester.runAsync(() => db.select(db.playerItems).get()), hasLength(1));
   });
 
   group('fit', () {

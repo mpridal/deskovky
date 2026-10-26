@@ -27,6 +27,15 @@ void main() {
     expect(await settings.watchLocale().first, isNull);
   });
 
+  test('items a player tried in the shop are kept per player', () async {
+    expect(await settings.watchTriedItems(1).first, isEmpty);
+    await settings.addTriedItem(1, 'cap');
+    await settings.addTriedItem(1, 'crown');
+    await settings.addTriedItem(1, 'cap');
+    expect(await settings.watchTriedItems(1).first, {'cap', 'crown'});
+    expect(await settings.watchTriedItems(2).first, isEmpty);
+  });
+
   test('values survive reopening a file database', () async {
     final dir = await Directory.systemTemp.createTemp('deskovky_settings');
     addTearDown(() => dir.delete(recursive: true));

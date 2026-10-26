@@ -311,5 +311,11 @@
   "colourBlue": "azul",
   "colourGreen": "verde",
   "colourYellow": "amarillo",
-  "colourBrown": "marrón"
+  "colourBrown": "marrón",
+  "parentsResetTitle": "Reiniciar puntos y mejoras",
+  "parentsReset": "Reiniciar",
+  "parentsResetConfirm": "{name} perderá {points} ● y todas las mejoras compradas. El nivel y las insignias se quedan.",
+  "parentsResetDone": "{name}: puntos y mejoras reiniciados.",
+  "resultCanBuy": "{name}, ¡ya puedes comprar: {item}!",
+  "pointsPurchaseItem": "Compra: {item}"
 }

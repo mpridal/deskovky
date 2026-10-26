@@ -167,7 +167,12 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                         avatar: player.avatar,
                         status: _status(l10n, item, owned, player.avatar, progress.level),
                         selected: item.id == selected?.id,
-                        onTap: () => setState(() => _selected = item),
+                        onTap: () {
+                          setState(() => _selected = item);
+                          if (!owned.contains(item.id)) {
+                            ref.read(settingsRepositoryProvider).addTriedItem(widget.playerId, item.id);
+                          }
+                        },
                       ),
                   ],
                 ),

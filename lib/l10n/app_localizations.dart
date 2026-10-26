@@ -1971,6 +1971,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'brown'**
   String get colourBrown;
+
+  /// No description provided for @parentsResetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset points and upgrades'**
+  String get parentsResetTitle;
+
+  /// No description provided for @parentsReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get parentsReset;
+
+  /// No description provided for @parentsResetConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} will lose {points} ● and all bought upgrades. Level and badges stay.'**
+  String parentsResetConfirm(String name, int points);
+
+  /// No description provided for @parentsResetDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}: points and upgrades reset.'**
+  String parentsResetDone(String name);
+
+  /// No description provided for @resultCanBuy.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, now you can buy: {item}!'**
+  String resultCanBuy(String name, String item);
+
+  /// No description provided for @pointsPurchaseItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase: {item}'**
+  String pointsPurchaseItem(String item);
 }
 
 class _AppLocalizationsDelegate

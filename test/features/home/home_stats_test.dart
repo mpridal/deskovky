@@ -5,6 +5,7 @@ import 'package:deskovky/core/points/points_repository.dart';
 import 'package:deskovky/core/settings/settings_repository.dart';
 import 'package:deskovky/core/stats/match_record.dart';
 import 'package:deskovky/core/stats/stats_repository.dart';
+import 'package:deskovky/features/shop/shop_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -79,6 +80,16 @@ void main() {
     expect(find.text('● 74'), findsOneWidget);
     expect(find.text('Úr. 1'), findsOneWidget);
     expect(find.bySemanticsLabel('Body: 74'), findsOneWidget);
+  });
+
+  testWidgets("the coin pill opens the active player's shop", (tester) async {
+    final (t, _) = await _seed(tester, db);
+    await tester.runAsync(() => SettingsRepository(db).setActivePlayerId(t));
+    await pumpApp(tester, size: const Size(412, 915), db: db);
+    await tester.tap(find.bySemanticsLabel(RegExp(r'^Body: ')));
+    await tester.pumpAndSettle();
+    expect(find.byType(ShopScreen), findsOneWidget);
+    expect(tester.widget<ShopScreen>(find.byType(ShopScreen)).playerId, t);
   });
 
   group('fit', () {

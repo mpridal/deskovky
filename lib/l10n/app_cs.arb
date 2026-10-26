@@ -311,5 +311,11 @@
   "colourBlue": "modrá",
   "colourGreen": "zelená",
   "colourYellow": "žlutá",
-  "colourBrown": "hnědá"
+  "colourBrown": "hnědá",
+  "parentsResetTitle": "Vynulovat body a vylepšení",
+  "parentsReset": "Vynulovat",
+  "parentsResetConfirm": "{name} přijde o {points} ● a o všechna koupená vylepšení. Úroveň a odznaky zůstanou.",
+  "parentsResetDone": "{name}: body a vylepšení vynulovány.",
+  "resultCanBuy": "{name}, teď si můžeš koupit: {item}!",
+  "pointsPurchaseItem": "Nákup: {item}"
 }

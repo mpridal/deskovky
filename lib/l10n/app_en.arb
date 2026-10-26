@@ -709,5 +709,45 @@
   "colourBlue": "blue",
   "colourGreen": "green",
   "colourYellow": "yellow",
-  "colourBrown": "brown"
+  "colourBrown": "brown",
+  "parentsResetTitle": "Reset points and upgrades",
+  "parentsReset": "Reset",
+  "parentsResetConfirm": "{name} will lose {points} ● and all bought upgrades. Level and badges stay.",
+  "@parentsResetConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "parentsResetDone": "{name}: points and upgrades reset.",
+  "@parentsResetDone": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "resultCanBuy": "{name}, now you can buy: {item}!",
+  "@resultCanBuy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "pointsPurchaseItem": "Purchase: {item}",
+  "@pointsPurchaseItem": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  }
 }

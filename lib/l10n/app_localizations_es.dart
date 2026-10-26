@@ -1084,4 +1084,30 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get colourBrown => 'marrón';
+
+  @override
+  String get parentsResetTitle => 'Reiniciar puntos y mejoras';
+
+  @override
+  String get parentsReset => 'Reiniciar';
+
+  @override
+  String parentsResetConfirm(String name, int points) {
+    return '$name perderá $points ● y todas las mejoras compradas. El nivel y las insignias se quedan.';
+  }
+
+  @override
+  String parentsResetDone(String name) {
+    return '$name: puntos y mejoras reiniciados.';
+  }
+
+  @override
+  String resultCanBuy(String name, String item) {
+    return '$name, ¡ya puedes comprar: $item!';
+  }
+
+  @override
+  String pointsPurchaseItem(String item) {
+    return 'Compra: $item';
+  }
 }

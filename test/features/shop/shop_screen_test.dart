@@ -5,6 +5,7 @@ import 'package:deskovky/core/db/app_database.dart';
 import 'package:deskovky/core/players/player_repository.dart';
 import 'package:deskovky/core/points/points_math.dart';
 import 'package:deskovky/core/points/points_repository.dart';
+import 'package:deskovky/core/settings/settings_repository.dart';
 import 'package:deskovky/core/shop/shop_catalog.dart';
 import 'package:deskovky/core/shop/shop_repository.dart';
 import 'package:deskovky/core/stats/stats_repository.dart';
@@ -59,7 +60,7 @@ void main() {
     await tester.ensureVisible(card(id));
     await tester.pumpAndSettle();
     await tester.tap(card(id));
-    await tester.pumpAndSettle();
+    await settle(tester);
   }
 
   AvatarSpec tryOn(WidgetTester tester) => tester.widget<AnimatedAvatarView>(find.byKey(const ValueKey('tryOn'))).spec;
@@ -85,6 +86,7 @@ void main() {
     expect(tryOn(tester).equipped[AccessorySlot.head]?.id, 'wizard_hat');
     expect(find.text('Zkouška: Čarodějnický klobouk'), findsOneWidget);
     expect(await tester.runAsync(() => PointsRepository(db).balance(id)), 10);
+    expect(await tester.runAsync(() => SettingsRepository(db).watchTriedItems(id).first), {'wizard_hat'});
   });
 
   testWidgets('buying: confirm, points go, sound plays, "Nasadit hned?" wears it', (tester) async {

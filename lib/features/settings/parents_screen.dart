@@ -135,6 +135,21 @@ class _ParentsScreenState extends ConsumerState<ParentsScreen> {
     if (mounted) setState(() => _done = l10n.parentsGiftDone(amount, player.name));
   }
 
+  Future<void> _reset(PlayerProfile player, int balance) async {
+    final l10n = AppLocalizations.of(context);
+    final shop = ref.read(shopRepositoryProvider);
+    final ok = await showAppConfirmDialog(
+      context,
+      title: l10n.parentsResetTitle,
+      message: l10n.parentsResetConfirm(player.name, balance),
+      confirmLabel: l10n.parentsReset,
+      cancelLabel: l10n.cancel,
+    );
+    if (!ok) return;
+    await shop.reset(player.id);
+    if (mounted) setState(() => _done = l10n.parentsResetDone(player.name));
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -199,6 +214,12 @@ class _ParentsScreenState extends ConsumerState<ParentsScreen> {
                                 style: OutlinedButton.styleFrom(minimumSize: const Size(72, 48)),
                                 child: Text('+$amount ●', style: AppTypography.button(color: AppColors.ink)),
                               ),
+                            OutlinedButton(
+                              key: ValueKey('reset_${p.id}'),
+                              onPressed: () => _reset(p, balances[p.id]?.balance ?? 0),
+                              style: OutlinedButton.styleFrom(minimumSize: const Size(72, 48)),
+                              child: Text(l10n.parentsReset, style: AppTypography.button(color: AppColors.ink)),
+                            ),
                           ],
                         ),
                       ],

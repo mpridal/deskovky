@@ -1092,4 +1092,30 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get colourBrown => 'hnědá';
+
+  @override
+  String get parentsResetTitle => 'Vynulovat body a vylepšení';
+
+  @override
+  String get parentsReset => 'Vynulovat';
+
+  @override
+  String parentsResetConfirm(String name, int points) {
+    return '$name přijde o $points ● a o všechna koupená vylepšení. Úroveň a odznaky zůstanou.';
+  }
+
+  @override
+  String parentsResetDone(String name) {
+    return '$name: body a vylepšení vynulovány.';
+  }
+
+  @override
+  String resultCanBuy(String name, String item) {
+    return '$name, teď si můžeš koupit: $item!';
+  }
+
+  @override
+  String pointsPurchaseItem(String item) {
+    return 'Nákup: $item';
+  }
 }

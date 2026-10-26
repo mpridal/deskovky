@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../app/providers.dart';
 import '../../core/badges/badge.dart';
@@ -13,6 +14,7 @@ import '../../games/registry.dart';
 import '../../l10n/app_localizations.dart';
 import '../../ui_kit/avatar/avatar_view.dart';
 import '../../ui_kit/components/paper_card.dart';
+import '../../ui_kit/components/primary_button.dart';
 import '../../ui_kit/components/round_icon_button.dart';
 import '../../ui_kit/components/ui_feedback.dart';
 import '../../ui_kit/surfaces/felt_background.dart';
@@ -97,6 +99,29 @@ class PlayerStatsScreen extends ConsumerWidget {
                 tiles: [
                   ('statBalance', l10n.statsBalance, '${points.balance}'),
                   ('statTotalEarned', l10n.statsTotalEarned, '${points.earned}'),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: PrimaryButton(
+                      key: const ValueKey('statsShop'),
+                      label: l10n.shopTitle,
+                      icon: Icons.storefront,
+                      onPressed: () => context.push('/players/$playerId/shop'),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: PrimaryButton(
+                      key: const ValueKey('statsWardrobe'),
+                      label: l10n.wardrobeTitle,
+                      icon: Icons.checkroom,
+                      secondary: true,
+                      onPressed: () => context.push('/players/$playerId/wardrobe'),
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 16),

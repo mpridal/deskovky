@@ -5,12 +5,16 @@ import 'package:deskovky/core/game/game_result.dart';
 import 'package:deskovky/core/points/points_math.dart';
 import 'package:deskovky/features/game_play/game_outcome.dart';
 import 'package:deskovky/features/game_play/seat_identity.dart';
+import 'package:deskovky/core/avatar/avatar_spec.dart';
+import 'package:deskovky/core/players/player_repository.dart';
+import 'package:deskovky/core/settings/settings_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../helpers/app_fonts.dart';
 import '../../helpers/pump_app.dart';
+import '../../helpers/test_database.dart';
 
 const _lines = [
   PointsLine(PointsReason.win, 20),
@@ -60,6 +64,42 @@ void main() {
     }
     await tester.scrollUntilVisible(find.byKey(const ValueKey('points4')), 200);
     expect(find.descendant(of: find.byKey(const ValueKey('points2')), matching: find.text('2. místo')), findsOneWidget);
+  });
+
+  testWidgets('a tried item that is affordable now is announced', (tester) async {
+    final db = testDatabase();
+    addTearDown(db.close);
+    final kuba = (await tester.runAsync(() async {
+      final id = (await PlayerRepository(db).create(name: 'Kuba', avatar: AvatarSpec.defaults)).id;
+      await SettingsRepository(db).addTriedItem(id, 'wizard_hat');
+      return id;
+    }))!;
+    final outcome = GameOutcomeView(
+      config: GameConfig(
+        gameId: 'sample',
+        seats: [HumanSeat(kuba), const RobotSeat()],
+        difficulty: Difficulty.medium,
+        robotSpeed: RobotSpeed.fast,
+        options: const {'range': 20},
+      ),
+      result: const GameResult(places: [1, 2], scores: [4, 3], stars: [3, 0]),
+      seats: [
+        const SeatIdentity(seat: 0, name: 'Kuba', profile: null, difficulty: null),
+        const SeatIdentity(seat: 1, name: 'Robot', profile: null, difficulty: Difficulty.medium),
+      ],
+      rewards: MatchRewards(
+        points: {kuba: const PlayerPoints(lines: [PointsLine(PointsReason.win, 30)], levelBefore: 2, levelAfter: 2, balanceBefore: 380)},
+      ),
+    );
+    await pumpApp(tester, size: const Size(360, 740), db: db, disableAnimations: true);
+    GoRouter.of(tester.element(find.byType(Navigator).first)).push('/play/sample/results', extra: outcome);
+    for (var i = 0; i < 3; i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 30)));
+      await tester.pumpAndSettle();
+    }
+    final notice = find.text('Kuba, teď si můžeš koupit: Čarodějnický klobouk!');
+    await tester.scrollUntilVisible(notice, 200);
+    expect(notice, findsOneWidget);
   });
 
   group('fit', () {

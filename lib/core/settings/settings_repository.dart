@@ -65,6 +65,18 @@ class SettingsRepository {
 
   Future<void> setLastUpdateCheck(DateTime time) => _set(_lastUpdateCheckKey, '${time.millisecondsSinceEpoch}');
 
+  /// Items a player tried on in the shop, for "Teď si můžeš koupit…" after
+  /// a game (spec 5.6).
+  Stream<Set<String>> watchTriedItems(int playerId) =>
+      _watch(_triedKey(playerId)).map((v) => v == null || v.isEmpty ? <String>{} : v.split(',').toSet());
+
+  Future<void> addTriedItem(int playerId, String itemId) async {
+    final tried = await watchTriedItems(playerId).first;
+    if (tried.add(itemId)) await _set(_triedKey(playerId), tried.join(','));
+  }
+
+  static String _triedKey(int playerId) => 'triedItems.$playerId';
+
   Stream<double> _watchVolume(String key, double fallback) =>
       _watch(key).map((v) => (double.tryParse(v ?? '') ?? fallback).clamp(0.0, 1.0));
 

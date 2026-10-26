@@ -1081,4 +1081,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get colourBrown => 'brown';
+
+  @override
+  String get parentsResetTitle => 'Reset points and upgrades';
+
+  @override
+  String get parentsReset => 'Reset';
+
+  @override
+  String parentsResetConfirm(String name, int points) {
+    return '$name will lose $points ● and all bought upgrades. Level and badges stay.';
+  }
+
+  @override
+  String parentsResetDone(String name) {
+    return '$name: points and upgrades reset.';
+  }
+
+  @override
+  String resultCanBuy(String name, String item) {
+    return '$name, now you can buy: $item!';
+  }
+
+  @override
+  String pointsPurchaseItem(String item) {
+    return 'Purchase: $item';
+  }
 }

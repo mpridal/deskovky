@@ -9,7 +9,9 @@ import '../../core/game/game_config.dart';
 import '../../app/stats_service.dart';
 import '../../games/badge_texts.dart';
 import '../../core/points/points_math.dart';
+import '../../core/shop/newly_affordable.dart';
 import '../../games/game_texts.dart';
+import '../../games/item_texts.dart';
 import '../../games/registry.dart';
 import '../../l10n/app_localizations.dart';
 import '../../ui_kit/components/paper_card.dart';
@@ -287,11 +289,45 @@ class _Points extends StatelessWidget {
                       textAlign: TextAlign.end,
                       style: AppTypography.button(color: AppColors.gold),
                     ),
+                  _CanBuy(playerId: playerId, name: nameOf(playerId), points: points),
                 ],
               ),
             ),
           ),
       ],
+    );
+  }
+}
+
+/// "Teď si můžeš koupit: …!" when the game made a tried item affordable
+/// (spec 5.6).
+class _CanBuy extends ConsumerWidget {
+  const _CanBuy({required this.playerId, required this.name, required this.points});
+
+  final int playerId;
+  final String name;
+  final PlayerPoints points;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final item = newlyAffordable(
+      ref.watch(shopCatalogProvider),
+      tried: ref.watch(triedItemsProvider(playerId)).value ?? const {},
+      owned: ref.watch(ownedItemsProvider(playerId)).value ?? const {},
+      balanceBefore: points.balanceBefore,
+      balanceAfter: points.balanceBefore + points.total,
+      levelBefore: points.levelBefore,
+      levelAfter: points.levelAfter,
+    );
+    if (item == null) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: Text(
+        l10n.resultCanBuy(name, itemName(l10n, item.id)),
+        textAlign: TextAlign.end,
+        style: AppTypography.button(color: AppColors.gold),
+      ),
     );
   }
 }
