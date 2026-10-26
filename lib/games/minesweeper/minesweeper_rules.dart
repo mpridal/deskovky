@@ -50,7 +50,8 @@ class MinesweeperRules implements GameRules<MinesweeperState> {
     if (t != null && (t is! int || t < 0)) return false;
     final cell = state.cellOf(c, r);
     return switch (move.type) {
-      MinesweeperMove.reveal => !state.isRevealed(cell) && state.marks[cell] != Mark.flag && !state.exploded.contains(cell),
+      MinesweeperMove.reveal =>
+        !state.isRevealed(cell) && state.marks[cell] != Mark.flag && !state.exploded.contains(cell),
       MinesweeperMove.chord => state.solo && _chordTargets(state, cell).isNotEmpty,
       MinesweeperMove.mark => !state.isRevealed(cell) && !state.exploded.contains(cell),
       _ => false,

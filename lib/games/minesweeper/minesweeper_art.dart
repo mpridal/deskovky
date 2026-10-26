@@ -108,7 +108,10 @@ class CellPainter extends CustomPainter {
     final paint = Paint()..color = color;
     if (number > 4) {
       canvas.drawRRect(
-        RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(rect.center.dx, y), width: s * 0.4, height: r * 2), Radius.circular(r)),
+        RRect.fromRectAndRadius(
+          Rect.fromCenter(center: Offset(rect.center.dx, y), width: s * 0.4, height: r * 2),
+          Radius.circular(r),
+        ),
         paint,
       );
     } else {
@@ -133,7 +136,13 @@ class CellPainter extends CustomPainter {
     final painter = TextPainter(
       text: TextSpan(
         text: text,
-        style: TextStyle(fontFamily: AppTypography.headingFamily, color: color, fontWeight: weight, fontSize: fontSize, height: 1),
+        style: TextStyle(
+          fontFamily: AppTypography.headingFamily,
+          color: color,
+          fontWeight: weight,
+          fontSize: fontSize,
+          height: 1,
+        ),
       ),
       textDirection: TextDirection.ltr,
     )..layout();
@@ -218,7 +227,11 @@ void paintMine(Canvas canvas, Offset centre, double radius) {
   }
   canvas
     ..drawCircle(centre, radius, ink)
-    ..drawCircle(centre - Offset(radius * 0.35, radius * 0.35), radius * 0.28, Paint()..color = const Color(0xCCFFFFFF));
+    ..drawCircle(
+      centre - Offset(radius * 0.35, radius * 0.35),
+      radius * 0.28,
+      Paint()..color = const Color(0xCCFFFFFF),
+    );
 }
 
 /// A smoke cloud "puf" (spec 13.7: the explosion is a puff of smoke), [t]

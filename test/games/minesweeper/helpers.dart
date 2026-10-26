@@ -27,9 +27,12 @@ MinesweeperState board(
   int seats = 1,
   bool questionMarks = false,
   MinesweeperLevel level = MinesweeperLevel.easy,
-}) => MinesweeperState.start(level: level, seats: seats, questionMarks: questionMarks, seed: 1).copyWith(
-  mines: [for (final (c, r) in mines) r * level.columns + c]..sort(),
-);
+}) => MinesweeperState.start(
+  level: level,
+  seats: seats,
+  questionMarks: questionMarks,
+  seed: 1,
+).copyWith(mines: [for (final (c, r) in mines) r * level.columns + c]..sort());
 
 Move reveal(int c, int r, {int seat = 0, int? t}) => MinesweeperMove.of(seat, MinesweeperMove.reveal, c, r, t: t);
 Move chord(int c, int r, {int seat = 0, int? t}) => MinesweeperMove.of(seat, MinesweeperMove.chord, c, r, t: t);

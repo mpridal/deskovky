@@ -47,9 +47,12 @@ class _MinesweeperBoardState extends State<MinesweeperBoard> with SingleTickerPr
   GameBoardView<MinesweeperState> get view => widget.view;
   MinesweeperState get s => view.state;
 
+  bool _still = false;
+
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _still = MediaQuery.disableAnimationsOf(context);
     _syncClock();
   }
 
@@ -74,9 +77,10 @@ class _MinesweeperBoardState extends State<MinesweeperBoard> with SingleTickerPr
     }
   }
 
-  /// The clock of one player ticks while the board is being cleared.
+  /// The clock of one player ticks while the board is being cleared (and
+  /// not in a pause). With reduced motion it only moves with each tap.
   void _syncClock() {
-    final run = s.solo && s.started && !s.over;
+    final run = s.solo && s.started && !s.over && view.canAct && !_still;
     if (run && _clock == null) {
       _clock = Timer.periodic(const Duration(seconds: 1), (_) {
         if (mounted) setState(() {});
@@ -139,7 +143,10 @@ class _MinesweeperBoardState extends State<MinesweeperBoard> with SingleTickerPr
       return;
     }
     final places = MinesweeperRules.placesOf(next);
-    final winners = [for (var p = 0; p < places.length; p++) if (places[p] == 1) p];
+    final winners = [
+      for (var p = 0; p < places.length; p++)
+        if (places[p] == 1) p,
+    ];
     if (winners.length == 1) host.reportEvent('minesweeper.win', {'seat': winners.single});
   }
 
@@ -183,9 +190,8 @@ class _MinesweeperBoardState extends State<MinesweeperBoard> with SingleTickerPr
           IgnorePointer(
             child: AnimatedBuilder(
               animation: _puff,
-              builder: (context, _) => _puff.isAnimating
-                  ? CustomPaint(painter: _PuffPainter(_puff.value))
-                  : const SizedBox.shrink(),
+              builder: (context, _) =>
+                  _puff.isAnimating ? CustomPaint(painter: _PuffPainter(_puff.value)) : const SizedBox.shrink(),
             ),
           ),
         ],
@@ -235,9 +241,7 @@ class _MinesweeperBoardState extends State<MinesweeperBoard> with SingleTickerPr
                   rows: rows,
                   minCellSize: MinesweeperBoard.minCell(level, tablet: MediaQuery.sizeOf(context).shortestSide >= 600),
                   controller: _grid,
-                  highlighted: {
-                    if (lastCell != null) turned ? (lastCell.$2, lastCell.$1) : lastCell,
-                  },
+                  highlighted: {if (lastCell != null) turned ? (lastCell.$2, lastCell.$1) : lastCell},
                   onTap: view.canAct ? ((p) => turned ? _tap(p.$2, p.$1) : _tap(p.$1, p.$2)) : null,
                   cellBuilder: (context, x, y) => turned ? _cell(y, x) : _cell(x, y),
                 ),
@@ -253,7 +257,10 @@ class _MinesweeperBoardState extends State<MinesweeperBoard> with SingleTickerPr
     if (!view.firstGame || !view.canAct) return null;
     if (!s.started) return minesweeperTexts.of(context, 'minesweeper.hint.start');
     if (s.flagsPlaced == 0) {
-      return minesweeperTexts.of(context, s.switchControls ? 'minesweeper.hint.flagSwitch' : 'minesweeper.hint.flagLong');
+      return minesweeperTexts.of(
+        context,
+        s.switchControls ? 'minesweeper.hint.flagSwitch' : 'minesweeper.hint.flagLong',
+      );
     }
     return null;
   }
@@ -385,7 +392,9 @@ class _ModeSwitch extends StatelessWidget {
                   color: value == flag ? AppColors.paper : Colors.transparent,
                   borderRadius: BorderRadius.circular(999),
                 ),
-                child: CustomPaint(painter: _ModeIconPainter(flag: value, on: value == flag)),
+                child: CustomPaint(
+                  painter: _ModeIconPainter(flag: value, on: value == flag),
+                ),
               ),
             ),
           ),
@@ -416,7 +425,13 @@ class _ModeIconPainter extends CustomPainter {
       ..style = PaintingStyle.stroke;
     canvas
       ..drawLine(rect.bottomLeft + Offset(s * 0.2, -s * 0.15), rect.topRight + Offset(-s * 0.3, s * 0.3), ink)
-      ..drawArc(rect.deflate(s * 0.08).shift(Offset(s * 0.05, -s * 0.05)), -2.6, 1.9, false, ink..color = on ? AppColors.wood : AppColors.paper2);
+      ..drawArc(
+        rect.deflate(s * 0.08).shift(Offset(s * 0.05, -s * 0.05)),
+        -2.6,
+        1.9,
+        false,
+        ink..color = on ? AppColors.wood : AppColors.paper2,
+      );
   }
 
   @override

@@ -304,7 +304,9 @@ void main() {
     });
 
     test('state survives JSON exactly', () {
-      final opened = play(rules.initialState(config(seats: 3, questionMarks: true, controls: 'switch'), 9), [reveal(4, 4)]);
+      final opened = play(rules.initialState(config(seats: 3, questionMarks: true, controls: 'switch'), 9), [
+        reveal(4, 4),
+      ]);
       final mine = opened.mines.first;
       final s = play(opened, [mark(mine % 9, mine ~/ 9, seat: 1)]);
       final json = jsonEncode(rules.stateToJson(s));

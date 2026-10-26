@@ -47,7 +47,10 @@ class MinesweeperAi implements AiPlayer<MinesweeperState> {
       case Difficulty.medium:
         final d = solver.deduce(view, state.mines.length);
         if (d.safe.isNotEmpty) return _pick(d.safe.toList()..sort(), random);
-        final unsure = [for (final c in hidden) if (!d.mines.contains(c)) c];
+        final unsure = [
+          for (final c in hidden)
+            if (!d.mines.contains(c)) c,
+        ];
         return _pick(unsure.isEmpty ? hidden : unsure, random);
       case Difficulty.hard:
         final d = solver.deduce(view, state.mines.length);

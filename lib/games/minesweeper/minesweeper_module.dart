@@ -57,7 +57,10 @@ class MinesweeperModule extends GameModule<MinesweeperState> {
     ChoiceOption(
       id: 'controls',
       labelKey: 'minesweeper.option.controls',
-      choices: [('longPress', 'minesweeper.option.controls.longPress'), ('switch', 'minesweeper.option.controls.switch')],
+      choices: [
+        ('longPress', 'minesweeper.option.controls.longPress'),
+        ('switch', 'minesweeper.option.controls.switch'),
+      ],
       defaultValue: 'longPress',
     ),
   ];

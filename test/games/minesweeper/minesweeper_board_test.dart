@@ -167,7 +167,9 @@ void main() {
       expect(h.host.sfx, contains('minesweeper.dig'));
     });
 
-    testWidgets('a long press places a flag with haptics and the flag sound; a tap on a flag does nothing', (tester) async {
+    testWidgets('a long press places a flag with haptics and the flag sound; a tap on a flag does nothing', (
+      tester,
+    ) async {
       final h = Harness(board([(0, 0), (8, 8)]));
       await h.pump(tester);
       await tester.longPress(cell(0, 0));
@@ -182,7 +184,15 @@ void main() {
 
     testWidgets('with the ⛏/🚩 switch a tap places flags in flag mode', (tester) async {
       final s = board([(0, 0), (8, 8)]);
-      final h = Harness(MinesweeperState.start(level: s.level, seats: 1, questionMarks: false, seed: 1, switchControls: true).copyWith(mines: s.mines));
+      final h = Harness(
+        MinesweeperState.start(
+          level: s.level,
+          seats: 1,
+          questionMarks: false,
+          seed: 1,
+          switchControls: true,
+        ).copyWith(mines: s.mines),
+      );
       await h.pump(tester);
       await tester.tap(find.byKey(const ValueKey('modeFlag')));
       await tester.pump();
@@ -243,11 +253,7 @@ void main() {
       await tester.tap(cell(8, 8));
       await tester.pump();
       expect(h.state.cleared, isTrue);
-      expect([for (final (id, _) in h.host.events) id], [
-        'minesweeper.win',
-        'minesweeper.noflag',
-        'minesweeper.blitz',
-      ]);
+      expect([for (final (id, _) in h.host.events) id], ['minesweeper.win', 'minesweeper.noflag', 'minesweeper.blitz']);
       expect(h.host.events.first.$2, {'seat': 0});
     });
 
@@ -261,6 +267,38 @@ void main() {
       await tester.pump();
       expect(h2.host.events, isEmpty, reason: 'two players still in');
     });
+  });
+
+  testWidgets('the rule steps and the turn hint draw in every language', (tester) async {
+    for (final locale in ['cs', 'en', 'es']) {
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(360, 740);
+      addTearDown(tester.view.reset);
+      late String? hint;
+      await tester.pumpWidget(
+        MaterialApp(
+          locale: Locale(locale),
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          home: Scaffold(
+            body: Builder(
+              builder: (context) {
+                hint = minesweeperModule.turnHint(context, board([(0, 0)], seats: 2), 'Kuba');
+                return Wrap(spacing: 12, runSpacing: 12, children: minesweeperModule.ruleSteps(context));
+              },
+            ),
+          ),
+        ),
+      );
+      expect(tester.takeException(), isNull, reason: locale);
+      expect(minesweeperModule.ruleSteps(tester.element(find.byType(Wrap))), hasLength(4));
+      expect(hint, contains('Kuba'));
+    }
   });
 
   group('goldens', () {

@@ -41,10 +41,10 @@ class MinesweeperSolver {
 
   static final _cache = <(int, int), List<List<int>>>{};
 
-  static List<List<int>> _allNeighbours(int columns, int rows) => _cache.putIfAbsent(
-    (columns, rows),
-    () => [for (var i = 0; i < columns * rows; i++) MinesweeperState.neighboursOf(i, columns, rows)],
-  );
+  static List<List<int>> _allNeighbours(int columns, int rows) => _cache.putIfAbsent((
+    columns,
+    rows,
+  ), () => [for (var i = 0; i < columns * rows; i++) MinesweeperState.neighboursOf(i, columns, rows)]);
 
   List<int> neighbours(int cell) => _neighbours[cell];
 
@@ -52,12 +52,7 @@ class MinesweeperSolver {
   /// mines uncovered by mistake. Flags are ignored – they may be wrong.
   static List<int> viewOf(MinesweeperState state) => [
     for (var i = 0; i < state.cellCount; i++)
-      if (state.isRevealed(i))
-        state.numbers[i]
-      else if (state.exploded.contains(i))
-        Seen.mine
-      else
-        Seen.hidden,
+      if (state.isRevealed(i)) state.numbers[i] else if (state.exploded.contains(i)) Seen.mine else Seen.hidden,
   ];
 
   /// Squares provably safe or mined in [view] with [totalMines] on the board.
@@ -160,15 +155,19 @@ class MinesweeperSolver {
     }
     for (var a = 0; a < constraints.length; a++) {
       final (cellsA, needA) = constraints[a];
-      final others = <int>{
-        for (final c in cellsA) ...byCell[c]!,
-      }..remove(a);
+      final others = <int>{for (final c in cellsA) ...byCell[c]!}..remove(a);
       for (final b in others) {
         final (cellsB, needB) = constraints[b];
-        final onlyB = [for (final c in cellsB) if (!cellsA.contains(c)) c];
+        final onlyB = [
+          for (final c in cellsB)
+            if (!cellsA.contains(c)) c,
+        ];
         if (needB - needA == onlyB.length && onlyB.isNotEmpty) {
           setMine(onlyB);
-          setSafe([for (final c in cellsA) if (!cellsB.contains(c)) c]);
+          setSafe([
+            for (final c in cellsA)
+              if (!cellsB.contains(c)) c,
+          ]);
         } else if (needB == needA && onlyB.isNotEmpty && cellsA.every(cellsB.contains)) {
           // A inside B with the same count: B's own squares are safe.
           setSafe(onlyB);
@@ -202,14 +201,7 @@ class MinesweeperSolver {
     final density = unknown == 0 ? 0.0 : ((totalMines - knownMines) / unknown).clamp(0.0, 1.0);
     return [
       for (var i = 0; i < view.length; i++)
-        if (view[i] >= 0)
-          0.0
-        else if (known[i] == 2)
-          1.0
-        else if (known[i] == 1)
-          0.0
-        else
-          local[i] ?? density,
+        if (view[i] >= 0) 0.0 else if (known[i] == 2) 1.0 else if (known[i] == 1) 0.0 else local[i] ?? density,
     ];
   }
 
