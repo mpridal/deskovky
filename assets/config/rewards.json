@@ -1,0 +1,16 @@
+{
+  "base": {
+    "win": [10, 20, 35],
+    "draw": [5, 10, 15],
+    "second": [4, 8, 12],
+    "participation": [2, 3, 4]
+  },
+  "starBonus": 2,
+  "streakBonus": { "3": 5, "5": 10, "10": 25 },
+  "firstGameOfDay": 5,
+  "personalRecord": 5,
+  "easyDailyFullWins": 10,
+  "cappedMatchPoints": 1,
+  "multiplierMin": 0.5,
+  "multiplierMax": 2.0
+}
