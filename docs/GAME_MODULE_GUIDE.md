@@ -32,14 +32,15 @@ Kostru nahraď skutečnou hrou. `available: true` přepni až v PR, kdy je hra h
 |---|---|
 | `id`, `titleKey`, `descriptionKey`, `rulesKey` | Klíče začínají `<id>.` |
 | `texts` | `GameTexts(cs: {...}, en: {...}, es: {...})`: všechny texty hry ve všech 3 jazycích, klíče `<id>.*`, placeholdery `{name}` |
-| `minPlayers`, `maxPlayers`, `supportsAi`, `difficulties` | |
+| `minPlayers`, `maxPlayers`, `supportsAi`, `difficulties` | `difficultyWithoutRobots: true`, když obtížnost platí i bez robotů (Miny: velikost desky, Pexeso sólo); nastavení ji pak nabídne vždy |
 | `options` | `ChoiceOption`/`ToggleOption`. Popisky jsou klíče `<id>.option.*`, hodnoty voleb přijdou v `GameConfig.options` |
 | `badges` | `BadgeDef(id: '<id>.xxx', titleKey: '<id>.badge.xxx.title', …, condition: …)`. Herní události hlásí deska přes `view.host.reportEvent('<id>.xxx')` a podmínka `BadgeCondition.event('<id>.xxx')` |
 | `sfx` | Nejvýš 3 vlastní efekty: `{'<id>.boing': 'games/<id>/sfx/boing.ogg'}`. Přehraješ je přes `view.host.playSfx('<id>.boing')`. Sdílené efekty (`tap`, `card_flip`, `dice_roll`, `piece_place`, …) jsou vždy k dispozici |
 | `musicTrack` | Je vždy `<id>`, hudba `assets/audio/music/<id>.ogg` už je připravená |
 | `pointsMultiplier` | 0,5–2 |
-| `phoneOrientation` | |
+| `phoneOrientation`, `tabletOrientation` | Herní obrazovka zamkne orientaci (telefon < 600 dp, tablet) a po odchodu ji uvolní |
 | `supportsSaveResume` | |
+| `ruleSteps(context)` | 2–4 ilustrované kroky pravidel kreslené kódem, zobrazí se pod textem pravidel v pauze i v nastavení hry (vzor: `_sample/sample_rule_step.dart`) |
 | `rules`, `ai`, `icon`, `board`, `turnHint` | Viz níže |
 
 Texty v UI hry čti přes `<id>Texts.of(context, '<id>.klic', {'name': …})`.
@@ -78,7 +79,8 @@ final move = search.best(state, seat, maxDepth: 6, timeLimit: const Duration(mil
 - `canAct`;
 - `submit(move)`;
 - `host` (efekty, haptika, události);
-- `elapsed()`.
+- `elapsed()`;
+- `firstGame` (první partie hráče na tahu – ukaž nenásilnou nápovědu k ovládání).
 
 HUD (hráči, skóre, pauza, bublina s `turnHint`) i výsledky kreslí framework.
 
@@ -86,8 +88,8 @@ HUD (hráči, skóre, pauza, bublina s `turnHint`) i výsledky kreslí framework
 - `BoardGrid(columns:, rows:, cellBuilder:, onTap:, highlighted:)`:
   - mřížka, tap → `(sloupec, řádek)`;
   - políčka ≥ 48 dp, a když se nevejdou, pinch-zoom a posun;
-  - `BoardGridController.reset()` pro tlačítko „vycentrovat“.
-- `PieceToken(seat:, size:, pulse:)`: figurka v barvě hráče se značkou pro barvoslepé. `HoppingPiece(path:, child:)` ji přesune po polích s poskokem.
+  - velká deska začíná vycentrovaná, `BoardGridController.reset()` ji vycentruje znovu (tlačítko „vycentrovat“).
+- `PieceToken(seat:, size:, pulse:)`: figurka v barvě hráče se značkou pro barvoslepé. `HoppingPiece(path:, child:, onDone:)` ji přesune po polích s poskokem; nová `path` u stejného widgetu spustí další přesun.
 - `FlipCard(faceUp:, front:, back:)`: karta s 3D otočením.
 - `Dice(value:, rolling:, label:, onTap:)`: kostka. Hodnotu určuje stav hry, widget ji jen ukazuje.
 - `GameSearch`: viz AI.
@@ -131,6 +133,14 @@ void main() => runGameContract(<id>Module);
 - Dál piš unit testy pravidel (všechna pravidla včetně hraničních případů), AI (síla podle obtížností) a widget testy desky. Widget testy dělej ve velikostech 360×740, 412×915, 800×1280 a 1280×800.
 - Testy UI s databází a assety: reálné I/O dokončuj smyčkou `tester.runAsync(() => Future.delayed(…))` + `pumpAndSettle()`.
 - Rychlé spuštění jen tvé hry: `flutter run --dart-define=GAME=<id>` (debug build) otevře rovnou její nastavení.
+
+## Známá omezení (bez nových balíčků)
+
+- **Obrázky jsou PNG**, ne SVG (aplikace nemá `flutter_svg`). Pexeso: Noto Emoji v PNG (repozitář `googlefonts/noto-emoji`, `png/512`, licence Apache 2.0, zapsat do `assets/games/memory/CREDITS.json`), zmenšené na ~256 px.
+- **Hod kostkou zatřesením** není (aplikace nemá senzory); kostka se hází ťuknutím – zadání ho uvádí jako volitelné.
+- **`BoardGrid` nemá dlouhý stisk**: pro vlajku v Minách dej do `cellBuilder` vlastní `GestureDetector(onLongPress: …)`.
+- **`GameTexts` nemá množná čísla**: použij oddělené klíče (`memory.pairs.one`, `memory.pairs.few`, `memory.pairs.many`) a vyber podle čísla v kódu hry.
+- **Volby jsou stejné na telefonu i tabletu**: 48 karet v Pexesu nabízí i telefon; hra ho tam má zvládnout (mřížka s posunem) nebo volbu nepoužít.
 
 ## Požadavky na framework
 

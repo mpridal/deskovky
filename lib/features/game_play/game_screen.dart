@@ -303,7 +303,8 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
     });
   }
 
-  Future<void> _confirmExit() async {
+  /// Asks before leaving; true when the player left.
+  Future<bool> _confirmExit() async {
     final l10n = AppLocalizations.of(context);
     final router = GoRouter.of(context);
     final store = ref.read(gameStoreProvider);
@@ -322,7 +323,7 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
     if (!quit) {
       if (!wasPaused && mounted) _turns.resume();
       if (wasTiming) _clock.start();
-      return;
+      return false;
     }
     if (_module.supportsSaveResume && !_turns.isOver) {
       await store.saveSession(_session.toSave(elapsed: _elapsed));
@@ -331,6 +332,7 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
     }
     _finished = true;
     router.go('/games');
+    return true;
   }
 
   Future<void> _openPause() async {
@@ -385,7 +387,8 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
         await _showRules();
         if (mounted) await _openPause();
       case 'exit':
-        await _confirmExit();
+        // Changed their mind: back to the pause menu, never a frozen game.
+        if (!await _confirmExit() && mounted) await _openPause();
       default:
         _turns.resume();
         _clock.start();

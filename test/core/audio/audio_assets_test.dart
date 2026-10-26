@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:deskovky/core/audio/audio_catalog.dart';
+import 'package:deskovky/games/registry.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 const _fields = ['file', 'title', 'author', 'source_url', 'license', 'attribution_text'];
@@ -56,30 +57,21 @@ void main() {
     }
   });
 
-  test('the four new games play their Kevin MacLeod tracks (spec 7.2)', () {
+  test("every game's own effects exist and are credited (from the manifests)", () {
     final byFile = {for (final c in credits) c['file']: c};
-    for (final (id, title) in [
-      ('tictactoe', 'Local Forecast - Elevator'),
-      ('memory', 'Monkeys Spinning Monkeys'),
-      ('minesweeper', 'Sneaky Snitch'),
-      ('ludo', 'Fluffing a Duck'),
-    ]) {
-      final entry = byFile['music/$id.ogg'];
-      expect(entry, isNotNull, reason: id);
-      expect((entry!['title'], entry['author'], entry['license']), (title, 'Kevin MacLeod', 'CC BY 4.0'), reason: id);
+    for (final module in gameModules) {
+      for (final path in module.sfx.values) {
+        expect(File(assetOf(path)).existsSync(), isTrue, reason: path);
+        expect(byFile[path], isNotNull, reason: '$path needs a CREDITS.json entry');
+      }
     }
   });
 
-  test('every game effect from spec 13.5–13.8 exists as a credited placeholder', () {
-    final byFile = {for (final c in credits) c['file']: c};
-    for (final path in [
-      'games/tictactoe/sfx/draw.ogg', 'games/tictactoe/sfx/line.ogg', //
-      'games/memory/sfx/match.ogg', 'games/memory/sfx/miss.ogg',
-      'games/minesweeper/sfx/dig.ogg', 'games/minesweeper/sfx/flag.ogg', 'games/minesweeper/sfx/puff.ogg',
-      'games/ludo/sfx/hop.ogg', 'games/ludo/sfx/boing.ogg', 'games/ludo/sfx/home.ogg',
-    ]) {
-      expect(File(assetOf(path)).existsSync(), isTrue, reason: path);
-      expect(byFile[path], isNotNull, reason: path);
+  test("each phase-2 game's music is credited in its own folder (a session can swap it)", () {
+    for (final module in gameModules.where((m) => m.id != 'sample')) {
+      final file = File('assets/games/${module.id}/CREDITS.json');
+      expect(file.existsSync(), isTrue, reason: module.id);
+      expect([for (final c in read(file)) c['file']], contains('music/${module.id}.ogg'), reason: module.id);
     }
   });
 

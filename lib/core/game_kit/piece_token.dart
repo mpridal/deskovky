@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../ui_kit/tokens/app_colors.dart';
@@ -146,10 +147,24 @@ class HoppingPiece extends StatefulWidget {
 class _HoppingPieceState extends State<HoppingPiece> with SingleTickerProviderStateMixin {
   late final AnimationController _move = AnimationController(vsync: this);
 
+  var _started = false;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_move.isAnimating || _move.isCompleted) return;
+    if (_started) return;
+    _started = true;
+    _start();
+  }
+
+  @override
+  void didUpdateWidget(HoppingPiece oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // The same piece moving again (e.g. keyed by its id) hops its new path.
+    if (!listEquals(oldWidget.path, widget.path)) _start();
+  }
+
+  void _start() {
     final steps = widget.path.length - 1;
     if (steps == 0 || MediaQuery.disableAnimationsOf(context)) {
       _move.value = 1;
@@ -157,7 +172,9 @@ class _HoppingPieceState extends State<HoppingPiece> with SingleTickerProviderSt
       return;
     }
     _move.duration = widget.perStep * steps;
-    _move.forward().whenComplete(() => widget.onDone?.call());
+    _move.forward(from: 0).whenCompleteOrCancel(() {
+      if (mounted && _move.isCompleted) widget.onDone?.call();
+    });
   }
 
   @override

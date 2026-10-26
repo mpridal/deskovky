@@ -41,6 +41,22 @@ void main() {
       expect(tester.getSize(find.byKey(const ValueKey('cell0,0'))).width, 48);
     });
 
+    testWidgets('a zoomable board starts centred and "centre" brings it back after panning', (tester) async {
+      final controller = BoardGridController();
+      addTearDown(controller.dispose);
+      await _pump(tester, BoardGrid(columns: 15, rows: 15, cellBuilder: _cell, controller: controller), size: const Size(360, 600));
+      await tester.pump();
+      final middle = find.byKey(const ValueKey('cell7,7'));
+      expect(tester.getCenter(middle).dx, closeTo(180, 30));
+      expect(tester.getCenter(middle).dy, closeTo(300, 30));
+      await tester.drag(find.byType(InteractiveViewer), const Offset(200, 150));
+      await tester.pumpAndSettle();
+      expect(tester.getCenter(middle).dx, greaterThan(250));
+      controller.reset();
+      await tester.pumpAndSettle();
+      expect(tester.getCenter(middle).dx, closeTo(180, 30));
+    });
+
     testWidgets('highlighted cells get a gold frame', (tester) async {
       await _pump(tester, BoardGrid(columns: 3, rows: 3, cellBuilder: _cell, highlighted: const {(1, 1)}));
       expect(find.byKey(const ValueKey('highlight1,1')), findsOneWidget);
@@ -79,6 +95,28 @@ void main() {
       expect(tester.getTopLeft(find.byKey(const ValueKey('hop'))), const Offset(100, 50));
       expect(done, isTrue);
     });
+  });
+
+  testWidgets('the same hopping piece hops again when it gets a new path', (tester) async {
+    var done = 0;
+    Widget piece(List<Offset> path) => Stack(
+      children: [
+        HoppingPiece(
+          key: const ValueKey('piece'),
+          path: path,
+          onDone: () => done++,
+          child: const PieceToken(key: ValueKey('hop'), seat: 1, size: 20),
+        ),
+      ],
+    );
+    await _pump(tester, piece(const [Offset(0, 0), Offset(50, 0)]));
+    await tester.pumpAndSettle();
+    await _pump(tester, piece(const [Offset(50, 0), Offset(100, 0), Offset(150, 20)]));
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(tester.getTopLeft(find.byKey(const ValueKey('hop'))).dx, lessThan(150), reason: 'it moves, it does not jump');
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.byKey(const ValueKey('hop'))), const Offset(150, 20));
+    expect(done, 2);
   });
 
   group('FlipCard', () {

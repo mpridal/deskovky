@@ -171,6 +171,22 @@ void main() {
     expect(find.text('Ťukni na číslo, které tipuješ.'), findsNothing);
   });
 
+  testWidgets('pause → Konec → Zrušit goes back to the pause menu instead of a frozen game', (tester) async {
+    final t = await _player(tester, db, 'Tereza');
+    await _startGame(tester, db, _config([HumanSeat(t), const RobotSeat()]));
+    await tester.tap(find.bySemanticsLabel(RegExp('^Pauza')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.descendant(of: find.byType(Dialog), matching: find.text('Konec')));
+    await tester.pumpAndSettle();
+    expect(find.text('Opravdu ukončit?'), findsOneWidget);
+    await tester.tap(find.text('Zrušit'));
+    await tester.pumpAndSettle();
+    expect(find.text('Pokračovat'), findsOneWidget, reason: 'the pause menu is back');
+    await tester.tap(find.text('Pokračovat'));
+    await tester.pumpAndSettle();
+    expect(find.byType(Dialog), findsNothing);
+  });
+
   testWidgets('a saved game whose player was deleted cannot be resumed', (tester) async {
     final t = await _player(tester, db, 'Tereza');
     final k = await _player(tester, db, 'Kuba');

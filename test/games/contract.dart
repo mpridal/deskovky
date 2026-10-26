@@ -154,6 +154,22 @@ void _playable<S>(GameModule<S> m, int maxMoves) {
     }
   });
 
+  test('every choice of every option starts and plays out (e.g. each board size)', () {
+    final seats = [const HumanSeat(1), for (var s = 1; s < m.minPlayers; s++) const RobotSeat()];
+    final base = _config(m, seats, Difficulty.medium);
+    final variants = [
+      for (final o in m.options)
+        ...switch (o) {
+          ChoiceOption(:final choices) => [for (final (v, _) in choices) (o.id, v)],
+          ToggleOption() => [(o.id, true), (o.id, false)],
+        },
+    ];
+    for (final (id, value) in variants) {
+      final config = base.copyWith(options: {...base.options, id: value});
+      _playOut(m, config, 3, maxMoves);
+    }
+  });
+
   test('a finished game gives a valid result', () {
     for (final seats in _seatings(m).take(6)) {
       final session = _playOut(m, _config(m, seats, Difficulty.medium), 11, maxMoves);
@@ -187,6 +203,14 @@ void _playable<S>(GameModule<S> m, int maxMoves) {
       replay.apply(move);
     }
     expect(replay.hash, session.hash);
+
+    // Saved in the middle of the game, restored the same.
+    final half = GameSession<S>.start(m.rules, config, session.seed);
+    for (final move in session.moves.take(session.moves.length ~/ 2)) {
+      half.apply(move);
+    }
+    final halfSaved = SavedGame.fromJson(jsonDecode(jsonEncode(half.toSave().toJson())))!;
+    expect(GameSession.restore(m.rules, halfSaved)!.hash, half.hash);
 
     final saved = SavedGame.fromJson(jsonDecode(jsonEncode(session.toSave(elapsed: const Duration(seconds: 3)).toJson())))!;
     final restored = GameSession.restore(m.rules, saved)!;

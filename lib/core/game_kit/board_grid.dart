@@ -7,9 +7,10 @@ import '../../ui_kit/tokens/app_colors.dart';
 /// Lets a board's "centre" button reset the zoom of a [BoardGrid].
 class BoardGridController {
   final TransformationController transform = TransformationController();
+  Matrix4 _centre = Matrix4.identity();
 
-  /// Back to the start: the board's top left corner, no zoom.
-  void reset() => transform.value = Matrix4.identity();
+  /// Back to the start: the board centred in its space, no zoom.
+  void reset() => transform.value = _centre.clone();
 
   void dispose() => transform.dispose();
 }
@@ -63,6 +64,20 @@ class _BoardGridState extends State<BoardGrid> {
       final fit = min(byWidth, byHeight);
       if (fit >= widget.minCellSize) return Center(child: _grid(fit));
       final cell = widget.minCellSize;
+      final view = Size(box.maxWidth, box.maxHeight.isFinite ? box.maxHeight : widget.rows * cell);
+      final centre = Matrix4.translationValues(
+        (view.width - widget.columns * cell) / 2,
+        (view.height - widget.rows * cell) / 2,
+        0,
+      );
+      final controller = _controller;
+      if (controller._centre != centre) {
+        controller._centre = centre;
+        // A new board or space starts centred (after this frame's layout).
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) controller.reset();
+        });
+      }
       return InteractiveViewer(
         transformationController: _controller.transform,
         constrained: false,
