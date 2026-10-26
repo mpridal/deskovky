@@ -67,10 +67,14 @@ class UpdateService {
         final last = await settings.lastUpdateCheck();
         if (last != null && _now().difference(last) < interval) return const NotChecked();
       }
-      await settings.setLastUpdateCheck(_now());
       final release = await source.latest().timeout(timeout);
       if (release == null) return const CheckFailed('no usable release');
-      if (!(release.version > currentVersion)) return const UpToDate();
+      if (!(release.version > currentVersion)) {
+        // Only "nothing new" pauses checking for 6 hours: a known update is
+        // offered again at the next start, and an offline start retries.
+        await settings.setLastUpdateCheck(_now());
+        return const UpToDate();
+      }
       return UpdateAvailable(release, mandatory: release.minSupportedVersion > currentVersion);
     } catch (e) {
       debugPrint('UpdateService: check failed: $e');

@@ -21,13 +21,20 @@ class UpdateIntegrityException implements Exception {
 /// Downloads a release APK into [directory] and verifies its SHA-256
 /// (spec 4.6). One download at a time; a second request joins the first.
 class UpdateDownloader {
-  UpdateDownloader({required this.client, required Directory directory}) : _directory = (() async => directory);
+  UpdateDownloader({required this.client, required Directory directory, this.idleTimeout = defaultIdleTimeout})
+    : _directory = (() async => directory);
 
   /// Downloads into `cache/updates/`, the only place the installer accepts.
   UpdateDownloader.cache({required this.client})
-    : _directory = (() async => Directory('${(await getApplicationCacheDirectory()).path}/updates').create(recursive: true));
+    : idleTimeout = defaultIdleTimeout,
+      _directory = (() async => Directory('${(await getApplicationCacheDirectory()).path}/updates').create(recursive: true));
+
+  static const defaultIdleTimeout = Duration(seconds: 30);
 
   final http.Client client;
+
+  /// A download that receives nothing for this long fails (Wi-Fi gone).
+  final Duration idleTimeout;
   final Future<Directory> Function() _directory;
 
   Future<File>? _running;
@@ -40,7 +47,7 @@ class UpdateDownloader {
     final target = File('${directory.path}/deskovky-${release.version}.apk');
     final part = File('${target.path}.part');
     try {
-      final response = await client.send(http.Request('GET', release.apkUrl));
+      final response = await client.send(http.Request('GET', release.apkUrl)).timeout(idleTimeout);
       if (response.statusCode != 200) {
         throw http.ClientException('HTTP ${response.statusCode}', release.apkUrl);
       }
@@ -50,7 +57,7 @@ class UpdateDownloader {
       final digest = _DigestSink();
       final hasher = sha256.startChunkedConversion(digest);
       try {
-        await for (final chunk in response.stream) {
+        await for (final chunk in response.stream.timeout(idleTimeout)) {
           sink.add(chunk);
           hasher.add(chunk);
           received += chunk.length;
@@ -64,7 +71,13 @@ class UpdateDownloader {
       if (actual != release.sha256) throw UpdateIntegrityException(release.sha256, actual);
       onProgress?.call(1);
       if (target.existsSync()) await target.delete();
-      return await part.rename(target.path);
+      final done = await part.rename(target.path);
+      // Older downloads would only take space (~24 MB each).
+      String name(File f) => f.path.split(RegExp(r'[\\/]')).last;
+      for (final old in directory.listSync().whereType<File>()) {
+        if (name(old) != name(done)) await old.delete();
+      }
+      return done;
     } catch (_) {
       if (part.existsSync()) await part.delete();
       rethrow;

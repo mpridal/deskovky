@@ -74,9 +74,19 @@ class UpdateController extends Notifier<UpdateState> {
   @override
   UpdateState build() => const UpdateState();
 
+  bool _busy = false;
+  DateTime? _handedOffAt;
+
   Future<UpdateCheck> _check({required bool force}) async {
     final installer = ref.read(apkInstallerProvider);
-    final current = Semver.parse(await installer.appVersion()) ?? const Semver(0, 0, 0);
+    final Semver? current;
+    try {
+      current = Semver.parse(await installer.appVersion());
+    } catch (e) {
+      return CheckFailed('$e');
+    }
+    // An unknown own version must not make every release look mandatory.
+    if (current == null) return const CheckFailed('unknown app version');
     final service = UpdateService(
       source: ref.read(releaseSourceProvider),
       settings: ref.read(settingsRepositoryProvider),
@@ -111,19 +121,27 @@ class UpdateController extends Notifier<UpdateState> {
   /// installing yet (the UI explains and opens the settings).
   Future<bool> update() async {
     final release = state.release;
-    if (release == null || state.progress != null) return true;
+    // Set before the first await, so a second tap cannot start a second
+    // install; right after a hand-off the installer is still opening.
+    final handedOff = _handedOffAt;
+    if (release == null || _busy) return true;
+    if (handedOff != null && DateTime.now().difference(handedOff) < const Duration(seconds: 5)) return true;
+    _busy = true;
     final installer = ref.read(apkInstallerProvider);
-    if (!await installer.canInstall()) return false;
-    state = state.copyWith(progress: () => 0, failed: false);
     try {
+      if (!await installer.canInstall()) return false;
+      state = state.copyWith(progress: () => 0, failed: false);
       final File apk = await ref
           .read(updateDownloaderProvider)
           .download(release, onProgress: (p) => state = state.copyWith(progress: () => p));
       await installer.install(apk.path);
+      _handedOffAt = DateTime.now();
       state = state.copyWith(progress: () => null);
     } catch (e) {
       debugPrint('UpdateController: update failed: $e');
       state = state.copyWith(progress: () => null, failed: true);
+    } finally {
+      _busy = false;
     }
     return true;
   }

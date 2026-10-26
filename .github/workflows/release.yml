@@ -13,6 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # No token left in .git/config for build or test code to use.
+          persist-credentials: false
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: 3.47.8

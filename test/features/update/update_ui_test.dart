@@ -69,6 +69,15 @@ void main() {
     expect(installer.installed.single, endsWith('deskovky-0.1.1.apk'));
   });
 
+  testWidgets('a fast double tap on "Aktualizovat" installs only once', (tester) async {
+    final installer = FakeApkInstaller();
+    await start(tester, releases: FakeReleaseSource(fakeRelease('0.1.1')), installer: installer, downloader: FakeUpdateDownloader());
+    await tester.tap(find.text('Aktualizovat'));
+    await tester.tap(find.text('Aktualizovat'), warnIfMissed: false);
+    await settle(tester);
+    expect(installer.installed, hasLength(1));
+  });
+
   testWidgets('without the install permission a child-friendly explanation leads to the settings', (tester) async {
     final installer = FakeApkInstaller(allowed: false);
     await start(
@@ -136,6 +145,27 @@ void main() {
   group('fit', () {
     setUpAll(loadAppFonts);
     for (final code in ['cs', 'en', 'es']) {
+      testWidgets('the mandatory card, the permission dialog and the settings section fit 360 dp at 130 % in $code', (tester) async {
+        await start(
+          tester,
+          releases: FakeReleaseSource(fakeRelease('0.3.0', minSupported: '0.2.0')),
+          installer: FakeApkInstaller(allowed: false),
+          size: const Size(360, 740),
+          locale: Locale(code),
+          textScale: 1.3,
+        );
+        expect(tester.takeException(), isNull);
+        await tester.tap(find.byKey(const ValueKey('updateNow')));
+        await settle(tester);
+        expect(tester.takeException(), isNull);
+        await tester.tapAt(const Offset(5, 5));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byIcon(Icons.settings_outlined));
+        await tester.pumpAndSettle();
+        await tester.scrollUntilVisible(find.byKey(const ValueKey('autoUpdate')), 200);
+        expect(tester.takeException(), isNull);
+      });
+
       testWidgets('the update card fits 360 dp at 130 % in $code', (tester) async {
         await start(
           tester,

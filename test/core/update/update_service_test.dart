@@ -116,12 +116,13 @@ void main() {
       expect(await service(_Source(() => _release('0.1.0'))).check(), isA<UpToDate>());
     });
 
-    test('at most once in 6 hours unless forced; auto-check can be switched off', () async {
-      final source = _Source(() => _release('0.1.1'));
-      await service(source).check();
+    test('after "nothing new" at most once in 6 hours unless forced; auto-check can be switched off', () async {
+      final source = _Source(() => _release('0.1.0'));
+      expect(await service(source).check(), isA<UpToDate>());
       now = now.add(const Duration(hours: 5));
       expect(await service(source).check(), isA<NotChecked>());
       expect(source.calls, 1);
+      source.answer = () => _release('0.1.1');
       expect(await service(source).check(force: true), isA<UpdateAvailable>());
       expect(source.calls, 2);
       await settings.setAutoCheckUpdates(false);
@@ -146,6 +147,38 @@ void main() {
       now = now.add(const Duration(hours: 7));
       final mandatory = await service(_Source(() => _release('0.2.0', minSupported: '0.1.5'))).check();
       expect((mandatory as UpdateAvailable).mandatory, isTrue);
+    });
+  
+    test('a known update is offered again at the next start; a failed check does not pause checking', () async {
+      final source = _Source(() => _release('0.1.1'));
+      expect(await service(source).check(), isA<UpdateAvailable>());
+      now = now.add(const Duration(minutes: 5));
+      expect(await service(source).check(), isA<UpdateAvailable>(), reason: 'after a restart the card comes back');
+      final offline = _Source(() => throw Exception('offline'));
+      expect(await service(offline).check(), isA<CheckFailed>());
+      now = now.add(const Duration(minutes: 5));
+      await service(offline).check();
+      expect(offline.calls, 2, reason: 'an offline start does not silence checks for 6 hours');
+    });
+  });
+
+  group('versions', () {
+    test('minor and patch above 99 are rejected (they would break versionCode ordering)', () {
+      expect(Semver.parse('0.1.100'), isNull);
+      expect(Semver.parse('1.100.0'), isNull);
+    });
+
+    test('a latest.json whose versionCode disagrees with its version is rejected', () {
+      final info = ReleaseInfo.fromGitHub(
+        release: {
+          'tag_name': 'v0.1.1',
+          'assets': [
+            {'name': 'deskovky-0.1.1.apk', 'browser_download_url': 'https://x/a.apk'},
+          ],
+        },
+        latestJson: {'version': '0.1.1', 'versionCode': 999, 'sha256': 'cd' * 32, 'minSupportedVersion': '0.1.0'},
+      );
+      expect(info, isNull);
     });
   });
 }

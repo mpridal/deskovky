@@ -36,7 +36,7 @@ class ReleaseInfo {
     final sha = '${latestJson['sha256']}'.toLowerCase();
     final versionCode = latestJson['versionCode'];
     if (tag == null || version == null || minSupported == null || tag != version) return null;
-    if (!RegExp(r'^[0-9a-f]{64}$').hasMatch(sha) || versionCode is! int) return null;
+    if (!RegExp(r'^[0-9a-f]{64}$').hasMatch(sha) || versionCode != version.versionCode) return null;
     final assets = release['assets'];
     final apk = assets is List
         ? assets.whereType<Map<String, Object?>>().where((a) => a['name'] == 'deskovky-$version.apk').firstOrNull
@@ -45,7 +45,7 @@ class ReleaseInfo {
     if (apk == null || url == null || !url.hasScheme) return null;
     return ReleaseInfo(
       version: version,
-      versionCode: versionCode,
+      versionCode: version.versionCode,
       sha256: sha,
       minSupportedVersion: minSupported,
       apkUrl: url,

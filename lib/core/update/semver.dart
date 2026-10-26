@@ -13,7 +13,10 @@ class Semver implements Comparable<Semver> {
   static Semver? parse(String text) {
     final m = RegExp(r'^v?(\d+)\.(\d+)\.(\d+)(\+\d+)?$').firstMatch(text.trim());
     if (m == null) return null;
-    return Semver(int.parse(m[1]!), int.parse(m[2]!), int.parse(m[3]!));
+    final (minor, patch) = (int.parse(m[2]!), int.parse(m[3]!));
+    // versionCode packs minor and patch into two digits each.
+    if (minor > 99 || patch > 99) return null;
+    return Semver(int.parse(m[1]!), minor, patch);
   }
 
   /// Android versionCode derived from the tag (spec 4).

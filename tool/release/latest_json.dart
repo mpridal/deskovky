@@ -21,6 +21,9 @@ Map<String, Object?> buildLatestJson({
 }) {
   final parts = RegExp(r'^(\d+)\.(\d+)\.(\d+)$').firstMatch(version);
   if (parts == null) throw ArgumentError.value(version, 'version', 'expected major.minor.patch');
+  if (int.parse(parts[2]!) > 99 || int.parse(parts[3]!) > 99) {
+    throw ArgumentError.value(version, 'version', 'minor and patch must be 0–99 (versionCode)');
+  }
   final sections = changelog.split(RegExp(r'^## ', multiLine: true));
   final section = sections.where((s) => s.split('\n').first.trim() == version).firstOrNull;
   if (section == null) throw StateError('CHANGELOG.md has no "## $version" section');

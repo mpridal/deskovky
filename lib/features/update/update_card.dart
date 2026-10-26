@@ -41,7 +41,8 @@ class UpdateCard extends ConsumerWidget {
               ],
             ),
             if (state.mandatory) Text(l10n.updateMandatory, style: AppTypography.caption(color: AppColors.ink)),
-            if (notes.isNotEmpty) Text(notes, style: AppTypography.caption(color: AppColors.ink)),
+            if (notes.isNotEmpty)
+              Text(notes, maxLines: 4, overflow: TextOverflow.ellipsis, style: AppTypography.caption(color: AppColors.ink)),
             if (state.failed) Text(l10n.updateFailed, style: AppTypography.caption(color: AppColors.players[0])),
             const SizedBox(height: 8),
             if (progress != null) ...[
@@ -57,7 +58,11 @@ class UpdateCard extends ConsumerWidget {
                 runSpacing: 4,
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
-                  PrimaryButton(label: l10n.updateNow, onPressed: () => _update(context, ref)),
+                  PrimaryButton(
+                      key: const ValueKey('updateNow'),
+                      label: l10n.updateNow,
+                      onPressed: () => _update(context, ref),
+                    ),
                   if (!state.mandatory)
                     TextButton(
                       onPressed: () => ref.read(updateControllerProvider.notifier).dismiss(),

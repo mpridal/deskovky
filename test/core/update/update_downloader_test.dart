@@ -65,4 +65,25 @@ void main() {
     await expectLater(downloader.download(_release(apk)), throwsA(isA<http.ClientException>()));
     expect(dir.listSync(), isEmpty);
   });
+
+  test('a download that stalls fails after the idle timeout instead of hanging forever', () async {
+    final downloader = UpdateDownloader(
+      client: MockClient.streaming((request, _) async {
+        final stalled = StreamController<List<int>>();
+        stalled.add([1, 2, 3]);
+        return http.StreamedResponse(stalled.stream, 200, contentLength: 10);
+      }),
+      directory: dir,
+      idleTimeout: const Duration(milliseconds: 100),
+    );
+    await expectLater(downloader.download(_release(apk)), throwsA(isA<TimeoutException>()));
+    expect(dir.listSync(), isEmpty);
+  });
+
+  test('older downloads are cleaned up when a new one completes', () async {
+    File('${dir.path}/deskovky-0.0.9.apk').writeAsBytesSync([1]);
+    final downloader = UpdateDownloader(client: MockClient((_) async => http.Response.bytes(apk, 200)), directory: dir);
+    await downloader.download(_release(apk));
+    expect(dir.listSync().map((f) => f.path.split(RegExp(r'[\\/]')).last), ['deskovky-0.1.1.apk']);
+  });
 }
