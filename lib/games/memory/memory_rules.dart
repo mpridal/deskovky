@@ -357,10 +357,12 @@ class MemoryRules implements GameRules<MemoryState> {
 
   /// Seats that kept every picture in mind (no memory mistake) once the
   /// last pair is all that is left: then no more mistakes are possible.
+  /// With others it also takes at least half of the game's pairs, so a
+  /// lucky turn or two is not enough.
   static List<int> elephants(MemoryState state) => [
     if (state.cards >= elephantCards && state.pairsLeft <= 1)
       for (var s = 0; s < state.seats; s++)
-        if (state.mistakes[s] == 0 && state.turns[s] > 0) s,
+        if (state.mistakes[s] == 0 && state.turns[s] > 0 && (state.solo || state.pairsOf(s) * 2 >= state.pairs)) s,
   ];
 
   @override
