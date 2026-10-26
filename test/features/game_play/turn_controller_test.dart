@@ -117,6 +117,7 @@ void main() {
       await tester.pump();
       expect(c.session.moves, hasLength(1));
       expect(c.session.moves.single.seat, 0);
+      expect(c.session.moves.single.data['n'], anyOf(1, 2), reason: 'a legal move, not the broken one');
       expect(c.humanSeatToAct, 1);
     });
   }

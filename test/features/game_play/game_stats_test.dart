@@ -102,7 +102,9 @@ void main() {
     final tile = find.byKey(ValueKey('number$miss'));
     await tester.ensureVisible(tile);
     await tester.tap(tile);
-    await _letRecord(tester);
+    // Only the save after the miss; the slow robot (1.2 s) must not move yet.
+    await tester.pump(const Duration(milliseconds: 50));
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 200)));
     final saved = await tester.runAsync(() => GameStore(db).savedSession('sample'));
     expect(saved, isNotNull, reason: 'the game in progress was saved');
 

@@ -39,10 +39,8 @@ class _GateState extends State<_Gate> {
 
   /// A new 6–9 × 6–9 question, never the same as the last one.
   (int, int) _next([(int, int)? last]) {
-    while (true) {
-      final q = (6 + widget.random.nextInt(4), 6 + widget.random.nextInt(4));
-      if (q != last) return q;
-    }
+    final q = (6 + widget.random.nextInt(4), 6 + widget.random.nextInt(4));
+    return q == last ? (q.$1, 6 + (q.$2 - 5) % 4) : q;
   }
 
   @override
