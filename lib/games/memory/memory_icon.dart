@@ -12,7 +12,12 @@ class MemoryIcon extends StatelessWidget {
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) {
       final side = constraints.biggest.shortestSide * 0.7;
-      return Center(child: SizedBox.square(dimension: side, child: CustomPaint(painter: _MemoryIconPainter())));
+      return Center(
+        child: SizedBox.square(
+          dimension: side,
+          child: CustomPaint(painter: _MemoryIconPainter()),
+        ),
+      );
     },
   );
 }
@@ -24,10 +29,13 @@ class _MemoryIconPainter extends CustomPainter {
     final card = RRect.fromRectAndRadius(Offset.zero & size, Radius.circular(s * 0.18));
     canvas
       ..drawRRect(card, Paint()..color = AppColors.paper)
-      ..drawRRect(card, Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2
-        ..color = AppColors.wood);
+      ..drawRRect(
+        card,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2
+          ..color = AppColors.wood,
+      );
     void drawCard(Offset at, double angle, {required bool up}) {
       canvas
         ..save()
@@ -39,10 +47,13 @@ class _MemoryIconPainter extends CustomPainter {
       );
       canvas
         ..drawRRect(r, Paint()..color = up ? AppColors.paper2 : AppColors.wood)
-        ..drawRRect(r, Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 1.5
-          ..color = AppColors.walnut);
+        ..drawRRect(
+          r,
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 1.5
+            ..color = AppColors.walnut,
+        );
       if (up) {
         final star = Path();
         for (var i = 0; i < 10; i++) {

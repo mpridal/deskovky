@@ -22,5 +22,37 @@
     "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
     "license": "CC0 1.0",
     "attribution_text": "„Zástupný efekt memory.miss“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  },
+  {
+    "file": "games/memory/cards/animals/1f436.png",
+    "title": "Pexeso – obrázky „Zvířátka“ (24 × Noto Emoji)",
+    "author": "Google (Noto Emoji)",
+    "source_url": "https://github.com/googlefonts/noto-emoji/tree/main/2D/png/512",
+    "license": "Apache License 2.0",
+    "attribution_text": "Obrázky karet ve složce assets/games/memory/cards/animals/ jsou z Noto Emoji, © Google Inc., Apache License 2.0 (https://www.apache.org/licenses/LICENSE-2.0, text v assets/games/memory/NOTO_EMOJI_LICENSE.txt). Zmenšeno na 256 px."
+  },
+  {
+    "file": "games/memory/cards/food/1f34e.png",
+    "title": "Pexeso – obrázky „Ovoce a zelenina“ (24 × Noto Emoji)",
+    "author": "Google (Noto Emoji)",
+    "source_url": "https://github.com/googlefonts/noto-emoji/tree/main/2D/png/512",
+    "license": "Apache License 2.0",
+    "attribution_text": "Obrázky karet ve složce assets/games/memory/cards/food/ jsou z Noto Emoji, © Google Inc., Apache License 2.0 (https://www.apache.org/licenses/LICENSE-2.0, text v assets/games/memory/NOTO_EMOJI_LICENSE.txt). Zmenšeno na 256 px."
+  },
+  {
+    "file": "games/memory/cards/transport/1f697.png",
+    "title": "Pexeso – obrázky „Doprava“ (24 × Noto Emoji)",
+    "author": "Google (Noto Emoji)",
+    "source_url": "https://github.com/googlefonts/noto-emoji/tree/main/2D/png/512",
+    "license": "Apache License 2.0",
+    "attribution_text": "Obrázky karet ve složce assets/games/memory/cards/transport/ jsou z Noto Emoji, © Google Inc., Apache License 2.0 (https://www.apache.org/licenses/LICENSE-2.0, text v assets/games/memory/NOTO_EMOJI_LICENSE.txt). Zmenšeno na 256 px."
+  },
+  {
+    "file": "games/memory/cards/space/1f680.png",
+    "title": "Pexeso – obrázky „Vesmír“ (24 × Noto Emoji)",
+    "author": "Google (Noto Emoji)",
+    "source_url": "https://github.com/googlefonts/noto-emoji/tree/main/2D/png/512",
+    "license": "Apache License 2.0",
+    "attribution_text": "Obrázky karet ve složce assets/games/memory/cards/space/ jsou z Noto Emoji, © Google Inc., Apache License 2.0 (https://www.apache.org/licenses/LICENSE-2.0, text v assets/games/memory/NOTO_EMOJI_LICENSE.txt). Zmenšeno na 256 px."
   }
 ]
