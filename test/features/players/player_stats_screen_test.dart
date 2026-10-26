@@ -48,6 +48,7 @@ void main() {
   tearDown(() => db.close());
 
   testWidgets('shows totals, the game records and badges earned and still locked', (tester) async {
+    final handle = tester.ensureSemantics();
     final id = await _seed(tester, db);
     await _open(tester, db, id);
     expect(find.text('Statistiky: Tereza'), findsOneWidget);
@@ -58,10 +59,12 @@ void main() {
     expect(find.descendant(of: tile('statBestStreak'), matching: find.text('2')), findsOneWidget);
     await tester.scrollUntilVisible(find.text('Nejrychlejší výhra: 1:02'), 200);
     expect(find.text('Nejlepší skóre: 7'), findsOneWidget);
+    expect(find.bySemanticsLabel(RegExp('Nejlepší hodnocení: 3 ze 3 hvězd')), findsOneWidget);
     await tester.scrollUntilVisible(find.byKey(const ValueKey('badge_first_win')), 200);
     expect(find.byKey(const ValueKey('badge_first_win_earned')), findsOneWidget);
     await tester.scrollUntilVisible(find.byKey(const ValueKey('badge_streak5')), 200);
     expect(find.byKey(const ValueKey('badge_streak5_earned')), findsNothing);
+    handle.dispose();
   });
 
   testWidgets('players list leads to statistics', (tester) async {

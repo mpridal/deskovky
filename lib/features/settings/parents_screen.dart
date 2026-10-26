@@ -20,16 +20,13 @@ import '../../ui_kit/tokens/app_typography.dart';
 /// Asks a times-table question that children of the target age cannot yet
 /// answer (spec 5.6 "Rodičovská zóna"); true when answered right.
 Future<bool> showParentsGate(BuildContext context, {Random? random}) async {
-  final r = random ?? Random();
-  final a = 6 + r.nextInt(4), b = 6 + r.nextInt(4);
-  return await showDialog<bool>(context: context, builder: (_) => _Gate(a: a, b: b)) ?? false;
+  return await showDialog<bool>(context: context, builder: (_) => _Gate(random: random ?? Random())) ?? false;
 }
 
 class _Gate extends StatefulWidget {
-  const _Gate({required this.a, required this.b});
+  const _Gate({required this.random});
 
-  final int a;
-  final int b;
+  final Random random;
 
   @override
   State<_Gate> createState() => _GateState();
@@ -38,6 +35,15 @@ class _Gate extends StatefulWidget {
 class _GateState extends State<_Gate> {
   final _answer = TextEditingController();
   bool _wrong = false;
+  late (int, int) _question = _next();
+
+  /// A new 6–9 × 6–9 question, never the same as the last one.
+  (int, int) _next([(int, int)? last]) {
+    while (true) {
+      final q = (6 + widget.random.nextInt(4), 6 + widget.random.nextInt(4));
+      if (q != last) return q;
+    }
+  }
 
   @override
   void dispose() {
@@ -46,10 +52,15 @@ class _GateState extends State<_Gate> {
   }
 
   void _check() {
-    if (int.tryParse(_answer.text.trim()) == widget.a * widget.b) {
+    if (int.tryParse(_answer.text.trim()) == _question.$1 * _question.$2) {
       Navigator.of(context).pop(true);
     } else {
-      setState(() => _wrong = true);
+      // A new question each time: guessing through ten answers stops working.
+      setState(() {
+        _wrong = true;
+        _question = _next(_question);
+        _answer.clear();
+      });
     }
   }
 
@@ -68,7 +79,7 @@ class _GateState extends State<_Gate> {
             Text(l10n.parentsGateTitle, style: AppTypography.h2(color: AppColors.ink)),
             const SizedBox(height: 8),
             Text(
-              l10n.parentsGateQuestion(widget.a, widget.b),
+              l10n.parentsGateQuestion(_question.$1, _question.$2),
               key: const ValueKey('gateQuestion'),
               style: AppTypography.body(color: AppColors.ink),
             ),

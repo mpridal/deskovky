@@ -42,6 +42,15 @@ void main() {
     await _answer(tester, right: false);
     expect(find.text('To není správně.'), findsOneWidget);
     expect(find.byType(ParentsScreen), findsNothing);
+    expect(find.byType(TextField), findsOneWidget);
+    expect(tester.widget<TextField>(find.byType(TextField)).controller!.text, isEmpty, reason: 'answer cleared');
+  });
+
+  testWidgets('a wrong answer asks a new question', (tester) async {
+    await _openGate(tester, db);
+    final before = tester.widget<Text>(find.byKey(const ValueKey('gateQuestion'))).data;
+    await _answer(tester, right: false);
+    expect(tester.widget<Text>(find.byKey(const ValueKey('gateQuestion'))).data, isNot(before));
   });
 
   testWidgets('a parent gives a player 50 points; it is in the ledger as a gift', (tester) async {

@@ -122,9 +122,21 @@ class PlayerStatsScreen extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            '${_gameTitle(l10n, gameId)}  ${'★' * best.bestStars}${'☆' * (3 - best.bestStars)}',
-                            style: AppTypography.button(color: AppColors.ink),
+                          Row(
+                            children: [
+                              Flexible(
+                                child: Text(_gameTitle(l10n, gameId), style: AppTypography.button(color: AppColors.ink)),
+                              ),
+                              const SizedBox(width: 8),
+                              Semantics(
+                                label: l10n.homeBestStars(best.bestStars),
+                                excludeSemantics: true,
+                                child: Text(
+                                  '${'★' * best.bestStars}${'☆' * (3 - best.bestStars)}',
+                                  style: AppTypography.button(color: AppColors.ink),
+                                ),
+                              ),
+                            ],
                           ),
                           Text(l10n.statsBestScore(best.bestScore), style: AppTypography.caption(color: AppColors.ink)),
                           if (best.fastestWin != null)
