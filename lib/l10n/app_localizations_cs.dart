@@ -723,4 +723,36 @@ class AppLocalizationsCs extends AppLocalizations {
   String levelUp(int level) {
     return 'Nová úroveň $level!';
   }
+
+  @override
+  String homePointsBalance(int points) {
+    return 'Body: $points';
+  }
+
+  @override
+  String levelShort(int level) {
+    return 'Úr. $level';
+  }
+
+  @override
+  String levelLabel(int level) {
+    return 'Úroveň $level';
+  }
+
+  @override
+  String levelNext(int current, int needed) {
+    return '$current / $needed ● do další úrovně';
+  }
+
+  @override
+  String get levelMax => 'Nejvyšší úroveň!';
+
+  @override
+  String get statsBalance => 'Zůstatek';
+
+  @override
+  String get statsTotalEarned => 'Celkem získáno';
+
+  @override
+  String get statsPointsHistory => 'Historie bodů';
 }

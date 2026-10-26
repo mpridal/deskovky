@@ -20,6 +20,7 @@ import '../../ui_kit/tokens/app_colors.dart';
 import '../../ui_kit/tokens/app_typography.dart';
 import '../game_play/game_outcome.dart';
 import 'confetti.dart';
+import 'points_labels.dart';
 
 /// Results of a game (spec 5.9, mockup "Výsledky"): winner, ranking with
 /// scores and stars, play again / change settings / home. The points
@@ -244,20 +245,8 @@ class _Points extends StatelessWidget {
       return '';
     }
 
-    String label(PointsLine line) => switch (line.reason) {
-      PointsReason.win => l10n.pointsWin,
-      PointsReason.draw => l10n.pointsDraw,
-      PointsReason.second => l10n.pointsSecond,
-      PointsReason.participation => l10n.pointsParticipation,
-      PointsReason.stars => l10n.pointsStars(line.count ?? 0),
-      PointsReason.streak => l10n.pointsStreak(line.count ?? 0),
-      PointsReason.firstToday => l10n.pointsFirstToday,
-      PointsReason.record => l10n.pointsRecord,
-      PointsReason.badge => l10n.pointsBadge(_badgeTitle(context, line.badgeId)),
-      PointsReason.capped => l10n.pointsCapped,
-      PointsReason.gift => l10n.pointsGift,
-      PointsReason.purchase => l10n.pointsPurchase,
-    };
+    String label(PointsLine line) =>
+        pointsLabel(l10n, line.reason, detail: line.badgeId ?? line.count?.toString());
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -304,11 +293,5 @@ class _Points extends StatelessWidget {
           ),
       ],
     );
-  }
-
-  String _badgeTitle(BuildContext context, String? id) {
-    final l10n = AppLocalizations.of(context);
-    final badge = id == null ? null : badgeById(id);
-    return badge == null ? (id ?? '') : badgeText(l10n, badge.titleKey);
   }
 }

@@ -1,12 +1,14 @@
 import 'package:deskovky/core/avatar/avatar_spec.dart';
 import 'package:deskovky/core/db/app_database.dart';
 import 'package:deskovky/core/players/player_repository.dart';
+import 'package:deskovky/core/points/points_repository.dart';
 import 'package:deskovky/core/settings/settings_repository.dart';
 import 'package:deskovky/core/stats/match_record.dart';
 import 'package:deskovky/core/stats/stats_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../helpers/app_fonts.dart';
 import '../../helpers/pump_app.dart';
 import '../../helpers/test_database.dart';
 
@@ -65,5 +67,31 @@ void main() {
     expect(find.descendant(of: panel, matching: rows), findsNWidgets(2));
     expect(find.descendant(of: panel, matching: find.text('První výhra')), findsOneWidget);
     expect(find.descendant(of: panel, matching: find.textContaining('Kuba')), findsWidgets);
+  });
+
+  testWidgets("the top bar shows the active player's points and level", (tester) async {
+    final (t, _) = await _seed(tester, db);
+    await tester.runAsync(() async {
+      await SettingsRepository(db).setActivePlayerId(t);
+      await PointsRepository(db).gift(t, 74);
+    });
+    await pumpApp(tester, size: const Size(412, 915), db: db);
+    expect(find.text('● 74'), findsOneWidget);
+    expect(find.text('Úr. 1'), findsOneWidget);
+    expect(find.bySemanticsLabel('Body: 74'), findsOneWidget);
+  });
+
+  group('fit', () {
+    setUpAll(loadAppFonts);
+    testWidgets('the top bar with points fits 360 dp at 130 % with a long name in es', (tester) async {
+      await tester.runAsync(() async {
+        final p = await PlayerRepository(db).create(name: 'Maximiliánek123', avatar: AvatarSpec.defaults);
+        await SettingsRepository(db).setActivePlayerId(p.id);
+        await PointsRepository(db).gift(p.id, 12345);
+      });
+      await pumpApp(tester, size: const Size(360, 740), db: db, locale: const Locale('es'), textScale: 1.3);
+      expect(tester.takeException(), isNull);
+      expect(find.text('● 12345'), findsOneWidget);
+    });
   });
 }

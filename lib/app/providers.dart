@@ -125,3 +125,13 @@ final statsNowProvider = StreamProvider<DateTime>((ref) {
 
 /// Every points movement of every player (leaderboards, balances).
 final pointsLedgerProvider = StreamProvider<List<PointsEntry>>((ref) => ref.watch(pointsRepositoryProvider).watchAll());
+
+/// Balance and total earned per player, from the ledger (spec 5.6).
+final pointsSummaryProvider = Provider<Map<int, ({int balance, int earned})>>((ref) {
+  final totals = <int, ({int balance, int earned})>{};
+  for (final e in ref.watch(pointsLedgerProvider).value ?? const <PointsEntry>[]) {
+    final t = totals[e.playerId] ?? (balance: 0, earned: 0);
+    totals[e.playerId] = (balance: t.balance + e.amount, earned: t.earned + (e.amount > 0 ? e.amount : 0));
+  }
+  return totals;
+});

@@ -202,5 +202,13 @@
   "pointsGift": "Dárek od rodiče",
   "pointsPurchase": "Nákup",
   "pointsTotal": "Celkem +{points} ●",
-  "levelUp": "Nová úroveň {level}!"
+  "levelUp": "Nová úroveň {level}!",
+  "homePointsBalance": "Body: {points}",
+  "levelShort": "Úr. {level}",
+  "levelLabel": "Úroveň {level}",
+  "levelNext": "{current} / {needed} ● do další úrovně",
+  "levelMax": "Nejvyšší úroveň!",
+  "statsBalance": "Zůstatek",
+  "statsTotalEarned": "Celkem získáno",
+  "statsPointsHistory": "Historie bodů"
 }

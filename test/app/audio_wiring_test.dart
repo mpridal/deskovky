@@ -9,6 +9,7 @@ import 'package:deskovky/core/settings/settings_repository.dart';
 import 'package:deskovky/features/game_play/game_outcome.dart';
 import 'package:deskovky/features/game_play/game_screen.dart';
 import 'package:deskovky/features/game_play/seat_identity.dart';
+import 'package:deskovky/games/_sample/sample_rules.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -99,7 +100,9 @@ void main() {
     _router(tester).push('/play/sample', extra: _config([HumanSeat(t.id), HumanSeat(k.id)]));
     await _settle(tester);
     audio.sfx.clear();
-    final tile = find.byKey(const ValueKey('number1'));
+    // A miss on purpose: hitting the secret would end the game (seeds vary).
+    final secret = (tester.state<GameScreenState>(find.byType(GameScreen)).debugSession!.state as SampleState).secret;
+    final tile = find.byKey(ValueKey('number${secret == 1 ? 2 : 1}'));
     await tester.ensureVisible(tile);
     await tester.tap(tile);
     await tester.pump(const Duration(milliseconds: 50));

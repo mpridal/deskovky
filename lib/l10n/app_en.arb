@@ -443,5 +443,44 @@
         "type": "int"
       }
     }
-  }
+  },
+  "homePointsBalance": "Points: {points}",
+  "@homePointsBalance": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "levelShort": "Lv {level}",
+  "@levelShort": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "levelLabel": "Level {level}",
+  "@levelLabel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "levelNext": "{current} / {needed} ● to the next level",
+  "@levelNext": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "needed": {
+        "type": "int"
+      }
+    }
+  },
+  "levelMax": "Top level!",
+  "statsBalance": "Balance",
+  "statsTotalEarned": "Total earned",
+  "statsPointsHistory": "Points history"
 }

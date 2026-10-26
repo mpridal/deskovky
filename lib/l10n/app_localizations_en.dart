@@ -713,4 +713,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String levelUp(int level) {
     return 'New level $level!';
   }
+
+  @override
+  String homePointsBalance(int points) {
+    return 'Points: $points';
+  }
+
+  @override
+  String levelShort(int level) {
+    return 'Lv $level';
+  }
+
+  @override
+  String levelLabel(int level) {
+    return 'Level $level';
+  }
+
+  @override
+  String levelNext(int current, int needed) {
+    return '$current / $needed ● to the next level';
+  }
+
+  @override
+  String get levelMax => 'Top level!';
+
+  @override
+  String get statsBalance => 'Balance';
+
+  @override
+  String get statsTotalEarned => 'Total earned';
+
+  @override
+  String get statsPointsHistory => 'Points history';
 }

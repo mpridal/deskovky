@@ -202,5 +202,13 @@
   "pointsGift": "Regalo de un padre",
   "pointsPurchase": "Compra",
   "pointsTotal": "Total +{points} ●",
-  "levelUp": "¡Nuevo nivel {level}!"
+  "levelUp": "¡Nuevo nivel {level}!",
+  "homePointsBalance": "Puntos: {points}",
+  "levelShort": "Nv. {level}",
+  "levelLabel": "Nivel {level}",
+  "levelNext": "{current} / {needed} ● para el siguiente nivel",
+  "levelMax": "¡Nivel máximo!",
+  "statsBalance": "Saldo",
+  "statsTotalEarned": "Total ganado",
+  "statsPointsHistory": "Historial de puntos"
 }

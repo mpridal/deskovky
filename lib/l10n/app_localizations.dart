@@ -1317,6 +1317,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New level {level}!'**
   String levelUp(int level);
+
+  /// No description provided for @homePointsBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Points: {points}'**
+  String homePointsBalance(int points);
+
+  /// No description provided for @levelShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Lv {level}'**
+  String levelShort(int level);
+
+  /// No description provided for @levelLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Level {level}'**
+  String levelLabel(int level);
+
+  /// No description provided for @levelNext.
+  ///
+  /// In en, this message translates to:
+  /// **'{current} / {needed} ● to the next level'**
+  String levelNext(int current, int needed);
+
+  /// No description provided for @levelMax.
+  ///
+  /// In en, this message translates to:
+  /// **'Top level!'**
+  String get levelMax;
+
+  /// No description provided for @statsBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance'**
+  String get statsBalance;
+
+  /// No description provided for @statsTotalEarned.
+  ///
+  /// In en, this message translates to:
+  /// **'Total earned'**
+  String get statsTotalEarned;
+
+  /// No description provided for @statsPointsHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Points history'**
+  String get statsPointsHistory;
 }
 
 class _AppLocalizationsDelegate
