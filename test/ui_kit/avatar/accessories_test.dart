@@ -31,8 +31,8 @@ void main() {
     expect(accessoryArts['magic_wand']!.slot, AccessorySlot.hand);
   });
 
-  testWidgets('every mockup item draws on every face and hair style at 28, 64 and 160 dp', (tester) async {
-    for (final id in _mockupItems) {
+  testWidgets('every item draws on every face and hair style at 28, 64 and 160 dp', (tester) async {
+    for (final id in accessoryArts.keys) {
       for (final face in FaceShape.values) {
         for (final hair in HairStyle.values) {
           for (final size in [28.0, 64.0, 160.0]) {

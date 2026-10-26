@@ -2,9 +2,12 @@ import 'dart:math';
 import 'dart:ui';
 
 import '../../../core/avatar/accessory_slot.dart';
+import 'effect_arts.dart';
 import 'face_arts.dart';
+import 'frame_arts.dart';
 import 'hand_arts.dart';
 import 'head_arts.dart';
+import 'pet_arts.dart';
 
 export '../../../core/avatar/accessory_slot.dart';
 
@@ -40,7 +43,14 @@ class AccessoryArt {
 }
 
 /// Art for every catalog item id.
-const Map<String, AccessoryArt> accessoryArts = {...headArts, ...faceArts, ...handArts};
+const Map<String, AccessoryArt> accessoryArts = {
+  ...headArts,
+  ...faceArts,
+  ...handArts,
+  ...petArts,
+  ...frameArts,
+  ...effectArts,
+};
 
 /// Shared colours and helpers for the arts.
 abstract final class Art {
