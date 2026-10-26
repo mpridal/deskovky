@@ -37,6 +37,7 @@ class UpdateState {
     this.progress,
     this.failed = false,
     this.manual,
+    this.preparing = false,
   });
 
   final ReleaseInfo? release;
@@ -48,6 +49,9 @@ class UpdateState {
   final bool failed;
   final ManualCheck? manual;
 
+  /// Tapped "Aktualizovat", waiting for Android and the download to start.
+  final bool preparing;
+
   /// The home card is shown.
   bool get offered => release != null && (!dismissed || mandatory);
 
@@ -58,6 +62,7 @@ class UpdateState {
     double? Function()? progress,
     bool? failed,
     ManualCheck? Function()? manual,
+    bool? preparing,
   }) => UpdateState(
     release: release ?? this.release,
     mandatory: mandatory ?? this.mandatory,
@@ -65,6 +70,7 @@ class UpdateState {
     progress: progress == null ? this.progress : progress(),
     failed: failed ?? this.failed,
     manual: manual == null ? this.manual : manual(),
+    preparing: preparing ?? this.preparing,
   );
 }
 
@@ -127,10 +133,15 @@ class UpdateController extends Notifier<UpdateState> {
     if (release == null || _busy) return true;
     if (handedOff != null && DateTime.now().difference(handedOff) < const Duration(seconds: 5)) return true;
     _busy = true;
+    // Visible at once: the tap was heard, even before Android answers.
+    state = state.copyWith(preparing: true, failed: false);
     final installer = ref.read(apkInstallerProvider);
     try {
-      if (!await installer.canInstall()) return false;
-      state = state.copyWith(progress: () => 0, failed: false);
+      if (!await installer.canInstall()) {
+        state = state.copyWith(preparing: false);
+        return false;
+      }
+      state = state.copyWith(progress: () => 0, preparing: false);
       final File apk = await ref
           .read(updateDownloaderProvider)
           .download(release, onProgress: (p) => state = state.copyWith(progress: () => p));
@@ -139,7 +150,7 @@ class UpdateController extends Notifier<UpdateState> {
       state = state.copyWith(progress: () => null);
     } catch (e) {
       debugPrint('UpdateController: update failed: $e');
-      state = state.copyWith(progress: () => null, failed: true);
+      state = state.copyWith(progress: () => null, failed: true, preparing: false);
     } finally {
       _busy = false;
     }

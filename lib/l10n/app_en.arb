@@ -557,5 +557,6 @@
   "settingsCheckNow": "Check for updates now",
   "settingsAutoUpdate": "Check automatically",
   "updateUpToDate": "You have the newest version.",
-  "updateCheckFailed": "The check failed – is the device online?"
+  "updateCheckFailed": "The check failed – is the device online?",
+  "updatePreparing": "Preparing the update…"
 }

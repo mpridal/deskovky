@@ -834,4 +834,7 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get updateCheckFailed =>
       'La búsqueda falló – ¿está el dispositivo conectado?';
+
+  @override
+  String get updatePreparing => 'Preparando la actualización…';
 }

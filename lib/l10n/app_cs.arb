@@ -234,5 +234,6 @@
   "settingsCheckNow": "Zkontrolovat aktualizace teď",
   "settingsAutoUpdate": "Automaticky kontrolovat",
   "updateUpToDate": "Máš nejnovější verzi.",
-  "updateCheckFailed": "Kontrola se nepovedla – je zařízení připojené k internetu?"
+  "updateCheckFailed": "Kontrola se nepovedla – je zařízení připojené k internetu?",
+  "updatePreparing": "Připravuji aktualizaci…"
 }

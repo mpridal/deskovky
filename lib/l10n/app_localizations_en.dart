@@ -830,4 +830,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get updateCheckFailed => 'The check failed – is the device online?';
+
+  @override
+  String get updatePreparing => 'Preparing the update…';
 }

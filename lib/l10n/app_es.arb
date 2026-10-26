@@ -234,5 +234,6 @@
   "settingsCheckNow": "Buscar actualizaciones ahora",
   "settingsAutoUpdate": "Buscar automáticamente",
   "updateUpToDate": "Tienes la versión más nueva.",
-  "updateCheckFailed": "La búsqueda falló – ¿está el dispositivo conectado?"
+  "updateCheckFailed": "La búsqueda falló – ¿está el dispositivo conectado?",
+  "updatePreparing": "Preparando la actualización…"
 }

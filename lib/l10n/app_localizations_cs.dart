@@ -842,4 +842,7 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get updateCheckFailed =>
       'Kontrola se nepovedla – je zařízení připojené k internetu?';
+
+  @override
+  String get updatePreparing => 'Připravuji aktualizaci…';
 }

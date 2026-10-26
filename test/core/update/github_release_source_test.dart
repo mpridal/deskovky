@@ -45,4 +45,15 @@ void main() {
     final source = GitHubReleaseSource(client: MockClient((_) async => http.Response('rate limited', 403)));
     expect(source.latest(), throwsA(isA<http.ClientException>()));
   });
+
+  test('latest.json is read as UTF-8 even without a charset header (GitHub asset downloads)', () async {
+    final czech = {...latest, 'notes_cs': 'Zkouška aktualizace: hráči a body zůstávají.'};
+    final client = MockClient((request) async {
+      final body = request.url.path == '/x/latest.json' ? jsonEncode(czech) : jsonEncode(release);
+      // Raw UTF-8 bytes, content type without a charset, as objects.githubusercontent.com sends it.
+      return http.Response.bytes(utf8.encode(body), 200, headers: {'content-type': 'application/octet-stream'});
+    });
+    final info = await GitHubReleaseSource(client: client).latest();
+    expect(info!.notesFor('cs'), 'Zkouška aktualizace: hráči a body zůstávají.');
+  });
 }

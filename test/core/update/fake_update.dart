@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:deskovky/core/update/apk_installer.dart';
@@ -28,7 +29,10 @@ class FakeReleaseSource implements ReleaseSource {
 }
 
 class FakeApkInstaller implements ApkInstaller {
-  FakeApkInstaller({this.version = '0.1.0', this.allowed = true});
+  FakeApkInstaller({this.version = '0.1.0', this.allowed = true, this.canInstallGate});
+
+  /// When set, `canInstall` waits for it (a slow platform answer).
+  Completer<void>? canInstallGate;
 
   final String version;
   bool allowed;
@@ -39,7 +43,10 @@ class FakeApkInstaller implements ApkInstaller {
   Future<String> appVersion() async => version;
 
   @override
-  Future<bool> canInstall() async => allowed;
+  Future<bool> canInstall() async {
+    await canInstallGate?.future;
+    return allowed;
+  }
 
   @override
   Future<void> openInstallSettings() async => settingsOpened++;

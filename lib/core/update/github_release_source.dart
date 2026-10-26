@@ -34,7 +34,9 @@ class GitHubReleaseSource implements ReleaseSource {
     final response = await _client.get(url, headers: const {'Accept': 'application/vnd.github+json'});
     if (response.statusCode == 404) return null;
     if (response.statusCode != 200) throw http.ClientException('HTTP ${response.statusCode}', url);
-    final body = jsonDecode(response.body);
+    // Always UTF-8: asset downloads come without a charset, and `body` would
+    // then decode as Latin-1 ("ZkouÅ¡ka").
+    final body = jsonDecode(utf8.decode(response.bodyBytes));
     return body is Map<String, Object?> ? body : null;
   }
 }

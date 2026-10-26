@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:deskovky/core/db/app_database.dart';
 import 'package:deskovky/core/settings/settings_repository.dart';
 import 'package:flutter/material.dart';
@@ -67,6 +69,32 @@ void main() {
     await settle(tester);
     expect(downloader.downloads, 1);
     expect(installer.installed.single, endsWith('deskovky-0.1.1.apk'));
+  });
+
+  testWidgets('a tap shows at once that the update is being prepared', (tester) async {
+    final gate = Completer<void>();
+    final installer = FakeApkInstaller(canInstallGate: gate);
+    await start(tester, releases: FakeReleaseSource(fakeRelease('0.1.1')), installer: installer, downloader: FakeUpdateDownloader());
+    await tester.tap(find.text('Aktualizovat'));
+    await tester.pump();
+    expect(find.text('Připravuji aktualizaci…'), findsOneWidget);
+    expect(find.text('Aktualizovat'), findsNothing);
+    gate.complete();
+    await settle(tester);
+    expect(installer.installed, hasLength(1));
+  });
+
+  testWidgets('if the platform fails, the card says so instead of doing nothing', (tester) async {
+    await start(
+      tester,
+      releases: FakeReleaseSource(fakeRelease('0.1.1')),
+      installer: _ThrowingInstaller(),
+      downloader: FakeUpdateDownloader(),
+    );
+    await tester.tap(find.text('Aktualizovat'));
+    await settle(tester);
+    expect(find.text('Stažení se nepovedlo. Zkus to později.'), findsOneWidget);
+    expect(find.text('Aktualizovat'), findsOneWidget, reason: 'can try again');
   });
 
   testWidgets('a fast double tap on "Aktualizovat" installs only once', (tester) async {
@@ -179,4 +207,9 @@ void main() {
       });
     }
   });
+}
+
+class _ThrowingInstaller extends FakeApkInstaller {
+  @override
+  Future<bool> canInstall() async => throw Exception('channel broken');
 }
