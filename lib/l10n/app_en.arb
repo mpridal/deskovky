@@ -749,5 +749,6 @@
   "shopHooray": "Hooray!",
   "shopNotEnough": "You don't have enough points for that now.",
   "shopFailed": "That didn't work. Try again.",
-  "updatePreparing": "Preparing the update…"
+  "updatePreparing": "Preparing the update…",
+  "setupDifficultySolo": "Difficulty"
 }

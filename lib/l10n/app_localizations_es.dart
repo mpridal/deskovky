@@ -1098,4 +1098,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get updatePreparing => 'Preparando la actualización…';
+
+  @override
+  String get setupDifficultySolo => 'Dificultad';
 }

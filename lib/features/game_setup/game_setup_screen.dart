@@ -246,13 +246,15 @@ class _GameSetupScreenState extends ConsumerState<GameSetupScreen> {
                     ),
                   ),
                 ),
-              if (config.robots > 0 && module.supportsAi) ...[
-                _label(l10n.setupDifficulty),
+              if (module.difficultyWithoutRobots || (config.robots > 0 && module.supportsAi)) ...[
+                _label(config.robots > 0 ? l10n.setupDifficulty : l10n.setupDifficultySolo),
                 SegmentedControl<Difficulty>(
                   segments: [for (final d in module.difficulties) (d, difficultyLabel(l10n, d))],
                   selected: config.difficulty,
                   onChanged: (d) => _update(config.copyWith(difficulty: d)),
                 ),
+              ],
+              if (config.robots > 0 && module.supportsAi) ...[
                 _label(l10n.setupSpeed),
                 SegmentedControl<RobotSpeed>(
                   segments: [

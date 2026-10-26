@@ -66,6 +66,10 @@ abstract class GameModule<S> {
   int get maxPlayers;
   bool get supportsAi;
   List<Difficulty> get difficulties => Difficulty.values;
+
+  /// True when difficulty matters without robots too (Miny: board size,
+  /// Pexeso solo: preview and swaps); the setup then always offers it.
+  bool get difficultyWithoutRobots => false;
   List<GameOption> get options => const [];
 
   /// Scales the base points of a game (spec 5.6), 0.5–2.

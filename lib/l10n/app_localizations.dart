@@ -1983,6 +1983,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Preparing the update…'**
   String get updatePreparing;
+
+  /// No description provided for @setupDifficultySolo.
+  ///
+  /// In en, this message translates to:
+  /// **'Difficulty'**
+  String get setupDifficultySolo;
 }
 
 class _AppLocalizationsDelegate

@@ -36,6 +36,8 @@ class MinesweeperModule extends GameModule<Map<String, Object?>> {
   bool get supportsSaveResume => true;
   @override
   bool get available => false;
+  @override
+  bool get difficultyWithoutRobots => true;
 
   @override
   Map<String, String> get sfx => const {

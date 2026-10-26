@@ -313,5 +313,6 @@
   "shopHooray": "Hurá!",
   "shopNotEnough": "Na to teď nemáš dost bodů.",
   "shopFailed": "To teď nejde. Zkus to znovu.",
-  "updatePreparing": "Připravuji aktualizaci…"
+  "updatePreparing": "Připravuji aktualizaci…",
+  "setupDifficultySolo": "Obtížnost"
 }

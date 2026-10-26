@@ -313,5 +313,6 @@
   "shopHooray": "¡Bien!",
   "shopNotEnough": "Ahora no tienes puntos suficientes.",
   "shopFailed": "No ha funcionado. Inténtalo otra vez.",
-  "updatePreparing": "Preparando la actualización…"
+  "updatePreparing": "Preparando la actualización…",
+  "setupDifficultySolo": "Dificultad"
 }

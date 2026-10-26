@@ -1106,4 +1106,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get updatePreparing => 'Připravuji aktualizaci…';
+
+  @override
+  String get setupDifficultySolo => 'Obtížnost';
 }

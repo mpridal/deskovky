@@ -1,3 +1,4 @@
+import 'package:deskovky/app/providers.dart';
 import 'package:deskovky/core/avatar/avatar_spec.dart';
 import 'package:deskovky/core/db/app_database.dart';
 import 'package:deskovky/core/game/difficulty.dart';
@@ -43,6 +44,27 @@ void main() {
   late AppDatabase db;
   setUp(() => db = testDatabase());
   tearDown(() => db.close());
+
+  testWidgets('a solo game whose difficulty is not about robots still offers it (Miny: board size)', (tester) async {
+    final ids = await _players(tester, db, ['Kuba']);
+    await tester.runAsync(
+      () => GameStore(db).saveLastConfig(
+        GameConfig(
+          gameId: 'minesweeper',
+          seats: [HumanSeat(ids.first)],
+          difficulty: Difficulty.hard,
+          robotSpeed: RobotSpeed.normal,
+          options: const {},
+        ),
+      ),
+    );
+    await pumpApp(tester, size: const Size(412, 915), db: db, disableAnimations: true, overrides: [startGameProvider.overrideWithValue('minesweeper')]);
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+    await tester.pumpAndSettle();
+    await _scrollTo(tester, find.text('Obtížnost'));
+    expect(find.text('Obtížnost'), findsOneWidget);
+    expect(find.text('Rychlost robotů'), findsNothing, reason: 'no robots, no robot speed');
+  });
 
   testWidgets('defaults: the active player and robot Čipík', (tester) async {
     await _players(tester, db, ['Tereza']);
