@@ -12,7 +12,12 @@ class MinesweeperIcon extends StatelessWidget {
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) {
       final side = constraints.biggest.shortestSide * 0.7;
-      return Center(child: SizedBox.square(dimension: side, child: CustomPaint(painter: _MinesweeperIconPainter())));
+      return Center(
+        child: SizedBox.square(
+          dimension: side,
+          child: CustomPaint(painter: _MinesweeperIconPainter()),
+        ),
+      );
     },
   );
 }
@@ -24,10 +29,13 @@ class _MinesweeperIconPainter extends CustomPainter {
     final card = RRect.fromRectAndRadius(Offset.zero & size, Radius.circular(s * 0.18));
     canvas
       ..drawRRect(card, Paint()..color = AppColors.paper)
-      ..drawRRect(card, Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2
-        ..color = AppColors.wood);
+      ..drawRRect(
+        card,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2
+          ..color = AppColors.wood,
+      );
     final tile = s * 0.36;
     for (var r = 0; r < 2; r++) {
       for (var c = 0; c < 2; c++) {
@@ -48,9 +56,13 @@ class _MinesweeperIconPainter extends CustomPainter {
     number.paint(canvas, Offset(s * 0.3, s * 0.68) - Offset(number.width / 2, number.height / 2));
     final pole = Offset(s * 0.68, s * 0.2);
     canvas
-      ..drawLine(pole, pole + Offset(0, s * 0.26), Paint()
-        ..color = AppColors.ink
-        ..strokeWidth = s * 0.03)
+      ..drawLine(
+        pole,
+        pole + Offset(0, s * 0.26),
+        Paint()
+          ..color = AppColors.ink
+          ..strokeWidth = s * 0.03,
+      )
       ..drawPath(
         Path()
           ..moveTo(pole.dx, pole.dy)
