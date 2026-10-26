@@ -1046,4 +1046,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String shopPlayerLevel(String name, int level) {
     return '$name · Level $level';
   }
+
+  @override
+  String get wardrobeTitle => 'Wardrobe';
+
+  @override
+  String get wardrobeEmpty => 'Nothing here yet. Buy upgrades in the shop.';
+
+  @override
+  String get wardrobeToShop => 'To the shop';
+
+  @override
+  String wardrobeColour(String name) {
+    return 'Colour: $name';
+  }
+
+  @override
+  String get colourGold => 'gold';
+
+  @override
+  String get colourSilver => 'silver';
+
+  @override
+  String get colourRed => 'red';
+
+  @override
+  String get colourBlue => 'blue';
+
+  @override
+  String get colourGreen => 'green';
+
+  @override
+  String get colourYellow => 'yellow';
+
+  @override
+  String get colourBrown => 'brown';
 }

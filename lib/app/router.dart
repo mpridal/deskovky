@@ -14,6 +14,7 @@ import '../features/results/results_screen.dart';
 import '../features/players/profile_editor_route.dart';
 import '../features/settings/credits_screen.dart';
 import '../features/shop/shop_screen.dart';
+import '../features/wardrobe/wardrobe_screen.dart';
 import '../features/settings/parents_screen.dart';
 import '../features/settings/settings_screen.dart';
 import '../features/settings/ui_kit_catalog_screen.dart';
@@ -67,6 +68,11 @@ GoRouter buildRouter() {
                     path: ':id/shop',
                     parentNavigatorKey: rootKey,
                     builder: (_, state) => ShopScreen(playerId: int.tryParse(state.pathParameters['id'] ?? '') ?? -1),
+                  ),
+                  GoRoute(
+                    path: ':id/wardrobe',
+                    parentNavigatorKey: rootKey,
+                    builder: (_, state) => WardrobeScreen(playerId: int.tryParse(state.pathParameters['id'] ?? '') ?? -1),
                   ),
                   GoRoute(
                     path: ':id/stats',

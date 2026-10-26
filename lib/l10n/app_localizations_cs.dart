@@ -1057,4 +1057,39 @@ class AppLocalizationsCs extends AppLocalizations {
   String shopPlayerLevel(String name, int level) {
     return '$name · Úroveň $level';
   }
+
+  @override
+  String get wardrobeTitle => 'Šatník';
+
+  @override
+  String get wardrobeEmpty => 'Zatím tu nic není. Vylepšení koupíš v obchodě.';
+
+  @override
+  String get wardrobeToShop => 'Do obchodu';
+
+  @override
+  String wardrobeColour(String name) {
+    return 'Barva: $name';
+  }
+
+  @override
+  String get colourGold => 'zlatá';
+
+  @override
+  String get colourSilver => 'stříbrná';
+
+  @override
+  String get colourRed => 'červená';
+
+  @override
+  String get colourBlue => 'modrá';
+
+  @override
+  String get colourGreen => 'zelená';
+
+  @override
+  String get colourYellow => 'žlutá';
+
+  @override
+  String get colourBrown => 'hnědá';
 }

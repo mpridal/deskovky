@@ -1905,6 +1905,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name} · Level {level}'**
   String shopPlayerLevel(String name, int level);
+
+  /// No description provided for @wardrobeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Wardrobe'**
+  String get wardrobeTitle;
+
+  /// No description provided for @wardrobeEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing here yet. Buy upgrades in the shop.'**
+  String get wardrobeEmpty;
+
+  /// No description provided for @wardrobeToShop.
+  ///
+  /// In en, this message translates to:
+  /// **'To the shop'**
+  String get wardrobeToShop;
+
+  /// No description provided for @wardrobeColour.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour: {name}'**
+  String wardrobeColour(String name);
+
+  /// No description provided for @colourGold.
+  ///
+  /// In en, this message translates to:
+  /// **'gold'**
+  String get colourGold;
+
+  /// No description provided for @colourSilver.
+  ///
+  /// In en, this message translates to:
+  /// **'silver'**
+  String get colourSilver;
+
+  /// No description provided for @colourRed.
+  ///
+  /// In en, this message translates to:
+  /// **'red'**
+  String get colourRed;
+
+  /// No description provided for @colourBlue.
+  ///
+  /// In en, this message translates to:
+  /// **'blue'**
+  String get colourBlue;
+
+  /// No description provided for @colourGreen.
+  ///
+  /// In en, this message translates to:
+  /// **'green'**
+  String get colourGreen;
+
+  /// No description provided for @colourYellow.
+  ///
+  /// In en, this message translates to:
+  /// **'yellow'**
+  String get colourYellow;
+
+  /// No description provided for @colourBrown.
+  ///
+  /// In en, this message translates to:
+  /// **'brown'**
+  String get colourBrown;
 }
 
 class _AppLocalizationsDelegate

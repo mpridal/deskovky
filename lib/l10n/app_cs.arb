@@ -300,5 +300,16 @@
   "shopUnequip": "Sundat",
   "shopNotNow": "Teď ne",
   "shopNextLevel": "Úroveň {level} → {next} · ještě {points} bodů",
-  "shopPlayerLevel": "{name} · Úroveň {level}"
+  "shopPlayerLevel": "{name} · Úroveň {level}",
+  "wardrobeTitle": "Šatník",
+  "wardrobeEmpty": "Zatím tu nic není. Vylepšení koupíš v obchodě.",
+  "wardrobeToShop": "Do obchodu",
+  "wardrobeColour": "Barva: {name}",
+  "colourGold": "zlatá",
+  "colourSilver": "stříbrná",
+  "colourRed": "červená",
+  "colourBlue": "modrá",
+  "colourGreen": "zelená",
+  "colourYellow": "žlutá",
+  "colourBrown": "hnědá"
 }

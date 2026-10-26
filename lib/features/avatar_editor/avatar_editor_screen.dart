@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../core/avatar/avatar_spec.dart';
+import '../../core/shop/random_look.dart';
+import '../../core/shop/shop_catalog.dart';
 import '../../core/players/player_profile.dart';
 import '../../l10n/app_localizations.dart';
 import '../../ui_kit/avatar/avatar_view.dart';
@@ -43,6 +45,7 @@ class AvatarEditorScreen extends StatefulWidget {
     this.showName = false,
     this.initialName = '',
     this.onSave,
+    this.ownedItems = const [],
   });
 
   final AvatarSpec initial;
@@ -53,6 +56,9 @@ class AvatarEditorScreen extends StatefulWidget {
   final bool showName;
   final String initialName;
   final AvatarEditSave? onSave;
+
+  /// The player's upgrades; "Random" may put them on (spec 5.6).
+  final List<ShopItem> ownedItems;
 
   @override
   State<AvatarEditorScreen> createState() => _AvatarEditorScreenState();
@@ -146,7 +152,7 @@ class _AvatarEditorScreenState extends State<AvatarEditorScreen> {
           RoundIconButton(
             icon: Icons.casino,
             tooltip: l10n.avatarRandom,
-            onPressed: () => _update(AvatarSpec.random(_random)),
+            onPressed: () => _update(randomLook(_random, widget.ownedItems)),
           ),
         ],
       ),

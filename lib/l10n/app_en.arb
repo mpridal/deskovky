@@ -691,5 +691,23 @@
         "type": "int"
       }
     }
-  }
+  },
+  "wardrobeTitle": "Wardrobe",
+  "wardrobeEmpty": "Nothing here yet. Buy upgrades in the shop.",
+  "wardrobeToShop": "To the shop",
+  "wardrobeColour": "Colour: {name}",
+  "@wardrobeColour": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "colourGold": "gold",
+  "colourSilver": "silver",
+  "colourRed": "red",
+  "colourBlue": "blue",
+  "colourGreen": "green",
+  "colourYellow": "yellow",
+  "colourBrown": "brown"
 }

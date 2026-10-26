@@ -300,5 +300,16 @@
   "shopUnequip": "Quitarse",
   "shopNotNow": "Ahora no",
   "shopNextLevel": "Nivel {level} → {next} · faltan {points} puntos",
-  "shopPlayerLevel": "{name} · Nivel {level}"
+  "shopPlayerLevel": "{name} · Nivel {level}",
+  "wardrobeTitle": "Armario",
+  "wardrobeEmpty": "Aún no hay nada. Compra mejoras en la tienda.",
+  "wardrobeToShop": "A la tienda",
+  "wardrobeColour": "Color: {name}",
+  "colourGold": "dorado",
+  "colourSilver": "plateado",
+  "colourRed": "rojo",
+  "colourBlue": "azul",
+  "colourGreen": "verde",
+  "colourYellow": "amarillo",
+  "colourBrown": "marrón"
 }
