@@ -834,4 +834,112 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get updateCheckFailed =>
       'La búsqueda falló – ¿está el dispositivo conectado?';
+
+  @override
+  String get itemCap => 'Gorra';
+
+  @override
+  String get itemEarsHeadband => 'Diadema con orejas';
+
+  @override
+  String get itemFlowerWreath => 'Corona de flores';
+
+  @override
+  String get itemTopHat => 'Sombrero de copa';
+
+  @override
+  String get itemVikingHelmet => 'Casco vikingo';
+
+  @override
+  String get itemPirateBandana => 'Pañuelo pirata';
+
+  @override
+  String get itemWizardHat => 'Sombrero de mago';
+
+  @override
+  String get itemCrown => 'Corona';
+
+  @override
+  String get itemHalo => 'Aureola';
+
+  @override
+  String get itemGlasses => 'Gafas';
+
+  @override
+  String get itemMustache => 'Bigote';
+
+  @override
+  String get itemFacePaintStar => 'Estrella pintada';
+
+  @override
+  String get itemSunglasses => 'Gafas de sol';
+
+  @override
+  String get itemHeroMask => 'Máscara de héroe';
+
+  @override
+  String get itemMonocle => 'Monóculo';
+
+  @override
+  String get itemCarnivalMask => 'Máscara de carnaval';
+
+  @override
+  String get itemLollipop => 'Piruleta';
+
+  @override
+  String get itemBalloon => 'Globo';
+
+  @override
+  String get itemIceCream => 'Helado';
+
+  @override
+  String get itemPhone => 'Móvil';
+
+  @override
+  String get itemMicrophone => 'Micrófono';
+
+  @override
+  String get itemMagicWand => 'Varita mágica';
+
+  @override
+  String get itemTrophy => 'Trofeo';
+
+  @override
+  String get itemKitten => 'Gatito';
+
+  @override
+  String get itemChick => 'Pollito';
+
+  @override
+  String get itemPuppy => 'Perrito';
+
+  @override
+  String get itemParrot => 'Loro';
+
+  @override
+  String get itemDragon => 'Dragoncito';
+
+  @override
+  String get itemWoodFrame => 'Marco de madera';
+
+  @override
+  String get itemGoldFrame => 'Marco dorado';
+
+  @override
+  String get itemRainbowFrame => 'Marco arcoíris';
+
+  @override
+  String get itemFlameFrame => 'Marco de llamas';
+
+  @override
+  String get itemStarFrame => 'Marco de estrellas';
+
+  @override
+  String get itemSparkles => 'Destellos';
+
+  @override
+  String get itemBubbles => 'Burbujas';
+
+  @override
+  String get itemSnow => 'Nevada';
 }

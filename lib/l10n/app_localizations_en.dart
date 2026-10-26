@@ -830,4 +830,112 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get updateCheckFailed => 'The check failed – is the device online?';
+
+  @override
+  String get itemCap => 'Cap';
+
+  @override
+  String get itemEarsHeadband => 'Ear headband';
+
+  @override
+  String get itemFlowerWreath => 'Flower wreath';
+
+  @override
+  String get itemTopHat => 'Top hat';
+
+  @override
+  String get itemVikingHelmet => 'Viking helmet';
+
+  @override
+  String get itemPirateBandana => 'Pirate bandana';
+
+  @override
+  String get itemWizardHat => 'Wizard hat';
+
+  @override
+  String get itemCrown => 'Crown';
+
+  @override
+  String get itemHalo => 'Halo';
+
+  @override
+  String get itemGlasses => 'Glasses';
+
+  @override
+  String get itemMustache => 'Moustache';
+
+  @override
+  String get itemFacePaintStar => 'Star face paint';
+
+  @override
+  String get itemSunglasses => 'Sunglasses';
+
+  @override
+  String get itemHeroMask => 'Hero mask';
+
+  @override
+  String get itemMonocle => 'Monocle';
+
+  @override
+  String get itemCarnivalMask => 'Carnival mask';
+
+  @override
+  String get itemLollipop => 'Lollipop';
+
+  @override
+  String get itemBalloon => 'Balloon';
+
+  @override
+  String get itemIceCream => 'Ice cream';
+
+  @override
+  String get itemPhone => 'Phone';
+
+  @override
+  String get itemMicrophone => 'Microphone';
+
+  @override
+  String get itemMagicWand => 'Magic wand';
+
+  @override
+  String get itemTrophy => 'Trophy';
+
+  @override
+  String get itemKitten => 'Kitten';
+
+  @override
+  String get itemChick => 'Chick';
+
+  @override
+  String get itemPuppy => 'Puppy';
+
+  @override
+  String get itemParrot => 'Parrot';
+
+  @override
+  String get itemDragon => 'Little dragon';
+
+  @override
+  String get itemWoodFrame => 'Wooden frame';
+
+  @override
+  String get itemGoldFrame => 'Gold frame';
+
+  @override
+  String get itemRainbowFrame => 'Rainbow frame';
+
+  @override
+  String get itemFlameFrame => 'Flame frame';
+
+  @override
+  String get itemStarFrame => 'Star frame';
+
+  @override
+  String get itemSparkles => 'Sparkles';
+
+  @override
+  String get itemBubbles => 'Bubbles';
+
+  @override
+  String get itemSnow => 'Snowfall';
 }

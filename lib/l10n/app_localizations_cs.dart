@@ -842,4 +842,112 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get updateCheckFailed =>
       'Kontrola se nepovedla – je zařízení připojené k internetu?';
+
+  @override
+  String get itemCap => 'Kšiltovka';
+
+  @override
+  String get itemEarsHeadband => 'Čelenka s oušky';
+
+  @override
+  String get itemFlowerWreath => 'Věneček';
+
+  @override
+  String get itemTopHat => 'Cylindr';
+
+  @override
+  String get itemVikingHelmet => 'Vikinská helma';
+
+  @override
+  String get itemPirateBandana => 'Pirátský šátek';
+
+  @override
+  String get itemWizardHat => 'Čarodějnický klobouk';
+
+  @override
+  String get itemCrown => 'Korunka';
+
+  @override
+  String get itemHalo => 'Svatozář';
+
+  @override
+  String get itemGlasses => 'Brýle';
+
+  @override
+  String get itemMustache => 'Knírek';
+
+  @override
+  String get itemFacePaintStar => 'Malování hvězda';
+
+  @override
+  String get itemSunglasses => 'Sluneční brýle';
+
+  @override
+  String get itemHeroMask => 'Maska hrdiny';
+
+  @override
+  String get itemMonocle => 'Monokl';
+
+  @override
+  String get itemCarnivalMask => 'Karnevalová maska';
+
+  @override
+  String get itemLollipop => 'Lízátko';
+
+  @override
+  String get itemBalloon => 'Balónek';
+
+  @override
+  String get itemIceCream => 'Zmrzlina';
+
+  @override
+  String get itemPhone => 'Mobil';
+
+  @override
+  String get itemMicrophone => 'Mikrofon';
+
+  @override
+  String get itemMagicWand => 'Kouzelná hůlka';
+
+  @override
+  String get itemTrophy => 'Trofej';
+
+  @override
+  String get itemKitten => 'Kočka';
+
+  @override
+  String get itemChick => 'Kuřátko';
+
+  @override
+  String get itemPuppy => 'Pejsek';
+
+  @override
+  String get itemParrot => 'Papoušek';
+
+  @override
+  String get itemDragon => 'Dráček';
+
+  @override
+  String get itemWoodFrame => 'Dřevěný rámeček';
+
+  @override
+  String get itemGoldFrame => 'Zlatý rámeček';
+
+  @override
+  String get itemRainbowFrame => 'Duhový rámeček';
+
+  @override
+  String get itemFlameFrame => 'Plamenný rámeček';
+
+  @override
+  String get itemStarFrame => 'Hvězdný rámeček';
+
+  @override
+  String get itemSparkles => 'Třpytky';
+
+  @override
+  String get itemBubbles => 'Bublinky';
+
+  @override
+  String get itemSnow => 'Sněžení';
 }

@@ -1509,6 +1509,222 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The check failed – is the device online?'**
   String get updateCheckFailed;
+
+  /// No description provided for @itemCap.
+  ///
+  /// In en, this message translates to:
+  /// **'Cap'**
+  String get itemCap;
+
+  /// No description provided for @itemEarsHeadband.
+  ///
+  /// In en, this message translates to:
+  /// **'Ear headband'**
+  String get itemEarsHeadband;
+
+  /// No description provided for @itemFlowerWreath.
+  ///
+  /// In en, this message translates to:
+  /// **'Flower wreath'**
+  String get itemFlowerWreath;
+
+  /// No description provided for @itemTopHat.
+  ///
+  /// In en, this message translates to:
+  /// **'Top hat'**
+  String get itemTopHat;
+
+  /// No description provided for @itemVikingHelmet.
+  ///
+  /// In en, this message translates to:
+  /// **'Viking helmet'**
+  String get itemVikingHelmet;
+
+  /// No description provided for @itemPirateBandana.
+  ///
+  /// In en, this message translates to:
+  /// **'Pirate bandana'**
+  String get itemPirateBandana;
+
+  /// No description provided for @itemWizardHat.
+  ///
+  /// In en, this message translates to:
+  /// **'Wizard hat'**
+  String get itemWizardHat;
+
+  /// No description provided for @itemCrown.
+  ///
+  /// In en, this message translates to:
+  /// **'Crown'**
+  String get itemCrown;
+
+  /// No description provided for @itemHalo.
+  ///
+  /// In en, this message translates to:
+  /// **'Halo'**
+  String get itemHalo;
+
+  /// No description provided for @itemGlasses.
+  ///
+  /// In en, this message translates to:
+  /// **'Glasses'**
+  String get itemGlasses;
+
+  /// No description provided for @itemMustache.
+  ///
+  /// In en, this message translates to:
+  /// **'Moustache'**
+  String get itemMustache;
+
+  /// No description provided for @itemFacePaintStar.
+  ///
+  /// In en, this message translates to:
+  /// **'Star face paint'**
+  String get itemFacePaintStar;
+
+  /// No description provided for @itemSunglasses.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunglasses'**
+  String get itemSunglasses;
+
+  /// No description provided for @itemHeroMask.
+  ///
+  /// In en, this message translates to:
+  /// **'Hero mask'**
+  String get itemHeroMask;
+
+  /// No description provided for @itemMonocle.
+  ///
+  /// In en, this message translates to:
+  /// **'Monocle'**
+  String get itemMonocle;
+
+  /// No description provided for @itemCarnivalMask.
+  ///
+  /// In en, this message translates to:
+  /// **'Carnival mask'**
+  String get itemCarnivalMask;
+
+  /// No description provided for @itemLollipop.
+  ///
+  /// In en, this message translates to:
+  /// **'Lollipop'**
+  String get itemLollipop;
+
+  /// No description provided for @itemBalloon.
+  ///
+  /// In en, this message translates to:
+  /// **'Balloon'**
+  String get itemBalloon;
+
+  /// No description provided for @itemIceCream.
+  ///
+  /// In en, this message translates to:
+  /// **'Ice cream'**
+  String get itemIceCream;
+
+  /// No description provided for @itemPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get itemPhone;
+
+  /// No description provided for @itemMicrophone.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone'**
+  String get itemMicrophone;
+
+  /// No description provided for @itemMagicWand.
+  ///
+  /// In en, this message translates to:
+  /// **'Magic wand'**
+  String get itemMagicWand;
+
+  /// No description provided for @itemTrophy.
+  ///
+  /// In en, this message translates to:
+  /// **'Trophy'**
+  String get itemTrophy;
+
+  /// No description provided for @itemKitten.
+  ///
+  /// In en, this message translates to:
+  /// **'Kitten'**
+  String get itemKitten;
+
+  /// No description provided for @itemChick.
+  ///
+  /// In en, this message translates to:
+  /// **'Chick'**
+  String get itemChick;
+
+  /// No description provided for @itemPuppy.
+  ///
+  /// In en, this message translates to:
+  /// **'Puppy'**
+  String get itemPuppy;
+
+  /// No description provided for @itemParrot.
+  ///
+  /// In en, this message translates to:
+  /// **'Parrot'**
+  String get itemParrot;
+
+  /// No description provided for @itemDragon.
+  ///
+  /// In en, this message translates to:
+  /// **'Little dragon'**
+  String get itemDragon;
+
+  /// No description provided for @itemWoodFrame.
+  ///
+  /// In en, this message translates to:
+  /// **'Wooden frame'**
+  String get itemWoodFrame;
+
+  /// No description provided for @itemGoldFrame.
+  ///
+  /// In en, this message translates to:
+  /// **'Gold frame'**
+  String get itemGoldFrame;
+
+  /// No description provided for @itemRainbowFrame.
+  ///
+  /// In en, this message translates to:
+  /// **'Rainbow frame'**
+  String get itemRainbowFrame;
+
+  /// No description provided for @itemFlameFrame.
+  ///
+  /// In en, this message translates to:
+  /// **'Flame frame'**
+  String get itemFlameFrame;
+
+  /// No description provided for @itemStarFrame.
+  ///
+  /// In en, this message translates to:
+  /// **'Star frame'**
+  String get itemStarFrame;
+
+  /// No description provided for @itemSparkles.
+  ///
+  /// In en, this message translates to:
+  /// **'Sparkles'**
+  String get itemSparkles;
+
+  /// No description provided for @itemBubbles.
+  ///
+  /// In en, this message translates to:
+  /// **'Bubbles'**
+  String get itemBubbles;
+
+  /// No description provided for @itemSnow.
+  ///
+  /// In en, this message translates to:
+  /// **'Snowfall'**
+  String get itemSnow;
 }
 
 class _AppLocalizationsDelegate
