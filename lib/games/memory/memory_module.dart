@@ -38,7 +38,7 @@ class MemoryModule extends GameModule<MemoryState> {
   @override
   bool get supportsSaveResume => true;
   @override
-  bool get available => false;
+  bool get available => true;
   @override
   bool get difficultyWithoutRobots => true;
 

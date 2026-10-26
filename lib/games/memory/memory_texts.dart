@@ -5,7 +5,7 @@ const memoryTexts = GameTexts(
   cs: {
     'memory.title': 'Pexeso',
     'memory.description': 'Najdi dvojice obrázků.',
-    'memory.rules': 'Otoč dvě karty. Když jsou stejné, nech si je a hraj znovu. Když ne, otočí se zpět a hraje další. Vyhrává ten, kdo najde nejvíc dvojic. Sám hraješ na co nejméně tahů.',
+    'memory.rules': 'Otoč dvě karty. Když jsou stejné, nech si je a hraj znovu. Když ne, otočí se zpět a hraje další. Vyhrává ten, kdo najde nejvíc dvojic. Sám hraješ na co nejméně tahů: na Lehkou uvidíš na začátku na 2 sekundy všechny obrázky, na Těžkou se po každé čtvrté chybě dvě zakryté karty prohodí.',
     'memory.option.cards': 'Počet karet',
     'memory.option.set': 'Obrázky',
     'memory.option.set.animals': 'Zvířátka',
@@ -35,7 +35,7 @@ const memoryTexts = GameTexts(
   en: {
     'memory.title': 'Memory',
     'memory.description': 'Find the matching pairs.',
-    'memory.rules': 'Turn over two cards. If they match, keep them and go again. If not, they turn back and the next player goes. Whoever finds the most pairs wins. Alone, try to use as few turns as you can.',
+    'memory.rules': 'Turn over two cards. If they match, keep them and go again. If not, they turn back and the next player goes. Whoever finds the most pairs wins. Alone, try to use as few turns as you can: on Easy you see all pictures for 2 seconds at the start, on Hard two face-down cards swap places after every fourth miss.',
     'memory.option.cards': 'Cards',
     'memory.option.set': 'Pictures',
     'memory.option.set.animals': 'Animals',
@@ -65,7 +65,7 @@ const memoryTexts = GameTexts(
   es: {
     'memory.title': 'Memoria',
     'memory.description': 'Encuentra las parejas.',
-    'memory.rules': 'Da la vuelta a dos cartas. Si son iguales, te las quedas y vuelves a jugar. Si no, se tapan y juega el siguiente. Gana quien encuentre más parejas. Solo, intenta usar los menos turnos posibles.',
+    'memory.rules': 'Da la vuelta a dos cartas. Si son iguales, te las quedas y vuelves a jugar. Si no, se tapan y juega el siguiente. Gana quien encuentre más parejas. Solo, intenta usar los menos turnos posibles: en Fácil ves todos los dibujos 2 segundos al empezar, en Difícil dos cartas tapadas cambian de sitio tras cada cuarto fallo.',
     'memory.option.cards': 'Cartas',
     'memory.option.set': 'Dibujos',
     'memory.option.set.animals': 'Animales',
