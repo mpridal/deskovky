@@ -77,7 +77,9 @@ abstract class GameModule<S> {
 
   /// The game's own badges, ids prefixed with `<id>.` (spec 5.5, 13.4).
   List<BadgeDef> get badges => const [];
+  /// Orientation the game screen locks on phones and on tablets (≥ 600 dp).
   GameOrientation get phoneOrientation => GameOrientation.any;
+  GameOrientation get tabletOrientation => GameOrientation.any;
 
   /// The game's own effects: id (`<id>.boing`) → path `games/<id>/sfx/boing.ogg`
   /// (spec 7.1, 13.4: at most three). Played via `GameHost.playSfx`.

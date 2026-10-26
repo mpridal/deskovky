@@ -39,6 +39,8 @@ class LudoModule extends GameModule<Map<String, Object?>> {
 
   @override
   GameOrientation get phoneOrientation => GameOrientation.portrait;
+  @override
+  GameOrientation get tabletOrientation => GameOrientation.landscape;
 
   @override
   Map<String, String> get sfx => const {

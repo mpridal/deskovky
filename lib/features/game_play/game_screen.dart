@@ -26,6 +26,7 @@ import '../../ui_kit/surfaces/felt_background.dart';
 import '../../ui_kit/tokens/app_colors.dart';
 import '../../ui_kit/tokens/app_typography.dart';
 import '../game_setup/seat_editor.dart';
+import 'game_orientation.dart';
 import 'game_outcome.dart';
 import 'player_chip.dart';
 import 'seat_identity.dart';
@@ -63,6 +64,25 @@ class GameScreenState extends ConsumerState<GameScreen> {
   void initState() {
     super.initState();
     _prepare();
+  }
+
+  var _oriented = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final module = _module;
+    if (_oriented || module == null) return;
+    _oriented = true;
+    final lock = orientationsFor(module, MediaQuery.sizeOf(context));
+    if (lock.isNotEmpty) SystemChrome.setPreferredOrientations(lock);
+  }
+
+  @override
+  void dispose() {
+    // Free the device again for the rest of the app.
+    if (_oriented) SystemChrome.setPreferredOrientations(const []);
+    super.dispose();
   }
 
   Future<void> _prepare() async {
