@@ -531,4 +531,133 @@ class AppLocalizationsEs extends AppLocalizations {
   String creditsLicense(String license) {
     return 'Licencia: $license';
   }
+
+  @override
+  String get badgeFirstWinTitle => 'Primera victoria';
+
+  @override
+  String get badgeFirstWinDescription => 'Gana tu primera partida.';
+
+  @override
+  String get badgeStreak5Title => 'Cinco seguidas';
+
+  @override
+  String get badgeStreak5Description => 'Gana 5 partidas seguidas.';
+
+  @override
+  String get badgeGames10Title => 'Diez partidas';
+
+  @override
+  String get badgeGames10Description => 'Juega 10 partidas.';
+
+  @override
+  String get badgeHardWinTitle => 'Domador de robots';
+
+  @override
+  String get badgeHardWinDescription => 'Vence a los robots en Difícil.';
+
+  @override
+  String get badgeAllGamesTitle => 'Explorador';
+
+  @override
+  String get badgeAllGamesDescription => 'Juega a todos los juegos.';
+
+  @override
+  String get sampleBadgeBullseyeTitle => '¡En el blanco!';
+
+  @override
+  String get sampleBadgeBullseyeDescription =>
+      'Adivina el número a la primera.';
+
+  @override
+  String get resultNewBadges => 'Insignias nuevas';
+
+  @override
+  String get leaderboardWeek => 'Semana';
+
+  @override
+  String get leaderboardMonth => 'Mes';
+
+  @override
+  String get leaderboardAllTime => 'Siempre';
+
+  @override
+  String get leaderboardAllGames => 'Todos los juegos';
+
+  @override
+  String get leaderboardAnyDifficulty => 'Cualquier dificultad';
+
+  @override
+  String get leaderboardEmpty => 'Todavía no hay nadie. ¡Terminad una partida!';
+
+  @override
+  String leaderboardWins(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count victorias',
+      one: '$count victoria',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String leaderboardDetail(int played, int rate) {
+    String _temp0 = intl.Intl.pluralLogic(
+      played,
+      locale: localeName,
+      other: '$played partidas',
+      one: '$played partida',
+    );
+    return '$_temp0 · $rate %';
+  }
+
+  @override
+  String playerStats(String name) {
+    return 'Estadísticas: $name';
+  }
+
+  @override
+  String get statsPlayed => 'Jugadas';
+
+  @override
+  String get statsWins => 'Victorias';
+
+  @override
+  String get statsWinRate => 'Éxito';
+
+  @override
+  String get statsBestStreak => 'Mejor racha';
+
+  @override
+  String get statsCurrentStreak => 'Racha actual';
+
+  @override
+  String get statsByGame => 'Por juego';
+
+  @override
+  String statsBestScore(int score) {
+    return 'Mejor puntuación: $score';
+  }
+
+  @override
+  String statsFastestWin(String time) {
+    return 'Victoria más rápida: $time';
+  }
+
+  @override
+  String get statsBadges => 'Insignias';
+
+  @override
+  String statsBadgeEarned(String date) {
+    return 'Conseguida el $date';
+  }
+
+  @override
+  String get statsNoGames => 'Aún no hay partidas terminadas.';
+
+  @override
+  String homeBestStars(int stars) {
+    return 'Mejor valoración: $stars de 3 estrellas';
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../badges/badge.dart';
 import 'ai_player.dart';
 import 'difficulty.dart';
 import 'game_option.dart';
@@ -55,6 +56,9 @@ abstract class GameModule<S> {
   bool get supportsAi;
   List<Difficulty> get difficulties => Difficulty.values;
   List<GameOption> get options => const [];
+
+  /// The game's own badges, ids prefixed with `<id>.` (spec 5.5, 13.4).
+  List<BadgeDef> get badges => const [];
   GameOrientation get phoneOrientation => GameOrientation.any;
 
   /// Music id in the AudioCatalog (spec 7.2), e.g. 'ludo'.

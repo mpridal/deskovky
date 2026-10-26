@@ -64,6 +64,7 @@ class PlayersScreen extends ConsumerWidget {
                 active: player.id == activeId,
                 onSelect: () => _select(context, ref, player),
                 onEdit: () => context.push('/players/${player.id}/edit'),
+                onStats: () => context.push('/players/${player.id}/stats'),
                 onDelete: () => _delete(context, ref, player),
               ),
             ),

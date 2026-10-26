@@ -62,3 +62,11 @@ Framework (lib/features/game_play):
 - **Obnovení** = `GameSession.restore(rules, save)` přehraje tahy; neplatný tah nebo chybějící profil → partie se zahodí a otevře se nastavení.
 - **Typ stavu:** framework zná jen `GameModule<Object?>`; `module.withType(<T>(m) => …)` vrátí typovaný kontext pro `GameSession<T>` a desku.
 - **Registr:** `lib/games/registry.dart`. Texty her zatím ve sdílených ARB s prefixem hry (`sample…`), milník 9 je přesune do složek her.
+
+## Statistiky, žebříčky a odznaky (m6)
+
+- Schéma v3: `matches` (hra, čas v ms, délka, obtížnost robotů nebo NULL), `match_participants` (místo, skóre, hvězdy; robot/smazaný hráč), `player_counters` (součty událostí z `reportEvent`), `earned_badges`.
+- `StatsService` (vrstva `app`, zná registr her) po konci partie zapíše záznam, spočítá statistiky každého člověka a vyhodnotí odznaky (rámcové `frameworkBadges` + `GameModule.badges`). Nové odznaky jdou do `GameOutcomeView.newBadges` → výsledky (vyjetí zespodu, fanfára `achievement`).
+- Statistiky (`computePlayerStats`) a žebříčky (`leaderboard`) se počítají v paměti ze všech partií (`allMatchesProvider`) – rodinné zařízení jich má nejvýš tisíce; kdyby to zpomalilo, přejít na SQL agregace.
+- Žebříček řadí podle výher (pak % výher); body z m7 ho doplní.
+

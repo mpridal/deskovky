@@ -72,3 +72,10 @@ Pravidla paralelní práce (kap. 13.2 zadání) se doplní v milníku 9.
 - Tlačítka ui_kitu cvakají přes `UiFeedback` (tap/back/toggle); zpětné tlačítko dostane `sound: UiSound.back`.
 - **Výměna zástupných zvuků za skutečné:** 1) soubor do `assets/audio/music/` nebo `sfx/` (OGG), 2) cesta v `AudioCatalog.standard` (`lib/core/audio/audio_catalog.dart`), 3) záznam v `assets/audio/CREDITS.json` (`file, title, author, source_url, license, attribution_text`; u CC BY přesný text uvedení). Test `audio_assets_test.dart` hlídá, že každý soubor existuje, má záznam a hudba je ≤ 15 MB. Zástupné WAV znovu vygeneruje `python tool/generate_placeholder_audio.py` (přepíše i CREDITS.json – po výměně za skutečné soubory ho už nespouštět).
 - `dart format` spouštěj jen na nové soubory, ne na celý strom (přeformátoval by stovky řádků).
+
+## Statistiky a odznaky (milník 6)
+
+- Každá dohraná partie jde přes `StatsService.recordFinished` (`lib/app/stats_service.dart`) do tabulek `matches` a `match_participants` (roboti s `robot = true`, smazaný hráč = `player_id NULL` a `robot = false`). Žebříčky a statistiky jsou čisté funkce nad všemi partiemi (`lib/core/stats/leaderboard.dart`, `player_stats.dart`) – testuj je bez UI.
+- **Výhra** = samostatně 1. místo; sdílené 1. místo = remíza. **Hra pro 1 hráče:** úspěšné dokončení = místo 1, neúspěch = místo 2 (zadání 5.6). Roboti nikdy nejsou v žebříčcích ani nedostávají odznaky.
+- **Jak přidat odznak hry:** v manifestu `List<BadgeDef> get badges` s id `<hra>.<nazev>`, podmínka ze stavebnice `BadgeCondition` (`wins`, `winStreak`, `played`, `counter`, `wonAgainst`, `won`, `event`, `allGames`, `all`), odměna +15 až +50 (vyplácí m7). Událost hlásí hra `view.host.reportEvent('<hra>.<udalost>', {'seat': seat, 'count': n})` – se `seat` platí jen pro hráče na tom místě. Texty: klíče do ARB + řádek do `badgeText` (`lib/games/badge_texts.dart`); test `badge_texts_test.dart` hlídá všechny 3 jazyky.
+- Widget testy, které dohrají partii, musí dát databázi reálný čas (`tester.runAsync`) – viz `_letRecord` v `test/features/game_play/game_stats_test.dart`.

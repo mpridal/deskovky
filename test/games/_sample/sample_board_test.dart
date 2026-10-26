@@ -11,13 +11,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+final _events = <(String, Map<String, Object?>)>[];
+
 class _Host implements GameHost {
   @override
   void haptic() {}
   @override
   void playSfx(String id) {}
   @override
-  void reportEvent(String id, [Map<String, Object?> data = const {}]) {}
+  void reportEvent(String id, [Map<String, Object?> data = const {}]) => _events.add((id, data));
 }
 
 const _config = GameConfig(
@@ -118,5 +120,27 @@ void main() {
       }),
     ));
     expect(hint, 'Kuba, tipni číslo od 1 do 20');
+  });
+
+  testWidgets("hitting the secret with the player's first tip reports sample.bullseye", (tester) async {
+    _events.clear();
+    final state = const SampleRules().initialState(_config, 1);
+    await _pumpBoard(tester, state);
+    await tester.ensureVisible(_tile(state.secret));
+    await tester.tap(_tile(state.secret));
+    expect(_events.single.$1, 'sample.bullseye');
+    expect(_events.single.$2, {'seat': 0});
+  });
+
+  testWidgets('a hit after an earlier own tip is no bullseye', (tester) async {
+    _events.clear();
+    final session = GameSession.start(const SampleRules(), _config, 4);
+    final secret = session.state.secret;
+    session.apply(Move(seat: 0, type: 'guess', data: {'value': secret > 10 ? 1 : 20}));
+    session.apply(Move(seat: 1, type: 'guess', data: {'value': secret > 10 ? 2 : 19}));
+    await _pumpBoard(tester, session.state);
+    await tester.ensureVisible(_tile(secret));
+    await tester.tap(_tile(secret));
+    expect(_events, isEmpty);
   });
 }
