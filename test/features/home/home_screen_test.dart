@@ -1,3 +1,4 @@
+import 'package:deskovky/games/registry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -33,7 +34,7 @@ void main() {
     expect(tops[4], greaterThan(tops[0]));
   });
 
-  testWidgets('the sample game comes first and is playable, the other five say "Brzy"', (tester) async {
+  testWidgets('the sample game comes first and is playable; games not done yet say "Brzy"', (tester) async {
     await pumpApp(tester, size: const Size(1280, 800));
     expect(_card, findsNWidgets(6));
     final first = _card.at(0);
@@ -41,7 +42,9 @@ void main() {
     expect(find.descendant(of: first, matching: find.text('1–4 hráči')), findsOneWidget);
     expect(find.descendant(of: first, matching: find.text('Brzy')), findsNothing);
     for (var i = 1; i < 6; i++) {
-      expect(find.descendant(of: _card.at(i), matching: find.text('Brzy')), findsOneWidget);
+      // A game's own session flips `available` when it is done.
+      final soon = !gameModules[i].available;
+      expect(find.descendant(of: _card.at(i), matching: find.text('Brzy')), soon ? findsOneWidget : findsNothing);
     }
   });
 
