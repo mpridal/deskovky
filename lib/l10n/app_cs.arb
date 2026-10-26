@@ -187,5 +187,20 @@
   "statsBadges": "Odznaky",
   "statsBadgeEarned": "Získáno {date}",
   "statsNoGames": "Zatím žádná dohraná hra.",
-  "homeBestStars": "Nejlepší hodnocení: {stars} ze 3 hvězd"
+  "homeBestStars": "Nejlepší hodnocení: {stars} ze 3 hvězd",
+  "resultPoints": "Body",
+  "pointsWin": "Výhra",
+  "pointsDraw": "Remíza",
+  "pointsSecond": "2. místo",
+  "pointsParticipation": "Účast",
+  "pointsStars": "Hodnocení {count} ★",
+  "pointsStreak": "Série {count} výher",
+  "pointsFirstToday": "První hra dne",
+  "pointsRecord": "Nový osobní rekord",
+  "pointsBadge": "Odznak: {name}",
+  "pointsCapped": "Dnes už hodně výher na Lehkou",
+  "pointsGift": "Dárek od rodiče",
+  "pointsPurchase": "Nákup",
+  "pointsTotal": "Celkem +{points} ●",
+  "levelUp": "Nová úroveň {level}!"
 }

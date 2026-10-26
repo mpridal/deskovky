@@ -658,4 +658,59 @@ class AppLocalizationsEn extends AppLocalizations {
   String homeBestStars(int stars) {
     return 'Best rating: $stars of 3 stars';
   }
+
+  @override
+  String get resultPoints => 'Points';
+
+  @override
+  String get pointsWin => 'Win';
+
+  @override
+  String get pointsDraw => 'Draw';
+
+  @override
+  String get pointsSecond => '2nd place';
+
+  @override
+  String get pointsParticipation => 'Taking part';
+
+  @override
+  String pointsStars(int count) {
+    return 'Rating $count ★';
+  }
+
+  @override
+  String pointsStreak(int count) {
+    return '$count wins in a row';
+  }
+
+  @override
+  String get pointsFirstToday => 'First game today';
+
+  @override
+  String get pointsRecord => 'New personal best';
+
+  @override
+  String pointsBadge(String name) {
+    return 'Badge: $name';
+  }
+
+  @override
+  String get pointsCapped => 'Lots of Easy wins today';
+
+  @override
+  String get pointsGift => 'Gift from a parent';
+
+  @override
+  String get pointsPurchase => 'Purchase';
+
+  @override
+  String pointsTotal(int points) {
+    return 'Total +$points ●';
+  }
+
+  @override
+  String levelUp(int level) {
+    return 'New level $level!';
+  }
 }

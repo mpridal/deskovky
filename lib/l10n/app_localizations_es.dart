@@ -660,4 +660,59 @@ class AppLocalizationsEs extends AppLocalizations {
   String homeBestStars(int stars) {
     return 'Mejor valoración: $stars de 3 estrellas';
   }
+
+  @override
+  String get resultPoints => 'Puntos';
+
+  @override
+  String get pointsWin => 'Victoria';
+
+  @override
+  String get pointsDraw => 'Empate';
+
+  @override
+  String get pointsSecond => '2.º puesto';
+
+  @override
+  String get pointsParticipation => 'Participación';
+
+  @override
+  String pointsStars(int count) {
+    return 'Valoración $count ★';
+  }
+
+  @override
+  String pointsStreak(int count) {
+    return 'Racha de $count victorias';
+  }
+
+  @override
+  String get pointsFirstToday => 'Primera partida del día';
+
+  @override
+  String get pointsRecord => 'Nuevo récord personal';
+
+  @override
+  String pointsBadge(String name) {
+    return 'Insignia: $name';
+  }
+
+  @override
+  String get pointsCapped => 'Muchas victorias en Fácil hoy';
+
+  @override
+  String get pointsGift => 'Regalo de un padre';
+
+  @override
+  String get pointsPurchase => 'Compra';
+
+  @override
+  String pointsTotal(int points) {
+    return 'Total +$points ●';
+  }
+
+  @override
+  String levelUp(int level) {
+    return '¡Nuevo nivel $level!';
+  }
 }

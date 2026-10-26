@@ -66,10 +66,16 @@ void main() {
     final replay = GameSession.restore(finished!.rules, finished.toSave())!;
     expect(replay.hash, finished.hash);
 
-    await tester.pumpAndSettle(const Duration(milliseconds: 700));
+    // Results open once the game is recorded (real database I/O).
+    for (var i = 0; i < 30 && find.byType(ResultsScreen).evaluate().isEmpty; i++) {
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
+    }
+    await tester.pumpAndSettle();
     expect(find.byType(ResultsScreen), findsOneWidget);
     expect(find.byType(RobotAvatar), findsWidgets);
 
+    await tester.scrollUntilVisible(find.text('Hrát znovu'), 300, scrollable: find.byType(Scrollable).first);
     await tester.tap(find.text('Hrát znovu'));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));

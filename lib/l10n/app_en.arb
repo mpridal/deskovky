@@ -393,5 +393,55 @@
         "type": "int"
       }
     }
+  },
+  "resultPoints": "Points",
+  "pointsWin": "Win",
+  "pointsDraw": "Draw",
+  "pointsSecond": "2nd place",
+  "pointsParticipation": "Taking part",
+  "pointsStars": "Rating {count} ★",
+  "@pointsStars": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pointsStreak": "{count} wins in a row",
+  "@pointsStreak": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pointsFirstToday": "First game today",
+  "pointsRecord": "New personal best",
+  "pointsBadge": "Badge: {name}",
+  "@pointsBadge": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pointsCapped": "Lots of Easy wins today",
+  "pointsGift": "Gift from a parent",
+  "pointsPurchase": "Purchase",
+  "pointsTotal": "Total +{points} ●",
+  "@pointsTotal": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "levelUp": "New level {level}!",
+  "@levelUp": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
   }
 }

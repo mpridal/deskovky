@@ -57,6 +57,9 @@ abstract class GameModule<S> {
   List<Difficulty> get difficulties => Difficulty.values;
   List<GameOption> get options => const [];
 
+  /// Scales the base points of a game (spec 5.6), 0.5–2.
+  double get pointsMultiplier => 1.0;
+
   /// The game's own badges, ids prefixed with `<id>.` (spec 5.5, 13.4).
   List<BadgeDef> get badges => const [];
   GameOrientation get phoneOrientation => GameOrientation.any;

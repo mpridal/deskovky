@@ -8,6 +8,7 @@ import '../../app/providers.dart';
 import '../../core/game/game_config.dart';
 import '../../app/stats_service.dart';
 import '../../games/badge_texts.dart';
+import '../../core/points/points_math.dart';
 import '../../games/game_texts.dart';
 import '../../games/registry.dart';
 import '../../l10n/app_localizations.dart';
@@ -87,6 +88,7 @@ class ResultsScreen extends StatelessWidget {
                                 ),
                         ),
                       ),
+                    if (outcome.rewards.points.isNotEmpty) _Points(outcome: outcome),
                     if (outcome.newBadges.isNotEmpty) _NewBadges(outcome: outcome),
                     const SizedBox(height: 16),
                     PrimaryButton(
@@ -220,5 +222,93 @@ class _NewBadges extends StatelessWidget {
           ),
       ],
     );
+  }
+}
+
+/// Points breakdown of every person (spec 5.6 "Výsledky partie"): lines appear
+/// one by one, then the total and a new level.
+class _Points extends StatelessWidget {
+  const _Points({required this.outcome});
+
+  final GameOutcomeView outcome;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final animate = !MediaQuery.disableAnimationsOf(context);
+    String nameOf(int playerId) {
+      final seats = outcome.config.seats;
+      for (var s = 0; s < seats.length; s++) {
+        if (seats[s] case HumanSeat(:final profileId) when profileId == playerId) return outcome.seats[s].name;
+      }
+      return '';
+    }
+
+    String label(PointsLine line) => switch (line.reason) {
+      PointsReason.win => l10n.pointsWin,
+      PointsReason.draw => l10n.pointsDraw,
+      PointsReason.second => l10n.pointsSecond,
+      PointsReason.participation => l10n.pointsParticipation,
+      PointsReason.stars => l10n.pointsStars(line.count ?? 0),
+      PointsReason.streak => l10n.pointsStreak(line.count ?? 0),
+      PointsReason.firstToday => l10n.pointsFirstToday,
+      PointsReason.record => l10n.pointsRecord,
+      PointsReason.badge => l10n.pointsBadge(_badgeTitle(context, line.badgeId)),
+      PointsReason.capped => l10n.pointsCapped,
+      PointsReason.gift => l10n.pointsGift,
+      PointsReason.purchase => l10n.pointsPurchase,
+    };
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SizedBox(height: 8),
+        Text(l10n.resultPoints, style: AppTypography.h2(color: AppColors.paper)),
+        const SizedBox(height: 8),
+        for (final MapEntry(key: playerId, value: points) in outcome.rewards.points.entries)
+          Padding(
+            key: ValueKey('points$playerId'),
+            padding: const EdgeInsets.only(bottom: 8),
+            child: PaperCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(nameOf(playerId), style: AppTypography.button(color: AppColors.ink)),
+                  for (final (i, line) in points.lines.indexed)
+                    TweenAnimationBuilder<double>(
+                      tween: Tween(begin: animate ? 0 : 1, end: 1),
+                      duration: Duration(milliseconds: animate ? 250 + 150 * i : 1),
+                      builder: (context, t, child) => Opacity(opacity: t, child: child),
+                      child: Row(
+                        children: [
+                          Expanded(child: Text(label(line), style: AppTypography.caption(color: AppColors.ink))),
+                          Text('+${line.amount}', style: AppTypography.caption(color: AppColors.ink)),
+                        ],
+                      ),
+                    ),
+                  const SizedBox(height: 4),
+                  Text(
+                    l10n.pointsTotal(points.total),
+                    textAlign: TextAlign.end,
+                    style: AppTypography.button(color: AppColors.wood),
+                  ),
+                  if (points.levelAfter > points.levelBefore)
+                    Text(
+                      l10n.levelUp(points.levelAfter),
+                      textAlign: TextAlign.end,
+                      style: AppTypography.button(color: AppColors.gold),
+                    ),
+                ],
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  String _badgeTitle(BuildContext context, String? id) {
+    final l10n = AppLocalizations.of(context);
+    final badge = id == null ? null : badgeById(id);
+    return badge == null ? (id ?? '') : badgeText(l10n, badge.titleKey);
   }
 }

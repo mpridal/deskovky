@@ -234,11 +234,11 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
         .catchError((Object e) {
           // Statistics must never keep the results away.
           debugPrint('GameScreen: cannot record the game: $e');
-          return <EarnedBadge>[];
+          return MatchRewards.none;
         });
     _finishTimer = Timer(const Duration(milliseconds: 600), () async {
-      final badges = await recording;
-      if (mounted) context.pushReplacement('/play/${_module.id}/results', extra: outcome.withBadges(badges));
+      final rewards = await recording;
+      if (mounted) context.pushReplacement('/play/${_module.id}/results', extra: outcome.withRewards(rewards));
     });
   }
 

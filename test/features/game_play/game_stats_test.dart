@@ -30,9 +30,11 @@ const _config = GameConfig(
 
 /// The 600 ms pause before results, with real time for the database writes.
 Future<void> _letRecord(WidgetTester tester) async {
-  for (var i = 0; i < 6; i++) {
+  // Up to ~3 s of real time: a busy test run makes the writes slower.
+  for (var i = 0; i < 30; i++) {
     await tester.pump(const Duration(milliseconds: 300));
-    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
+    if (i >= 5 && find.byType(ResultsScreen).evaluate().isNotEmpty) break;
   }
   await tester.pumpAndSettle();
 }

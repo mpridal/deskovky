@@ -1227,6 +1227,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Best rating: {stars} of 3 stars'**
   String homeBestStars(int stars);
+
+  /// No description provided for @resultPoints.
+  ///
+  /// In en, this message translates to:
+  /// **'Points'**
+  String get resultPoints;
+
+  /// No description provided for @pointsWin.
+  ///
+  /// In en, this message translates to:
+  /// **'Win'**
+  String get pointsWin;
+
+  /// No description provided for @pointsDraw.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw'**
+  String get pointsDraw;
+
+  /// No description provided for @pointsSecond.
+  ///
+  /// In en, this message translates to:
+  /// **'2nd place'**
+  String get pointsSecond;
+
+  /// No description provided for @pointsParticipation.
+  ///
+  /// In en, this message translates to:
+  /// **'Taking part'**
+  String get pointsParticipation;
+
+  /// No description provided for @pointsStars.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating {count} ★'**
+  String pointsStars(int count);
+
+  /// No description provided for @pointsStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} wins in a row'**
+  String pointsStreak(int count);
+
+  /// No description provided for @pointsFirstToday.
+  ///
+  /// In en, this message translates to:
+  /// **'First game today'**
+  String get pointsFirstToday;
+
+  /// No description provided for @pointsRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'New personal best'**
+  String get pointsRecord;
+
+  /// No description provided for @pointsBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Badge: {name}'**
+  String pointsBadge(String name);
+
+  /// No description provided for @pointsCapped.
+  ///
+  /// In en, this message translates to:
+  /// **'Lots of Easy wins today'**
+  String get pointsCapped;
+
+  /// No description provided for @pointsGift.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift from a parent'**
+  String get pointsGift;
+
+  /// No description provided for @pointsPurchase.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase'**
+  String get pointsPurchase;
+
+  /// No description provided for @pointsTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total +{points} ●'**
+  String pointsTotal(int points);
+
+  /// No description provided for @levelUp.
+  ///
+  /// In en, this message translates to:
+  /// **'New level {level}!'**
+  String levelUp(int level);
 }
 
 class _AppLocalizationsDelegate
