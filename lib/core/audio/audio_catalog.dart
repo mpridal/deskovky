@@ -6,18 +6,18 @@ import 'package:flutter/foundation.dart';
 class AudioCatalog {
   const AudioCatalog({required this.music, required this.sfx});
 
-  /// Paths are relative to `assets/audio/`. The WAV files are generated
-  /// placeholders (tool/generate_placeholder_audio.py) until the real OGG
-  /// recordings arrive.
+  /// Paths are relative to `assets/audio/`; game effects (`games/<id>/…`)
+  /// to `assets/`. Music is `music/<id>.ogg`; the WAV effects and
+  /// `music/checkers.ogg` are placeholders (tool/generate_placeholder_audio.py).
   static const standard = AudioCatalog(
     music: {
-      'menu': 'music/menu.mp3',
-      'sample': 'music/sample.mp3',
-      'tictactoe': 'music/tictactoe.wav',
-      'memory': 'music/memory.wav',
-      'minesweeper': 'music/minesweeper.wav',
-      'ludo': 'music/ludo.wav',
-      'checkers': 'music/checkers.wav',
+      'menu': 'music/menu.ogg',
+      'sample': 'music/sample.ogg',
+      'tictactoe': 'music/tictactoe.ogg',
+      'memory': 'music/memory.ogg',
+      'minesweeper': 'music/minesweeper.ogg',
+      'ludo': 'music/ludo.ogg',
+      'checkers': 'music/checkers.ogg',
     },
     sfx: {
       'tap': 'sfx/tap.wav',
@@ -40,4 +40,7 @@ class AudioCatalog {
 
   final Map<String, String> music;
   final Map<String, String> sfx;
+
+  /// This catalog plus games' own effects (`GameModule.sfx`, spec 7.1).
+  AudioCatalog withSfx(Map<String, String> more) => AudioCatalog(music: music, sfx: {...sfx, ...more});
 }

@@ -35,5 +35,14 @@ List<Credit> parseCredits(String json) => [
     ),
 ];
 
-Future<List<Credit>> loadCredits(AssetBundle bundle) async =>
-    parseCredits(await bundle.loadString('assets/audio/CREDITS.json'));
+/// The shared credits plus each game's optional `assets/games/<id>/CREDITS.json`
+/// (only files the app actually bundles are read).
+Future<List<Credit>> loadCredits(AssetBundle bundle, {Iterable<String> games = const []}) async {
+  final bundled = games.isEmpty ? const <String>{} : (await AssetManifest.loadFromAssetBundle(bundle)).listAssets().toSet();
+  return [
+    ...parseCredits(await bundle.loadString('assets/audio/CREDITS.json')),
+    for (final id in games)
+      if (bundled.contains('assets/games/$id/CREDITS.json'))
+        ...parseCredits(await bundle.loadString('assets/games/$id/CREDITS.json')),
+  ];
+}

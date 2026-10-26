@@ -68,6 +68,10 @@ abstract class GameModule<S> {
   List<BadgeDef> get badges => const [];
   GameOrientation get phoneOrientation => GameOrientation.any;
 
+  /// The game's own effects: id (`<id>.boing`) → path `games/<id>/sfx/boing.ogg`
+  /// (spec 7.1, 13.4: at most three). Played via `GameHost.playSfx`.
+  Map<String, String> get sfx => const {};
+
   /// Music id in the AudioCatalog (spec 7.2), e.g. 'ludo'.
   String get musicTrack;
   bool get supportsSaveResume;

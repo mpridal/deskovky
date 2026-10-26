@@ -35,11 +35,17 @@ void main() {
     expect(credits.single.attribution, '"Wallpaper" Kevin MacLeod (incompetech.com)');
   });
 
+  test("games' own credits join the shared ones; a game without a file is fine", () async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    final credits = await loadCredits(rootBundle, games: ['ludo', 'nothing']);
+    expect(credits.map((c) => c.title), containsAll(['Carefree', 'Fluffing a Duck', 'Zástupný efekt ludo.boing']));
+  });
+
   test('the bundled CREDITS.json loads', () async {
     TestWidgetsFlutterBinding.ensureInitialized();
     final credits = await loadCredits(rootBundle);
     expect(credits, isNotEmpty);
-    expect(credits.map((c) => c.file), contains('music/menu.mp3'));
+    expect(credits.map((c) => c.file), contains('music/menu.ogg'));
   });
 
   testWidgets('settings lead to credits with sounds, fonts and library licences', (tester) async {

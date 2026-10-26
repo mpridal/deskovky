@@ -1,0 +1,10 @@
+[
+  {
+    "file": "music/checkers.ogg",
+    "title": "Zástupná hudba checkers",
+    "author": "Deskovky (vygenerováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "license": "CC0 1.0",
+    "attribution_text": "„Zástupná hudba checkers“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  }
+]

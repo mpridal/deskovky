@@ -16,7 +16,8 @@ class JustAudioBackend implements AudioBackend {
       _sfx = List.generate(sfxSlots, (_) => AudioPlayer(handleAudioSessionActivation: false)),
       _sfxAsset = List.filled(sfxSlots, null);
 
-  static const _root = 'assets/audio/';
+  /// Game effects live in their game's folder under `assets/games/`.
+  static String _path(String asset) => asset.startsWith('games/') ? 'assets/$asset' : 'assets/audio/$asset';
 
   final List<AudioPlayer> _music;
   final List<AudioPlayer> _sfx;
@@ -25,7 +26,7 @@ class JustAudioBackend implements AudioBackend {
   @override
   Future<void> loadMusic(int channel, String asset) async {
     final player = _music[channel];
-    await player.setAsset('$_root$asset');
+    await player.setAsset(_path(asset));
     await player.setLoopMode(LoopMode.one);
   }
 
@@ -47,7 +48,7 @@ class JustAudioBackend implements AudioBackend {
     final player = _sfx[slot];
     if (_sfxAsset[slot] != asset) {
       _sfxAsset[slot] = null;
-      await player.setAsset('$_root$asset');
+      await player.setAsset(_path(asset));
       _sfxAsset[slot] = asset;
     } else {
       await player.seek(Duration.zero);

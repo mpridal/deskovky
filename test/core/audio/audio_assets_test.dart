@@ -7,14 +7,21 @@ import 'package:flutter_test/flutter_test.dart';
 const _fields = ['file', 'title', 'author', 'source_url', 'license', 'attribution_text'];
 
 void main() {
-  final credits = (jsonDecode(File('assets/audio/CREDITS.json').readAsStringSync()) as List)
-      .cast<Map<String, dynamic>>();
+  List<Map<String, dynamic>> read(File f) => (jsonDecode(f.readAsStringSync()) as List).cast<Map<String, dynamic>>();
+  final gameCredits = Directory('assets/games').existsSync()
+      ? [
+          for (final d in Directory('assets/games').listSync().whereType<Directory>())
+            if (File('${d.path}/CREDITS.json').existsSync()) ...read(File('${d.path}/CREDITS.json')),
+        ]
+      : <Map<String, dynamic>>[];
+  final credits = [...read(File('assets/audio/CREDITS.json')), ...gameCredits];
+  String assetOf(String path) => path.startsWith('games/') ? 'assets/$path' : 'assets/audio/$path';
   final catalog = AudioCatalog.standard;
   final files = [...catalog.music.values, ...catalog.sfx.values];
 
   test('every catalog sound exists and is a non-empty audio file', () {
     for (final path in files) {
-      final file = File('assets/audio/$path');
+      final file = File(assetOf(path));
       expect(file.existsSync(), isTrue, reason: path);
       expect(file.lengthSync(), greaterThan(1000), reason: path);
     }
@@ -45,7 +52,34 @@ void main() {
 
   test('CREDITS.json lists only files that exist', () {
     for (final c in credits) {
-      expect(File('assets/audio/${c['file']}').existsSync(), isTrue, reason: '${c['file']}');
+      expect(File(assetOf(c['file'] as String)).existsSync(), isTrue, reason: '${c['file']}');
+    }
+  });
+
+  test('the four new games play their Kevin MacLeod tracks (spec 7.2)', () {
+    final byFile = {for (final c in credits) c['file']: c};
+    for (final (id, title) in [
+      ('tictactoe', 'Local Forecast - Elevator'),
+      ('memory', 'Monkeys Spinning Monkeys'),
+      ('minesweeper', 'Sneaky Snitch'),
+      ('ludo', 'Fluffing a Duck'),
+    ]) {
+      final entry = byFile['music/$id.ogg'];
+      expect(entry, isNotNull, reason: id);
+      expect((entry!['title'], entry['author'], entry['license']), (title, 'Kevin MacLeod', 'CC BY 4.0'), reason: id);
+    }
+  });
+
+  test('every game effect from spec 13.5–13.8 exists as a credited placeholder', () {
+    final byFile = {for (final c in credits) c['file']: c};
+    for (final path in [
+      'games/tictactoe/sfx/draw.ogg', 'games/tictactoe/sfx/line.ogg', //
+      'games/memory/sfx/match.ogg', 'games/memory/sfx/miss.ogg',
+      'games/minesweeper/sfx/dig.ogg', 'games/minesweeper/sfx/flag.ogg', 'games/minesweeper/sfx/puff.ogg',
+      'games/ludo/sfx/hop.ogg', 'games/ludo/sfx/boing.ogg', 'games/ludo/sfx/home.ogg',
+    ]) {
+      expect(File(assetOf(path)).existsSync(), isTrue, reason: path);
+      expect(byFile[path], isNotNull, reason: path);
     }
   });
 
@@ -61,5 +95,12 @@ void main() {
     expect(pubspec, contains('- assets/audio/music/'));
     expect(pubspec, contains('- assets/audio/sfx/'));
     expect(pubspec, contains('- assets/audio/CREDITS.json'));
+    for (final id in ['tictactoe', 'memory', 'minesweeper', 'ludo', 'checkers']) {
+      expect(pubspec, contains('- assets/games/$id/'), reason: id);
+      expect(pubspec, contains('- assets/games/$id/sfx/'), reason: id);
+    }
+    for (final set in ['animals', 'food', 'transport', 'space']) {
+      expect(pubspec, contains('- assets/games/memory/cards/$set/'), reason: set);
+    }
   });
 }

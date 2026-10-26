@@ -1,6 +1,6 @@
 [
   {
-    "file": "music/menu.mp3",
+    "file": "music/menu.ogg",
     "title": "Carefree",
     "author": "Kevin MacLeod",
     "source_url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Carefree.mp3",
@@ -8,52 +8,12 @@
     "attribution_text": "\"Carefree\" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0, http://creativecommons.org/licenses/by/4.0/"
   },
   {
-    "file": "music/sample.mp3",
+    "file": "music/sample.ogg",
     "title": "Quirky Dog",
     "author": "Kevin MacLeod",
     "source_url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Quirky%20Dog.mp3",
     "license": "CC BY 4.0",
     "attribution_text": "\"Quirky Dog\" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0, http://creativecommons.org/licenses/by/4.0/"
-  },
-  {
-    "file": "music/tictactoe.wav",
-    "title": "Zástupná hudba tictactoe",
-    "author": "Deskovky (vygenerováno)",
-    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
-    "license": "CC0 1.0",
-    "attribution_text": "„Zástupná hudba tictactoe“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
-  },
-  {
-    "file": "music/memory.wav",
-    "title": "Zástupná hudba memory",
-    "author": "Deskovky (vygenerováno)",
-    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
-    "license": "CC0 1.0",
-    "attribution_text": "„Zástupná hudba memory“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
-  },
-  {
-    "file": "music/minesweeper.wav",
-    "title": "Zástupná hudba minesweeper",
-    "author": "Deskovky (vygenerováno)",
-    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
-    "license": "CC0 1.0",
-    "attribution_text": "„Zástupná hudba minesweeper“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
-  },
-  {
-    "file": "music/ludo.wav",
-    "title": "Zástupná hudba ludo",
-    "author": "Deskovky (vygenerováno)",
-    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
-    "license": "CC0 1.0",
-    "attribution_text": "„Zástupná hudba ludo“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
-  },
-  {
-    "file": "music/checkers.wav",
-    "title": "Zástupná hudba checkers",
-    "author": "Deskovky (vygenerováno)",
-    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
-    "license": "CC0 1.0",
-    "attribution_text": "„Zástupná hudba checkers“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
   },
   {
     "file": "sfx/tap.wav",

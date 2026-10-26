@@ -22,6 +22,7 @@ import '../core/stats/leaderboard.dart';
 import '../core/stats/match_record.dart';
 import '../core/stats/player_stats.dart';
 import '../core/stats/stats_repository.dart';
+import '../games/registry.dart';
 import 'stats_service.dart';
 
 /// The app database. Overridden in `main()` with [AppDatabase.open] and in
@@ -66,7 +67,10 @@ final vibrationOnProvider = StreamProvider<bool>((ref) => ref.watch(settingsRepo
 
 /// Music and effects; tests override it with a fake backend.
 final audioServiceProvider = Provider<AudioService>((ref) {
-  final service = AudioService(backend: JustAudioBackend(), catalog: AudioCatalog.standard);
+  final service = AudioService(
+    backend: JustAudioBackend(),
+    catalog: AudioCatalog.standard.withSfx({for (final m in gameModules) ...m.sfx}),
+  );
   ref.onDispose(service.dispose);
   return service;
 });

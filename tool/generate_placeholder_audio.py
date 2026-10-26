@@ -1,34 +1,55 @@
-"""Generates placeholder sounds into assets/audio/ and their CREDITS.json.
+"""Generates placeholder sounds and their credits.
 
 Placeholders keep the app working until the real recordings (spec 7.2, 7.3)
-are chosen. Standard library only; output is deterministic.
+are chosen. Output is deterministic. Shared effects are WAV in assets/audio/;
+games' own effects and placeholder music are OGG (needs ffmpeg) in
+assets/games/<id>/sfx/ and assets/audio/music/<id>.ogg, credited in
+assets/games/<id>/CREDITS.json.
 
-    python tool/generate_placeholder_audio.py
+    FFMPEG=C:/dev/tools/ffmpeg/bin/ffmpeg.exe python tool/generate_placeholder_audio.py
 
-Real files replace these one by one: drop the file into assets/audio/,
-update its path in lib/core/audio/audio_catalog.dart and its entry in
-assets/audio/CREDITS.json (keep entries for files not replaced yet).
+Real files replace these one by one: drop the file in, point the catalog or
+the game's manifest at it, update its credits entry and remove it from the
+lists below. Credits of real recordings are kept when the script runs.
 """
 
 import json
 import math
+import os
+import subprocess
+import tempfile
 import struct
 import wave
 from pathlib import Path
 
 RATE = 22050
 ROOT = Path(__file__).resolve().parent.parent / "assets" / "audio"
+GAMES = ROOT.parent / "games"
+FFMPEG = os.environ.get("FFMPEG", "ffmpeg")
+GENERATED = "Deskovky (vygenerováno)"
 
 # Menu and Hádej číslo already have real music (see CREDITS.json).
 # Each track is a quiet 4 s chord loop; whole-Hz frequencies make 4 s an
 # exact number of periods, so the loop is seamless. Tremolo speed differs
 # per track so the tracks are told apart.
 MUSIC = {
-    "tictactoe": ([175, 220, 262], 0.25),
-    "memory": ([262, 330, 392], 2.0),
-    "minesweeper": ([147, 175, 220], 0.75),
-    "ludo": ([294, 370, 440], 2.0),
     "checkers": ([165, 196, 247], 0.5),
+}
+
+# Each game's own effects (spec 13.5–13.8), ids `<game>.<name>`.
+GAME_SFX = {
+    "tictactoe": {"draw": ([0], 0.12, "noise"), "line": ([660, 880], 0.1, "sine")},
+    "memory": {"match": ([1047, 1319], 0.1, "bell"), "miss": ([220], 0.18, "sine")},
+    "minesweeper": {
+        "dig": ([0], 0.08, "noise"),
+        "flag": ([784], 0.06, "click"),
+        "puff": ([0, 0], 0.12, "noise"),
+    },
+    "ludo": {
+        "hop": ([523], 0.06, "click"),
+        "boing": ([392, 262], 0.12, "sine"),
+        "home": ([523, 659, 784], 0.12, "bell"),
+    },
 }
 
 # (notes in Hz, note length in s, waveform)
@@ -101,30 +122,61 @@ def credit(file, title):
     return {
         "file": file,
         "title": title,
-        "author": "Deskovky (vygenerováno)",
+        "author": GENERATED,
         "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
         "license": "CC0 1.0",
         "attribution_text": f"„{title}“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0",
     }
 
 
-def main():
-    # Keep the entries of real recordings that replaced placeholders.
-    path = ROOT / "CREDITS.json"
+def write_ogg(path, samples):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory() as tmp:
+        wav = Path(tmp) / "x.wav"
+        write_wav(wav, samples)
+        subprocess.run(
+            [FFMPEG, "-y", "-loglevel", "error", "-i", str(wav), "-c:a", "libvorbis", "-q:a", "3", str(path)],
+            check=True,
+        )
+
+
+def notes(names, length, kind):
+    samples = []
+    for i, freq in enumerate(names):
+        samples += note(freq, length, kind, i)
+    return samples
+
+
+def kept(path):
+    """Credits of real recordings in an existing CREDITS.json."""
     old = json.loads(path.read_text(encoding="utf-8")) if path.exists() else []
-    credits = [c for c in old if c["author"] != "Deskovky (vygenerováno)"]
-    for name, (freqs, tremolo) in MUSIC.items():
-        file = f"music/{name}.wav"
-        write_wav(ROOT / file, music(freqs, tremolo))
-        credits.append(credit(file, f"Zástupná hudba {name}"))
-    for name, (notes, length, kind) in SFX.items():
+    return [c for c in old if c["author"] != GENERATED]
+
+
+def save(path, credits):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(credits, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def main():
+    shared = kept(ROOT / "CREDITS.json")
+    for name, (freqs, length, kind) in SFX.items():
         file = f"sfx/{name}.wav"
-        samples = []
-        for i, freq in enumerate(notes):
-            samples += note(freq, length, kind, i)
-        write_wav(ROOT / file, samples)
-        credits.append(credit(file, f"Zástupný efekt {name}"))
-    (ROOT / "CREDITS.json").write_text(json.dumps(credits, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        write_wav(ROOT / file, notes(freqs, length, kind))
+        shared.append(credit(file, f"Zástupný efekt {name}"))
+    save(ROOT / "CREDITS.json", shared)
+
+    for game in sorted(set(MUSIC) | set(GAME_SFX)):
+        credits = kept(GAMES / game / "CREDITS.json")
+        if game in MUSIC:
+            freqs, tremolo = MUSIC[game]
+            write_ogg(ROOT / "music" / f"{game}.ogg", music(freqs, tremolo))
+            credits.append(credit(f"music/{game}.ogg", f"Zástupná hudba {game}"))
+        for name, (freqs, length, kind) in GAME_SFX.get(game, {}).items():
+            file = f"games/{game}/sfx/{name}.ogg"
+            write_ogg(GAMES / game / "sfx" / f"{name}.ogg", notes(freqs, length, kind))
+            credits.append(credit(file, f"Zástupný efekt {game}.{name}"))
+        save(GAMES / game / "CREDITS.json", credits)
 
 
 if __name__ == "__main__":

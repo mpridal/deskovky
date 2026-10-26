@@ -64,16 +64,16 @@ void main() {
     final t = (await tester.runAsync(() => PlayerRepository(db).create(name: 'Tereza', avatar: AvatarSpec.defaults)))!;
     await pumpApp(tester, size: const Size(800, 1280), db: db, audio: audio, disableAnimations: true);
     await _settle(tester);
-    expect(audio.audible, ['music/menu.mp3']);
+    expect(audio.audible, ['music/menu.ogg']);
 
     _router(tester).push('/play/sample', extra: _config([HumanSeat(t.id), const RobotSeat()]));
     await _settle(tester);
     expect(find.byType(GameScreen), findsOneWidget);
-    expect(audio.audible, ['music/sample.mp3']);
+    expect(audio.audible, ['music/sample.ogg']);
 
     _router(tester).go('/games');
     await _settle(tester);
-    expect(audio.audible, ['music/menu.mp3']);
+    expect(audio.audible, ['music/menu.ogg']);
   });
 
   testWidgets('music switched off in settings stays silent from the start', (tester) async {
@@ -83,14 +83,14 @@ void main() {
     expect(audio.audible, isEmpty);
     await tester.runAsync(() => SettingsRepository(db).setMusicOn(true));
     await _settle(tester);
-    expect(audio.audible, ['music/menu.mp3']);
+    expect(audio.audible, ['music/menu.ogg']);
   });
 
   testWidgets('music volume from settings is applied', (tester) async {
     await tester.runAsync(() => SettingsRepository(db).setMusicVolume(0.3));
     await pumpApp(tester, size: const Size(412, 915), db: db, audio: audio, disableAnimations: true);
     await _settle(tester);
-    expect(audio.volumeOf('music/menu.mp3'), closeTo(0.3, 0.01));
+    expect(audio.volumeOf('music/menu.ogg'), closeTo(0.3, 0.01));
   });
 
   testWidgets('a tip in the sample game sounds piece_place, the next player turn', (tester) async {
@@ -127,7 +127,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.pump(const Duration(milliseconds: 100));
     expect([for (final s in audio.sfx) s.$2], contains('sfx/jingle_win.wav'));
-    expect(audio.volumeOf('music/sample.mp3'), lessThan(0.7 * 0.5));
+    expect(audio.volumeOf('music/sample.ogg'), lessThan(0.7 * 0.5));
   });
 
   testWidgets('results: when only robots win, jingle_lose plays', (tester) async {
@@ -182,7 +182,7 @@ void main() {
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
     await tester.pump();
-    expect(audio.audible, ['music/menu.mp3']);
+    expect(audio.audible, ['music/menu.ogg']);
   });
 
   testWidgets('vibration switched off is respected from the first tip after start', (tester) async {
@@ -222,6 +222,6 @@ void main() {
     await _settle(tester);
     await tester.pump(const Duration(milliseconds: 100));
     expect(audio.sfx, isEmpty);
-    expect(audio.volumeOf('music/sample.mp3'), closeTo(0.7, 0.01));
+    expect(audio.volumeOf('music/sample.ogg'), closeTo(0.7, 0.01));
   });
 }

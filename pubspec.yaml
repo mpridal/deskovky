@@ -36,6 +36,20 @@ flutter:
     - assets/audio/music/
     - assets/audio/sfx/
     - assets/audio/CREDITS.json
+    - assets/games/tictactoe/
+    - assets/games/tictactoe/sfx/
+    - assets/games/memory/
+    - assets/games/memory/sfx/
+    - assets/games/minesweeper/
+    - assets/games/minesweeper/sfx/
+    - assets/games/ludo/
+    - assets/games/ludo/sfx/
+    - assets/games/checkers/
+    - assets/games/checkers/sfx/
+    - assets/games/memory/cards/animals/
+    - assets/games/memory/cards/food/
+    - assets/games/memory/cards/transport/
+    - assets/games/memory/cards/space/
     - assets/config/rewards.json
     - assets/config/shop_items.json
     - assets/fonts/OFL-Baloo2.txt
