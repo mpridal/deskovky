@@ -126,6 +126,24 @@ void main() {
     expect(restored.rules.currentSeat(restored.state), seat);
   });
 
+  testWidgets('game time stops in the pause and continues after a resume (spec 13.4)', (tester) async {
+    final t = await _player(tester, db, 'Tereza');
+    await tester.runAsync(
+      () => GameStore(db).saveSession(SavedGame(config: _config([HumanSeat(t), const RobotSeat()]), seed: 1, moves: const [], elapsedMs: 5000)),
+    );
+    await pumpApp(tester, size: const Size(800, 1280), db: db, disableAnimations: true);
+    await _settleIo(tester);
+    await tester.tap(find.text('Pokračovat: Hádej číslo'));
+    await _settleIo(tester);
+    expect(_screen(tester).debugElapsed, greaterThanOrEqualTo(const Duration(seconds: 5)));
+
+    await tester.tap(find.bySemanticsLabel(RegExp('^Pauza')));
+    await tester.pumpAndSettle();
+    final paused = _screen(tester).debugElapsed;
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 80)));
+    expect(_screen(tester).debugElapsed, paused);
+  });
+
   testWidgets('a saved game whose player was deleted cannot be resumed', (tester) async {
     final t = await _player(tester, db, 'Tereza');
     final k = await _player(tester, db, 'Kuba');

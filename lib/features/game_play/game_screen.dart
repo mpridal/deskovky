@@ -53,6 +53,12 @@ class GameScreenState extends ConsumerState<GameScreen> {
   @visibleForTesting
   GameSession<Object?>? get debugSession => _session;
 
+  final _play = GlobalKey();
+
+  /// Playing time so far, without pauses (for tests).
+  @visibleForTesting
+  Duration get debugElapsed => (_play.currentState as _Timed?)?.elapsed ?? Duration.zero;
+
   @override
   void initState() {
     super.initState();
@@ -111,7 +117,9 @@ class GameScreenState extends ConsumerState<GameScreen> {
     if (module == null || session == null) {
       return const Scaffold(body: FeltBackground(child: SizedBox.expand()));
     }
-    return module.withType(<T>(m) => _GamePlay<T>(module: m, session: session as GameSession<T>, profiles: _profiles));
+    return module.withType(
+      <T>(m) => _GamePlay<T>(key: _play, module: m, session: session as GameSession<T>, profiles: _profiles),
+    );
   }
 }
 
@@ -145,7 +153,11 @@ class _GamePlay<S> extends ConsumerStatefulWidget {
   ConsumerState<_GamePlay<S>> createState() => _GamePlayState<S>();
 }
 
-class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingObserver {
+abstract interface class _Timed {
+  Duration get elapsed;
+}
+
+class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingObserver implements _Timed {
   late final TurnController<S> _turns;
   late final _host = _Host(
     vibrationOn: () => ref.read(vibrationOnProvider).value ?? true,
@@ -155,6 +167,13 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
 
   /// Playing time without pauses and background (spec 5.4 "délka").
   final _clock = Stopwatch();
+
+  /// Playing time including the time before a resume (spec 13.4).
+  Duration get _elapsed => _session.elapsedBefore + _clock.elapsed;
+
+  @override
+  Duration get elapsed => _elapsed;
+
   Timer? _finishTimer;
   bool _finished = false;
   bool _pauseOpen = false;
@@ -210,7 +229,7 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
 
   void _save() {
     if (_finished || !_module.supportsSaveResume || _turns.isOver) return;
-    ref.read(gameStoreProvider).saveSession(_session.toSave());
+    ref.read(gameStoreProvider).saveSession(_session.toSave(elapsed: _elapsed));
   }
 
   void _checkFinished() {
@@ -229,7 +248,7 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
           config: _session.config,
           result: outcome.result,
           events: List.of(_host.events),
-          duration: _clock.elapsed,
+          duration: _elapsed,
         )
         .catchError((Object e) {
           // Statistics must never keep the results away.
@@ -264,7 +283,7 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
       return;
     }
     if (_module.supportsSaveResume && !_turns.isOver) {
-      await store.saveSession(_session.toSave());
+      await store.saveSession(_session.toSave(elapsed: _elapsed));
     } else {
       await store.deleteSession(_module.id);
     }
@@ -429,6 +448,7 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
       canAct: mySeat != null && !_finished,
       submit: (Move move) => _turns.submitHuman(move),
       host: _host,
+      elapsed: () => _elapsed,
     );
 
     String? bubble;

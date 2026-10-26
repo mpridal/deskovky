@@ -6,14 +6,20 @@ import 'state_hash.dart';
 /// One running game: state plus the log of applied moves (owned by the
 /// framework, not by the game).
 class GameSession<S> {
-  GameSession._(this.rules, this.config, this.seed, this._state);
+  GameSession._(this.rules, this.config, this.seed, this._state, [this.elapsedBefore = Duration.zero]);
 
   factory GameSession.start(GameRules<S> rules, GameConfig config, int seed) =>
       GameSession._(rules, config, seed, rules.initialState(config, seed));
 
   /// Replays a saved game; null if any saved move is no longer legal.
   static GameSession<S>? restore<S>(GameRules<S> rules, SavedGame save) {
-    final session = GameSession.start(rules, save.config, save.seed);
+    final session = GameSession._(
+      rules,
+      save.config,
+      save.seed,
+      rules.initialState(save.config, save.seed),
+      Duration(milliseconds: save.elapsedMs),
+    );
     for (final move in save.moves) {
       if (!session.apply(move)) return null;
     }
@@ -23,6 +29,9 @@ class GameSession<S> {
   final GameRules<S> rules;
   final GameConfig config;
   final int seed;
+
+  /// Playing time from before a resume; the screen adds its own clock.
+  final Duration elapsedBefore;
   S _state;
   final List<Move> _moves = [];
 
@@ -39,5 +48,6 @@ class GameSession<S> {
     return true;
   }
 
-  SavedGame toSave() => SavedGame(config: config, seed: seed, moves: moves);
+  SavedGame toSave({Duration elapsed = Duration.zero}) =>
+      SavedGame(config: config, seed: seed, moves: moves, elapsedMs: elapsed.inMilliseconds);
 }

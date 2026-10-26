@@ -31,6 +31,7 @@ class GameBoardView<S> {
     required this.canAct,
     required this.submit,
     required this.host,
+    this.elapsed = _noTime,
   });
 
   final S state;
@@ -41,7 +42,13 @@ class GameBoardView<S> {
   final bool canAct;
   final Future<bool> Function(Move move) submit;
   final GameHost host;
+
+  /// Playing time so far without pauses and background (spec 13.4), e.g.
+  /// for a move that records when a Minesweeper board was cleared.
+  final Duration Function() elapsed;
 }
+
+Duration _noTime() => Duration.zero;
 
 /// A game registered with the framework (spec 8). The framework never looks
 /// inside the game: it only uses this manifest, the rules, the AI and the board.
