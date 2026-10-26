@@ -62,8 +62,13 @@ PlayerStats computePlayerStats(int playerId, Iterable<MatchRecord> matches) {
     final me = match.participants.where((p) => p.playerId == playerId && !p.robot).firstOrNull;
     if (me == null) continue;
     final won = match.isWin(me);
+    // Alone at the table there is nobody to beat: a solo game counts as
+    // played and for records, but never as a win or a streak.
+    final versus = match.participants.length > 1;
     played++;
-    if (won) {
+    if (!versus) {
+      // Streak and totals unchanged.
+    } else if (won) {
       wins++;
       streak++;
       if (bestStreak < streak) bestStreak = streak;
@@ -76,7 +81,7 @@ PlayerStats computePlayerStats(int playerId, Iterable<MatchRecord> matches) {
     final fastest = old?.fastestWin;
     byGame[match.gameId] = GameBest(
       played: (old?.played ?? 0) + 1,
-      wins: (old?.wins ?? 0) + (won ? 1 : 0),
+      wins: (old?.wins ?? 0) + (won && versus ? 1 : 0),
       bestScore: old == null || me.score > old.bestScore ? me.score : old.bestScore,
       fastestWin: won && (fastest == null || match.duration < fastest) ? match.duration : fastest,
       bestStars: old == null || me.stars > old.bestStars ? me.stars : old.bestStars,

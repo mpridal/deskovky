@@ -32,10 +32,8 @@ class _LeaderboardsScreenState extends ConsumerState<LeaderboardsScreen> {
     final l10n = AppLocalizations.of(context);
     final matches = ref.watch(allMatchesProvider).value ?? const [];
     final players = {for (final p in ref.watch(playersProvider).value ?? const <PlayerProfile>[]) p.id: p};
-    final rows = [
-      for (final row in leaderboard(matches, _query, now: ref.read(statsRepositoryProvider).now()))
-        if (players.containsKey(row.playerId)) row,
-    ];
+    final now = ref.watch(statsNowProvider).value ?? ref.read(statsRepositoryProvider).now();
+    final rows = leaderboard(matches, _query, now: now, players: players.keys.toSet());
     return SafeArea(
       child: ListView(
         padding: const EdgeInsets.all(16),

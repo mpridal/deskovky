@@ -50,23 +50,38 @@ DateTime? periodStart(StatsPeriod period, DateTime now) => switch (period) {
   StatsPeriod.all => null,
 };
 
-/// People ranked by wins, then win rate, then fewer games (spec 5.4). Robots
-/// and deleted players never appear. Points join in milestone 7.
-List<LeaderboardEntry> leaderboard(Iterable<MatchRecord> matches, LeaderboardQuery query, {required DateTime now}) {
+/// When the week or month views change next: the earlier of next Monday
+/// 00:00 and the next 1st 00:00.
+DateTime nextPeriodBoundary(DateTime now) {
+  final monday = DateTime(now.year, now.month, now.day + 8 - now.weekday);
+  final month = DateTime(now.year, now.month + 1);
+  return monday.isBefore(month) ? monday : month;
+}
+
+/// People ranked by wins, then win rate, then fewer games (spec 5.4). Robots,
+/// deleted players and anyone outside [players] (when given) never appear;
+/// one-seat games do not count. Points join in milestone 7.
+List<LeaderboardEntry> leaderboard(
+  Iterable<MatchRecord> matches,
+  LeaderboardQuery query, {
+  required DateTime now,
+  Set<int>? players,
+}) {
   final start = periodStart(query.period, now);
   final selected = matches.where(
     (m) =>
+        m.participants.length > 1 &&
         (query.gameId == null || m.gameId == query.gameId) &&
         (query.difficulty == null || m.difficulty == query.difficulty) &&
         (start == null || !m.playedAt.isBefore(start)),
-  );
-  final players = {
+  ).toList();
+  final ranked = {
     for (final m in selected)
       for (final p in m.participants)
-        if (!p.robot) ?p.playerId,
+        if (!p.robot && (players == null || players.contains(p.playerId))) ?p.playerId,
   };
   final rows = [
-    for (final id in players)
+    for (final id in ranked)
       () {
         final s = computePlayerStats(id, selected);
         return (id: id, wins: s.wins, played: s.played, rate: s.winRate);
@@ -75,7 +90,9 @@ List<LeaderboardEntry> leaderboard(Iterable<MatchRecord> matches, LeaderboardQue
       final byWins = b.wins.compareTo(a.wins);
       if (byWins != 0) return byWins;
       final byRate = b.rate.compareTo(a.rate);
-      return byRate != 0 ? byRate : a.played.compareTo(b.played);
+      if (byRate != 0) return byRate;
+      final byPlayed = a.played.compareTo(b.played);
+      return byPlayed != 0 ? byPlayed : a.id.compareTo(b.id);
     });
   final result = <LeaderboardEntry>[];
   for (var i = 0; i < rows.length; i++) {

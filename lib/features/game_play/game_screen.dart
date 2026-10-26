@@ -249,6 +249,8 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
     // Robots must not play (or even finish the game) under the dialog.
     final wasPaused = _turns.paused;
     _turns.pause();
+    final wasTiming = _clock.isRunning;
+    _clock.stop();
     final quit = await showAppConfirmDialog(
       context,
       title: l10n.exitTitle,
@@ -258,6 +260,7 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
     );
     if (!quit) {
       if (!wasPaused && mounted) _turns.resume();
+      if (wasTiming) _clock.start();
       return;
     }
     if (_module.supportsSaveResume && !_turns.isOver) {

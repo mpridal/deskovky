@@ -82,4 +82,21 @@ void main() {
     expect(earned.keys, ['first_win']);
     expect(earned['first_win'], DateTime(2026, 10, 21, 18));
   });
+
+  test('deleting a player refreshes the watched matches', () async {
+    await stats.recordMatch(match(players: [tereza, kuba]));
+    final seen = <List<int?>>[];
+    final sub = stats.watchAllMatches().listen((m) => seen.add([for (final p in m.single.participants) p.playerId]));
+    await pumpEventQueue();
+    await PlayerRepository(db).delete(kuba);
+    await pumpEventQueue();
+    await sub.cancel();
+    expect(seen.last, [tereza, null]);
+  });
+
+  test('the last badge is the latest awarded even within the same millisecond', () async {
+    await stats.awardBadge(tereza, 'first_win');
+    await stats.awardBadge(kuba, 'hard_win');
+    expect(await stats.lastBadge(), (kuba, 'hard_win'));
+  });
 }

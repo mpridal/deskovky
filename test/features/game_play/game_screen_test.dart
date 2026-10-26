@@ -97,6 +97,9 @@ void main() {
     expect(find.text('Rozehraná hra se uloží.'), findsOneWidget);
     await tester.tap(find.text('Ukončit'));
     await tester.pumpAndSettle();
+    // The save is real database I/O; under a busy test run it needs real time.
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
+    await tester.pumpAndSettle();
     expect(find.byType(GameScreen), findsNothing);
     expect(find.byType(ActivePlayerBar), findsOneWidget);
     expect(await tester.runAsync(() => GameStore(db).savedSession('sample')), isNotNull);

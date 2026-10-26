@@ -164,8 +164,9 @@ class _WeekLeaderboard extends ConsumerWidget {
     final rows = leaderboard(
       ref.watch(allMatchesProvider).value ?? const [],
       const LeaderboardQuery(period: StatsPeriod.week),
-      now: ref.read(statsRepositoryProvider).now(),
-    ).where((r) => players.containsKey(r.playerId)).take(4).toList();
+      now: ref.watch(statsNowProvider).value ?? ref.read(statsRepositoryProvider).now(),
+      players: players.keys.toSet(),
+    ).take(4).toList();
     if (rows.isEmpty) return Text(l10n.screenEmpty, style: AppTypography.caption(color: AppColors.woodLight));
     return Column(
       children: [

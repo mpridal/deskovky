@@ -19,6 +19,9 @@ class StatsRepository {
 
   DateTime now() => _now();
 
+  /// Runs [action] atomically (drift nests inner transactions as savepoints).
+  Future<T> transaction<T>(Future<T> Function() action) => _db.transaction(action);
+
   /// Stores [match]; [events] add up in the human players' counters
   /// (`data['count']`, default 1; only the player at `data['seat']` when the
   /// event names a seat). Returns the match id.
@@ -71,9 +74,10 @@ class StatsRepository {
   Future<List<MatchRecord>> allMatches() =>
       _load((_db.select(_db.matches)..orderBy([(m) => OrderingTerm.asc(m.playedAt), (m) => OrderingTerm.asc(m.id)])).get());
 
-  /// All matches now and after every change (participants are written in
-  /// the same transaction as their match).
-  Stream<List<MatchRecord>> watchAllMatches() => _db.select(_db.matches).watch().asyncMap((_) => allMatches());
+  /// All matches now and after every change. Watches participants: they are
+  /// written with every new match, and deleting a player clears their id.
+  Stream<List<MatchRecord>> watchAllMatches() =>
+      _db.select(_db.matchParticipants).watch().asyncMap((_) => allMatches());
 
   Stream<Map<String, DateTime>> watchEarnedBadges(int playerId) =>
       (_db.select(_db.earnedBadges)..where((b) => b.playerId.equals(playerId))).watch().asyncMap(
@@ -158,7 +162,10 @@ class StatsRepository {
   /// The most recently earned badge on this device (tablet "Poslední odměna").
   Future<(int playerId, String badgeId)?> lastBadge() async {
     final row = await (_db.select(_db.earnedBadges)
-          ..orderBy([(b) => OrderingTerm.desc(b.earnedAt)])
+          ..orderBy([
+            (b) => OrderingTerm.desc(b.earnedAt),
+            (_) => OrderingTerm.desc(const CustomExpression<int>('rowid')),
+          ])
           ..limit(1))
         .getSingleOrNull();
     return row == null ? null : (row.playerId, row.badgeId);

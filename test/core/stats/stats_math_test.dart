@@ -117,9 +117,9 @@ void main() {
 
     test('week starts Monday 00:00 local, month on the 1st', () {
       final matches = [
-        _m([(_t, 1)], at: DateTime(2026, 10, 25, 23, 59)), // Sunday, last week
-        _m([(_k, 1)], at: DateTime(2026, 10, 26, 0, 0)), // Monday
-        _m([(_b, 1)], at: DateTime(2026, 9, 30, 23, 59)), // last month
+        _m([(_t, 1), (null, 2)], at: DateTime(2026, 10, 25, 23, 59)), // Sunday, last week
+        _m([(_k, 1), (null, 2)], at: DateTime(2026, 10, 26, 0, 0)), // Monday
+        _m([(_b, 1), (null, 2)], at: DateTime(2026, 9, 30, 23, 59)), // last month
       ];
       expect([for (final r in leaderboard(matches, const LeaderboardQuery(period: StatsPeriod.week), now: now)) r.playerId], [_k]);
       expect(
@@ -141,6 +141,47 @@ void main() {
         ],
       );
       expect([for (final r in leaderboard([match], const LeaderboardQuery(), now: now)) r.playerId], [_t]);
+    });
+  });
+
+  group('review fixes', () {
+    final now = DateTime(2026, 10, 26, 10);
+
+    test('one-seat games count as played and as records, never as wins or streaks', () {
+      final s = computePlayerStats(_t, [
+        for (var i = 0; i < 5; i++) _m([(_t, 1)], seconds: 50 - i),
+        _m([(_t, 2), (_k, 1)]),
+      ]);
+      expect(s.played, 6);
+      expect(s.wins, 0);
+      expect(s.bestStreak, 0);
+      expect(s.byGame['sample']!.fastestWin, const Duration(seconds: 46), reason: 'a solo win is a record');
+    });
+
+    test('the leaderboard leaves out one-seat games', () {
+      final rows = leaderboard([_m([(_t, 1)]), _m([(_k, 1), (_t, 2)])], const LeaderboardQuery(), now: now);
+      expect([for (final r in rows) (r.playerId, r.wins, r.played)], [(_k, 1, 1), (_t, 0, 1)]);
+    });
+
+    test('only existing players are ranked, without gaps', () {
+      final rows = leaderboard(
+        [_m([(_t, 1), (_k, 2)]), _m([(_t, 1), (_b, 2)]), _m([(_k, 1), (_b, 2)])],
+        const LeaderboardQuery(),
+        now: now,
+        players: {_k, _b},
+      );
+      expect([for (final r in rows) (r.playerId, r.rank)], [(_k, 1), (_b, 2)]);
+    });
+
+    test('ties keep a stable order by player id', () {
+      final rows = leaderboard([_m([(_k, 1), (_t, 2)]), _m([(_t, 1), (_k, 2)])], const LeaderboardQuery(), now: now);
+      expect([for (final r in rows) r.playerId], [_t, _k]);
+    });
+
+    test('the next period boundary is the next Monday or the next 1st, whichever comes first', () {
+      expect(nextPeriodBoundary(DateTime(2026, 10, 25, 23, 59)), DateTime(2026, 10, 26));
+      expect(nextPeriodBoundary(DateTime(2026, 10, 28, 12)), DateTime(2026, 11, 1));
+      expect(nextPeriodBoundary(DateTime(2026, 11, 1, 0, 0)), DateTime(2026, 11, 2));
     });
   });
 }

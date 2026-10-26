@@ -35,14 +35,15 @@ class StatsService {
   /// Every badge, framework first, then by game.
   List<BadgeDef> get allBadges => [...frameworkBadges, for (final m in _modules) ...m.badges];
 
-  /// Stores the game and returns the badges people earned with it. Robots
-  /// and profiles deleted meanwhile get nothing (spec 5.7.1).
+  /// Stores the game and returns the badges people earned with it, all in
+  /// one transaction, so a killed app never keeps the game without its
+  /// badges. Robots and profiles deleted meanwhile get nothing (spec 5.7.1).
   Future<List<EarnedBadge>> recordFinished({
     required GameConfig config,
     required GameResult result,
     required List<GameEvent> events,
     required Duration duration,
-  }) async {
+  }) => _repo.transaction(() async {
     final humanIds = {
       for (final s in config.seats)
         if (s is HumanSeat) s.profileId,
@@ -98,5 +99,5 @@ class StatsService {
       }
     }
     return earned;
-  }
+  });
 }
