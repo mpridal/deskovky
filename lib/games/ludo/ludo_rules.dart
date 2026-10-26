@@ -273,6 +273,10 @@ class LudoRules implements GameRules<LudoState> {
   static List<LudoStep> currentSteps(LudoState s) =>
       s.phase == LudoPhase.move && s.dice != null ? steps(s, s.current, s.dice!) : const [];
 
+  /// "Ukončit a seřadit" is offered once some piece (anyone's) is home: an
+  /// early end right at the start would hand out free places (spec 5.6).
+  static bool canStop(LudoState s) => s.pieces.any((p) => p.any(LudoPos.inHome));
+
   static bool _done(LudoState s, int seat) => s.pieces[seat].every(LudoPos.inHome);
 
   static bool _over(LudoState s) =>
@@ -297,7 +301,7 @@ class LudoRules implements GameRules<LudoState> {
   bool isLegal(LudoState state, Move move) {
     if (_over(state) || move.seat != state.current) return false;
     return switch (move.type) {
-      'stop' => move.data.isEmpty,
+      'stop' => move.data.isEmpty && canStop(state),
       'roll' => state.phase == LudoPhase.roll && move.data.isEmpty,
       'move' => currentSteps(state).any((m) => m.piece == move.data['piece']),
       _ => false,
@@ -406,11 +410,12 @@ class LudoRules implements GameRules<LudoState> {
     return GameResult(
       places: p,
       scores: [for (var s = 0; s < state.seats; s++) score(state, s)],
-      stars: [for (final place in p) place <= 3 ? 4 - place : 0],
+      // An early end only ranks the players; stars are for a game played out.
+      stars: [for (final place in p) state.stopped || place > 3 ? 0 : 4 - place],
       stats: {
         'captures': state.stats.fold<int>(0, (sum, x) => sum + x.captures),
         'pieces': state.options.pieces,
-        'stopped': state.stopped,
+        'endedEarly': state.stopped,
       },
     );
   }

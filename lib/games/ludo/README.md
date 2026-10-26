@@ -12,9 +12,9 @@
 - Do domečku jen přesným hodem; v domečku se figurky nepřeskakují, ale smí v něm postoupit dál (bez přeskakování).
 - Když lze táhnout, táhnout se musí (žádný „pas“). Když nelze, hod propadne a hraje další.
 - Vyhrává, kdo má první všechny figurky doma. S volbou „Dohrát pořadí“ se hraje, dokud nezbude jediný hráč.
-- „Ukončit a seřadit“ (pod kostkou, když je na tahu člověk, po potvrzení): hra skončí, dohraní hráči drží svá místa, ostatní se seřadí podle postupu (součet polí, která jejich figurky ušly); stejný postup = sdílené místo.
+- „Ukončit a seřadit“ (pod kostkou, když je na tahu člověk, po potvrzení; nabídne se, až má kdokoli aspoň jednu figurku v domečku): hra skončí, dohraní hráči drží svá místa, ostatní se seřadí podle postupu (součet polí, která jejich figurky ušly); stejný postup = sdílené místo. Ukončená partie nedává hvězdy (★ 0) a ve výsledku má `stats['endedEarly'] = true`.
 - **Volby:** délka plná (4 figurky) / krátká (2 figurky), povinné vyhazování (když lze vyhodit, musí se vyhodit – i nasazením), 3 pokusy, dohrát pořadí, „Jediný tah zahrát samo“ (zadání: „lze vypnout“).
-- **Hodnocení:** 1. místo ★★★, 2. ★★, 3. ★, 4. bez hvězdy. Skóre v HUD = figurky doma. Body ×1,2 (dlouhá hra).
+- **Hodnocení:** 1. místo ★★★, 2. ★★, 3. ★, 4. bez hvězdy; předčasně ukončená partie ★ 0 všem. Skóre v HUD = figurky doma. Body ×1,2 (dlouhá hra).
 - **Odznaky:** `ludo.calm` Nezlobím se (výhra a aspoň 3× vyhozen), `ludo.hunter` Lovec (5 vyhození v jedné hře), `ludo.sixes` Tři šestky za sebou, `ludo.family` Rodinná hra (dohraná hra se 4 lidmi).
 
 ### Rozhodnutí, která zadání nechávalo otevřená
@@ -22,7 +22,9 @@
 - Šestka, se kterou nelze táhnout, dává hod navíc; tři pokusy se počítají jen při hodech bez šestky.
 - Figurky v domečku se nepočítají jako „na desce“ – hráč s figurkami jen v rohu a v domečku má 3 pokusy.
 - Hráč, který dohrál, už nehází; po jeho posledním tahu hraje další, i kdyby padla šestka.
-- „Ukončit a seřadit“ může jen člověk na tahu (tah `stop`); viz `FRAMEWORK_REQUESTS.md`.
+- „Ukončit a seřadit“ může jen člověk na tahu (tah `stop`), a to až když je nějaká figurka v domečku – jinak by šlo hned na začátku „vyhrát“ zadarmo (zadání 5.6: předčasně ukončená hra je bez bodů). Body za samostatné 1. místo ve frameworku zatím zůstávají – viz `FRAMEWORK_REQUESTS.md`, bod 4.
+- „Rodinná hra“ (4 lidé) se hlásí až od první figurky v domečku, ne hned na začátku.
+- **K potvrzení Milošem:** pořadí priorit Střední AI se liší od zadání (nasazení až jako poslední) – viz AI níže.
 - Mini avatar na startovních polích chybí – deska nezná hráče (`FRAMEWORK_REQUESTS.md`).
 
 ## Architektura
@@ -37,7 +39,7 @@
 ## AI (`ludo_ai.dart`)
 
 - **Lehká:** náhodná legální figurka.
-- **Střední:** priority vyhodit → do domečku → utéct z ohrožení → posunout nejpřednější figurku, která zůstane v bezpečí → nasadit. Zadání uvádí nasazení hned za vyhozením a posun nejzadnější figurky; tak ale Střední prohrávala s Lehkou (22 % výher), protože se 3 pokusy je brzké nasazení nevýhodné. Takto vyhrává 53 %.
+- **Střední:** priority vyhodit → do domečku → utéct z ohrožení → posunout nejpřednější figurku, která zůstane v bezpečí → nasadit. Zadání uvádí nasazení hned za vyhozením a posun nejzadnější figurky; tak ale Střední prohrávala s Lehkou (22 % výher), protože se 3 pokusy je brzké nasazení nevýhodné. Takto vyhrává 53 %. **Rozhodne Miloš** – vrátit pořadí ze zadání je jedna úprava v `_byPriority`.
 - **Těžká:** hodnoticí funkce (postup figurek, domeček, riziko – kolik soupeřových figurek může příštím hodem doskočit, včetně nasazení na jejich start – minus 0,6 × nejlepší soupeř) a expectimax o 1 hod dopředu: pro každý tah zprůměruje 6 možných hodů toho, kdo hraje dál, který zvolí svůj nejlepší tah.
 - Testy (`test/games/ludo/ludo_ai_test.dart`, 2 hráči, střídá se začínající): Těžká vs Lehká 77 % (200 partií), Těžká vs Střední 71,5 %, 100 partií na každé obtížnosti s různými volbami bez nelegálního tahu.
 
