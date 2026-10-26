@@ -42,3 +42,23 @@ Pravidla rozsahu pro paralelní vývoj her (kap. 13.2) proto znamenají `lib/gam
 - **Drift (SQLite)** – `lib/core/db/`. Typované dotazy, sledování změn jako `Stream`, verzované schéma se snapshoty v `drift_schemas/` a generovaným ověřovačem migrací (`test/core/db/generated/`). Soubor DB leží v adresáři aplikace (`drift_flutter`), aktualizace APK ho nemaže.
 - **Repozitáře** – `PlayerRepository` (pravidla profilů z kap. 5.2), `SettingsRepository` (aktivní hráč, jazyk). UI k databázi nikdy nepřistupuje přímo.
 - **Riverpod** – `lib/app/providers.dart`. Jediné místo, kde se skládají závislosti; v testech se `databaseProvider` přepíše paměťovou DB (`test/helpers/test_database.dart`). Proč Riverpod: testovatelné přepisování závislostí bez globálních singletonů a přímá podpora `Stream` → `AsyncValue`.
+
+## Herní API (milník 4)
+
+```
+GameModule<S>  ── manifest hry: rozsah hráčů, volby, obtížnosti, rules, ai, board, icon
+  rules: GameRules<S>   initialState(config, seed) → apply(state, Move) … isOver / result
+  ai:    AiPlayer<S>    chooseMove(state, seat, difficulty, SeededRandom) – čistá funkce
+
+Framework (lib/features/game_play):
+  GameSession<S>  stav + log tahů + seed  →  toSave() = SavedGame (config, seed, moves)
+  LocalTransport  ověří a aplikuje Move   (fáze 3: NetworkTransport, hry beze změny)
+  TurnController  pořadí, roboti s prodlevou (RobotSpeed), AI přes AiRunner (izolát)
+  GameScreen      HUD, pauza, ukládání při každém tahu a při odchodu z aplikace
+```
+
+- **Tok tahu:** deska → `GameBoardView.submit(Move)` → `TurnController.submitHuman` → `LocalTransport.submit` → `GameSession.apply` → listener uloží partii a překreslí HUD. Roboti posílají tahy stejnou cestou.
+- **Náhoda** jen přes `SeededRandom` (vlastní xorshift32 se zamrzlou referenční posloupností), nikdy `dart:math Random` – uložená partie se musí přehrát stejně na každém zařízení i verzi.
+- **Obnovení** = `GameSession.restore(rules, save)` přehraje tahy; neplatný tah nebo chybějící profil → partie se zahodí a otevře se nastavení.
+- **Typ stavu:** framework zná jen `GameModule<Object?>`; `module.withType(<T>(m) => …)` vrátí typovaný kontext pro `GameSession<T>` a desku.
+- **Registr:** `lib/games/registry.dart`. Texty her zatím ve sdílených ARB s prefixem hry (`sample…`), milník 9 je přesune do složek her.

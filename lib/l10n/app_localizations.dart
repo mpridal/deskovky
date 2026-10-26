@@ -597,6 +597,366 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Phone setting'**
   String get settingsLanguageSystem;
+
+  /// No description provided for @sampleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Guess the number'**
+  String get sampleTitle;
+
+  /// No description provided for @sampleDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Who guesses the secret number first?'**
+  String get sampleDescription;
+
+  /// No description provided for @sampleRules.
+  ///
+  /// In en, this message translates to:
+  /// **'The game hides a number. Players take turns guessing. After each guess you learn whether the secret number is higher or lower. Whoever hits it wins!'**
+  String get sampleRules;
+
+  /// No description provided for @gamePlayersRange.
+  ///
+  /// In en, this message translates to:
+  /// **'{min}–{max} players'**
+  String gamePlayersRange(int min, int max);
+
+  /// No description provided for @continueTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue: {game}'**
+  String continueTitle(String game);
+
+  /// No description provided for @continueSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Game in progress'**
+  String get continueSaved;
+
+  /// No description provided for @continueSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{players} · {difficulty}'**
+  String continueSummary(String players, String difficulty);
+
+  /// No description provided for @seatSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{players} ({humans} + {robots} 🤖)'**
+  String seatSummary(String players, int humans, int robots);
+
+  /// No description provided for @continuePlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Play ▸'**
+  String get continuePlay;
+
+  /// No description provided for @difficultyEasy.
+  ///
+  /// In en, this message translates to:
+  /// **'Easy'**
+  String get difficultyEasy;
+
+  /// No description provided for @difficultyMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get difficultyMedium;
+
+  /// No description provided for @difficultyHard.
+  ///
+  /// In en, this message translates to:
+  /// **'Hard'**
+  String get difficultyHard;
+
+  /// No description provided for @sampleOptionRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Number range'**
+  String get sampleOptionRange;
+
+  /// No description provided for @setupPlayers.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of players'**
+  String get setupPlayers;
+
+  /// No description provided for @seatsHumans.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{{count} person} other{{count} people}}'**
+  String seatsHumans(int count);
+
+  /// No description provided for @seatsRobots.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{{count} robot} other{{count} robots}}'**
+  String seatsRobots(int count);
+
+  /// No description provided for @setupDifficulty.
+  ///
+  /// In en, this message translates to:
+  /// **'Robot difficulty'**
+  String get setupDifficulty;
+
+  /// No description provided for @setupSpeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Robot speed'**
+  String get setupSpeed;
+
+  /// No description provided for @speedSlow.
+  ///
+  /// In en, this message translates to:
+  /// **'Slow'**
+  String get speedSlow;
+
+  /// No description provided for @speedNormal.
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get speedNormal;
+
+  /// No description provided for @speedFast.
+  ///
+  /// In en, this message translates to:
+  /// **'Fast'**
+  String get speedFast;
+
+  /// No description provided for @seatHuman.
+  ///
+  /// In en, this message translates to:
+  /// **'Human'**
+  String get seatHuman;
+
+  /// No description provided for @seatRobot.
+  ///
+  /// In en, this message translates to:
+  /// **'🤖 Robot'**
+  String get seatRobot;
+
+  /// No description provided for @setupLoaded.
+  ///
+  /// In en, this message translates to:
+  /// **'↺ Settings loaded from your last game'**
+  String get setupLoaded;
+
+  /// No description provided for @setupFilled.
+  ///
+  /// In en, this message translates to:
+  /// **'free seats filled with robots'**
+  String get setupFilled;
+
+  /// No description provided for @setupNoFreeProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'All players are already at the table.'**
+  String get setupNoFreeProfile;
+
+  /// No description provided for @seatMoveUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Move up'**
+  String get seatMoveUp;
+
+  /// No description provided for @seatMoveDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Move down'**
+  String get seatMoveDown;
+
+  /// No description provided for @setupPlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Play!'**
+  String get setupPlay;
+
+  /// No description provided for @setupNeedPlayer.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a player first.'**
+  String get setupNeedPlayer;
+
+  /// No description provided for @robotName0.
+  ///
+  /// In en, this message translates to:
+  /// **'Robo'**
+  String get robotName0;
+
+  /// No description provided for @robotName1.
+  ///
+  /// In en, this message translates to:
+  /// **'Chip'**
+  String get robotName1;
+
+  /// No description provided for @robotName2.
+  ///
+  /// In en, this message translates to:
+  /// **'Bolt'**
+  String get robotName2;
+
+  /// No description provided for @robotName3.
+  ///
+  /// In en, this message translates to:
+  /// **'Buzz'**
+  String get robotName3;
+
+  /// No description provided for @hudExit.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit'**
+  String get hudExit;
+
+  /// No description provided for @hudPause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get hudPause;
+
+  /// No description provided for @hudMusic.
+  ///
+  /// In en, this message translates to:
+  /// **'Music'**
+  String get hudMusic;
+
+  /// No description provided for @hudSfx.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound effects'**
+  String get hudSfx;
+
+  /// No description provided for @exitTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Really quit?'**
+  String get exitTitle;
+
+  /// No description provided for @exitSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'The game in progress will be saved.'**
+  String get exitSaved;
+
+  /// No description provided for @exitNotSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'The game in progress will not be saved.'**
+  String get exitNotSaved;
+
+  /// No description provided for @exitConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Quit'**
+  String get exitConfirm;
+
+  /// No description provided for @pauseResume.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get pauseResume;
+
+  /// No description provided for @pauseRestart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start again'**
+  String get pauseRestart;
+
+  /// No description provided for @pauseRules.
+  ///
+  /// In en, this message translates to:
+  /// **'Rules'**
+  String get pauseRules;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @turnOf.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}\'s turn'**
+  String turnOf(String name);
+
+  /// No description provided for @robotThinking.
+  ///
+  /// In en, this message translates to:
+  /// **'🤖 {name} is thinking…'**
+  String robotThinking(String name);
+
+  /// No description provided for @resumeFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The saved game cannot be continued.'**
+  String get resumeFailed;
+
+  /// No description provided for @resultWins.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} wins!'**
+  String resultWins(String name);
+
+  /// No description provided for @resultDraw.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a draw!'**
+  String get resultDraw;
+
+  /// No description provided for @resultPlayAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Play again'**
+  String get resultPlayAgain;
+
+  /// No description provided for @resultChangeSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Change settings'**
+  String get resultChangeSettings;
+
+  /// No description provided for @resultHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get resultHome;
+
+  /// No description provided for @resultRobotTag.
+  ///
+  /// In en, this message translates to:
+  /// **'robot'**
+  String get resultRobotTag;
+
+  /// No description provided for @resultSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{game} · {difficulty}'**
+  String resultSubtitle(String game, String difficulty);
+
+  /// No description provided for @sampleHigher.
+  ///
+  /// In en, this message translates to:
+  /// **'Higher!'**
+  String get sampleHigher;
+
+  /// No description provided for @sampleLower.
+  ///
+  /// In en, this message translates to:
+  /// **'Lower!'**
+  String get sampleLower;
+
+  /// No description provided for @sampleTurnHint.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, guess a number from {low} to {high}'**
+  String sampleTurnHint(String name, int low, int high);
+
+  /// No description provided for @seatReplacedByRobot.
+  ///
+  /// In en, this message translates to:
+  /// **'Missing players were replaced by robots.'**
+  String get seatReplacedByRobot;
 }
 
 class _AppLocalizationsDelegate

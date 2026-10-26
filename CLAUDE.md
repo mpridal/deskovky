@@ -50,10 +50,17 @@ Flutter není v PATH starších terminálů – v případě potřeby `export PA
 - Generovaný kód (`*.g.dart`, `test/core/db/generated/`) se **commituje**; po změně tabulek: `dart run build_runner build --delete-conflicting-outputs`.
 - **Změna schématu** (nikdy jinak – data hráčů nesmí aktualizace smazat):
   1. zvýšit `schemaVersion` a doplnit krok do `migration.onUpgrade`,
-  2. `dart run drift_dev make-migrations` (uloží `drift_schemas/app/drift_schema_vN.json`),
-  3. `dart run drift_dev schema generate drift_schemas/app/ test/core/db/generated/`,
-  4. do `test/core/db/migration_test.dart` přidat test migrace z každé starší verze na novou (`verifier.startAt(n)` → `migrateAndValidate(db, N)`).
+  2. `MSYS_NO_PATHCONV=1 dart run drift_dev make-migrations` – uloží `drift_schemas/app/drift_schema_vN.json` a pomocné soubory do `test/core/db/generated/app/` (včetně vzorového testu bez dat),
+  3. do `test/core/db/migration_test.dart` přidat test migrace z každé starší verze na novou **s daty** (vložit řádky přes `vN.DatabaseAtVN`, migrovat, ověřit přes repozitáře),
+  4. časová razítka pro řazení ukládat jako `int` ms (`DateTimeColumn` drží jen sekundy).
 - Testy widgetů používají `testDatabase()` (`test/helpers/test_database.dart`, proudy se zavírají synchronně); zápisy do DB přímo v těle `testWidgets` jen přes `tester.runAsync`.
 - V Git Bash na Windows při `adb shell … /sdcard/…` nastavit `MSYS_NO_PATHCONV=1`, jinak se cesta přepíše.
+
+## Hry a testy her
+
+- Nová hra = `GameModule` + `GameRules` + `AiPlayer` + deska ve `lib/games/<id>/`, registrace v `lib/games/registry.dart` (podrobný návod `docs/GAME_MODULE_GUIDE.md` v milníku 10). Vzor: `lib/games/_sample/`.
+- Každá akce hráče je `Move` přes `GameBoardView.submit`; deska nikdy nemění stav sama.
+- Testy, které otevřou herní obrazovku: `pumpApp(..., disableAnimations: true)` (pulzování hráče na tahu je nekonečné → `pumpAndSettle` by nikdy neskončil). Roboti v testech běží přes `InlineAiRunner` (nastavuje `pumpApp`).
+- Ruční průchod na emulátoru skriptem přes `uiautomator dump`: na herní obrazovce dočasně `adb shell settings put global animator_duration_scale 0` (a transition/window), jinak uiautomator nečeká na klid; po skončení vrátit na 1.
 
 Pravidla paralelní práce (kap. 13.2 zadání) se doplní v milníku 9.

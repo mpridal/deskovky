@@ -131,5 +131,163 @@
   "homeSwitchPlayer": "Switch player",
   "homeCreatePlayer": "Create a player",
   "settingsLanguage": "Language",
-  "settingsLanguageSystem": "Phone setting"
+  "settingsLanguageSystem": "Phone setting",
+  "sampleTitle": "Guess the number",
+  "sampleDescription": "Who guesses the secret number first?",
+  "sampleRules": "The game hides a number. Players take turns guessing. After each guess you learn whether the secret number is higher or lower. Whoever hits it wins!",
+  "gamePlayersRange": "{min}–{max} players",
+  "@gamePlayersRange": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "continueTitle": "Continue: {game}",
+  "@continueTitle": {
+    "placeholders": {
+      "game": {
+        "type": "String"
+      }
+    }
+  },
+  "continueSaved": "Game in progress",
+  "continueSummary": "{players} · {difficulty}",
+  "@continueSummary": {
+    "placeholders": {
+      "players": {
+        "type": "String"
+      },
+      "difficulty": {
+        "type": "String"
+      }
+    }
+  },
+  "seatSummary": "{players} ({humans} + {robots} 🤖)",
+  "@seatSummary": {
+    "placeholders": {
+      "players": {
+        "type": "String"
+      },
+      "humans": {
+        "type": "int"
+      },
+      "robots": {
+        "type": "int"
+      }
+    }
+  },
+  "continuePlay": "Play ▸",
+  "difficultyEasy": "Easy",
+  "difficultyMedium": "Medium",
+  "difficultyHard": "Hard",
+  "sampleOptionRange": "Number range",
+  "setupPlayers": "Number of players",
+  "seatsHumans": "{count, plural, one{{count} person} other{{count} people}}",
+  "@seatsHumans": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "seatsRobots": "{count, plural, one{{count} robot} other{{count} robots}}",
+  "@seatsRobots": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "setupDifficulty": "Robot difficulty",
+  "setupSpeed": "Robot speed",
+  "speedSlow": "Slow",
+  "speedNormal": "Normal",
+  "speedFast": "Fast",
+  "seatHuman": "Human",
+  "seatRobot": "🤖 Robot",
+  "setupLoaded": "↺ Settings loaded from your last game",
+  "setupFilled": "free seats filled with robots",
+  "setupNoFreeProfile": "All players are already at the table.",
+  "seatMoveUp": "Move up",
+  "seatMoveDown": "Move down",
+  "setupPlay": "Play!",
+  "setupNeedPlayer": "Create a player first.",
+  "robotName0": "Robo",
+  "robotName1": "Chip",
+  "robotName2": "Bolt",
+  "robotName3": "Buzz",
+  "hudExit": "Exit",
+  "hudPause": "Pause",
+  "hudMusic": "Music",
+  "hudSfx": "Sound effects",
+  "exitTitle": "Really quit?",
+  "exitSaved": "The game in progress will be saved.",
+  "exitNotSaved": "The game in progress will not be saved.",
+  "exitConfirm": "Quit",
+  "pauseResume": "Continue",
+  "pauseRestart": "Start again",
+  "pauseRules": "Rules",
+  "close": "Close",
+  "turnOf": "{name}'s turn",
+  "@turnOf": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "robotThinking": "🤖 {name} is thinking…",
+  "@robotThinking": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "resumeFailed": "The saved game cannot be continued.",
+  "resultWins": "{name} wins!",
+  "@resultWins": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "resultDraw": "It's a draw!",
+  "resultPlayAgain": "Play again",
+  "resultChangeSettings": "Change settings",
+  "resultHome": "Home",
+  "resultRobotTag": "robot",
+  "resultSubtitle": "{game} · {difficulty}",
+  "@resultSubtitle": {
+    "placeholders": {
+      "game": {
+        "type": "String"
+      },
+      "difficulty": {
+        "type": "String"
+      }
+    }
+  },
+  "sampleHigher": "Higher!",
+  "sampleLower": "Lower!",
+  "sampleTurnHint": "{name}, guess a number from {low} to {high}",
+  "@sampleTurnHint": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "low": {
+        "type": "int"
+      },
+      "high": {
+        "type": "int"
+      }
+    }
+  },
+  "seatReplacedByRobot": "Missing players were replaced by robots."
 }

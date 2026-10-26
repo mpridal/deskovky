@@ -279,4 +279,219 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsLanguageSystem => 'Phone setting';
+
+  @override
+  String get sampleTitle => 'Guess the number';
+
+  @override
+  String get sampleDescription => 'Who guesses the secret number first?';
+
+  @override
+  String get sampleRules =>
+      'The game hides a number. Players take turns guessing. After each guess you learn whether the secret number is higher or lower. Whoever hits it wins!';
+
+  @override
+  String gamePlayersRange(int min, int max) {
+    return '$min–$max players';
+  }
+
+  @override
+  String continueTitle(String game) {
+    return 'Continue: $game';
+  }
+
+  @override
+  String get continueSaved => 'Game in progress';
+
+  @override
+  String continueSummary(String players, String difficulty) {
+    return '$players · $difficulty';
+  }
+
+  @override
+  String seatSummary(String players, int humans, int robots) {
+    return '$players ($humans + $robots 🤖)';
+  }
+
+  @override
+  String get continuePlay => 'Play ▸';
+
+  @override
+  String get difficultyEasy => 'Easy';
+
+  @override
+  String get difficultyMedium => 'Medium';
+
+  @override
+  String get difficultyHard => 'Hard';
+
+  @override
+  String get sampleOptionRange => 'Number range';
+
+  @override
+  String get setupPlayers => 'Number of players';
+
+  @override
+  String seatsHumans(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count people',
+      one: '$count person',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String seatsRobots(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count robots',
+      one: '$count robot',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get setupDifficulty => 'Robot difficulty';
+
+  @override
+  String get setupSpeed => 'Robot speed';
+
+  @override
+  String get speedSlow => 'Slow';
+
+  @override
+  String get speedNormal => 'Normal';
+
+  @override
+  String get speedFast => 'Fast';
+
+  @override
+  String get seatHuman => 'Human';
+
+  @override
+  String get seatRobot => '🤖 Robot';
+
+  @override
+  String get setupLoaded => '↺ Settings loaded from your last game';
+
+  @override
+  String get setupFilled => 'free seats filled with robots';
+
+  @override
+  String get setupNoFreeProfile => 'All players are already at the table.';
+
+  @override
+  String get seatMoveUp => 'Move up';
+
+  @override
+  String get seatMoveDown => 'Move down';
+
+  @override
+  String get setupPlay => 'Play!';
+
+  @override
+  String get setupNeedPlayer => 'Create a player first.';
+
+  @override
+  String get robotName0 => 'Robo';
+
+  @override
+  String get robotName1 => 'Chip';
+
+  @override
+  String get robotName2 => 'Bolt';
+
+  @override
+  String get robotName3 => 'Buzz';
+
+  @override
+  String get hudExit => 'Exit';
+
+  @override
+  String get hudPause => 'Pause';
+
+  @override
+  String get hudMusic => 'Music';
+
+  @override
+  String get hudSfx => 'Sound effects';
+
+  @override
+  String get exitTitle => 'Really quit?';
+
+  @override
+  String get exitSaved => 'The game in progress will be saved.';
+
+  @override
+  String get exitNotSaved => 'The game in progress will not be saved.';
+
+  @override
+  String get exitConfirm => 'Quit';
+
+  @override
+  String get pauseResume => 'Continue';
+
+  @override
+  String get pauseRestart => 'Start again';
+
+  @override
+  String get pauseRules => 'Rules';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String turnOf(String name) {
+    return '$name\'s turn';
+  }
+
+  @override
+  String robotThinking(String name) {
+    return '🤖 $name is thinking…';
+  }
+
+  @override
+  String get resumeFailed => 'The saved game cannot be continued.';
+
+  @override
+  String resultWins(String name) {
+    return '$name wins!';
+  }
+
+  @override
+  String get resultDraw => 'It\'s a draw!';
+
+  @override
+  String get resultPlayAgain => 'Play again';
+
+  @override
+  String get resultChangeSettings => 'Change settings';
+
+  @override
+  String get resultHome => 'Home';
+
+  @override
+  String get resultRobotTag => 'robot';
+
+  @override
+  String resultSubtitle(String game, String difficulty) {
+    return '$game · $difficulty';
+  }
+
+  @override
+  String get sampleHigher => 'Higher!';
+
+  @override
+  String get sampleLower => 'Lower!';
+
+  @override
+  String sampleTurnHint(String name, int low, int high) {
+    return '$name, guess a number from $low to $high';
+  }
+
+  @override
+  String get seatReplacedByRobot => 'Missing players were replaced by robots.';
 }

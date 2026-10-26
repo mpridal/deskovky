@@ -1,3 +1,5 @@
+import 'package:deskovky/core/avatar/avatar_spec.dart';
+import 'package:deskovky/core/players/player_repository.dart';
 import 'package:deskovky/l10n/app_localizations.dart';
 import 'package:deskovky/ui_kit/components/primary_button.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../helpers/app_fonts.dart';
 import '../helpers/pump_app.dart';
+import '../helpers/test_database.dart';
 
 const _sizes = [
   Size(360, 740),
@@ -66,6 +69,20 @@ void main() {
           await tester.tap(find.text(l10n.navPlayers).last);
           await tester.pumpAndSettle();
           expect(_fitsOnOneLine(tester, _inButton(l10n.playersNew)), isTrue, reason: l10n.playersNew);
+        });
+
+        testWidgets('game setup labels fit on one line: $name', (tester) async {
+          final db = testDatabase();
+          addTearDown(db.close);
+          await tester.runAsync(() => PlayerRepository(db).create(name: 'Maximiliánek123', avatar: AvatarSpec.defaults));
+          await pumpApp(tester, size: size, locale: locale, textScale: scale, db: db, disableAnimations: true);
+          await tester.tap(find.text(l10n.sampleTitle).first);
+          await tester.pumpAndSettle();
+          for (final label in [l10n.setupPlayers, l10n.setupDifficulty, l10n.speedSlow, l10n.speedNormal, l10n.speedFast]) {
+            await tester.scrollUntilVisible(find.text(label), 100, scrollable: find.byType(Scrollable).first);
+            expect(_fitsOnOneLine(tester, find.text(label)), isTrue, reason: '"$label" wraps or is clipped');
+          }
+          expect(_fitsOnOneLine(tester, _inButton(l10n.setupPlay)), isTrue, reason: l10n.setupPlay);
         });
 
         testWidgets('avatar editor labels fit on one line: $name', (tester) async {
