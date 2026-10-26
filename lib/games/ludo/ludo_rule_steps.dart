@@ -56,8 +56,9 @@ class LudoRuleStep extends StatelessWidget {
                 for (var k = 0; k < 3; k++)
                   _fieldWith(
                     Color.lerp(AppColors.woodLight, AppColors.players[0], 0.6)!,
-                    k == 1 ? const PieceToken(seat: 0, size: 18) : null,
+                    k == 0 ? const PieceToken(seat: 0, size: 18) : null,
                     size: 22,
+                    target: k == 2,
                   ),
               ],
             ),
@@ -69,14 +70,14 @@ class LudoRuleStep extends StatelessWidget {
     ),
   );
 
-  static Widget _fieldWith(Color color, Widget? piece, {double size = _field}) => Container(
+  static Widget _fieldWith(Color color, Widget? piece, {double size = _field, bool target = false}) => Container(
     width: size,
     height: size,
     alignment: Alignment.center,
     decoration: BoxDecoration(
       color: color,
       shape: BoxShape.circle,
-      border: Border.all(color: AppColors.wood, width: 2),
+      border: Border.all(color: target ? AppColors.gold : AppColors.wood, width: target ? 3 : 2),
     ),
     child: piece,
   );

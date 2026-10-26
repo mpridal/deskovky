@@ -39,7 +39,7 @@ class LudoModule extends GameModule<LudoState> {
   @override
   bool get supportsSaveResume => true;
   @override
-  bool get available => false;
+  bool get available => true;
 
   /// A long game with luck: a bit more than the base points.
   @override
