@@ -1419,6 +1419,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Given: {points} ● – {name}'**
   String parentsGiftDone(int points, String name);
+
+  /// No description provided for @updateAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'New version {version} is here'**
+  String updateAvailable(String version);
+
+  /// No description provided for @updateNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get updateNow;
+
+  /// No description provided for @updateLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get updateLater;
+
+  /// No description provided for @updateDownloading.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading… {percent}%'**
+  String updateDownloading(int percent);
+
+  /// No description provided for @updateMandatory.
+  ///
+  /// In en, this message translates to:
+  /// **'This version is too old – please update.'**
+  String get updateMandatory;
+
+  /// No description provided for @updateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The download failed. Try again later.'**
+  String get updateFailed;
+
+  /// No description provided for @updatePermissionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'One more permission'**
+  String get updatePermissionTitle;
+
+  /// No description provided for @updatePermissionText.
+  ///
+  /// In en, this message translates to:
+  /// **'Android will ask whether Deskovky may install apps. It is only for the new Deskovky version. Ask a grown-up to turn the switch on, then come back here.'**
+  String get updatePermissionText;
+
+  /// No description provided for @updatePermissionOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get updatePermissionOpen;
+
+  /// No description provided for @settingsApp.
+  ///
+  /// In en, this message translates to:
+  /// **'App'**
+  String get settingsApp;
+
+  /// No description provided for @settingsVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version}'**
+  String settingsVersion(String version);
+
+  /// No description provided for @settingsCheckNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Check for updates now'**
+  String get settingsCheckNow;
+
+  /// No description provided for @settingsAutoUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Check automatically'**
+  String get settingsAutoUpdate;
+
+  /// No description provided for @updateUpToDate.
+  ///
+  /// In en, this message translates to:
+  /// **'You have the newest version.'**
+  String get updateUpToDate;
+
+  /// No description provided for @updateCheckFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The check failed – is the device online?'**
+  String get updateCheckFailed;
 }
 
 class _AppLocalizationsDelegate

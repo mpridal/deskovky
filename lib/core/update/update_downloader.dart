@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 
 import 'release_info.dart';
 
@@ -20,10 +21,14 @@ class UpdateIntegrityException implements Exception {
 /// Downloads a release APK into [directory] and verifies its SHA-256
 /// (spec 4.6). One download at a time; a second request joins the first.
 class UpdateDownloader {
-  UpdateDownloader({required this.client, required this.directory});
+  UpdateDownloader({required this.client, required Directory directory}) : _directory = (() async => directory);
+
+  /// Downloads into `cache/updates/`, the only place the installer accepts.
+  UpdateDownloader.cache({required this.client})
+    : _directory = (() async => Directory('${(await getApplicationCacheDirectory()).path}/updates').create(recursive: true));
 
   final http.Client client;
-  final Directory directory;
+  final Future<Directory> Function() _directory;
 
   Future<File>? _running;
 
@@ -31,6 +36,7 @@ class UpdateDownloader {
       _running ??= _download(release, onProgress).whenComplete(() => _running = null);
 
   Future<File> _download(ReleaseInfo release, void Function(double)? onProgress) async {
+    final directory = await _directory();
     final target = File('${directory.path}/deskovky-${release.version}.apk');
     final part = File('${target.path}.part');
     try {

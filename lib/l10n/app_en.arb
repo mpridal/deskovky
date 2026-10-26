@@ -521,5 +521,41 @@
         "type": "String"
       }
     }
-  }
+  },
+  "updateAvailable": "New version {version} is here",
+  "@updateAvailable": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateNow": "Update",
+  "updateLater": "Later",
+  "updateDownloading": "Downloading… {percent}%",
+  "@updateDownloading": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "updateMandatory": "This version is too old – please update.",
+  "updateFailed": "The download failed. Try again later.",
+  "updatePermissionTitle": "One more permission",
+  "updatePermissionText": "Android will ask whether Deskovky may install apps. It is only for the new Deskovky version. Ask a grown-up to turn the switch on, then come back here.",
+  "updatePermissionOpen": "Open settings",
+  "settingsApp": "App",
+  "settingsVersion": "Version {version}",
+  "@settingsVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCheckNow": "Check for updates now",
+  "settingsAutoUpdate": "Check automatically",
+  "updateUpToDate": "You have the newest version.",
+  "updateCheckFailed": "The check failed – is the device online?"
 }

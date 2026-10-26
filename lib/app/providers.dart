@@ -135,3 +135,7 @@ final pointsSummaryProvider = Provider<Map<int, ({int balance, int earned})>>((r
   }
   return totals;
 });
+
+final autoCheckUpdatesProvider = StreamProvider<bool>(
+  (ref) => ref.watch(settingsRepositoryProvider).watchAutoCheckUpdates(),
+);

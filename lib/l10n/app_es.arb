@@ -219,5 +219,20 @@
   "parentsGiftTitle": "Regalar puntos",
   "parentsGiftConfirm": "¿Regalar {points} ● a {name}?",
   "parentsGiftAction": "Regalar",
-  "parentsGiftDone": "Regalado: {points} ● – {name}"
+  "parentsGiftDone": "Regalado: {points} ● – {name}",
+  "updateAvailable": "Hay una versión nueva {version}",
+  "updateNow": "Actualizar",
+  "updateLater": "Más tarde",
+  "updateDownloading": "Descargando… {percent} %",
+  "updateMandatory": "Esta versión es demasiado antigua – actualiza, por favor.",
+  "updateFailed": "La descarga falló. Inténtalo más tarde.",
+  "updatePermissionTitle": "Un permiso más",
+  "updatePermissionText": "Android preguntará si Deskovky puede instalar aplicaciones. Es solo para la nueva versión de Deskovky. Pide a un adulto que active el interruptor y luego vuelve aquí.",
+  "updatePermissionOpen": "Abrir ajustes",
+  "settingsApp": "Aplicación",
+  "settingsVersion": "Versión {version}",
+  "settingsCheckNow": "Buscar actualizaciones ahora",
+  "settingsAutoUpdate": "Buscar automáticamente",
+  "updateUpToDate": "Tienes la versión más nueva.",
+  "updateCheckFailed": "La búsqueda falló – ¿está el dispositivo conectado?"
 }

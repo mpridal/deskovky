@@ -8,6 +8,7 @@ import '../l10n/app_localizations.dart';
 import '../ui_kit/tokens/app_theme.dart';
 import 'audio_director.dart';
 import 'providers.dart';
+import 'update_controller.dart';
 import 'router.dart';
 
 class DeskovkyApp extends ConsumerStatefulWidget {
@@ -19,6 +20,17 @@ class DeskovkyApp extends ConsumerStatefulWidget {
 
 class _DeskovkyAppState extends ConsumerState<DeskovkyApp> {
   late final GoRouter _router = buildRouter();
+
+  @override
+  void initState() {
+    super.initState();
+    // Spec 4.1: the app starts at once; the update check runs afterwards.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && ref.read(checkUpdatesAtStartProvider)) {
+        ref.read(updateControllerProvider.notifier).checkAtStart();
+      }
+    });
+  }
 
   @override
   void dispose() {
