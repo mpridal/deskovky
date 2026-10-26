@@ -50,6 +50,7 @@ Texty v UI hry čti přes `<id>Texts.of(context, '<id>.klic', {'name': …})`.
 - `initialState(config, seed)` → `currentSeat` → `legalMoves(state, seat)` → `apply(state, move)` → … → `isOver` / `result`.
 - **Žádné `Random()`**. Náhoda (míchání karet, kostka, rozmístění min) jen přes `SeededRandom` ze seedu, a pokud je potřeba během hry, ze stavu (ulož si stav generátoru do stavu hry).
 - **Každá akce hráče je `Move`** (malý JSON), i hod kostkou nebo otočení karty. Deska nikdy nemění stav sama, jen volá `view.submit(move)`.
+- **Předčasný konec** (např. „Ukončit a seřadit“): dej do výsledku `GameResult(stats: {'endedEarly': true})`. Framework pak partii nezapíše – žádné body, výhra ani odznaky (zadání 5.6); výsledky jen ukážou pořadí.
 - `legalMoves` je pro hráče na tahu vždy neprázdné (případně obsahuje tah „pas“). Framework z něj vybere tah, když AI selže.
 - Stav i tahy musí projít `toJson`/`fromJson`. Hash stavu se počítá ze `stateToJson`.
 - **Čas:** `view.elapsed()` vrací herní čas bez pauz a ukládá se s partií. Potřebuješ-li ho pro hodnocení (Miny, Pexeso), pošli ho v tahu (`data: {'t': view.elapsed().inMilliseconds}`). Replay pak dá stejný výsledek.
