@@ -70,3 +70,10 @@ Framework (lib/features/game_play):
 - Statistiky (`computePlayerStats`) a žebříčky (`leaderboard`) se počítají v paměti ze všech partií (`allMatchesProvider`) – rodinné zařízení jich má nejvýš tisíce; kdyby to zpomalilo, přejít na SQL agregace.
 - Žebříček řadí podle výher (pak % výher); body z m7 ho doplní.
 
+## Body a úrovně (m7a)
+
+- Schéma v4: `points_ledger` (hráč, částka ±, důvod, detail = odznak/položka/počet, odkaz na partii, čas). Smazání hráče smaže jeho knihu; smazání partie jen odpojí odkaz.
+- `RewardsConfig` (`assets/config/rewards.json`) → `computeMatchPoints` → řádky rozpisu (`PointsLine`) → `PointsRepository.addGameLines`. Úroveň `levelFor(celkem)` podle 50·n·(n+1)/2, max 30.
+- Výsledky dostávají `MatchRewards` (odznaky + body na hráče) a ukazují rozpis; horní pruh domovské obrazovky ukazuje zůstatek a úroveň; statistiky hráče úroveň s progress barem a historii bodů.
+- Milník 7b (katalog vylepšení, obchod, šatník) bude utrácet přes `PointsRepository.spend` (důvod `purchase`).
+
