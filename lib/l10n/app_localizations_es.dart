@@ -1110,4 +1110,23 @@ class AppLocalizationsEs extends AppLocalizations {
   String pointsPurchaseItem(String item) {
     return 'Compra: $item';
   }
+
+  @override
+  String shopNewBadge(String badge) {
+    return '¡Nueva insignia: $badge!';
+  }
+
+  @override
+  String shopNewBadgeReward(String description, int points) {
+    return '$description Premio +$points ●.';
+  }
+
+  @override
+  String get shopHooray => '¡Bien!';
+
+  @override
+  String get shopNotEnough => 'Ahora no tienes puntos suficientes.';
+
+  @override
+  String get shopFailed => 'No ha funcionado. Inténtalo otra vez.';
 }

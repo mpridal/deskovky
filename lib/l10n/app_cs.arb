@@ -317,5 +317,10 @@
   "parentsResetConfirm": "{name} přijde o {points} ● a o všechna koupená vylepšení. Úroveň a odznaky zůstanou.",
   "parentsResetDone": "{name}: body a vylepšení vynulovány.",
   "resultCanBuy": "{name}, teď si můžeš koupit: {item}!",
-  "pointsPurchaseItem": "Nákup: {item}"
+  "pointsPurchaseItem": "Nákup: {item}",
+  "shopNewBadge": "Nový odznak: {badge}!",
+  "shopNewBadgeReward": "{description} Odměna +{points} ●.",
+  "shopHooray": "Hurá!",
+  "shopNotEnough": "Na to teď nemáš dost bodů.",
+  "shopFailed": "To teď nejde. Zkus to znovu."
 }

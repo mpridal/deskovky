@@ -317,5 +317,10 @@
   "parentsResetConfirm": "{name} perderá {points} ● y todas las mejoras compradas. El nivel y las insignias se quedan.",
   "parentsResetDone": "{name}: puntos y mejoras reiniciados.",
   "resultCanBuy": "{name}, ¡ya puedes comprar: {item}!",
-  "pointsPurchaseItem": "Compra: {item}"
+  "pointsPurchaseItem": "Compra: {item}",
+  "shopNewBadge": "¡Nueva insignia: {badge}!",
+  "shopNewBadgeReward": "{description} Premio +{points} ●.",
+  "shopHooray": "¡Bien!",
+  "shopNotEnough": "Ahora no tienes puntos suficientes.",
+  "shopFailed": "No ha funcionado. Inténtalo otra vez."
 }

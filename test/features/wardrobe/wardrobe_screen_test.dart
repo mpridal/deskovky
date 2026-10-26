@@ -10,7 +10,10 @@ import 'package:deskovky/core/shop/shop_repository.dart';
 import 'package:deskovky/core/stats/stats_repository.dart';
 import 'package:deskovky/features/shop/shop_screen.dart';
 import 'package:deskovky/features/wardrobe/wardrobe_screen.dart';
+import 'package:deskovky/app/providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
@@ -55,8 +58,9 @@ void main() {
     Size size = const Size(412, 915),
     Locale locale = const Locale('cs'),
     double textScale = 1,
+    List<Override> overrides = const [],
   }) async {
-    await pumpApp(tester, size: size, db: db, audio: audio, locale: locale, textScale: textScale);
+    await pumpApp(tester, size: size, db: db, audio: audio, locale: locale, textScale: textScale, overrides: overrides);
     GoRouter.of(tester.element(find.byType(Navigator).first)).push('/players/$id/wardrobe');
     await settle(tester);
     expect(find.byType(WardrobeScreen), findsOneWidget);
@@ -119,6 +123,14 @@ void main() {
     expect(await tester.runAsync(() => PointsRepository(db).balance(id)), balance);
   });
 
+  testWidgets('a failing equip does not crash and tells the player', (tester) async {
+    final id = await player(tester, items: ['glasses']);
+    await open(tester, id, overrides: [shopRepositoryProvider.overrideWith((ref) => _FailingShop(db))]);
+    await tapCard(tester, 'glasses');
+    expect(tester.takeException(), isNull);
+    expect(find.text('To teď nejde. Zkus to znovu.'), findsOneWidget);
+  });
+
   group('fit', () {
     setUpAll(loadAppFonts);
     for (final code in ['cs', 'en', 'es']) {
@@ -136,4 +148,18 @@ void main() {
       });
     }
   });
+}
+
+/// Fails to equip, like after a parent's reset in the meantime.
+class _FailingShop extends ShopRepository {
+  _FailingShop(AppDatabase db)
+    : super(
+        db,
+        catalog: ShopCatalog.parse(File(ShopCatalog.asset).readAsStringSync()),
+        points: PointsRepository(db),
+        stats: StatsRepository(db),
+      );
+
+  @override
+  Future<void> equip(int playerId, String itemId, {String? variant}) async => throw StateError('not owned');
 }

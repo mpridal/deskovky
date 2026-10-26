@@ -170,7 +170,8 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                         onTap: () {
                           setState(() => _selected = item);
                           if (!owned.contains(item.id)) {
-                            ref.read(settingsRepositoryProvider).addTriedItem(widget.playerId, item.id);
+                            // Only for a later hint; losing it is harmless.
+                            ref.read(settingsRepositoryProvider).addTriedItem(widget.playerId, item.id).ignore();
                           }
                         },
                       ),
@@ -209,10 +210,10 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
       final wearing = player.avatar.equipped[item.slot]?.id == item.id;
       return PrimaryButton(
         label: wearing ? l10n.shopUnequip : l10n.shopEquip,
-        onPressed: () async {
+        onPressed: () => _guard(l10n, () async {
           ref.read(audioServiceProvider).playSfx('equip');
           wearing ? await shop.unequip(player.id, item.slot) : await shop.equip(player.id, item.id);
-        },
+        }),
       );
     }
     final price = item.price;
@@ -255,10 +256,41 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
       cancelLabel: l10n.cancel,
     );
     if (!ok) return;
-    final result = await shop.buy(playerId, item.id);
-    if (result.outcome != BuyOutcome.bought) return;
+    final BuyResult result;
+    try {
+      result = await shop.buy(playerId, item.id);
+    } on Object {
+      _tell(l10n.shopFailed);
+      return;
+    }
+    switch (result.outcome) {
+      case BuyOutcome.bought:
+        break;
+      case BuyOutcome.alreadyOwned:
+        return;
+      case BuyOutcome.notEnoughPoints:
+        _tell(l10n.shopNotEnough);
+        return;
+      case BuyOutcome.levelTooLow || BuyOutcome.notForSale || BuyOutcome.unknown:
+        _tell(l10n.shopFailed);
+        return;
+    }
     audio.playSfx('purchase');
     if (!mounted) return;
+    if (result.newBadge case final id?) {
+      final badge = badgeById(id);
+      if (badge != null) {
+        if (audio.playSfx('achievement')) audio.duck(const Duration(seconds: 2));
+        await showAppInfoDialog(
+          context,
+          title: l10n.shopNewBadge(badgeText(l10n, badge.titleKey)),
+          message: l10n.shopNewBadgeReward(badgeText(l10n, badge.descriptionKey), badge.reward),
+          okLabel: l10n.shopHooray,
+          icon: badge.icon,
+        );
+        if (!mounted) return;
+      }
+    }
     final wear = await showAppConfirmDialog(
       context,
       title: name,
@@ -268,7 +300,22 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
     );
     if (!wear) return;
     audio.playSfx('equip');
-    await shop.equip(playerId, item.id);
+    await _guard(l10n, () => shop.equip(playerId, item.id));
+  }
+
+  /// Runs a shop change; if it fails (e.g. a parent reset meanwhile), says so
+  /// instead of failing silently.
+  Future<void> _guard(AppLocalizations l10n, Future<void> Function() change) async {
+    try {
+      await change();
+    } on Object {
+      _tell(l10n.shopFailed);
+    }
+  }
+
+  void _tell(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 }
 

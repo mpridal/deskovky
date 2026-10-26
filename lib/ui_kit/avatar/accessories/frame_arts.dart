@@ -3,7 +3,8 @@ import 'dart:ui';
 
 import 'accessory_art.dart';
 
-/// "Rámeček" (spec 5.6): a ring around the circle, between radius 44 and 50.
+/// "Rámeček" (spec 5.6): a ring around the circle, between radius 43.5 and 49.5
+/// (painted outside the circle clip, so nothing may reach radius 50).
 const Map<String, AccessoryArt> frameArts = {
   'wood_frame': AccessoryArt(AccessorySlot.frame, _woodFrame),
   'gold_frame': AccessoryArt(AccessorySlot.frame, _goldFrame),
@@ -13,7 +14,7 @@ const Map<String, AccessoryArt> frameArts = {
 };
 
 const _centre = Offset(50, 50);
-const _radius = 47.0;
+const _radius = 46.5;
 
 void _ring(Canvas c, Paint paint) => c.drawCircle(_centre, _radius, paint..style = PaintingStyle.stroke);
 
@@ -70,6 +71,6 @@ void _starFrame(Canvas c, AccessoryContext ctx) {
   _ring(c, Paint()..color = const Color(0xFF3A4FA0)..strokeWidth = 6);
   for (var i = 0; i < 8; i++) {
     final a = i * pi / 4 - pi / 2;
-    c.drawPath(Art.star(_centre + Offset(_radius * cos(a), _radius * sin(a)), 3.4, 1.4), Art.fill(Art.goldLight));
+    c.drawPath(Art.star(_centre + Offset(_radius * cos(a), _radius * sin(a)), 3.0, 1.3), Art.fill(Art.goldLight));
   }
 }

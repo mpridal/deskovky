@@ -1118,4 +1118,23 @@ class AppLocalizationsCs extends AppLocalizations {
   String pointsPurchaseItem(String item) {
     return 'Nákup: $item';
   }
+
+  @override
+  String shopNewBadge(String badge) {
+    return 'Nový odznak: $badge!';
+  }
+
+  @override
+  String shopNewBadgeReward(String description, int points) {
+    return '$description Odměna +$points ●.';
+  }
+
+  @override
+  String get shopHooray => 'Hurá!';
+
+  @override
+  String get shopNotEnough => 'Na to teď nemáš dost bodů.';
+
+  @override
+  String get shopFailed => 'To teď nejde. Zkus to znovu.';
 }

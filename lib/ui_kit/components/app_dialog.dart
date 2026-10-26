@@ -42,3 +42,43 @@ Future<bool> showAppConfirmDialog(
   );
   return result ?? false;
 }
+
+/// Paper dialog with one button, e.g. a new badge; [icon] sits on a gold
+/// circle above the title.
+Future<void> showAppInfoDialog(
+  BuildContext context, {
+  required String title,
+  required String message,
+  required String okLabel,
+  IconData? icon,
+}) => showDialog<void>(
+  context: context,
+  builder: (context) => Dialog(
+    backgroundColor: AppColors.paper,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+    child: Padding(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (icon != null) ...[
+            Center(
+              child: CircleAvatar(
+                radius: 30,
+                backgroundColor: AppColors.gold,
+                child: Icon(icon, color: AppColors.ink, size: 32),
+              ),
+            ),
+            const SizedBox(height: 12),
+          ],
+          Text(title, textAlign: TextAlign.center, style: AppTypography.h2(color: AppColors.ink)),
+          const SizedBox(height: 8),
+          Text(message, textAlign: TextAlign.center, style: AppTypography.body(color: AppColors.ink)),
+          const SizedBox(height: 20),
+          PrimaryButton(label: okLabel, onPressed: () => Navigator.of(context).pop()),
+        ],
+      ),
+    ),
+  ),
+);

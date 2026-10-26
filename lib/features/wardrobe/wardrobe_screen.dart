@@ -105,8 +105,8 @@ class WardrobeScreen extends ConsumerWidget {
                                 slot: slot,
                                 items: items,
                                 avatar: avatar,
-                                onTap: (item) => _toggle(ref, avatar, item),
-                                onColour: (item, variant) => _recolour(ref, item, variant),
+                                onTap: (item) => _guard(context, () => _toggle(ref, avatar, item)),
+                                onColour: (item, variant) => _guard(context, () => _recolour(ref, item, variant)),
                               ),
                         ],
                       ),
@@ -116,6 +116,18 @@ class WardrobeScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  /// Runs a wardrobe change; if it fails (e.g. a parent reset meanwhile),
+  /// says so instead of failing silently.
+  Future<void> _guard(BuildContext context, Future<void> Function() change) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final failed = AppLocalizations.of(context).shopFailed;
+    try {
+      await change();
+    } on Object {
+      messenger.showSnackBar(SnackBar(content: Text(failed)));
+    }
   }
 
   Future<void> _toggle(WidgetRef ref, AvatarSpec avatar, ShopItem item) async {

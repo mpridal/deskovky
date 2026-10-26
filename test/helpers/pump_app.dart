@@ -10,6 +10,7 @@ import 'package:deskovky/core/shop/shop_catalog.dart';
 import 'package:deskovky/core/game/ai_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 
 import '../core/audio/fake_audio_backend.dart';
@@ -31,6 +32,7 @@ Future<void> pumpApp(
   FakeApkInstaller? installer,
   FakeUpdateDownloader? downloader,
   bool checkUpdates = false,
+  List<Override> overrides = const [],
 }) async {
   tester.view.devicePixelRatio = 1.0;
   tester.view.physicalSize = size;
@@ -58,6 +60,7 @@ Future<void> pumpApp(
         releaseSourceProvider.overrideWithValue(releases ?? FakeReleaseSource()),
         apkInstallerProvider.overrideWithValue(installer ?? FakeApkInstaller()),
         updateDownloaderProvider.overrideWithValue(downloader ?? FakeUpdateDownloader()),
+        ...overrides,
         audioServiceProvider.overrideWith((ref) {
           final service = AudioService(backend: audio ?? FakeAudioBackend(), catalog: AudioCatalog.standard);
           ref.onDispose(service.dispose);

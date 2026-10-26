@@ -749,5 +749,27 @@
         "type": "String"
       }
     }
-  }
+  },
+  "shopNewBadge": "New badge: {badge}!",
+  "@shopNewBadge": {
+    "placeholders": {
+      "badge": {
+        "type": "String"
+      }
+    }
+  },
+  "shopNewBadgeReward": "{description} Reward +{points} ●.",
+  "@shopNewBadgeReward": {
+    "placeholders": {
+      "description": {
+        "type": "String"
+      },
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "shopHooray": "Hooray!",
+  "shopNotEnough": "You don't have enough points for that now.",
+  "shopFailed": "That didn't work. Try again."
 }

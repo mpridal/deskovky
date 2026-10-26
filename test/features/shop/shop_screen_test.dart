@@ -11,7 +11,10 @@ import 'package:deskovky/core/shop/shop_repository.dart';
 import 'package:deskovky/core/stats/stats_repository.dart';
 import 'package:deskovky/features/shop/shop_screen.dart';
 import 'package:deskovky/ui_kit/avatar/avatar_view.dart';
+import 'package:deskovky/app/providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
@@ -46,8 +49,9 @@ void main() {
     Size size = const Size(412, 915),
     Locale locale = const Locale('cs'),
     double textScale = 1,
+    List<Override> overrides = const [],
   }) async {
-    await pumpApp(tester, size: size, db: db, audio: audio, locale: locale, textScale: textScale);
+    await pumpApp(tester, size: size, db: db, audio: audio, locale: locale, textScale: textScale, overrides: overrides);
     GoRouter.of(tester.element(find.byType(Navigator).first)).push('/players/$id/shop');
     await settle(tester);
     expect(find.byType(ShopScreen), findsOneWidget);
@@ -138,6 +142,57 @@ void main() {
     expect((await tester.runAsync(() => PlayerRepository(db).byId(id)))!.avatar.equipped, isEmpty);
   });
 
+  ShopRepository realShop() => ShopRepository(
+    db,
+    catalog: ShopCatalog.parse(File(ShopCatalog.asset).readAsStringSync()),
+    points: PointsRepository(db),
+    stats: StatsRepository(db),
+  );
+
+  testWidgets('the 10th purchase celebrates the Sběratel badge', (tester) async {
+    final id = await player(tester, points: 2000);
+    await tester.runAsync(() async {
+      for (final item in ['cap', 'ears_headband', 'flower_wreath', 'glasses', 'mustache', 'face_paint_star', 'lollipop', 'balloon', 'ice_cream']) {
+        expect((await realShop().buy(id, item)).outcome, BuyOutcome.bought, reason: item);
+      }
+    });
+    final audio = FakeAudioBackend();
+    await open(tester, id, audio: audio);
+    await select(tester, 'top_hat');
+    await tester.tap(find.text('Koupit za 150 ●'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Koupit'));
+    await settle(tester);
+    expect(find.text('Nový odznak: Sběratel!'), findsOneWidget);
+    expect([for (final s in audio.sfx) s.$2], contains('sfx/achievement.wav'));
+    await tester.tap(find.text('Hurá!'));
+    await tester.pumpAndSettle();
+    expect(find.text('Nasadit hned?'), findsOneWidget);
+  });
+
+  testWidgets('a purchase refused at the last moment says why', (tester) async {
+    final id = await player(tester, points: 100);
+    await open(tester, id, overrides: [shopRepositoryProvider.overrideWith((ref) => _RefusingShop(db))]);
+    await select(tester, 'glasses');
+    await tester.tap(find.text('Koupit za 40 ●'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Koupit'));
+    await settle(tester);
+    expect(tester.takeException(), isNull);
+    expect(find.text('Na to teď nemáš dost bodů.'), findsOneWidget);
+  });
+
+  testWidgets('a failing equip does not crash and tells the player', (tester) async {
+    final id = await player(tester, points: 100);
+    await tester.runAsync(() => realShop().buy(id, 'glasses'));
+    await open(tester, id, overrides: [shopRepositoryProvider.overrideWith((ref) => _RefusingShop(db))]);
+    await select(tester, 'glasses');
+    await tester.tap(find.text('Nasadit'));
+    await settle(tester);
+    expect(tester.takeException(), isNull);
+    expect(find.text('To teď nejde. Zkus to znovu.'), findsOneWidget);
+  });
+
   group('fit', () {
     setUpAll(loadAppFonts);
     for (final code in ['cs', 'en', 'es']) {
@@ -156,4 +211,22 @@ void main() {
       });
     }
   });
+}
+
+/// Refuses every purchase and fails to equip, like after a parent's reset in
+/// the meantime.
+class _RefusingShop extends ShopRepository {
+  _RefusingShop(AppDatabase db)
+    : super(
+        db,
+        catalog: ShopCatalog.parse(File(ShopCatalog.asset).readAsStringSync()),
+        points: PointsRepository(db),
+        stats: StatsRepository(db),
+      );
+
+  @override
+  Future<BuyResult> buy(int playerId, String itemId) async => const BuyResult(BuyOutcome.notEnoughPoints);
+
+  @override
+  Future<void> equip(int playerId, String itemId, {String? variant}) async => throw StateError('not owned');
 }

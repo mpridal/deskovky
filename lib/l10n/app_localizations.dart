@@ -2007,6 +2007,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Purchase: {item}'**
   String pointsPurchaseItem(String item);
+
+  /// No description provided for @shopNewBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'New badge: {badge}!'**
+  String shopNewBadge(String badge);
+
+  /// No description provided for @shopNewBadgeReward.
+  ///
+  /// In en, this message translates to:
+  /// **'{description} Reward +{points} ●.'**
+  String shopNewBadgeReward(String description, int points);
+
+  /// No description provided for @shopHooray.
+  ///
+  /// In en, this message translates to:
+  /// **'Hooray!'**
+  String get shopHooray;
+
+  /// No description provided for @shopNotEnough.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have enough points for that now.'**
+  String get shopNotEnough;
+
+  /// No description provided for @shopFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'That didn\'t work. Try again.'**
+  String get shopFailed;
 }
 
 class _AppLocalizationsDelegate

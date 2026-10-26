@@ -44,6 +44,46 @@ void main() {
     }
   });
 
+  // Every other slot is clipped to the circle by AvatarPainter; frames are
+  // painted after the clip, so they must stay inside the avatar's box.
+  testWidgets('no frame paints outside the avatar circle (radius 50)', (tester) async {
+    const scale = 4.0, margin = 20.0;
+    final outside = <String>[];
+    await tester.runAsync(() async {
+      for (final MapEntry(key: id, value: art) in accessoryArts.entries) {
+        if (art.slot != AccessorySlot.frame) continue;
+        final variants = [null, 'gold', 'silver', 'red', 'blue', 'green', 'yellow', 'brown'];
+        for (final variant in variants) {
+          for (final t in [0.0, 0.25, 0.5, 0.75]) {
+            final recorder = PictureRecorder();
+            final canvas = Canvas(recorder)
+              ..scale(scale)
+              ..translate(margin, margin);
+            art.paint(canvas, AccessoryContext(skin: const Color(0xFFF2C9A0), variant: variant, t: t));
+            const side = ((100 + 2 * margin) * scale);
+            final image = await recorder.endRecording().toImage(side.toInt(), side.toInt());
+            final bytes = (await image.toByteData())!;
+            final w = image.width;
+            for (var y = 0; y < w; y++) {
+              for (var x = 0; x < w; x++) {
+                final alpha = bytes.getUint8((y * w + x) * 4 + 3);
+                if (alpha < 128) continue;
+                final dx = (x + 0.5) / scale - margin - 50, dy = (y + 0.5) / scale - margin - 50;
+                if (dx * dx + dy * dy > 50.0 * 50.0) {
+                  outside.add('$id/$variant/$t at (${(dx + 50).toStringAsFixed(1)}, ${(dy + 50).toStringAsFixed(1)})');
+                  y = w;
+                  break;
+                }
+              }
+            }
+            image.dispose();
+          }
+        }
+      }
+    });
+    expect({for (final o in outside) o.split('/').first}, isEmpty, reason: outside.take(40).join(' | '));
+  });
+
   test('small avatars leave out the pet and the effect (spec 5.6)', () {
     expect(AvatarPainter.visibleSlots(28), isNot(contains(AccessorySlot.pet)));
     expect(AvatarPainter.visibleSlots(28), isNot(contains(AccessorySlot.effect)));
