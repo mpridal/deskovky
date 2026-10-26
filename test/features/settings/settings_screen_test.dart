@@ -79,6 +79,8 @@ void main() {
       await showSound(tester);
       expect(tester.widget<Slider>(find.byKey(const ValueKey('musicVolume'))).value, closeTo(0.7, 0.001));
       expect(tester.widget<Slider>(find.byKey(const ValueKey('sfxVolume'))).value, closeTo(0.9, 0.001));
+      await tester.ensureVisible(find.byKey(const ValueKey('musicVolume')));
+      await tester.pumpAndSettle();
       await tester.drag(find.byKey(const ValueKey('musicVolume')), const Offset(-1000, 0));
       await tester.pumpAndSettle();
       expect(await read(tester, (s) => s.watchMusicVolume()), closeTo(0, 0.001));

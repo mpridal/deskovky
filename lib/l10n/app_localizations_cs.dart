@@ -788,4 +788,58 @@ class AppLocalizationsCs extends AppLocalizations {
   String parentsGiftDone(int points, String name) {
     return 'Darováno: $points ● – $name';
   }
+
+  @override
+  String updateAvailable(String version) {
+    return 'Je tu nová verze $version';
+  }
+
+  @override
+  String get updateNow => 'Aktualizovat';
+
+  @override
+  String get updateLater => 'Později';
+
+  @override
+  String updateDownloading(int percent) {
+    return 'Stahuji… $percent %';
+  }
+
+  @override
+  String get updateMandatory =>
+      'Tahle verze už je moc stará – aktualizuj prosím.';
+
+  @override
+  String get updateFailed => 'Stažení se nepovedlo. Zkus to později.';
+
+  @override
+  String get updatePermissionTitle => 'Ještě jedno povolení';
+
+  @override
+  String get updatePermissionText =>
+      'Android se zeptá, jestli Deskovky smějí instalovat aplikace. Je to jen kvůli nové verzi Deskovek. Ať dospělý zapne přepínač a pak se vraťte sem.';
+
+  @override
+  String get updatePermissionOpen => 'Otevřít nastavení';
+
+  @override
+  String get settingsApp => 'Aplikace';
+
+  @override
+  String settingsVersion(String version) {
+    return 'Verze $version';
+  }
+
+  @override
+  String get settingsCheckNow => 'Zkontrolovat aktualizace teď';
+
+  @override
+  String get settingsAutoUpdate => 'Automaticky kontrolovat';
+
+  @override
+  String get updateUpToDate => 'Máš nejnovější verzi.';
+
+  @override
+  String get updateCheckFailed =>
+      'Kontrola se nepovedla – je zařízení připojené k internetu?';
 }

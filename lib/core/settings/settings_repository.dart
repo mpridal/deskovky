@@ -17,6 +17,8 @@ class SettingsRepository {
   static const _musicVolumeKey = 'musicVolume';
   static const _sfxVolumeKey = 'sfxVolume';
   static const _vibrationKey = 'vibrationOn';
+  static const _autoUpdateKey = 'autoCheckUpdates';
+  static const _lastUpdateCheckKey = 'lastUpdateCheck';
 
   Stream<int?> watchActivePlayerId() => _watch(activePlayerKey).map((v) => v == null ? null : int.tryParse(v));
 
@@ -50,6 +52,18 @@ class SettingsRepository {
   Stream<bool> watchVibrationOn() => _watch(_vibrationKey).map((v) => v != 'false');
 
   Future<void> setVibrationOn(bool on) => _set(_vibrationKey, '$on');
+
+  /// Looks for a new version at start (spec 4); on unless switched off.
+  Stream<bool> watchAutoCheckUpdates() => _watch(_autoUpdateKey).map((v) => v != 'false');
+
+  Future<void> setAutoCheckUpdates(bool on) => _set(_autoUpdateKey, '$on');
+
+  Future<DateTime?> lastUpdateCheck() async {
+    final ms = int.tryParse(await _watch(_lastUpdateCheckKey).first ?? '');
+    return ms == null ? null : DateTime.fromMillisecondsSinceEpoch(ms);
+  }
+
+  Future<void> setLastUpdateCheck(DateTime time) => _set(_lastUpdateCheckKey, '${time.millisecondsSinceEpoch}');
 
   Stream<double> _watchVolume(String key, double fallback) =>
       _watch(key).map((v) => (double.tryParse(v ?? '') ?? fallback).clamp(0.0, 1.0));

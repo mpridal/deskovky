@@ -780,4 +780,58 @@ class AppLocalizationsEs extends AppLocalizations {
   String parentsGiftDone(int points, String name) {
     return 'Regalado: $points ● – $name';
   }
+
+  @override
+  String updateAvailable(String version) {
+    return 'Hay una versión nueva $version';
+  }
+
+  @override
+  String get updateNow => 'Actualizar';
+
+  @override
+  String get updateLater => 'Más tarde';
+
+  @override
+  String updateDownloading(int percent) {
+    return 'Descargando… $percent %';
+  }
+
+  @override
+  String get updateMandatory =>
+      'Esta versión es demasiado antigua – actualiza, por favor.';
+
+  @override
+  String get updateFailed => 'La descarga falló. Inténtalo más tarde.';
+
+  @override
+  String get updatePermissionTitle => 'Un permiso más';
+
+  @override
+  String get updatePermissionText =>
+      'Android preguntará si Deskovky puede instalar aplicaciones. Es solo para la nueva versión de Deskovky. Pide a un adulto que active el interruptor y luego vuelve aquí.';
+
+  @override
+  String get updatePermissionOpen => 'Abrir ajustes';
+
+  @override
+  String get settingsApp => 'Aplicación';
+
+  @override
+  String settingsVersion(String version) {
+    return 'Versión $version';
+  }
+
+  @override
+  String get settingsCheckNow => 'Buscar actualizaciones ahora';
+
+  @override
+  String get settingsAutoUpdate => 'Buscar automáticamente';
+
+  @override
+  String get updateUpToDate => 'Tienes la versión más nueva.';
+
+  @override
+  String get updateCheckFailed =>
+      'La búsqueda falló – ¿está el dispositivo conectado?';
 }

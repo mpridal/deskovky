@@ -778,4 +778,56 @@ class AppLocalizationsEn extends AppLocalizations {
   String parentsGiftDone(int points, String name) {
     return 'Given: $points ● – $name';
   }
+
+  @override
+  String updateAvailable(String version) {
+    return 'New version $version is here';
+  }
+
+  @override
+  String get updateNow => 'Update';
+
+  @override
+  String get updateLater => 'Later';
+
+  @override
+  String updateDownloading(int percent) {
+    return 'Downloading… $percent%';
+  }
+
+  @override
+  String get updateMandatory => 'This version is too old – please update.';
+
+  @override
+  String get updateFailed => 'The download failed. Try again later.';
+
+  @override
+  String get updatePermissionTitle => 'One more permission';
+
+  @override
+  String get updatePermissionText =>
+      'Android will ask whether Deskovky may install apps. It is only for the new Deskovky version. Ask a grown-up to turn the switch on, then come back here.';
+
+  @override
+  String get updatePermissionOpen => 'Open settings';
+
+  @override
+  String get settingsApp => 'App';
+
+  @override
+  String settingsVersion(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String get settingsCheckNow => 'Check for updates now';
+
+  @override
+  String get settingsAutoUpdate => 'Check automatically';
+
+  @override
+  String get updateUpToDate => 'You have the newest version.';
+
+  @override
+  String get updateCheckFailed => 'The check failed – is the device online?';
 }

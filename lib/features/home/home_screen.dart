@@ -7,6 +7,7 @@ import '../../app/providers.dart';
 import '../../games/registry.dart';
 import '../../ui_kit/layout/window_size.dart';
 import '../../ui_kit/tokens/app_colors.dart';
+import '../update/update_card.dart';
 import 'active_player_bar.dart';
 import 'continue_bar.dart';
 import 'game_card.dart';
@@ -46,6 +47,7 @@ class HomeScreen extends ConsumerWidget {
           padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
           sliver: SliverToBoxAdapter(child: ActivePlayerBar()),
         ),
+        const SliverToBoxAdapter(child: UpdateCard()),
         const SliverPadding(
           padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
           sliver: SliverToBoxAdapter(child: ContinueBar()),

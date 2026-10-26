@@ -89,3 +89,10 @@ Pravidla paralelní práce (kap. 13.2 zadání) se doplní v milníku 9.
 - Hra může upravit základ přes `GameModule.pointsMultiplier` (0,5–2).
 - Partie jen lidí = sloupec Střední. Po ochraně proti farmení (11. výhra dne na Lehkou sám s roboty) je celá partie za 1 bod, odměny za odznaky zůstávají.
 - Rodičovská zóna: Nastavení → Rodičovská zóna (příklad z násobilky) → dárek bodů.
+
+## Vydání a aktualizace (milník 8)
+
+- Vydání = tag `vX.Y.Z` (podrobně `docs/INSTALACE.md`): `pubspec.yaml` `version: X.Y.Z+kód` (kód = X·10000 + Y·100 + Z) a sekce v `CHANGELOG.md` (cs/en/es) – obojí hlídá `test/tool/latest_json_test.dart`. `release.yml` staví jen arm64.
+- Podpis: `android/key.properties` vzniká jen v CI ze Secrets (`KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`); lokální release build se podepíše debug klíčem. Klíče a hesla nikdy nezadávej ani nečti – dělá je Miloš.
+- Aplikace: `UpdateService` (kontrola max 1× za 6 h, 4 s timeout, chyby tiše), `UpdateDownloader` (jen do `cache/updates/`, ověří SHA-256), Kotlin kanál `deskovky/update` v `MainActivity` (verze, povolení, instalace přes FileProvider). Widget testy mají kontrolu při startu vypnutou (`pumpApp(checkUpdates: true)` ji zapne).
+- Emulátor je x86_64 – APK z vydání (arm64) na něm neběží; pro emulátor stav `flutter build apk --release` bez `--target-platform`.

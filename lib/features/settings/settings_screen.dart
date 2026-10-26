@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/providers.dart';
+import '../../app/update_controller.dart';
 import '../../l10n/app_localizations.dart';
 import '../../ui_kit/components/choice_pills.dart';
 import '../../ui_kit/components/primary_button.dart';
@@ -64,6 +65,8 @@ class SettingsScreen extends ConsumerWidget {
               },
             ),
           ),
+          const SizedBox(height: 24),
+          const _AppSection(),
           // Visual check of bundled fonts with diacritics (milestone 1).
           const SizedBox(height: 32),
           Text(l10n.fontSample, style: AppTypography.h2(color: AppColors.paper)),
@@ -194,6 +197,64 @@ class _VolumeSliderState extends State<_VolumeSlider> {
         onChanged: widget.enabled ? (v) => setState(() => _dragged = v) : null,
         onChangeEnd: widget.onChanged,
       ),
+    );
+  }
+}
+
+/// Version, "Zkontrolovat aktualizace teď" and the auto-check switch (spec 4).
+class _AppSection extends ConsumerStatefulWidget {
+  const _AppSection();
+
+  @override
+  ConsumerState<_AppSection> createState() => _AppSectionState();
+}
+
+class _AppSectionState extends ConsumerState<_AppSection> {
+  bool _checking = false;
+
+  Future<void> _checkNow() async {
+    setState(() => _checking = true);
+    await ref.read(updateControllerProvider.notifier).checkNow();
+    if (mounted) setState(() => _checking = false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final update = ref.watch(updateControllerProvider);
+    final version = ref.watch(appVersionProvider).value ?? '';
+    final message = switch (update.manual) {
+      ManualCheck.available => l10n.updateAvailable('${update.release?.version}'),
+      ManualCheck.upToDate => l10n.updateUpToDate,
+      ManualCheck.failed => l10n.updateCheckFailed,
+      null => null,
+    };
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(l10n.settingsApp, style: AppTypography.h2(color: AppColors.paper)),
+        Text(l10n.settingsVersion(version), style: AppTypography.body(color: AppColors.paper)),
+        const SizedBox(height: 8),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: PrimaryButton(
+            label: l10n.settingsCheckNow,
+            icon: Icons.system_update,
+            secondary: true,
+            onPressed: _checking ? null : _checkNow,
+          ),
+        ),
+        if (message != null) ...[
+          const SizedBox(height: 4),
+          Text(message, style: AppTypography.body(color: AppColors.gold)),
+        ],
+        _SwitchRow(
+          keyName: 'autoUpdate',
+          label: l10n.settingsAutoUpdate,
+          value: ref.watch(autoCheckUpdatesProvider).value ?? true,
+          onChanged: ref.read(settingsRepositoryProvider).setAutoCheckUpdates,
+        ),
+      ],
     );
   }
 }

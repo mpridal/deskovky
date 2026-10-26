@@ -219,5 +219,20 @@
   "parentsGiftTitle": "Darovat body",
   "parentsGiftConfirm": "Darovat {points} ● hráči {name}?",
   "parentsGiftAction": "Darovat",
-  "parentsGiftDone": "Darováno: {points} ● – {name}"
+  "parentsGiftDone": "Darováno: {points} ● – {name}",
+  "updateAvailable": "Je tu nová verze {version}",
+  "updateNow": "Aktualizovat",
+  "updateLater": "Později",
+  "updateDownloading": "Stahuji… {percent} %",
+  "updateMandatory": "Tahle verze už je moc stará – aktualizuj prosím.",
+  "updateFailed": "Stažení se nepovedlo. Zkus to později.",
+  "updatePermissionTitle": "Ještě jedno povolení",
+  "updatePermissionText": "Android se zeptá, jestli Deskovky smějí instalovat aplikace. Je to jen kvůli nové verzi Deskovek. Ať dospělý zapne přepínač a pak se vraťte sem.",
+  "updatePermissionOpen": "Otevřít nastavení",
+  "settingsApp": "Aplikace",
+  "settingsVersion": "Verze {version}",
+  "settingsCheckNow": "Zkontrolovat aktualizace teď",
+  "settingsAutoUpdate": "Automaticky kontrolovat",
+  "updateUpToDate": "Máš nejnovější verzi.",
+  "updateCheckFailed": "Kontrola se nepovedla – je zařízení připojené k internetu?"
 }
