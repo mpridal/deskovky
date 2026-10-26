@@ -102,6 +102,11 @@ void main() {
     expect(find.text('Rozehraná hra se uloží.'), findsOneWidget);
     await tester.tap(find.text('Ukončit'));
     await tester.pumpAndSettle();
+    // The home bar waits for the players from the database (real I/O).
+    for (var i = 0; i < 4 && find.byType(ActivePlayerBar).evaluate().isEmpty; i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 30)));
+      await tester.pumpAndSettle();
+    }
     expect(find.byType(GameScreen), findsNothing);
     expect(find.byType(ActivePlayerBar), findsOneWidget);
     expect(await tester.runAsync(() => GameStore(db).savedSession('sample')), isNotNull);
