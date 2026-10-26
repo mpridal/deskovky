@@ -494,4 +494,39 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get seatReplacedByRobot => 'Missing players were replaced by robots.';
+
+  @override
+  String get settingsSound => 'Sound';
+
+  @override
+  String get settingsMusic => 'Music';
+
+  @override
+  String get settingsMusicVolume => 'Music volume';
+
+  @override
+  String get settingsSfx => 'Sound effects';
+
+  @override
+  String get settingsSfxVolume => 'Effects volume';
+
+  @override
+  String get settingsVibration => 'Vibration';
+
+  @override
+  String get settingsCredits => 'Credits and licences';
+
+  @override
+  String get creditsSounds => 'Music and sounds';
+
+  @override
+  String get creditsFonts => 'Fonts';
+
+  @override
+  String get creditsLibraries => 'Library licences';
+
+  @override
+  String creditsLicense(String license) {
+    return 'Licence: $license';
+  }
 }

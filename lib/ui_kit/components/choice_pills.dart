@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../tokens/app_colors.dart';
 import '../tokens/app_typography.dart';
+import 'ui_feedback.dart';
 
 /// Single-choice pills that wrap onto more rows instead of shrinking text –
 /// for choices whose labels are too long for a [SegmentedControl].
@@ -24,7 +25,10 @@ class ChoicePills<T> extends StatelessWidget {
             inMutuallyExclusiveGroup: true,
             selected: value == selected,
             child: GestureDetector(
-              onTap: () => onChanged(value),
+              onTap: () {
+                UiFeedback.play(context, UiSound.toggle);
+                onChanged(value);
+              },
               behavior: HitTestBehavior.opaque,
               // No `alignment`: it would stretch the pill to the full row.
               child: Container(

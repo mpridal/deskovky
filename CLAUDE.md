@@ -64,3 +64,11 @@ Flutter není v PATH starších terminálů – v případě potřeby `export PA
 - Ruční průchod na emulátoru skriptem přes `uiautomator dump`: na herní obrazovce dočasně `adb shell settings put global animator_duration_scale 0` (a transition/window), jinak uiautomator nečeká na klid; po skončení vrátit na 1.
 
 Pravidla paralelní práce (kap. 13.2 zadání) se doplní v milníku 9.
+
+## Zvuk (milník 5)
+
+- `AudioService` (`lib/core/audio/`) – hudba se prolíná 600 ms, efekty v poolu 6 slotů, ducking −8 dB, pauza v pozadí. Platformu obstarává `JustAudioBackend`, testy `FakeAudioBackend` (`test/core/audio/`); `pumpApp(audio: …)` ho předá aplikaci.
+- Hudbu vybírá `AudioDirector` (`lib/app/audio_director.dart`) podle trasy: `/play/<id>` a jeho výsledky → `module.musicTrack`, jinde `menu`. Hry samy hudbu nespouštějí, jen efekty přes `GameHost.playSfx(id)`; zvuk `turn` hraje framework při změně hráče.
+- Tlačítka ui_kitu cvakají přes `UiFeedback` (tap/back/toggle); zpětné tlačítko dostane `sound: UiSound.back`.
+- **Výměna zástupných zvuků za skutečné:** 1) soubor do `assets/audio/music/` nebo `sfx/` (OGG), 2) cesta v `AudioCatalog.standard` (`lib/core/audio/audio_catalog.dart`), 3) záznam v `assets/audio/CREDITS.json` (`file, title, author, source_url, license, attribution_text`; u CC BY přesný text uvedení). Test `audio_assets_test.dart` hlídá, že každý soubor existuje, má záznam a hudba je ≤ 15 MB. Zástupné WAV znovu vygeneruje `python tool/generate_placeholder_audio.py` (přepíše i CREDITS.json – po výměně za skutečné soubory ho už nespouštět).
+- `dart format` spouštěj jen na nové soubory, ne na celý strom (přeformátoval by stovky řádků).

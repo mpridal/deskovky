@@ -502,4 +502,39 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get seatReplacedByRobot => 'Chybějící hráče nahradili roboti.';
+
+  @override
+  String get settingsSound => 'Zvuk';
+
+  @override
+  String get settingsMusic => 'Hudba';
+
+  @override
+  String get settingsMusicVolume => 'Hlasitost hudby';
+
+  @override
+  String get settingsSfx => 'Efekty';
+
+  @override
+  String get settingsSfxVolume => 'Hlasitost efektů';
+
+  @override
+  String get settingsVibration => 'Vibrace';
+
+  @override
+  String get settingsCredits => 'Autoři a licence';
+
+  @override
+  String get creditsSounds => 'Hudba a zvuky';
+
+  @override
+  String get creditsFonts => 'Písma';
+
+  @override
+  String get creditsLibraries => 'Licence knihoven';
+
+  @override
+  String creditsLicense(String license) {
+    return 'Licence: $license';
+  }
 }

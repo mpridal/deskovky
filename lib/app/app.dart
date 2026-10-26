@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../core/l10n/locale_resolution.dart';
 import '../l10n/app_localizations.dart';
 import '../ui_kit/tokens/app_theme.dart';
+import 'audio_director.dart';
 import 'providers.dart';
 import 'router.dart';
 
@@ -29,6 +30,7 @@ class _DeskovkyAppState extends ConsumerState<DeskovkyApp> {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       routerConfig: _router,
+      builder: (context, child) => AudioDirector(router: _router, child: child!),
       theme: buildAppTheme(),
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       // A language chosen in Settings wins; null lets the system decide.

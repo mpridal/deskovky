@@ -87,6 +87,7 @@ class SampleBoard extends StatelessWidget {
 
   void _guess(int seat, int n) {
     view.host.haptic();
+    view.host.playSfx('piece_place');
     view.submit(Move(seat: seat, type: 'guess', data: {'value': n}));
   }
 }

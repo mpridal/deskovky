@@ -14,6 +14,9 @@ class SettingsRepository {
   static const _localeKey = 'locale';
   static const _musicKey = 'musicOn';
   static const _sfxKey = 'sfxOn';
+  static const _musicVolumeKey = 'musicVolume';
+  static const _sfxVolumeKey = 'sfxVolume';
+  static const _vibrationKey = 'vibrationOn';
 
   Stream<int?> watchActivePlayerId() => _watch(activePlayerKey).map((v) => v == null ? null : int.tryParse(v));
 
@@ -34,6 +37,22 @@ class SettingsRepository {
   Stream<bool> watchSfxOn() => _watch(_sfxKey).map((v) => v != 'false');
 
   Future<void> setSfxOn(bool on) => _set(_sfxKey, '$on');
+
+  /// Volumes 0–1 (spec 5.10); defaults music 0.7, effects 0.9.
+  Stream<double> watchMusicVolume() => _watchVolume(_musicVolumeKey, 0.7);
+
+  Future<void> setMusicVolume(double volume) => _set(_musicVolumeKey, '${volume.clamp(0.0, 1.0)}');
+
+  Stream<double> watchSfxVolume() => _watchVolume(_sfxVolumeKey, 0.9);
+
+  Future<void> setSfxVolume(double volume) => _set(_sfxVolumeKey, '${volume.clamp(0.0, 1.0)}');
+
+  Stream<bool> watchVibrationOn() => _watch(_vibrationKey).map((v) => v != 'false');
+
+  Future<void> setVibrationOn(bool on) => _set(_vibrationKey, '$on');
+
+  Stream<double> _watchVolume(String key, double fallback) =>
+      _watch(key).map((v) => (double.tryParse(v ?? '') ?? fallback).clamp(0.0, 1.0));
 
   Stream<String?> _watch(String key) => (_db.select(_db.appSettings)..where((s) => s.key.equals(key)))
       .watchSingleOrNull()

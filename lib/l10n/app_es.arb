@@ -142,5 +142,16 @@
   "sampleHigher": "¡Más!",
   "sampleLower": "¡Menos!",
   "sampleTurnHint": "{name}, adivina un número del {low} al {high}",
-  "seatReplacedByRobot": "Los jugadores que faltan han sido sustituidos por robots."
+  "seatReplacedByRobot": "Los jugadores que faltan han sido sustituidos por robots.",
+  "settingsSound": "Sonido",
+  "settingsMusic": "Música",
+  "settingsMusicVolume": "Volumen de la música",
+  "settingsSfx": "Efectos",
+  "settingsSfxVolume": "Volumen de los efectos",
+  "settingsVibration": "Vibración",
+  "settingsCredits": "Créditos y licencias",
+  "creditsSounds": "Música y sonidos",
+  "creditsFonts": "Fuentes",
+  "creditsLibraries": "Licencias de bibliotecas",
+  "creditsLicense": "Licencia: {license}"
 }

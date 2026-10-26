@@ -1,0 +1,178 @@
+[
+  {
+    "file": "music/menu.wav",
+    "title": "Zástupná hudba menu",
+    "author": "Deskovky (vygenerováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "license": "CC0 1.0",
+    "attribution_text": "„Zástupná hudba menu“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  },
+  {
+    "file": "music/sample.wav",
+    "title": "Zástupná hudba sample",
+    "author": "Deskovky (vygenerováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "license": "CC0 1.0",
+    "attribution_text": "„Zástupná hudba sample“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  },
+  {
+    "file": "music/tictactoe.wav",
+    "title": "Zástupná hudba tictactoe",
+    "author": "Deskovky (vygenerováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "license": "CC0 1.0",
+    "attribution_text": "„Zástupná hudba tictactoe“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  },
+  {
+    "file": "music/memory.wav",
+    "title": "Zástupná hudba memory",
+    "author": "Deskovky (vygenerováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "license": "CC0 1.0",
+    "attribution_text": "„Zástupná hudba memory“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  },
+  {
+    "file": "music/minesweeper.wav",
+    "title": "Zástupná hudba minesweeper",
+    "author": "Deskovky (vygenerováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "license": "CC0 1.0",
+    "attribution_text": "„Zástupná hudba minesweeper“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  },
+  {
+    "file": "music/ludo.wav",
+    "title": "Zástupná hudba ludo",
+    "author": "Deskovky (vygenerováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "license": "CC0 1.0",
+    "attribution_text": "„Zástupná hudba ludo“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  },
+  {
+    "file": "music/checkers.wav",
+    "title": "Zástupná hudba checkers",
+    "author": "Deskovky (vygenerováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "license": "CC0 1.0",
+    "attribution_text": "„Zástupná hudba checkers“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  },
+  {
+    "file": "sfx/tap.wav",
+    "title": "Zástupný efekt tap",
+    "author": "Deskovky (vygenerováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "license": "CC0 1.0",
+    "attribution_text": "„Zástupný efekt tap“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  },
+  {
+    "file": "sfx/back.wav",
+    "title": "Zástupný efekt back",
+    "author": "Deskovky (vygenerováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "license": "CC0 1.0",
+    "attribution_text": "„Zástupný efekt back“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  },
+  {
+    "file": "sfx/toggle.wav",
+    "title": "Zástupný efekt toggle",
+    "author": "Deskovky (vygenerováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "license": "CC0 1.0",
+    "attribution_text": "„Zástupný efekt toggle“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  },
+  {
+    "file": "sfx/card_flip.wav",
+    "title": "Zástupný efekt card_flip",
+    "author": "Deskovky (vygenerováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "license": "CC0 1.0",
+    "attribution_text": "„Zástupný efekt card_flip“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  },
+  {
+    "file": "sfx/piece_place.wav",
+    "title": "Zástupný efekt piece_place",
+    "author": "Deskovky (vygenerováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "license": "CC0 1.0",
+    "attribution_text": "„Zástupný efekt piece_place“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  },
+  {
+    "file": "sfx/dice_roll.wav",
+    "title": "Zástupný efekt dice_roll",
+    "author": "Deskovky (vygenerováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "license": "CC0 1.0",
+    "attribution_text": "„Zástupný efekt dice_roll“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  },
+  {
+    "file": "sfx/coin.wav",
+    "title": "Zástupný efekt coin",
+    "author": "Deskovky (vygenerováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "license": "CC0 1.0",
+    "attribution_text": "„Zástupný efekt coin“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  },
+  {
+    "file": "sfx/achievement.wav",
+    "title": "Zástupný efekt achievement",
+    "author": "Deskovky (vygenerováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "license": "CC0 1.0",
+    "attribution_text": "„Zástupný efekt achievement“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  },
+  {
+    "file": "sfx/error.wav",
+    "title": "Zástupný efekt error",
+    "author": "Deskovky (vygenerováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "license": "CC0 1.0",
+    "attribution_text": "„Zástupný efekt error“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  },
+  {
+    "file": "sfx/turn.wav",
+    "title": "Zástupný efekt turn",
+    "author": "Deskovky (vygenerováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "license": "CC0 1.0",
+    "attribution_text": "„Zástupný efekt turn“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  },
+  {
+    "file": "sfx/purchase.wav",
+    "title": "Zástupný efekt purchase",
+    "author": "Deskovky (vygenerováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "license": "CC0 1.0",
+    "attribution_text": "„Zástupný efekt purchase“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  },
+  {
+    "file": "sfx/equip.wav",
+    "title": "Zástupný efekt equip",
+    "author": "Deskovky (vygenerováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "license": "CC0 1.0",
+    "attribution_text": "„Zástupný efekt equip“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  },
+  {
+    "file": "sfx/level_up.wav",
+    "title": "Zástupný efekt level_up",
+    "author": "Deskovky (vygenerováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "license": "CC0 1.0",
+    "attribution_text": "„Zástupný efekt level_up“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  },
+  {
+    "file": "sfx/jingle_win.wav",
+    "title": "Zástupný efekt jingle_win",
+    "author": "Deskovky (vygenerováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "license": "CC0 1.0",
+    "attribution_text": "„Zástupný efekt jingle_win“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  },
+  {
+    "file": "sfx/jingle_lose.wav",
+    "title": "Zástupný efekt jingle_lose",
+    "author": "Deskovky (vygenerováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "license": "CC0 1.0",
+    "attribution_text": "„Zástupný efekt jingle_lose“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+  }
+]

@@ -12,7 +12,7 @@ enum GameOrientation { any, portrait, landscape }
 abstract class GameHost {
   void haptic();
 
-  /// Plays a shared or game-specific sound effect (AudioService, milestone 5).
+  /// Plays a sound effect by its AudioCatalog id (spec 7.3).
   void playSfx(String id);
 
   /// Reports a game event for achievements (milestone 6).
@@ -56,6 +56,8 @@ abstract class GameModule<S> {
   List<Difficulty> get difficulties => Difficulty.values;
   List<GameOption> get options => const [];
   GameOrientation get phoneOrientation => GameOrientation.any;
+
+  /// Music id in the AudioCatalog (spec 7.2), e.g. 'ludo'.
   String get musicTrack;
   bool get supportsSaveResume;
   bool get available => true;

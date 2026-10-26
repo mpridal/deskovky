@@ -20,6 +20,7 @@ import '../../ui_kit/components/app_dialog.dart';
 import '../../ui_kit/components/app_toast.dart';
 import '../../ui_kit/components/primary_button.dart';
 import '../../ui_kit/components/round_icon_button.dart';
+import '../../ui_kit/components/ui_feedback.dart';
 import '../../ui_kit/surfaces/felt_background.dart';
 import '../../ui_kit/tokens/app_colors.dart';
 import '../../ui_kit/tokens/app_typography.dart';
@@ -114,13 +115,19 @@ class GameScreenState extends ConsumerState<GameScreen> {
 }
 
 class _Host implements GameHost {
+  _Host({required this.vibrationOn, required this.sfx});
+
+  final bool Function() vibrationOn;
+  final void Function(String id) sfx;
   final events = <(String, Map<String, Object?>)>[];
 
   @override
-  void haptic() => HapticFeedback.selectionClick();
+  void haptic() {
+    if (vibrationOn()) HapticFeedback.selectionClick();
+  }
 
   @override
-  void playSfx(String id) {}
+  void playSfx(String id) => sfx(id);
 
   @override
   void reportEvent(String id, [Map<String, Object?> data = const {}]) => events.add((id, data));
@@ -139,7 +146,11 @@ class _GamePlay<S> extends ConsumerStatefulWidget {
 
 class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingObserver {
   late final TurnController<S> _turns;
-  final _host = _Host();
+  late final _host = _Host(
+    vibrationOn: () => ref.read(vibrationOnProvider).value ?? true,
+    sfx: (id) => ref.read(audioServiceProvider).playSfx(id),
+  );
+  int? _lastSeat;
   Timer? _finishTimer;
   bool _finished = false;
   bool _pauseOpen = false;
@@ -158,6 +169,7 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
       runner: ref.read(aiRunnerProvider),
       robotDelay: _session.config.robotSpeed.delay,
     )..addListener(_onTurn);
+    _lastSeat = _turns.currentSeat;
     _turns.start();
     _checkFinished();
   }
@@ -178,6 +190,9 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
   }
 
   void _onTurn() {
+    final seat = _turns.currentSeat;
+    if (seat != null && _lastSeat != null && seat != _lastSeat && !_turns.isOver) _host.playSfx('turn');
+    _lastSeat = seat;
     setState(() {});
     _save();
     _checkFinished();
@@ -323,6 +338,8 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
     final wide = MediaQuery.sizeOf(context).width >= 600;
     final musicOn = ref.watch(musicOnProvider).value ?? true;
     final sfxOn = ref.watch(sfxOnProvider).value ?? true;
+    // Watched so the haptic callback reads a loaded value, not the default.
+    ref.watch(vibrationOnProvider);
     final settings = ref.read(settingsRepositoryProvider);
 
     // Phones show compact chips scaled to fit, so all four players stay visible.
@@ -354,7 +371,7 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
         children: [
           Row(
             children: [
-              RoundIconButton(icon: Icons.close, tooltip: l10n.hudExit, onPressed: _confirmExit),
+              RoundIconButton(icon: Icons.close, tooltip: l10n.hudExit, sound: UiSound.back, onPressed: _confirmExit),
               RoundIconButton(icon: Icons.pause, tooltip: l10n.hudPause, onPressed: _openPause),
               Expanded(child: wide ? Center(child: strip) : const SizedBox()),
               RoundIconButton(

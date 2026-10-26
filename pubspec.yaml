@@ -17,6 +17,7 @@ dependencies:
   flutter_riverpod: ^3.4.3
   go_router: ^18.1.1
   intl: any
+  just_audio: ^0.10.6
   path_provider: ^2.1.6
 
 dev_dependencies:
@@ -29,6 +30,12 @@ dev_dependencies:
 flutter:
   generate: true
   uses-material-design: true
+  assets:
+    - assets/audio/music/
+    - assets/audio/sfx/
+    - assets/audio/CREDITS.json
+    - assets/fonts/OFL-Baloo2.txt
+    - assets/fonts/OFL-Nunito.txt
   fonts:
     - family: Baloo2
       fonts:

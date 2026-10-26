@@ -16,6 +16,7 @@ import '../../ui_kit/components/choice_pills.dart';
 import '../../ui_kit/components/player_slot.dart';
 import '../../ui_kit/components/primary_button.dart';
 import '../../ui_kit/components/round_icon_button.dart';
+import '../../ui_kit/components/ui_feedback.dart';
 import '../../ui_kit/components/segmented_control.dart';
 import '../../ui_kit/surfaces/felt_background.dart';
 import '../../ui_kit/tokens/app_colors.dart';
@@ -131,6 +132,7 @@ class _GameSetupScreenState extends ConsumerState<GameSetupScreen> {
           RoundIconButton(
             icon: Icons.arrow_back,
             tooltip: l10n.back,
+            sound: UiSound.back,
             onPressed: () => Navigator.of(context).maybePop(),
           ),
           const SizedBox(width: 8),

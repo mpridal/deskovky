@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../app/providers.dart';
+import '../../core/game/game_config.dart';
 import '../../games/game_texts.dart';
 import '../../games/registry.dart';
 import '../../l10n/app_localizations.dart';
@@ -45,6 +48,7 @@ class ResultsScreen extends StatelessWidget {
         body: FeltBackground(
           child: Stack(
             children: [
+              _Jingle(outcome: outcome),
               SafeArea(
                 child: ListView(
                   padding: const EdgeInsets.all(16),
@@ -107,4 +111,35 @@ class ResultsScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Plays the results jingle once, with the music ducked (spec 7.1, 7.2):
+/// a human's outright win gets `jingle_win`, a robot's win or a draw
+/// `jingle_lose`.
+class _Jingle extends ConsumerStatefulWidget {
+  const _Jingle({required this.outcome});
+
+  final GameOutcomeView outcome;
+
+  @override
+  ConsumerState<_Jingle> createState() => _JingleState();
+}
+
+class _JingleState extends ConsumerState<_Jingle> {
+  @override
+  void initState() {
+    super.initState();
+    final places = widget.outcome.result.places;
+    final winners = [
+      for (var s = 0; s < places.length; s++)
+        if (places[s] == 1) s,
+    ];
+    final humanWon = winners.length == 1 && widget.outcome.config.seats[winners.single] is HumanSeat;
+    final audio = ref.read(audioServiceProvider);
+    // Music dips only when the jingle is actually heard.
+    if (audio.playSfx(humanWon ? 'jingle_win' : 'jingle_lose')) audio.duck(const Duration(seconds: 3));
+  }
+
+  @override
+  Widget build(BuildContext context) => const SizedBox.shrink();
 }

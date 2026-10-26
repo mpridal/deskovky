@@ -957,6 +957,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Missing players were replaced by robots.'**
   String get seatReplacedByRobot;
+
+  /// No description provided for @settingsSound.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound'**
+  String get settingsSound;
+
+  /// No description provided for @settingsMusic.
+  ///
+  /// In en, this message translates to:
+  /// **'Music'**
+  String get settingsMusic;
+
+  /// No description provided for @settingsMusicVolume.
+  ///
+  /// In en, this message translates to:
+  /// **'Music volume'**
+  String get settingsMusicVolume;
+
+  /// No description provided for @settingsSfx.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound effects'**
+  String get settingsSfx;
+
+  /// No description provided for @settingsSfxVolume.
+  ///
+  /// In en, this message translates to:
+  /// **'Effects volume'**
+  String get settingsSfxVolume;
+
+  /// No description provided for @settingsVibration.
+  ///
+  /// In en, this message translates to:
+  /// **'Vibration'**
+  String get settingsVibration;
+
+  /// No description provided for @settingsCredits.
+  ///
+  /// In en, this message translates to:
+  /// **'Credits and licences'**
+  String get settingsCredits;
+
+  /// No description provided for @creditsSounds.
+  ///
+  /// In en, this message translates to:
+  /// **'Music and sounds'**
+  String get creditsSounds;
+
+  /// No description provided for @creditsFonts.
+  ///
+  /// In en, this message translates to:
+  /// **'Fonts'**
+  String get creditsFonts;
+
+  /// No description provided for @creditsLibraries.
+  ///
+  /// In en, this message translates to:
+  /// **'Library licences'**
+  String get creditsLibraries;
+
+  /// No description provided for @creditsLicense.
+  ///
+  /// In en, this message translates to:
+  /// **'Licence: {license}'**
+  String creditsLicense(String license);
 }
 
 class _AppLocalizationsDelegate

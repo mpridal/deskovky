@@ -496,4 +496,39 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get seatReplacedByRobot =>
       'Los jugadores que faltan han sido sustituidos por robots.';
+
+  @override
+  String get settingsSound => 'Sonido';
+
+  @override
+  String get settingsMusic => 'Música';
+
+  @override
+  String get settingsMusicVolume => 'Volumen de la música';
+
+  @override
+  String get settingsSfx => 'Efectos';
+
+  @override
+  String get settingsSfxVolume => 'Volumen de los efectos';
+
+  @override
+  String get settingsVibration => 'Vibración';
+
+  @override
+  String get settingsCredits => 'Créditos y licencias';
+
+  @override
+  String get creditsSounds => 'Música y sonidos';
+
+  @override
+  String get creditsFonts => 'Fuentes';
+
+  @override
+  String get creditsLibraries => 'Licencias de bibliotecas';
+
+  @override
+  String creditsLicense(String license) {
+    return 'Licencia: $license';
+  }
 }

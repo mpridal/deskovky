@@ -53,6 +53,26 @@ void main() {
     expect(await settings.watchLocale().first, isNull);
   });
 
+  test('sound defaults: music 0.7, effects 0.9, vibration on (spec 5.10)', () async {
+    expect(await settings.watchMusicVolume().first, 0.7);
+    expect(await settings.watchSfxVolume().first, 0.9);
+    expect(await settings.watchVibrationOn().first, isTrue);
+  });
+
+  test('sound settings are stored; volumes are clamped to 0–1', () async {
+    await settings.setMusicVolume(0.25);
+    await settings.setSfxVolume(1.7);
+    await settings.setVibrationOn(false);
+    expect(await settings.watchMusicVolume().first, 0.25);
+    expect(await settings.watchSfxVolume().first, 1.0);
+    expect(await settings.watchVibrationOn().first, isFalse);
+  });
+
+  test('a broken stored volume falls back to the default', () async {
+    await db.into(db.appSettings).insertOnConflictUpdate(AppSettingsCompanion.insert(key: 'musicVolume', value: 'x'));
+    expect(await settings.watchMusicVolume().first, 0.7);
+  });
+
   group('active player', () {
     Future<PlayerProfile?> active() => watchActivePlayer(players, settings).first;
 
