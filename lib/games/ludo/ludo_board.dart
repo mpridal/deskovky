@@ -180,7 +180,7 @@ class _LudoBoardState extends State<LudoBoard> {
 
   void _roll() {
     final seat = _view.mySeat;
-    if (!_view.canAct || seat == null || _s.phase != LudoPhase.roll) return;
+    if (!_view.canAct || seat == null || _s.phase != LudoPhase.roll || _rolling) return;
     _send(Move(seat: seat, type: 'roll'));
   }
 
@@ -313,7 +313,8 @@ class _LudoBoardState extends State<LudoBoard> {
     final t = ludoTexts;
     final seat = _view.mySeat;
     final rolling = _rolling;
-    final canRoll = _view.canAct && _s.phase == LudoPhase.roll;
+    // Not while the die still shows the last roll (after a six).
+    final canRoll = _view.canAct && _s.phase == LudoPhase.roll && !rolling;
     final who = _view.lastMove?.seat ?? _s.current;
     final hint = _view.firstGame && _view.canAct
         ? t.of(context, canRoll ? 'ludo.firstHint.roll' : 'ludo.firstHint.move')
@@ -336,7 +337,7 @@ class _LudoBoardState extends State<LudoBoard> {
       ),
       if (_s.noMove && !rolling) _pill(t.of(context, 'ludo.noMove')),
       if (hint != null) _note(hint),
-      if (seat != null && _view.canAct)
+      if (seat != null && _view.canAct && LudoRules.canStop(_s))
         TextButton(
           key: const ValueKey('ludoStop'),
           onPressed: _stop,

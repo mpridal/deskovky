@@ -240,18 +240,37 @@ void main() {
       expect(rules.result(s).stars, [3, 2, 1]);
     });
 
-    test('"Ukončit a seřadit": anyone on turn may stop; ranks by progress, ties share', () {
-      final s = position([[10, base], [4, 5], [20, base], [base, base]], current: 2);
+    test('"Ukončit a seřadit": anyone on turn may stop; ranks by progress, ties share, no stars', () {
+      final s = position([[10, base], [4, 5], [20, 41], [base, base]], current: 2);
       final stop = const Move(seat: 2, type: 'stop');
       expect(rules.isLegal(s, stop), isTrue);
       expect(rules.legalMoves(s, 2), isNot(contains(stop)), reason: 'robots never stop a game');
       expect(rules.isLegal(s, const Move(seat: 1, type: 'stop')), isFalse);
       final after = rules.apply(s, stop);
       expect(rules.isOver(after), isTrue);
-      // Progress: 11, 11, 21, 0.
-      expect(rules.result(after).places, [2, 2, 1, 4]);
-      expect(rules.result(after).stars, [2, 2, 3, 0]);
+      // Progress: 11, 11, 63, 0.
+      final result = rules.result(after);
+      expect(result.places, [2, 2, 1, 4]);
+      expect(result.stars, [0, 0, 0, 0], reason: 'an early end earns no stars');
+      expect(result.stats['endedEarly'], isTrue);
       expect(rules.isLegal(after, stop), isFalse);
+    });
+
+    test('stopping is possible only once some piece is home (no free wins)', () {
+      const stop = Move(seat: 0, type: 'stop');
+      expect(rules.isLegal(rules.initialState(ludoConfig(), 1), stop), isFalse, reason: 'right at the start');
+      final oneOut = position([[0, base, base, base], [base, base, base, base]]);
+      expect(rules.isLegal(oneOut, stop), isFalse, reason: 'one piece entered, robots nothing');
+      expect(LudoRules.canStop(oneOut), isFalse);
+      final home = position([[0, base, base, base], [41, base, base, base]]);
+      expect(rules.isLegal(home, stop), isTrue);
+      expect(LudoRules.canStop(home), isTrue);
+    });
+
+    test('a normal end is not an early end', () {
+      final s = rolled(position([[37, 43], [5, base]]), 3);
+      final after = rules.apply(s, pick(s, 0));
+      expect(rules.result(after).stats['endedEarly'], isFalse);
     });
 
     test('finished seats stay ahead of everyone when the game is stopped', () {

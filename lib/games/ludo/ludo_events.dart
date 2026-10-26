@@ -8,12 +8,13 @@ abstract final class LudoEvents {
   static const hunter = 'ludo.hunter';
   static const sixes = 'ludo.sixes';
 
-  /// Four people at the table – no seat, so it concerns everybody.
+  /// Four people at the table – no seat, so it concerns everybody. Reported
+  /// only once the game is well under way (a piece home), not at the start.
   static const family = 'ludo.family';
 
   /// Every event [s] deserves so far, keyed so each is reported once.
   static Map<String, Map<String, Object?>> of(LudoState s) => {
-    if (s.seats == 4 && !s.robots.contains(true)) family: const {},
+    if (s.seats == 4 && !s.robots.contains(true) && LudoRules.canStop(s)) family: const {},
     for (var seat = 0; seat < s.seats; seat++) ...{
       if (s.stats[seat].captured >= 3) '$captured3#$seat': {'seat': seat},
       if (s.stats[seat].captures >= 5) '$hunter#$seat': {'seat': seat},

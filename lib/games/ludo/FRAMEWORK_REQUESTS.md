@@ -20,6 +20,12 @@ Hra funguje i bez nich – každý bod má dočasné řešení ve složce hry.
 - **Navržené API:** `GameModule.endEarlyMove(S state, int seat) → Move?` – framework nabídne v pauze „Ukončit a seřadit“ a pošle ten tah mimo pořadí.
 - **Dočasně:** tlačítko „Ukončit a seřadit“ pod kostkou, když je na tahu člověk; tah `stop` je legální (`isLegal`), ale není v `legalMoves`, aby ho robot nikdy nezvolil.
 
-## 4. Hod zatřesením
+## 4. Předčasně ukončená partie bez bodů za výhru (zadání 5.6)
+
+- **Co:** „Ukončit a seřadit“ končí hru pořadím podle postupu. `GameResult` umí jen místa a hvězdy, takže samostatné 1. místo framework počítá jako výhru: body za výhru, série, `BadgeCondition.won()` (i `ludo.calm`), statistiky. Zadání 5.6: předčasně ukončená hra má 0 bodů.
+- **Navržené API:** framework respektuje `GameResult.stats['endedEarly'] == true` – partie se zapíše (pořadí, odehraná hra), ale `computeMatchPoints` dá 0 bodů, nepočítá výhru do série ani žebříčku a nevyhodnocuje herní odznaky (ani `ludo.family`).
+- **Dočasně (v herní složce):** `stop` je legální až tehdy, když má kdokoli figurku v domečku (`LudoRules.canStop`) – žádné výhry zadarmo hned na začátku; ukončená partie dává všem ★ 0; „Rodinná hra“ se hlásí až od první figurky v domečku. Výsledek nese `stats['endedEarly']`.
+
+## 5. Hod zatřesením
 
 - Viz „Známá omezení“ v `docs/GAME_MODULE_GUIDE.md` – kostka se hází ťuknutím.

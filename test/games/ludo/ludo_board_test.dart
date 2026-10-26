@@ -170,7 +170,7 @@ void main() {
     final session = newSession(players: 2, seed: 3);
     final host = GameTestHost();
     await pumpTable(tester, sizes['phone']!, session, host);
-    expect(find.text('Ukončit a seřadit'), findsOneWidget);
+    expect(find.text('Ukončit a seřadit'), findsNothing, reason: 'no early end before any piece is home');
     await tester.tap(find.byType(Dice));
     await tester.pump();
     expect(session.moves, [const Move(seat: 0, type: 'roll')]);
@@ -225,20 +225,37 @@ void main() {
   });
 
   testWidgets('"Ukončit a seřadit" asks first, then ends the game', (tester) async {
-    final session = newSession(players: 2);
-    await pumpTable(tester, sizes['phone']!, session, GameTestHost());
+    final table = _Fixed(state: position([[3, base], [41, base]]));
+    await table.pump(tester, GameTestHost());
     await tester.tap(find.byKey(const ValueKey('ludoStop')));
     await tester.pumpAndSettle();
     expect(find.text('Ukončit hru?'), findsOneWidget);
     await tester.tap(find.text('Hrát dál'));
     await tester.pumpAndSettle();
-    expect(session.moves, isEmpty);
+    expect(table.sent, isEmpty);
     await tester.tap(find.byKey(const ValueKey('ludoStop')));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Ukončit a seřadit').last);
     await tester.pumpAndSettle();
-    expect(session.moves.single.type, 'stop');
-    expect(rules.isOver(session.state), isTrue);
+    expect(table.sent, [const Move(seat: 0, type: 'stop')]);
+  });
+
+  testWidgets('the die cannot be tapped again while it is still rolling', (tester) async {
+    final start = position([[38, 43], [base, base]]);
+    final table = _Fixed(state: start);
+    await table.pump(tester, GameTestHost(), animations: true);
+    await tester.tap(find.byType(Dice));
+    // A six that cannot move: the same seat rolls again.
+    final six = rules.rollWith(start, 6);
+    expect(six.phase, LudoPhase.roll);
+    await table.update(tester, six, roll(start));
+    await tester.tap(find.byType(Dice), warnIfMissed: false);
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(table.sent, hasLength(1), reason: 'the first roll is still shown');
+    await tester.pump(const Duration(milliseconds: 600));
+    await tester.tap(find.byType(Dice));
+    await tester.pump();
+    expect(table.sent, hasLength(2));
   });
 
   testWidgets('a capture: the hunter hops, the victim flies home with "boing"', (tester) async {
@@ -289,16 +306,19 @@ void main() {
     await table.pump(tester, host);
     await table.update(tester, s.copyWith(current: 1), null);
     expect([for (final (id, data) in host.events) '$id $data'], unorderedEquals([
-      '${LudoEvents.family} {}',
       '${LudoEvents.captured3} {seat: 0}',
       '${LudoEvents.sixes} {seat: 0}',
       '${LudoEvents.hunter} {seat: 1}',
-    ]));
+    ]), reason: 'no "Rodinná hra" before the game is well under way');
+    // Four people and a piece home: now it counts as a family game.
+    await table.update(tester, s.copyWith(current: 2, pieces: [[base], [41], [base], [base]]), null);
+    await table.update(tester, s.copyWith(current: 3, pieces: [[base], [42], [base], [base]]), null);
+    expect([for (final (id, _) in host.events) id].where((id) => id == LudoEvents.family), hasLength(1));
   });
 
   testWidgets('no "Rodinná hra" with a robot at the table', (tester) async {
     final host = GameTestHost();
-    final s = rules.initialState(ludoConfig(players: 4, robots: 1), 1);
+    final s = rules.initialState(ludoConfig(players: 4, robots: 1), 1).copyWith(pieces: [[41, base, base, base], for (var i = 0; i < 3; i++) [base, base, base, base]]);
     await _Fixed(state: s).pump(tester, host);
     expect(host.events, isEmpty);
   });
