@@ -6,7 +6,7 @@ Framework se v herní větvi nemění (zadání 13.2). Tady je, co Piškvorkám 
 
 **Co:** volba `start = alternate` má střídat začínajícího hráče mezi partiemi. `GameRules.initialState(config, seed)` ale nedostane nic o předchozí partii a hra nesmí nic ukládat sama (replay musí z configu a seedu dát vždy totéž).
 
-**Dočasně:** `alternate` určí začínajícího ze seedu stejně jako `random` (viz `TictactoeRules.initialState`).
+**Dočasně:** volba „střídavě“ je z nabídky odebraná (výchozí je „náhodně“). Starší uložené `alternate` se chová jako `random`. Po přidání API se volba vrátí.
 
 **Navržené API:** framework si pamatuje pořadí partií dané hry se stejnými hráči a předá ho v configu, např. `GameConfig.round` (0, 1, 2, … pro „Hrát znovu“ a další partie se stejnou sestavou; ukládá se se `SavedGame`, takže replay zůstane deterministický). Hra pak začne `round % 2`.
 

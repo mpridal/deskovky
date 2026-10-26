@@ -13,9 +13,10 @@ Hra pro dva: člověk proti člověku (hot-seat) nebo proti robotovi. Zadání: 
 **Volby:**
 - **Deska** 3×3 / 10×10 / 15×15.
 - **Začíná:**
-  - střídavě;
-  - náhodně;
+  - náhodně (výchozí);
   - vždy hráč 1.
+
+  Volba „střídavě“ se vrátí, až framework hře řekne, kolikátá je to partie (FRAMEWORK_REQUESTS.md, bod 1). Do té doby by byla jen náhodná. Starší uložené nastavení nebo partie se `start: alternate` se chovají jako „náhodně“.
 - **Velká deska: potvrdit tah druhým ťuknutím.** První ťuknutí ukáže průsvitnou značku a zlatý rámeček, druhé ťuknutí na totéž pole ji položí. Ťuknutí jinam značku přesune. Na 3×3 se volba nepoužije.
 
 **Hodnocení ★:**
@@ -39,7 +40,6 @@ Skóre v HUD je počet položených vlastních kamenů.
 ## Rozhodnutí podle zadání
 
 - **Hráči 1–2:** manifest má vždy 2 místa (`minPlayers = maxPlayers = 2`). „1 hráč“ znamená, že druhé místo je robot. Nastavení ho tak samo nabídne.
-- **„Začíná: střídavě“:** zatím se určuje ze seedu jako „náhodně“. Pravidla nevědí, kdo začínal minulou partii (FRAMEWORK_REQUESTS.md, bod 1).
 - **„Po ≥ 25 tazích“** u ★ za prohru nebo remízu na velké desce = tahy obou hráčů. Na rozdíl od „20 vlastních tahů“ u výhry zadání slovo „vlastních“ neuvádí.
 - **Blesk „do 9 tahů“** = nejvýš 9 vlastních kamenů.
 - **Těžká vs Lehká ≥ 80 %:**
@@ -77,6 +77,8 @@ Do JSON se ukládá `history`, `cells` se z ní při načtení dopočítají.
 **Deska:**
 - `BoardGrid` z game kitu; políčka mají aspoň 48 dp. 10×10 a 15×15 se na telefonu zoomují a posouvají; tlačítko „vycentrovat“ volá `BoardGridController.reset()`.
 - Poslední tah má zlatý rámeček. Nová značka se nakreslí tahem pera (280 ms).
+- Když tah (typicky robotův) nebo vítězná řada padne mimo výřez zoomované desky, deska se k nim plynule posune (350 ms, zoom zůstane; při omezení pohybu skočí hned).
+- Čtečka obrazovky: každé pole má popisek, např. „✕, sloupec 3, řádek 4“ nebo „volné, …“.
 - Vítězná řada se přeškrtne čarou přes středy políček (520 ms). Každé políčko kreslí svůj úsek, takže to funguje i se zoomem.
 - Při omezení pohybu jsou animace hned hotové.
 - **Zvuky:** `tictactoe.draw` při každém novém kameni (i robotově), `tictactoe.line` při přeškrtnutí. Efekty jsou syntetizované: `test/games/tictactoe/sfx_source/make_sfx.py`, CC0.

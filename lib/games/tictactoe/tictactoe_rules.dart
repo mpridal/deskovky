@@ -6,9 +6,9 @@ import '../../core/game/game_rules.dart';
 import '../../core/game/move.dart';
 import '../../core/game/seeded_random.dart';
 
-/// Who starts (option `start`, spec 13.5).
+/// Who starts (option `start`, spec 13.5). "Take turns" returns once the
+/// framework tells the game which round it is (FRAMEWORK_REQUESTS.md, 1).
 abstract final class TictactoeStart {
-  static const alternate = 'alternate';
   static const random = 'random';
   static const first = 'first';
 }
@@ -90,8 +90,7 @@ class TictactoeRules implements GameRules<TictactoeState> {
     final size = sizes.contains(raw) ? raw! as int : defaultSize;
     final starter = switch (config.options['start']) {
       TictactoeStart.first => 0,
-      // The rules never learn who started the previous game, so "take turns"
-      // also comes from the seed (see README and FRAMEWORK_REQUESTS.md).
+      // 'random', and 'alternate' of older saves: from the seed.
       _ => SeededRandom(seed).nextInt(2),
     };
     return TictactoeState(

@@ -258,6 +258,55 @@ void main() {
     }
   });
 
+  testWidgets('screen readers hear the mark and the position of every cell', (tester) async {
+    final handle = tester.ensureSemantics();
+    await pumpBoard(tester, position(config(), [(2, 0), (0, 1)]));
+    expect(find.bySemanticsLabel('✕, sloupec 3, řádek 1'), findsOneWidget);
+    expect(find.bySemanticsLabel('◯, sloupec 1, řádek 2'), findsOneWidget);
+    expect(find.bySemanticsLabel('volné, sloupec 2, řádek 2'), findsOneWidget);
+    handle.dispose();
+  });
+
+  group('a move outside the zoomed view is brought into it', () {
+    Future<void> robotPlays(WidgetTester tester, List<(int, int)> cells) async {
+      final table = tester.state<_TableState>(find.byType(_Table));
+      for (final (c, r) in cells) {
+        // ignore: invalid_use_of_protected_member
+        table.setState(() => table.state = rules.apply(table.state, TictactoeRules.place(table.state.current, c, r)));
+        await tester.pump();
+      }
+      // The glide starts on the frame after the move and takes 350 ms.
+      for (var i = 0; i < 3; i++) {
+        await tester.pump(const Duration(milliseconds: 300));
+      }
+    }
+
+    bool visible(WidgetTester tester, int c, int r) {
+      final view = tester.getRect(find.byType(InteractiveViewer));
+      final rect = tester.getRect(cell(c, r));
+      return view.contains(rect.topLeft) && view.contains(rect.bottomRight);
+    }
+
+    testWidgets('the robot answers in a far corner of 15×15 on a phone', (tester) async {
+      await pumpBoard(tester, position(config(board: 15, robot: true), [(7, 7)]), size: const Size(360, 740), humans: {0});
+      expect(visible(tester, 14, 14), isFalse);
+      await robotPlays(tester, [(14, 14)]);
+      expect(visible(tester, 14, 14), isTrue);
+    });
+
+    testWidgets('a winning row ending off screen is shown, also without animations', (tester) async {
+      tester.platformDispatcher.accessibilityFeaturesTestValue = const FakeAccessibilityFeatures(disableAnimations: true);
+      addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
+      // ◯ (robot) has (0..3, 0); ✕ scattered in the middle.
+      final s = position(config(board: 15, robot: true), [(7, 7), (0, 0), (8, 8), (1, 0), (6, 6), (2, 0), (9, 9), (3, 0), (5, 9)]);
+      await pumpBoard(tester, s, size: const Size(360, 740), humans: {0});
+      await robotPlays(tester, [(4, 0)]);
+      for (var c = 0; c <= 4; c++) {
+        expect(visible(tester, c, 0), isTrue, reason: '($c, 0)');
+      }
+    });
+  });
+
   testWidgets('rotating the device mid-game keeps the game', (tester) async {
     final (_, sent) = await pumpBoard(tester, position(config(board: 10), [(5, 5), (4, 4)]), size: const Size(412, 915));
     tester.view.physicalSize = const Size(915, 412);
