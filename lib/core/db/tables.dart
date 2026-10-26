@@ -95,3 +95,18 @@ class EarnedBadges extends Table {
   @override
   Set<Column<Object>> get primaryKey => {playerId, badgeId};
 }
+
+/// Every movement of points (spec 5.6): balance = sum, total earned = sum of
+/// the positive entries.
+@DataClassName('PointsEntryRow')
+class PointsLedger extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get playerId => integer().references(Players, #id, onDelete: KeyAction.cascade)();
+  IntColumn get amount => integer()();
+
+  /// `PointsReason.name`, or `purchase`.
+  TextColumn get reason => text()();
+  TextColumn get detail => text().nullable()();
+  IntColumn get matchId => integer().nullable().references(Matches, #id, onDelete: KeyAction.setNull)();
+  IntColumn get at => integer()();
+}
