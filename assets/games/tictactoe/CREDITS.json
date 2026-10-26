@@ -9,18 +9,18 @@
   },
   {
     "file": "games/tictactoe/sfx/draw.ogg",
-    "title": "Zástupný efekt tictactoe.draw",
-    "author": "Deskovky (vygenerováno)",
-    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "title": "Tužka – značka",
+    "author": "Deskovky (syntetizováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/test/games/tictactoe/sfx_source/make_sfx.py",
     "license": "CC0 1.0",
-    "attribution_text": "„Zástupný efekt tictactoe.draw“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+    "attribution_text": "„Tužka – značka“ – zvuk syntetizovaný skriptem Deskovek, CC0 1.0"
   },
   {
     "file": "games/tictactoe/sfx/line.ogg",
-    "title": "Zástupný efekt tictactoe.line",
-    "author": "Deskovky (vygenerováno)",
-    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
+    "title": "Tužka – přeškrtnutí",
+    "author": "Deskovky (syntetizováno)",
+    "source_url": "https://github.com/mpridal/deskovky/blob/main/test/games/tictactoe/sfx_source/make_sfx.py",
     "license": "CC0 1.0",
-    "attribution_text": "„Zástupný efekt tictactoe.line“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+    "attribution_text": "„Tužka – přeškrtnutí“ – zvuk syntetizovaný skriptem Deskovek, CC0 1.0"
   }
 ]
