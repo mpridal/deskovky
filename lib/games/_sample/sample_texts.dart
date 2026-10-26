@@ -13,6 +13,9 @@ const sampleTexts = GameTexts(
     'sample.turnHint': '{name}, tipni číslo od {low} do {high}',
     'sample.badge.bullseye.title': 'Trefa!',
     'sample.badge.bullseye.description': 'Uhádni číslo hned prvním tipem.',
+    'sample.step1': 'Ťukni na číslo.',
+    'sample.step2': 'Šipka napoví: víc, nebo míň?',
+    'sample.firstHint': 'Ťukni na číslo, které tipuješ.',
   },
   en: {
     'sample.title': 'Guess the number',
@@ -25,6 +28,9 @@ const sampleTexts = GameTexts(
     'sample.turnHint': '{name}, guess a number from {low} to {high}',
     'sample.badge.bullseye.title': 'Bullseye!',
     'sample.badge.bullseye.description': 'Guess the number with your first tip.',
+    'sample.step1': 'Tap a number.',
+    'sample.step2': 'The arrow tells you: higher or lower?',
+    'sample.firstHint': 'Tap the number you guess.',
   },
   es: {
     'sample.title': 'Adivina el número',
@@ -37,5 +43,8 @@ const sampleTexts = GameTexts(
     'sample.turnHint': '{name}, adivina un número del {low} al {high}',
     'sample.badge.bullseye.title': '¡En el blanco!',
     'sample.badge.bullseye.description': 'Adivina el número a la primera.',
+    'sample.step1': 'Toca un número.',
+    'sample.step2': 'La flecha te dice: ¿más o menos?',
+    'sample.firstHint': 'Toca el número que adivinas.',
   },
 );

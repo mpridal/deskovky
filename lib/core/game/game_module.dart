@@ -32,6 +32,7 @@ class GameBoardView<S> {
     required this.submit,
     required this.host,
     this.elapsed = _noTime,
+    this.firstGame = false,
   });
 
   final S state;
@@ -46,6 +47,10 @@ class GameBoardView<S> {
   /// Playing time so far without pauses and background (spec 13.4), e.g.
   /// for a move that records when a Minesweeper board was cleared.
   final Duration Function() elapsed;
+
+  /// True on the first game of this game by the person to act (spec 13.4:
+  /// a gentle hint how to play).
+  final bool firstGame;
 }
 
 Duration _noTime() => Duration.zero;
@@ -95,6 +100,10 @@ abstract class GameModule<S> {
   Widget icon(BuildContext context);
 
   Widget board(BuildContext context, GameBoardView<S> view);
+
+  /// 2–4 illustrated rule steps drawn in code (spec 13.4), shown under the
+  /// rules text in the pause menu and the setup screen.
+  List<Widget> ruleSteps(BuildContext context) => const [];
 
   /// Optional hint for the bubble at the bottom, e.g. "Kuba, guess a number".
   String? turnHint(BuildContext context, S state, String playerName) => null;

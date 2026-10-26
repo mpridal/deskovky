@@ -42,6 +42,14 @@ class SampleBoard extends StatelessWidget {
               ),
             ),
           ),
+        if (view.firstGame && view.canAct && s.guesses.isEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Text(
+              sampleTexts.of(context, 'sample.firstHint'),
+              style: AppTypography.button(color: AppColors.gold),
+            ),
+          ),
         const SizedBox(height: 8),
         Expanded(
           child: Opacity(

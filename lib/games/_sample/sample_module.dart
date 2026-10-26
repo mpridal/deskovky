@@ -8,6 +8,7 @@ import '../../core/game/game_rules.dart';
 import '../../core/game/game_texts.dart';
 import 'sample_ai.dart';
 import 'sample_board.dart';
+import 'sample_rule_step.dart';
 import 'sample_icon.dart';
 import 'sample_rules.dart';
 import 'sample_texts.dart';
@@ -71,6 +72,12 @@ class SampleModule extends GameModule<SampleState> {
 
   @override
   Widget board(BuildContext context, GameBoardView<SampleState> view) => SampleBoard(view: view);
+
+  @override
+  List<Widget> ruleSteps(BuildContext context) => [
+    SampleRuleStep(icon: Icons.touch_app, text: sampleTexts.of(context, 'sample.step1')),
+    SampleRuleStep(icon: Icons.swap_vert, text: sampleTexts.of(context, 'sample.step2')),
+  ];
 
   @override
   String? turnHint(BuildContext context, SampleState state, String playerName) =>

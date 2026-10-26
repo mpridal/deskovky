@@ -66,6 +66,16 @@ void main() {
     expect(find.text('Rychlost robotů'), findsNothing, reason: 'no robots, no robot speed');
   });
 
+  testWidgets('the rules with their pictures are one tap away before the game (spec 13.4)', (tester) async {
+    await _players(tester, db, ['Kuba']);
+    await _openSetup(tester, db);
+    await tester.tap(find.byKey(const ValueKey('setupRules')));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Hra skryje číslo'), findsOneWidget);
+    expect(find.byKey(const ValueKey('ruleStep0')), findsOneWidget);
+    expect(find.byKey(const ValueKey('ruleStep1')), findsOneWidget);
+  });
+
   testWidgets('defaults: the active player and robot Čipík', (tester) async {
     await _players(tester, db, ['Tereza']);
     await _openSetup(tester, db);

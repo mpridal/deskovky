@@ -5,6 +5,8 @@ import 'package:deskovky/core/game/game_config.dart';
 import 'package:deskovky/core/game/game_store.dart';
 import 'package:deskovky/core/players/player_repository.dart';
 import 'package:deskovky/core/settings/settings_repository.dart';
+import 'package:deskovky/core/stats/match_record.dart';
+import 'package:deskovky/core/stats/stats_repository.dart';
 import 'package:deskovky/features/game_play/game_screen.dart';
 import 'package:deskovky/features/game_setup/game_setup_screen.dart';
 import 'package:deskovky/features/home/active_player_bar.dart';
@@ -142,6 +144,31 @@ void main() {
     final paused = _screen(tester).debugElapsed;
     await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 80)));
     expect(_screen(tester).debugElapsed, paused);
+  });
+
+  testWidgets("a player's first game shows a controls hint; later games do not (spec 13.4)", (tester) async {
+    final t = await _player(tester, db, 'Tereza');
+    await _startGame(tester, db, _config([HumanSeat(t), const RobotSeat()]));
+    expect(find.text('Ťukni na číslo, které tipuješ.'), findsOneWidget);
+
+    await tester.pumpWidget(const SizedBox());
+    await tester.runAsync(
+      () => StatsRepository(db).recordMatch(
+        MatchRecord(
+          gameId: 'sample',
+          playedAt: DateTime.now(),
+          duration: Duration.zero,
+          difficulty: Difficulty.hard,
+          participants: [
+            MatchParticipant(seat: 0, playerId: t, place: 1, score: 1, stars: 3),
+            const MatchParticipant(seat: 1, playerId: null, place: 2, score: 0, stars: 0),
+          ],
+        ),
+      ),
+    );
+    await _startGame(tester, db, _config([HumanSeat(t), const RobotSeat()]));
+    await _settleIo(tester);
+    expect(find.text('Ťukni na číslo, které tipuješ.'), findsNothing);
   });
 
   testWidgets('a saved game whose player was deleted cannot be resumed', (tester) async {

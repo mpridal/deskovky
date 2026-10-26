@@ -21,6 +21,7 @@ import '../../ui_kit/components/segmented_control.dart';
 import '../../ui_kit/surfaces/felt_background.dart';
 import '../../ui_kit/tokens/app_colors.dart';
 import '../../ui_kit/tokens/app_typography.dart';
+import '../game_play/rules_dialog.dart';
 import '../game_play/seat_identity.dart';
 import 'profile_picker_sheet.dart';
 import 'seat_editor.dart';
@@ -281,7 +282,21 @@ class _GameSetupScreenState extends ConsumerState<GameSetupScreen> {
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-          child: PrimaryButton(label: l10n.setupPlay, onPressed: SeatEditor.isValid(config.seats) ? _play : null),
+          child: Row(
+            children: [
+              PrimaryButton(
+                key: const ValueKey('setupRules'),
+                label: l10n.pauseRules,
+                icon: Icons.menu_book,
+                secondary: true,
+                onPressed: () => showRulesDialog(context, module),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: PrimaryButton(label: l10n.setupPlay, onPressed: SeatEditor.isValid(config.seats) ? _play : null),
+              ),
+            ],
+          ),
         ),
       ],
     );

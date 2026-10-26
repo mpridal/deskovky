@@ -14,7 +14,6 @@ import '../../core/game/game_session.dart';
 import '../../core/game/move.dart';
 import '../../core/game/move_transport.dart';
 import '../../core/players/player_profile.dart';
-import '../../games/game_texts.dart';
 import '../../games/registry.dart';
 import '../../l10n/app_localizations.dart';
 import '../../ui_kit/components/app_dialog.dart';
@@ -29,6 +28,7 @@ import '../game_setup/seat_editor.dart';
 import 'game_orientation.dart';
 import 'game_outcome.dart';
 import 'player_chip.dart';
+import 'rules_dialog.dart';
 import 'seat_identity.dart';
 import 'turn_controller.dart';
 
@@ -50,6 +50,9 @@ class GameScreenState extends ConsumerState<GameScreen> {
   late final GameModule<Object?>? _module = moduleById(widget.gameId);
   GameSession<Object?>? _session;
   List<PlayerProfile> _profiles = const [];
+
+  /// People who already finished this game (for the first-game hint).
+  Set<int> _played = const {};
 
   @visibleForTesting
   GameSession<Object?>? get debugSession => _session;
@@ -90,6 +93,11 @@ class GameScreenState extends ConsumerState<GameScreen> {
     if (module == null) return;
     final store = ref.read(gameStoreProvider);
     final profiles = await ref.read(playerRepositoryProvider).all();
+    final played = {
+      for (final m in await ref.read(statsRepositoryProvider).allMatches())
+        if (m.gameId == widget.gameId)
+          for (final p in m.participants) ?p.playerId,
+    };
     final ids = {for (final p in profiles) p.id};
     final start = widget.start;
     GameSession<Object?>? session;
@@ -126,6 +134,7 @@ class GameScreenState extends ConsumerState<GameScreen> {
     if (!mounted) return;
     setState(() {
       _profiles = profiles;
+      _played = played;
       _session = session;
     });
   }
@@ -138,7 +147,13 @@ class GameScreenState extends ConsumerState<GameScreen> {
       return const Scaffold(body: FeltBackground(child: SizedBox.expand()));
     }
     return module.withType(
-      <T>(m) => _GamePlay<T>(key: _play, module: m, session: session as GameSession<T>, profiles: _profiles),
+      <T>(m) => _GamePlay<T>(
+        key: _play,
+        module: m,
+        session: session as GameSession<T>,
+        profiles: _profiles,
+        played: _played,
+      ),
     );
   }
 }
@@ -163,11 +178,18 @@ class _Host implements GameHost {
 }
 
 class _GamePlay<S> extends ConsumerStatefulWidget {
-  const _GamePlay({super.key, required this.module, required this.session, required this.profiles});
+  const _GamePlay({
+    super.key,
+    required this.module,
+    required this.session,
+    required this.profiles,
+    this.played = const {},
+  });
 
   final GameModule<S> module;
   final GameSession<S> session;
   final List<PlayerProfile> profiles;
+  final Set<int> played;
 
   @override
   ConsumerState<_GamePlay<S>> createState() => _GamePlayState<S>();
@@ -370,34 +392,7 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
     }
   }
 
-  Future<void> _showRules() {
-    final l10n = AppLocalizations.of(context);
-    return showDialog<void>(
-      context: context,
-      builder: (context) => Dialog(
-        backgroundColor: AppColors.paper,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(l10n.pauseRules, style: AppTypography.h2(color: AppColors.ink)),
-              const SizedBox(height: 8),
-              Flexible(
-                child: SingleChildScrollView(
-                  child: Text(gameText(l10n, _module.rulesKey), style: AppTypography.body(color: AppColors.ink)),
-                ),
-              ),
-              const SizedBox(height: 16),
-              PrimaryButton(label: l10n.close, onPressed: () => Navigator.of(context).pop()),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  Future<void> _showRules() => showRulesDialog(context, _module);
 
   @override
   Widget build(BuildContext context) {
@@ -469,6 +464,10 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
       submit: (Move move) => _turns.submitHuman(move),
       host: _host,
       elapsed: () => _elapsed,
+      firstGame: switch (mySeat == null ? null : _session.config.seats[mySeat]) {
+        HumanSeat(:final profileId) => !widget.played.contains(profileId),
+        _ => false,
+      },
     );
 
     String? bubble;
