@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/audio/audio_catalog.dart';
@@ -168,3 +169,10 @@ final triedItemsProvider = StreamProvider.autoDispose.family<Set<String>, int>(
 final ownedItemsProvider = StreamProvider.autoDispose.family<Set<String>, int>(
   (ref, playerId) => ref.watch(shopRepositoryProvider).watchOwned(playerId),
 );
+
+/// For game development (spec 8 bod 5): `flutter run --dart-define=GAME=memory`
+/// opens that game's setup straight away. Debug builds only.
+final startGameProvider = Provider<String?>((ref) {
+  const game = String.fromEnvironment('GAME');
+  return kDebugMode && game.isNotEmpty ? game : null;
+});

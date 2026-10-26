@@ -77,3 +77,10 @@ Framework (lib/features/game_play):
 - Výsledky dostávají `MatchRewards` (odznaky + body na hráče) a ukazují rozpis; horní pruh domovské obrazovky ukazuje zůstatek a úroveň; statistiky hráče úroveň s progress barem a historii bodů.
 - Milník 7b (katalog vylepšení, obchod, šatník) bude utrácet přes `PointsRepository.spend` (důvod `purchase`).
 
+## Příprava na paralelní vývoj her (m9)
+- **Texty her** jsou v Dart mapách ve složce hry (`GameTexts`), ne ve sdílených ARB – `gen-l10n` neumí slučovat více složek. `gameText`/`badgeText` hledají nejdřív v textech her.
+- **Zvuky her** deklaruje manifest (`GameModule.sfx`) a `AudioCatalog.withSfx` je přidá při startu; cesty `games/<id>/…` načítá backend z `assets/`. Licence her v `assets/games/<id>/CREDITS.json`, Autoři a licence je sloučí.
+- **Game kit** (`lib/core/game_kit/`): `BoardGrid`, `PieceToken`, `HoppingPiece`, `FlipCard`, `Dice` a čisté `GameSearch` (alpha-beta s iterativním prohlubováním a časovým limitem; běží v izolátu AI).
+- **Herní čas** bez pauz se ukládá se partií (`SavedGame.elapsedMs`) a deska ho dostává v `GameBoardView.elapsed`.
+- **Kontrakt** `test/games/contract.dart` musí projít každá hra; **`tool/check_scope.dart`** v CI drží větve `game/<id>` v jejich složce. Návod: `docs/GAME_MODULE_GUIDE.md`.
+

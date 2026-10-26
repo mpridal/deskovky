@@ -19,7 +19,7 @@ class DeskovkyApp extends ConsumerStatefulWidget {
 }
 
 class _DeskovkyAppState extends ConsumerState<DeskovkyApp> {
-  late final GoRouter _router = buildRouter();
+  late final GoRouter _router = buildRouter(startGame: ref.read(startGameProvider));
 
   @override
   void initState() {
