@@ -1,0 +1,73 @@
+name: Release
+
+# Spec 4: a pushed tag v* builds, signs and publishes the APK with latest.json.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.47.8
+          channel: stable
+          cache: true
+
+      - name: Version from the tag must match pubspec.yaml
+        id: version
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          PUBSPEC=$(grep '^version:' pubspec.yaml | sed 's/version: //')
+          if [ "${PUBSPEC%%+*}" != "$TAG" ]; then
+            echo "Tag v$TAG does not match pubspec.yaml version $PUBSPEC" >&2
+            exit 1
+          fi
+          IFS=. read -r MAJOR MINOR PATCH <<< "$TAG"
+          echo "name=$TAG" >> "$GITHUB_OUTPUT"
+          echo "code=$((MAJOR * 10000 + MINOR * 100 + PATCH))" >> "$GITHUB_OUTPUT"
+
+      - run: flutter pub get
+      - run: flutter analyze --fatal-infos
+      - run: flutter test
+
+      - name: Signing key from GitHub Secrets
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ]; then
+            echo "Missing KEYSTORE_BASE64 secret – refusing to publish an unsigned release" >&2
+            exit 1
+          fi
+          echo "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/upload.jks"
+          {
+            echo "storeFile=$RUNNER_TEMP/upload.jks"
+            echo "storePassword=$KEYSTORE_PASSWORD"
+            echo "keyAlias=$KEY_ALIAS"
+            echo "keyPassword=$KEY_PASSWORD"
+          } > android/key.properties
+
+      - name: Build the signed APK (arm64)
+        run: |
+          flutter build apk --release --target-platform android-arm64 \
+            --build-name=${{ steps.version.outputs.name }} --build-number=${{ steps.version.outputs.code }}
+          cp build/app/outputs/flutter-apk/app-release.apk deskovky-${{ steps.version.outputs.name }}.apk
+
+      - name: latest.json from CHANGELOG.md
+        run: dart run tool/release/make_latest_json.dart ${{ steps.version.outputs.name }} deskovky-${{ steps.version.outputs.name }}.apk latest.json
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 -c "import json; print(json.load(open('latest.json'))['notes_cs'])" > notes.md
+          gh release create "$GITHUB_REF_NAME" deskovky-${{ steps.version.outputs.name }}.apk latest.json \
+            --title "Deskovky ${{ steps.version.outputs.name }}" --notes-file notes.md
