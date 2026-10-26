@@ -1,7 +1,6 @@
 import 'package:deskovky/core/game/difficulty.dart';
 import 'package:deskovky/core/game/game_module.dart';
 import 'package:deskovky/core/game/move.dart';
-import 'package:deskovky/games/minesweeper/minesweeper_board.dart';
 import 'package:deskovky/games/minesweeper/minesweeper_module.dart';
 import 'package:deskovky/games/minesweeper/minesweeper_rules.dart';
 import 'package:deskovky/games/minesweeper/minesweeper_state.dart';
@@ -32,7 +31,8 @@ class Harness {
 
   MinesweeperState get state => notifier.value;
 
-  Future<void> pump(WidgetTester tester, {Size size = const Size(412, 915), String locale = 'cs'}) async {
+  /// A tablet by default: the whole easy board fits there without zoom.
+  Future<void> pump(WidgetTester tester, {Size size = const Size(800, 1280), String locale = 'cs'}) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = size;
     addTearDown(tester.view.reset);
@@ -105,21 +105,41 @@ void main() {
           final h = Harness(rules.apply(s0, reveal(s0.columns ~/ 2, s0.rows ~/ 2)));
           await h.pump(tester, size: size);
           expect(tester.takeException(), isNull);
-          final level = MinesweeperRules.levelOf(difficulty);
+          // Every square is a 48 dp target (spec 13.4); a board that does
+          // not fit zooms instead and offers the centre button.
           final square = tester.getSize(cell(0, 0));
-          final tablet = size.shortestSide >= 600;
-          expect(square.width, greaterThanOrEqualTo(MinesweeperBoard.minCell(level, tablet: tablet) - 0.01));
-          if (level == MinesweeperLevel.hard && !tablet) {
-            expect(find.byKey(const ValueKey('centre')), findsOneWidget);
-          }
-          if (level != MinesweeperLevel.hard || tablet) {
-            // Easy and medium fit everywhere, hard on tablets, without zooming.
-            expect(find.byType(InteractiveViewer), findsNothing);
-            expect(find.byKey(const ValueKey('centre')), findsNothing);
-          }
+          expect(square.width, greaterThanOrEqualTo(48 - 0.01));
+          final zoomed = find.byType(InteractiveViewer).evaluate().isNotEmpty;
+          expect(find.byKey(const ValueKey('centre')), zoomed ? findsOneWidget : findsNothing);
         });
       }
     }
+
+    testWidgets('medium on a small phone: 48 dp squares, pinch-zoom and the centre button', (tester) async {
+      final h = Harness(rules.initialState(config(difficulty: Difficulty.medium), 1));
+      await h.pump(tester, size: const Size(360, 740));
+      expect(tester.getSize(cell(0, 0)).width, greaterThanOrEqualTo(48));
+      expect(find.byType(InteractiveViewer), findsOneWidget);
+      expect(find.byKey(const ValueKey('centre')), findsOneWidget);
+    });
+
+    testWidgets('on a phone the zoomed board still uncovers with a tap and flags with a long press', (tester) async {
+      final h = Harness(board([(0, 0), (8, 8)]));
+      await h.pump(tester, size: const Size(412, 915));
+      expect(find.byType(InteractiveViewer), findsOneWidget);
+      await tester.longPress(cell(4, 3));
+      await tester.pump();
+      await tester.tap(cell(4, 5));
+      await tester.pump();
+      expect(h.sent, [mark(4, 3), reveal(4, 5, t: 12000)]);
+    });
+
+    testWidgets('easy on a tablet fits without zooming', (tester) async {
+      final h = Harness(rules.initialState(config(), 1));
+      await h.pump(tester, size: const Size(800, 1280));
+      expect(find.byType(InteractiveViewer), findsNothing);
+      expect(find.byKey(const ValueKey('centre')), findsNothing);
+    });
 
     testWidgets('a tall board is turned on a wide screen', (tester) async {
       final h = Harness(rules.initialState(config(difficulty: Difficulty.medium), 1));
@@ -233,6 +253,16 @@ void main() {
     });
   });
 
+  testWidgets('a screen reader hears what each square shows', (tester) async {
+    final handle = tester.ensureSemantics();
+    final h = Harness(play(board([(0, 0), (8, 8)]), [reveal(1, 1), mark(0, 0)]));
+    await h.pump(tester);
+    expect(find.bySemanticsLabel('A1, vlajka'), findsOneWidget);
+    expect(find.bySemanticsLabel('B2, 1'), findsOneWidget);
+    expect(find.bySemanticsLabel('C1, skryté pole'), findsOneWidget);
+    handle.dispose();
+  });
+
   group('the end', () {
     testWidgets('a mine is a puff: sound, smoke and all mines shown', (tester) async {
       final h = Harness(play(board([(0, 0), (8, 8)]), [reveal(1, 1)]));
@@ -326,7 +356,7 @@ void main() {
 
     testWidgets('lost_with_puff', (tester) async {
       final h = Harness(play(board([(0, 0), (8, 8), (3, 6)]), [reveal(1, 1), mark(8, 8), mark(5, 5)]));
-      await h.pump(tester, size: const Size(412, 915));
+      await h.pump(tester, size: const Size(800, 1280));
       await tester.tap(cell(0, 0));
       await tester.pump(const Duration(milliseconds: 250));
       await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/lost_with_puff.png'));

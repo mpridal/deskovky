@@ -29,6 +29,8 @@ Future<void> _openEasyGame(WidgetTester tester) async {
   expect(find.byType(GameScreen), findsOneWidget);
 }
 
+/// The tests run on a tablet, where the whole easy board fits without zoom
+/// (on a phone it is pinch-zoomed and the corner squares are off screen).
 Future<void> _tapCell(WidgetTester tester, int cell, int columns) async {
   await tester.tap(find.byKey(ValueKey('cell${cell % columns},${cell ~/ columns}')));
   await tester.pump(const Duration(milliseconds: 50));
@@ -42,7 +44,7 @@ void main() {
     await tester.runAsync(() async {
       tereza = (await PlayerRepository(db).create(name: 'Tereza', avatar: AvatarSpec.defaults)).id;
     });
-    await pumpApp(tester, size: const Size(412, 915), db: db, disableAnimations: true);
+    await pumpApp(tester, size: const Size(800, 1280), db: db, disableAnimations: true);
     await _openEasyGame(tester);
 
     await _tapCell(tester, 40, 9);
@@ -80,7 +82,7 @@ void main() {
     final db = testDatabase();
     addTearDown(db.close);
     await tester.runAsync(() => PlayerRepository(db).create(name: 'Tereza', avatar: AvatarSpec.defaults));
-    await pumpApp(tester, size: const Size(412, 915), db: db, disableAnimations: true);
+    await pumpApp(tester, size: const Size(800, 1280), db: db, disableAnimations: true);
     await _openEasyGame(tester);
     await _tapCell(tester, 40, 9);
     final s = _session(tester).state as MinesweeperState;
