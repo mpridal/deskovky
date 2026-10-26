@@ -40,8 +40,12 @@ class _MemoryBoardState extends State<MemoryBoard> with TickerProviderStateMixin
   static const missShown = Duration(milliseconds: 1200);
   static const previewShown = Duration(seconds: 2);
 
+  /// The last miss, shown for [missShown] even when the next robot already
+  /// turns a card, so people can remember it; a person's tap hurries it.
   Timer? _missTimer;
-  bool _missOn = false;
+  List<int> _missed = const [];
+  int _missSeat = 0;
+  bool get _missOn => _missed.isNotEmpty;
   Timer? _previewTimer;
   bool _previewOn = false;
   late final AnimationController _swap = AnimationController(vsync: this, duration: const Duration(milliseconds: 700))
@@ -62,7 +66,7 @@ class _MemoryBoardState extends State<MemoryBoard> with TickerProviderStateMixin
       _previewOn = true;
       _previewTimer = Timer(previewShown, _endPreview);
     }
-    if (s.miss.isNotEmpty) _showMiss();
+    if (s.miss.isNotEmpty) _showMiss(s.miss, (s.current - 1 + s.seats) % s.seats);
     // A restored game: what was found before the app closed was never
     // recorded (events are kept only until the game ends), so count it now.
     if (s.reveals.isNotEmpty) {
@@ -88,13 +92,11 @@ class _MemoryBoardState extends State<MemoryBoard> with TickerProviderStateMixin
     final reduce = MediaQuery.disableAnimationsOf(context);
     host.playSfx('card_flip');
     if (_previewOn) _endPreview();
+    final seat = before.current;
     if (after.miss.isNotEmpty) {
       host.playSfx('memory.miss');
-      _showMiss();
-    } else if (_missOn) {
-      _endMiss();
+      _showMiss(after.miss, seat);
     }
-    final seat = before.current;
     if (after.pairsOf(seat) > before.pairsOf(seat)) {
       host.playSfx('memory.match');
       if (!reduce) {
@@ -130,9 +132,10 @@ class _MemoryBoardState extends State<MemoryBoard> with TickerProviderStateMixin
     }
   }
 
-  void _showMiss() {
+  void _showMiss(List<int> cards, int seat) {
     _missTimer?.cancel();
-    _missOn = true;
+    _missed = cards;
+    _missSeat = seat;
     _missTimer = Timer(missShown, () {
       if (mounted) setState(_endMiss);
     });
@@ -140,7 +143,7 @@ class _MemoryBoardState extends State<MemoryBoard> with TickerProviderStateMixin
 
   void _endMiss() {
     _missTimer?.cancel();
-    _missOn = false;
+    _missed = const [];
     if (_swapWaiting) {
       _swapWaiting = false;
       _swap.forward(from: 0);
@@ -304,8 +307,8 @@ class _MemoryBoardState extends State<MemoryBoard> with TickerProviderStateMixin
       at = Offset.lerp(from, home, t)! + Offset(0, -lift);
       scale = 1 + 0.12 * sin(t * pi);
     }
-    final up = flight != null || s.open.contains(c) || (_missOn && s.miss.contains(c)) || _previewOn;
-    final frameSeat = flight?.seat ?? (s.open.contains(c) || s.miss.contains(c) ? _seatOf(c) : null);
+    final up = flight != null || s.open.contains(c) || _missed.contains(c) || _previewOn;
+    final frameSeat = flight?.seat ?? (s.open.contains(c) ? s.current : (_missed.contains(c) ? _missSeat : null));
     return Positioned(
       key: ValueKey('memory.card$c'),
       left: at.dx,
@@ -338,13 +341,5 @@ class _MemoryBoardState extends State<MemoryBoard> with TickerProviderStateMixin
         ),
       ),
     );
-  }
-
-  /// Who turned card [c] most recently (for the frame colour).
-  int? _seatOf(int c) {
-    final s = _s;
-    if (s.open.contains(c)) return s.current;
-    if (s.miss.contains(c)) return (s.current - 1 + s.seats) % s.seats;
-    return null;
   }
 }
