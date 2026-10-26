@@ -147,20 +147,21 @@ void main() {
   group('review fixes', () {
     final now = DateTime(2026, 10, 26, 10);
 
-    test('one-seat games count as played and as records, never as wins or streaks', () {
+    test('a one-seat game: 1st place = completed = win (spec 5.6), 2nd place = failed', () {
       final s = computePlayerStats(_t, [
-        for (var i = 0; i < 5; i++) _m([(_t, 1)], seconds: 50 - i),
-        _m([(_t, 2), (_k, 1)]),
+        for (var i = 0; i < 3; i++) _m([(_t, 1)], seconds: 50 - i),
+        _m([(_t, 2)], seconds: 5),
       ]);
-      expect(s.played, 6);
-      expect(s.wins, 0);
-      expect(s.bestStreak, 0);
-      expect(s.byGame['sample']!.fastestWin, const Duration(seconds: 46), reason: 'a solo win is a record');
+      expect(s.played, 4);
+      expect(s.wins, 3);
+      expect(s.bestStreak, 3);
+      expect(s.currentStreak, 0);
+      expect(s.byGame['sample']!.fastestWin, const Duration(seconds: 48), reason: 'a failed game is no record');
     });
 
-    test('the leaderboard leaves out one-seat games', () {
+    test('the leaderboard counts one-seat games too', () {
       final rows = leaderboard([_m([(_t, 1)]), _m([(_k, 1), (_t, 2)])], const LeaderboardQuery(), now: now);
-      expect([for (final r in rows) (r.playerId, r.wins, r.played)], [(_k, 1, 1), (_t, 0, 1)]);
+      expect([for (final r in rows) (r.playerId, r.wins, r.played)], [(_k, 1, 1), (_t, 1, 2)]);
     });
 
     test('only existing players are ranked, without gaps', () {

@@ -59,8 +59,8 @@ DateTime nextPeriodBoundary(DateTime now) {
 }
 
 /// People ranked by wins, then win rate, then fewer games (spec 5.4). Robots,
-/// deleted players and anyone outside [players] (when given) never appear;
-/// one-seat games do not count. Points join in milestone 7.
+/// deleted players and anyone outside [players] (when given) never appear.
+/// Points join in milestone 7.
 List<LeaderboardEntry> leaderboard(
   Iterable<MatchRecord> matches,
   LeaderboardQuery query, {
@@ -70,7 +70,6 @@ List<LeaderboardEntry> leaderboard(
   final start = periodStart(query.period, now);
   final selected = matches.where(
     (m) =>
-        m.participants.length > 1 &&
         (query.gameId == null || m.gameId == query.gameId) &&
         (query.difficulty == null || m.difficulty == query.difficulty) &&
         (start == null || !m.playedAt.isBefore(start)),
