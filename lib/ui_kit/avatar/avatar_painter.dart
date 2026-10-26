@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/rendering.dart';
 
 import '../../core/avatar/avatar_spec.dart';
+import 'accessories/accessory_art.dart';
 
 const _ink = Color(0xFF2B211B);
 const _mouthColor = Color(0xFF5E1F1B);
@@ -15,11 +16,38 @@ const _capShade = Color(0xFFB8403C);
 
 /// Paints a human avatar in a 100×100 coordinate system (same as the SVG
 /// mockup), scaled to the canvas. Layers back to front: background, back
-/// hair, shoulders, neck, face, cheeks, eyes, mouth, front hair.
+/// hair, shoulders, neck, face, cheeks, eyes, mouth, front hair (cut under a
+/// hat), then the worn upgrades – face, head, pet, hand, effect – and the
+/// frame around the circle (spec 5.6).
 class AvatarPainter extends CustomPainter {
-  AvatarPainter(this.spec);
+  AvatarPainter(this.spec, {this.logicalSize = 100, this.t = 0});
 
   final AvatarSpec spec;
+
+  /// Logical size in dp; small avatars leave out the pet and the effect.
+  final double logicalSize;
+
+  /// Animation phase 0–1 for animated upgrades.
+  final double t;
+
+  /// Below this size the pet and the effect would only be noise (spec 5.6).
+  static const detailSize = 40.0;
+
+  static Set<AccessorySlot> visibleSlots(double size) => {
+    for (final s in AccessorySlot.values)
+      if (size >= detailSize || (s != AccessorySlot.pet && s != AccessorySlot.effect)) s,
+  };
+
+  AccessoryArt? _art(AccessorySlot slot) {
+    final worn = spec.equipped[slot];
+    final art = worn == null ? null : accessoryArts[worn.id];
+    return art != null && art.slot == slot && visibleSlots(logicalSize).contains(slot) ? art : null;
+  }
+
+  void _wear(Canvas canvas, AccessorySlot slot) => _art(slot)?.paint(
+    canvas,
+    AccessoryContext(skin: AvatarPalette.skin[spec.skin], variant: spec.equipped[slot]?.variant, t: t),
+  );
 
   /// Colors of eye lines and the mouth for a skin tone, chosen for at least
   /// 3:1 contrast. The two darkest tones get light features (and eye whites).
@@ -54,7 +82,26 @@ class AvatarPainter extends CustomPainter {
     canvas.drawCircle(const Offset(65, 60), 4, cheek);
     _eyes(canvas);
     _mouth(canvas);
+    // A hat cuts the hair above its brim, so nothing sticks out of it.
+    final hairLine = _art(AccessorySlot.head)?.hairLine;
+    canvas.save();
+    if (hairLine != null) canvas.clipRect(Rect.fromLTRB(0, hairLine, 100, 100));
     _frontHair(canvas, hair);
+    canvas.restore();
+    for (final slot in const [
+      AccessorySlot.face,
+      AccessorySlot.head,
+      AccessorySlot.pet,
+      AccessorySlot.hand,
+      AccessorySlot.effect,
+    ]) {
+      _wear(canvas, slot);
+    }
+    canvas.restore();
+    // The frame goes around the circle, outside its clip.
+    canvas.save();
+    canvas.scale(size.width / 100, size.height / 100);
+    _wear(canvas, AccessorySlot.frame);
     canvas.restore();
   }
 
@@ -326,5 +373,6 @@ class AvatarPainter extends CustomPainter {
     ..strokeCap = StrokeCap.round;
 
   @override
-  bool shouldRepaint(AvatarPainter oldDelegate) => oldDelegate.spec != spec;
+  bool shouldRepaint(AvatarPainter oldDelegate) =>
+      oldDelegate.spec != spec || oldDelegate.t != t || oldDelegate.logicalSize != logicalSize;
 }

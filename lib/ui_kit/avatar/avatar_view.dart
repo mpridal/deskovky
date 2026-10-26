@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../core/avatar/avatar_spec.dart';
+import 'accessories/accessory_art.dart';
 import 'avatar_painter.dart';
 
 /// A human avatar drawn from [spec] at [size] dp (28–160), optionally with a
@@ -16,9 +17,17 @@ class AvatarView extends StatelessWidget {
   final Color? ringColor;
   final String? semanticLabel;
 
+  /// Animated upgrades move only from this size up (spec 5.6).
+  static const animationSize = 64.0;
+
   @override
   Widget build(BuildContext context) {
-    Widget avatar = CustomPaint(size: Size.square(size), painter: AvatarPainter(spec));
+    final animate = size >= animationSize &&
+        !MediaQuery.disableAnimationsOf(context) &&
+        spec.equipped.values.any((e) => accessoryArts[e.id]?.animated ?? false);
+    Widget avatar = animate
+        ? _AnimatedAccessories(spec: spec, size: size)
+        : CustomPaint(size: Size.square(size), painter: AvatarPainter(spec, logicalSize: size));
     if (ringColor != null) {
       avatar = DecoratedBox(
         position: DecorationPosition.foreground,
@@ -88,4 +97,35 @@ class _AnimatedAvatarViewState extends State<AnimatedAvatarView> with SingleTick
       ),
     );
   }
+}
+
+/// Repaints the avatar for upgrades that move (glowing halo, sparks, …).
+class _AnimatedAccessories extends StatefulWidget {
+  const _AnimatedAccessories({required this.spec, required this.size});
+
+  final AvatarSpec spec;
+  final double size;
+
+  @override
+  State<_AnimatedAccessories> createState() => _AnimatedAccessoriesState();
+}
+
+class _AnimatedAccessoriesState extends State<_AnimatedAccessories> with SingleTickerProviderStateMixin {
+  late final AnimationController _cycle = AnimationController(vsync: this, duration: const Duration(seconds: 2))
+    ..repeat();
+
+  @override
+  void dispose() {
+    _cycle.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(
+    animation: _cycle,
+    builder: (context, _) => CustomPaint(
+      size: Size.square(widget.size),
+      painter: AvatarPainter(widget.spec, logicalSize: widget.size, t: _cycle.value),
+    ),
+  );
 }
