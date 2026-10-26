@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 
+import '../../core/badges/badge.dart';
 import '../../core/game/ai_player.dart';
 import '../../core/game/game_module.dart';
 import '../../core/game/game_option.dart';
 import '../../core/game/game_rules.dart';
 import '../../core/game/game_texts.dart';
+import 'memory_ai.dart';
+import 'memory_board.dart';
 import 'memory_icon.dart';
+import 'memory_rule_step.dart';
 import 'memory_rules.dart';
 import 'memory_texts.dart';
 
-/// Manifest of Pexeso (spec 13). Skeleton from milestone 9:
-/// shown as "Brzy" until the game's own session makes it playable.
-class MemoryModule extends GameModule<Map<String, Object?>> {
+/// Manifest of Pexeso (spec 13.6).
+class MemoryModule extends GameModule<MemoryState> {
   const MemoryModule();
 
   @override
@@ -51,27 +54,82 @@ class MemoryModule extends GameModule<Map<String, Object?>> {
       id: 'cards',
       labelKey: 'memory.option.cards',
       choices: [(12, '12'), (16, '16'), (24, '24'), (36, '36'), (48, '48')],
-      defaultValue: 16,
+      defaultValue: MemoryRules.defaultCards,
     ),
     ChoiceOption(
       id: 'set',
       labelKey: 'memory.option.set',
-      choices: [('animals', 'memory.option.set.animals'), ('food', 'memory.option.set.food'), ('transport', 'memory.option.set.transport'), ('space', 'memory.option.set.space')],
+      choices: [
+        ('animals', 'memory.option.set.animals'),
+        ('food', 'memory.option.set.food'),
+        ('transport', 'memory.option.set.transport'),
+        ('space', 'memory.option.set.space'),
+      ],
       defaultValue: 'animals',
     ),
   ];
 
   @override
-  GameRules<Map<String, Object?>> get rules => const MemoryRules();
+  List<BadgeDef> get badges => const [
+    BadgeDef(
+      id: 'memory.elephant',
+      titleKey: 'memory.badge.elephant.title',
+      descriptionKey: 'memory.badge.elephant.description',
+      icon: Icons.psychology,
+      reward: 40,
+      condition: BadgeCondition.event('memory.elephant'),
+    ),
+    BadgeDef(
+      id: 'memory.speed',
+      titleKey: 'memory.badge.speed.title',
+      descriptionKey: 'memory.badge.speed.description',
+      icon: Icons.bolt,
+      reward: 30,
+      condition: BadgeCondition.event('memory.speed'),
+    ),
+    BadgeDef(
+      id: 'memory.streak',
+      titleKey: 'memory.badge.streak.title',
+      descriptionKey: 'memory.badge.streak.description',
+      icon: Icons.local_fire_department,
+      reward: 30,
+      condition: BadgeCondition.event('memory.streak'),
+    ),
+    BadgeDef(
+      id: 'memory.collector',
+      titleKey: 'memory.badge.collector.title',
+      descriptionKey: 'memory.badge.collector.description',
+      icon: Icons.style,
+      reward: 50,
+      condition: BadgeCondition.counter('memory.pairs', 200),
+    ),
+  ];
 
   @override
-  AiPlayer<Map<String, Object?>>? get ai => null;
+  GameRules<MemoryState> get rules => const MemoryRules();
+
+  @override
+  AiPlayer<MemoryState> get ai => const MemoryAi();
 
   @override
   Widget icon(BuildContext context) => const MemoryIcon();
 
   @override
-  Widget board(BuildContext context, GameBoardView<Map<String, Object?>> view) => const SizedBox.shrink();
+  Widget board(BuildContext context, GameBoardView<MemoryState> view) => MemoryBoard(view: view);
+
+  @override
+  List<Widget> ruleSteps(BuildContext context) => [
+    MemoryRuleStep(left: 0, right: null, icon: Icons.touch_app, text: memoryTexts.of(context, 'memory.step1')),
+    MemoryRuleStep(left: 1, right: 1, icon: Icons.check_circle, text: memoryTexts.of(context, 'memory.step2')),
+    MemoryRuleStep(left: 4, right: 2, icon: Icons.replay, text: memoryTexts.of(context, 'memory.step3')),
+  ];
+
+  @override
+  String? turnHint(BuildContext context, MemoryState state, String playerName) => memoryTexts.of(
+    context,
+    state.open.isEmpty ? 'memory.turnHint.first' : 'memory.turnHint.second',
+    {'name': playerName},
+  );
 }
 
 const memoryModule = MemoryModule();
