@@ -59,6 +59,8 @@ void main() {
     expect(find.byKey(const ValueKey('leaderboardRow')), findsNWidgets(2));
     expect(find.descendant(of: _row('Tereza'), matching: find.text('2 výhry')), findsOneWidget);
     expect(find.descendant(of: _row('Kuba'), matching: find.text('1 výhra')), findsOneWidget);
+    expect(find.descendant(of: _row('Tereza'), matching: find.text('3 hry · 67 %')), findsOneWidget);
+    expect(find.descendant(of: _row('Kuba'), matching: find.text('2 hry · 50 %')), findsOneWidget);
     expect(tester.getTopLeft(_row('Tereza')).dy, lessThan(tester.getTopLeft(_row('Kuba')).dy));
     expect(find.textContaining('Čipík'), findsNothing);
   });

@@ -603,7 +603,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String leaderboardDetail(int played, int rate) {
-    return '$played partidas · $rate %';
+    String _temp0 = intl.Intl.pluralLogic(
+      played,
+      locale: localeName,
+      other: '$played partidas',
+      one: '$played partida',
+    );
+    return '$_temp0 · $rate %';
   }
 
   @override

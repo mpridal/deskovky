@@ -1147,7 +1147,7 @@ abstract class AppLocalizations {
   /// No description provided for @leaderboardDetail.
   ///
   /// In en, this message translates to:
-  /// **'{played} games · {rate}%'**
+  /// **'{played, plural, one{{played} game} other{{played} games}} · {rate}%'**
   String leaderboardDetail(int played, int rate);
 
   /// No description provided for @playerStats.

@@ -610,7 +610,14 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String leaderboardDetail(int played, int rate) {
-    return '$played her · $rate %';
+    String _temp0 = intl.Intl.pluralLogic(
+      played,
+      locale: localeName,
+      other: '$played her',
+      few: '$played hry',
+      one: '$played hra',
+    );
+    return '$_temp0 · $rate %';
   }
 
   @override

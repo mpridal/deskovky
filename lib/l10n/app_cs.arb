@@ -174,7 +174,7 @@
   "leaderboardAnyDifficulty": "Každá obtížnost",
   "leaderboardEmpty": "Zatím tu nikdo není. Dohrajte hru!",
   "leaderboardWins": "{count, plural, one{{count} výhra} few{{count} výhry} other{{count} výher}}",
-  "leaderboardDetail": "{played} her · {rate} %",
+  "leaderboardDetail": "{played, plural, one{{played} hra} few{{played} hry} other{{played} her}} · {rate} %",
   "playerStats": "Statistiky: {name}",
   "statsPlayed": "Odehráno",
   "statsWins": "Výhry",

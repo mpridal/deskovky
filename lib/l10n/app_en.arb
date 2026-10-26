@@ -335,7 +335,7 @@
       }
     }
   },
-  "leaderboardDetail": "{played} games · {rate}%",
+  "leaderboardDetail": "{played, plural, one{{played} game} other{{played} games}} · {rate}%",
   "@leaderboardDetail": {
     "placeholders": {
       "played": {
