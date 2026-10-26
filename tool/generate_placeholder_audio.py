@@ -36,9 +36,9 @@ MUSIC = {
     "checkers": ([165, 196, 247], 0.5),
 }
 
-# Each game's own effects (spec 13.5–13.8), ids `<game>.<name>`.
+# Each game's own effects (spec 13.5–13.8), ids `<game>.<name>`. Piškvorky
+# make their own real effects (test/games/tictactoe/sfx_source/make_sfx.py).
 GAME_SFX = {
-    "tictactoe": {"draw": ([0], 0.12, "noise"), "line": ([660, 880], 0.1, "sine")},
     "memory": {"match": ([1047, 1319], 0.1, "bell"), "miss": ([220], 0.18, "sine")},
     "minesweeper": {
         "dig": ([0], 0.08, "noise"),
