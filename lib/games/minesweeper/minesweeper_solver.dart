@@ -129,7 +129,7 @@ class MinesweeperSolver {
     final result = <(List<int>, int)>[];
     for (var i = 0; i < view.length; i++) {
       final n = view[i];
-      if (n <= 0) continue;
+      if (n < 0) continue;
       var need = n;
       final cells = <int>[];
       for (final c in _neighbours[i]) {

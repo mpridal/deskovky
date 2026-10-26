@@ -24,11 +24,11 @@ class MinesweeperBoard extends StatefulWidget {
   final GameBoardView<MinesweeperState> view;
 
   /// Smallest square before the board zooms: easy and medium fit a phone,
-  /// hard is pinch-zoomed (spec 13.7).
-  static double minCell(MinesweeperLevel level) => switch (level) {
+  /// hard is pinch-zoomed there (spec 13.7) but fits a tablet.
+  static double minCell(MinesweeperLevel level, {bool tablet = false}) => switch (level) {
     MinesweeperLevel.easy => 34,
     MinesweeperLevel.medium => 26,
-    MinesweeperLevel.hard => 40,
+    MinesweeperLevel.hard => tablet ? 32 : 40,
   };
 
   @override
@@ -212,7 +212,7 @@ class _MinesweeperBoardState extends State<MinesweeperBoard> with SingleTickerPr
             : null;
         return Column(
           children: [
-            _toolbar(context),
+            _toolbar(context, zoomed: _zoomed(box, columns, rows, context)),
             if (_hint(context) case final hint?)
               Padding(
                 padding: const EdgeInsets.only(top: 6),
@@ -233,7 +233,7 @@ class _MinesweeperBoardState extends State<MinesweeperBoard> with SingleTickerPr
                   key: ValueKey('grid$turned'),
                   columns: columns,
                   rows: rows,
-                  minCellSize: MinesweeperBoard.minCell(level),
+                  minCellSize: MinesweeperBoard.minCell(level, tablet: MediaQuery.sizeOf(context).shortestSide >= 600),
                   controller: _grid,
                   highlighted: {
                     if (lastCell != null) turned ? (lastCell.$2, lastCell.$1) : lastCell,
@@ -258,7 +258,15 @@ class _MinesweeperBoardState extends State<MinesweeperBoard> with SingleTickerPr
     return null;
   }
 
-  Widget _toolbar(BuildContext context) {
+  /// Roughly what BoardGrid decides: the squares do not fit, so the board
+  /// zooms and needs the "centre" button.
+  bool _zoomed(BoxConstraints box, int columns, int rows, BuildContext context) {
+    final height = box.maxHeight - 56 - (_hint(context) == null ? 0 : 50);
+    final fit = (box.maxWidth / columns) < (height / rows) ? box.maxWidth / columns : height / rows;
+    return fit < MinesweeperBoard.minCell(s.level, tablet: MediaQuery.sizeOf(context).shortestSide >= 600);
+  }
+
+  Widget _toolbar(BuildContext context, {required bool zoomed}) {
     final left = s.level.mines - s.flagsCount() - (s.solo ? 0 : s.exploded.length);
     final ms = s.over && s.finishMs != null ? s.finishMs! : view.elapsed().inMilliseconds;
     final seconds = s.started ? ms ~/ 1000 : 0;
@@ -266,20 +274,31 @@ class _MinesweeperBoardState extends State<MinesweeperBoard> with SingleTickerPr
       height: 48,
       child: Row(
         children: [
-          _Pill(
-            key: const ValueKey('minesLeft'),
-            icon: CustomPaint(painter: _MineIconPainter(), size: const Size.square(22)),
-            text: '$left',
-          ),
-          if (s.solo) ...[
-            const SizedBox(width: 8),
-            _Pill(
-              key: const ValueKey('clock'),
-              icon: const Icon(Icons.timer_outlined, size: 20, color: AppColors.ink),
-              text: '${seconds ~/ 60}:${(seconds % 60).toString().padLeft(2, '0')}',
+          // Counters shrink rather than overflow next to the switch.
+          Expanded(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Row(
+                children: [
+                  _Pill(
+                    key: const ValueKey('minesLeft'),
+                    icon: CustomPaint(painter: _MineIconPainter(), size: const Size.square(22)),
+                    text: '$left',
+                  ),
+                  if (s.solo) ...[
+                    const SizedBox(width: 8),
+                    _Pill(
+                      key: const ValueKey('clock'),
+                      icon: CustomPaint(painter: _ClockIconPainter(), size: const Size.square(20)),
+                      text: '${seconds ~/ 60}:${(seconds % 60).toString().padLeft(2, '0')}',
+                    ),
+                  ],
+                ],
+              ),
             ),
-          ],
-          const Spacer(),
+          ),
+          const SizedBox(width: 8),
           if (s.switchControls)
             _ModeSwitch(
               flag: _flagMode,
@@ -287,7 +306,7 @@ class _MinesweeperBoardState extends State<MinesweeperBoard> with SingleTickerPr
               flagLabel: minesweeperTexts.of(context, 'minesweeper.mode.flag'),
               onChanged: (flag) => setState(() => _flagMode = flag),
             ),
-          if (s.level == MinesweeperLevel.hard) ...[
+          if (zoomed) ...[
             const SizedBox(width: 8),
             RoundIconButton(
               key: const ValueKey('centre'),
@@ -402,6 +421,25 @@ class _ModeIconPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_ModeIconPainter old) => old.flag != flag || old.on != on;
+}
+
+class _ClockIconPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final c = size.center(Offset.zero), r = size.shortestSide * 0.42;
+    final ink = Paint()
+      ..color = AppColors.ink
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = r * 0.22
+      ..strokeCap = StrokeCap.round;
+    canvas
+      ..drawCircle(c, r, ink)
+      ..drawLine(c, c - Offset(0, r * 0.6), ink)
+      ..drawLine(c, c + Offset(r * 0.45, 0), ink);
+  }
+
+  @override
+  bool shouldRepaint(_ClockIconPainter old) => false;
 }
 
 class _MineIconPainter extends CustomPainter {
