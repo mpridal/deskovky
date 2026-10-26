@@ -23,10 +23,10 @@ Co by Pexesu pomohlo od frameworku (API v1.0 se během fáze 2 nemění). Každ�
 - **Návrh API:** stejný hook jako v bodě 2 (`eventsOf(finalState)`), nebo `GameRules.events(before, move, after)`, které framework zavolá u každého tahu (i robota).
 - **Dočasně:** deska hlásí události před odesláním tahu člověka (`MemoryRules.eventsAfter`). Slona hlásí ve chvíli, kdy zbývá poslední dvojice – tehdy už nikdo chybu udělat nemůže.
 
-## 4. Test `test/games/skeletons_test.dart` po vydání hry
+## 4. Sdílené testy, které čekají „Brzy“
 
-- **Co:** test vyžaduje, aby všech 5 her fáze 2 mělo `available: false`. Hotové Pexeso má `available: true`, takže první test v tomto souboru selže (soubor je mimo rozsah herní větve).
-- **Návrh:** integrační session odebere `memory` ze seznamu `coming` (stejně i další hotové hry).
+- **Co:** `test/games/skeletons_test.dart`, `test/features/home/home_screen_test.dart` a test filtru v `test/features/leaderboards/leaderboards_screen_test.dart` čekají, že Pexeso má `available: false`. Hotové Pexeso má `available: true`, takže tyto testy selžou (soubory jsou mimo rozsah herní větve).
+- **Stav:** opravuje je větev `framework/contract-fixes`; po jejím sloučení do `main` se tato větev rebasuje.
 
 ## 5. Popis obtížnosti pro hru bez robotů (drobnost)
 

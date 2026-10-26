@@ -100,6 +100,7 @@ Future<HarnessState> pumpBoard(
   bool firstGame = false,
   bool animate = false,
   Set<int> robots = const {},
+  Locale locale = const Locale('cs'),
 }) async {
   tester.view.devicePixelRatio = 1;
   tester.view.physicalSize = size;
@@ -107,7 +108,7 @@ Future<HarnessState> pumpBoard(
   await tester.pumpWidget(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      locale: const Locale('cs'),
+      locale: locale,
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: const [
         AppLocalizations.delegate,
@@ -446,6 +447,24 @@ void main() {
     await tapCard(tester, b);
     expect(find.byKey(const ValueKey('memory.firstHint')), findsNothing);
   });
+
+  for (final locale in const [Locale('cs'), Locale('en'), Locale('es')]) {
+    testWidgets('nothing overflows on the smallest phone with 48 cards (${locale.languageCode})', (tester) async {
+      await pumpBoard(
+        tester,
+        rules.initialState(config(seats: 1, cards: 48, difficulty: Difficulty.easy), 1),
+        size: const Size(360, 740),
+        firstGame: true,
+        locale: locale,
+      );
+      expect(tester.takeException(), isNull);
+      expect(tester.getRect(card(47)).width, greaterThanOrEqualTo(48));
+      await tester.pump(const Duration(seconds: 2));
+      expect(find.byKey(const ValueKey('memory.firstHint')), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      expect(tester.getRect(card(47)).bottom, lessThanOrEqualTo(740 - 56 - 16));
+    });
+  }
 
   testWidgets('turn hint and illustrated rules in every language', (tester) async {
     for (final locale in const [Locale('cs'), Locale('en'), Locale('es')]) {
