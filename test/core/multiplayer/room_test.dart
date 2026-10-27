@@ -234,4 +234,26 @@ void main() {
     host.dispose();
     client.dispose();
   });
+
+  test('in the lobby the host turns open places into robots or own people and removes a player', () async {
+    final host = _host(remotes: 2);
+    final kuba = await _join(host, 'Kuba');
+    expect(host.freePlaces, 1);
+    host.setSlot(2, const RobotSlot());
+    expect(host.freePlaces, 0);
+    expect(host.slots[2], isA<RobotSlot>());
+    host.setSlot(2, LocalSlot(profileId: 2, card: _card('Máma')));
+    await _settle();
+    expect(kuba.lobby!.slots[2].kind, SlotKind.host);
+    expect(kuba.lobby!.slots[2].name, 'Máma');
+    // A remote person's place is not the host's to overwrite; removing is.
+    host.setSlot(1, const RobotSlot());
+    expect(host.slots[1], isA<RemoteSlot>());
+    host.kick(kuba.clientId!);
+    await _settle();
+    expect(host.slots[1], isA<OpenSlot>());
+    expect(kuba.closedReason, 'kicked');
+    host.dispose();
+    kuba.dispose();
+  });
 }

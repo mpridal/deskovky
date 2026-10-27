@@ -1101,4 +1101,145 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get setupDifficultySolo => 'Dificultad';
+
+  @override
+  String get whereLabel => 'Dónde se juega';
+
+  @override
+  String get whereHere => 'En este dispositivo';
+
+  @override
+  String get whereWifi => 'Cada uno en el suyo (Wi-Fi)';
+
+  @override
+  String get trialTag => 'De prueba';
+
+  @override
+  String get noWifi =>
+      'No estás en una red Wi-Fi. Conéctate a la misma Wi-Fi que los demás.';
+
+  @override
+  String get setupOpenRoom => 'Abrir la sala';
+
+  @override
+  String get roomTitle => 'Sala';
+
+  @override
+  String get roomCode => 'Código de sala';
+
+  @override
+  String get roomJoinHint =>
+      'Los demás pulsan Unirse a una partida o escanean el código QR.';
+
+  @override
+  String get slotOpen => 'Plaza libre';
+
+  @override
+  String get slotHere => '🏠 Aquí';
+
+  @override
+  String get slotOwnDevice => '📱 En el suyo';
+
+  @override
+  String get slotReady => 'Listo';
+
+  @override
+  String get slotWaiting => 'Esperando';
+
+  @override
+  String get slotDisconnected => 'Desconectado';
+
+  @override
+  String get slotMakeRobot => 'Añadir un robot';
+
+  @override
+  String get slotAddLocal => 'Añadir un jugador de este dispositivo';
+
+  @override
+  String get slotLeaveOpen => 'Dejarla libre';
+
+  @override
+  String get roomRemove => 'Quitar jugador';
+
+  @override
+  String get roomStart => 'Empezar la partida';
+
+  @override
+  String get roomWaitReady => 'Esperando a que todos estén listos.';
+
+  @override
+  String get roomNoServer => 'No se pudo abrir la sala.';
+
+  @override
+  String get homeJoin => 'Unirse a una partida';
+
+  @override
+  String get joinWho => 'Quién juega en este dispositivo';
+
+  @override
+  String get joinRooms => 'Salas en la red';
+
+  @override
+  String get joinSearching => 'Buscando salas…';
+
+  @override
+  String get joinByCode => 'Código de sala (4 cifras)';
+
+  @override
+  String get joinCodeNotFound =>
+      'No hay ninguna sala con este código en la red.';
+
+  @override
+  String get joinAdvanced => 'Avanzado';
+
+  @override
+  String get joinAddress => 'Dirección (IP:puerto)';
+
+  @override
+  String get joinConnect => 'Conectar';
+
+  @override
+  String get joinFailed => 'No se pudo conectar.';
+
+  @override
+  String get joinPickSomeone => 'Elige al menos un jugador.';
+
+  @override
+  String get byeVersion =>
+      'El anfitrión tiene otra versión de la app. Actualizad todos a la misma.';
+
+  @override
+  String get byeCode => 'Código de sala incorrecto.';
+
+  @override
+  String get byeFull => 'La sala está llena.';
+
+  @override
+  String get byeStarted => 'La partida ya ha empezado.';
+
+  @override
+  String get byeKicked => 'El anfitrión te ha quitado de la sala.';
+
+  @override
+  String get byeLost => 'Se perdió la conexión con el anfitrión.';
+
+  @override
+  String get lobbyReady => 'Estoy listo';
+
+  @override
+  String get lobbyNotReady => 'Todavía no';
+
+  @override
+  String get lobbySettings => 'Ajustes (los elige el anfitrión)';
+
+  @override
+  String get lobbyWaitStart => 'Esperando a que el anfitrión empiece.';
+
+  @override
+  String get leaveRoom => 'Salir de la sala';
+
+  @override
+  String joinFree(int count) {
+    return 'Plazas libres: $count';
+  }
 }

@@ -7,6 +7,9 @@ import '../features/game_play/game_outcome.dart';
 import '../features/game_play/game_screen.dart';
 import '../features/game_setup/game_setup_screen.dart';
 import '../features/home/home_screen.dart';
+import '../features/multiplayer/client_lobby_screen.dart';
+import '../features/multiplayer/host_room_screen.dart';
+import '../features/multiplayer/join_screen.dart';
 import '../features/leaderboards/leaderboards_screen.dart';
 import '../features/players/player_stats_screen.dart';
 import '../features/players/players_screen.dart';
@@ -46,6 +49,13 @@ GoRouter buildRouter({String? startGame}) {
         builder: (_, state) => state.extra is GameOutcomeView
             ? ResultsScreen(outcome: state.extra! as GameOutcomeView)
             : GameSetupScreen(gameId: state.pathParameters['gameId']!),
+      ),
+      // Network play (spec 14): the host's room, joining and the joined room.
+      GoRoute(path: '/room', builder: (_, _) => const HostRoomScreen()),
+      GoRoute(
+        path: '/join',
+        builder: (_, _) => const JoinScreen(),
+        routes: [GoRoute(path: 'lobby', builder: (_, _) => const ClientLobbyScreen())],
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, shell) => AppShell(shell: shell),

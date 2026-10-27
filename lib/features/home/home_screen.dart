@@ -5,6 +5,9 @@ import 'package:go_router/go_router.dart';
 import '../../app/providers.dart';
 
 import '../../games/registry.dart';
+import '../../l10n/app_localizations.dart';
+import '../../ui_kit/components/paper_card.dart';
+import '../../ui_kit/tokens/app_typography.dart';
 import '../../ui_kit/layout/window_size.dart';
 import '../../ui_kit/tokens/app_colors.dart';
 import '../update/update_card.dart';
@@ -69,6 +72,29 @@ class HomeScreen extends ConsumerWidget {
                   onTap: i < gameModules.length ? () => context.push('/play/${gameModules[i].id}/setup') : null,
                 ),
             ],
+          ),
+        ),
+        // Joining a game on another device (spec 14.2 step 3), under the games.
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+          sliver: SliverToBoxAdapter(
+            child: PaperCard(
+              key: const ValueKey('homeJoin'),
+              onTap: () => context.push('/join'),
+              child: Row(
+                children: [
+                  const Icon(Icons.wifi, color: AppColors.wood),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      AppLocalizations.of(context).homeJoin,
+                      style: AppTypography.body(color: AppColors.ink).copyWith(fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                  const Icon(Icons.chevron_right, color: AppColors.wood),
+                ],
+              ),
+            ),
           ),
         ),
       ],

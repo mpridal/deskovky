@@ -1989,6 +1989,276 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Difficulty'**
   String get setupDifficultySolo;
+
+  /// No description provided for @whereLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Where to play'**
+  String get whereLabel;
+
+  /// No description provided for @whereHere.
+  ///
+  /// In en, this message translates to:
+  /// **'On this device'**
+  String get whereHere;
+
+  /// No description provided for @whereWifi.
+  ///
+  /// In en, this message translates to:
+  /// **'Each on their own (Wi-Fi)'**
+  String get whereWifi;
+
+  /// No description provided for @trialTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Trial'**
+  String get trialTag;
+
+  /// No description provided for @noWifi.
+  ///
+  /// In en, this message translates to:
+  /// **'You are not on Wi-Fi. Connect to the same Wi-Fi as the others.'**
+  String get noWifi;
+
+  /// No description provided for @setupOpenRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the room'**
+  String get setupOpenRoom;
+
+  /// No description provided for @roomTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Room'**
+  String get roomTitle;
+
+  /// No description provided for @roomCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Room code'**
+  String get roomCode;
+
+  /// No description provided for @roomJoinHint.
+  ///
+  /// In en, this message translates to:
+  /// **'The others tap Join a game, or scan the QR code.'**
+  String get roomJoinHint;
+
+  /// No description provided for @slotOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Free place'**
+  String get slotOpen;
+
+  /// No description provided for @slotHere.
+  ///
+  /// In en, this message translates to:
+  /// **'🏠 Here'**
+  String get slotHere;
+
+  /// No description provided for @slotOwnDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'📱 Own device'**
+  String get slotOwnDevice;
+
+  /// No description provided for @slotReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready'**
+  String get slotReady;
+
+  /// No description provided for @slotWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting'**
+  String get slotWaiting;
+
+  /// No description provided for @slotDisconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnected'**
+  String get slotDisconnected;
+
+  /// No description provided for @slotMakeRobot.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a robot'**
+  String get slotMakeRobot;
+
+  /// No description provided for @slotAddLocal.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a player from this device'**
+  String get slotAddLocal;
+
+  /// No description provided for @slotLeaveOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave it free'**
+  String get slotLeaveOpen;
+
+  /// No description provided for @roomRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove player'**
+  String get roomRemove;
+
+  /// No description provided for @roomStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start the game'**
+  String get roomStart;
+
+  /// No description provided for @roomWaitReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for everyone to be ready.'**
+  String get roomWaitReady;
+
+  /// No description provided for @roomNoServer.
+  ///
+  /// In en, this message translates to:
+  /// **'The room could not be opened.'**
+  String get roomNoServer;
+
+  /// No description provided for @homeJoin.
+  ///
+  /// In en, this message translates to:
+  /// **'Join a game'**
+  String get homeJoin;
+
+  /// No description provided for @joinWho.
+  ///
+  /// In en, this message translates to:
+  /// **'Who plays on this device'**
+  String get joinWho;
+
+  /// No description provided for @joinRooms.
+  ///
+  /// In en, this message translates to:
+  /// **'Rooms on the network'**
+  String get joinRooms;
+
+  /// No description provided for @joinSearching.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking for rooms…'**
+  String get joinSearching;
+
+  /// No description provided for @joinByCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Room code (4 digits)'**
+  String get joinByCode;
+
+  /// No description provided for @joinCodeNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No room with this code on the network.'**
+  String get joinCodeNotFound;
+
+  /// No description provided for @joinAdvanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get joinAdvanced;
+
+  /// No description provided for @joinAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Address (IP:port)'**
+  String get joinAddress;
+
+  /// No description provided for @joinConnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect'**
+  String get joinConnect;
+
+  /// No description provided for @joinFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not connect.'**
+  String get joinFailed;
+
+  /// No description provided for @joinPickSomeone.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick at least one player.'**
+  String get joinPickSomeone;
+
+  /// No description provided for @byeVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'The host has another version of the app. Update everyone to the same one.'**
+  String get byeVersion;
+
+  /// No description provided for @byeCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong room code.'**
+  String get byeCode;
+
+  /// No description provided for @byeFull.
+  ///
+  /// In en, this message translates to:
+  /// **'The room is full.'**
+  String get byeFull;
+
+  /// No description provided for @byeStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'The game has already started.'**
+  String get byeStarted;
+
+  /// No description provided for @byeKicked.
+  ///
+  /// In en, this message translates to:
+  /// **'The host removed you from the room.'**
+  String get byeKicked;
+
+  /// No description provided for @byeLost.
+  ///
+  /// In en, this message translates to:
+  /// **'The connection to the host was lost.'**
+  String get byeLost;
+
+  /// No description provided for @lobbyReady.
+  ///
+  /// In en, this message translates to:
+  /// **'I am ready'**
+  String get lobbyReady;
+
+  /// No description provided for @lobbyNotReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Not yet'**
+  String get lobbyNotReady;
+
+  /// No description provided for @lobbySettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Game settings (the host chooses)'**
+  String get lobbySettings;
+
+  /// No description provided for @lobbyWaitStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for the host to start.'**
+  String get lobbyWaitStart;
+
+  /// No description provided for @leaveRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave the room'**
+  String get leaveRoom;
+
+  /// No description provided for @joinFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Free places: {count}'**
+  String joinFree(int count);
 }
 
 class _AppLocalizationsDelegate

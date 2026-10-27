@@ -135,6 +135,31 @@ class HostRoom extends ChangeNotifier {
     return playing.whereType<RemoteSlot>().every((s) => s.ready && s.connected);
   }
 
+  int get freePlaces => _slots.whereType<OpenSlot>().length;
+
+  /// Before the game: puts [slot] (open, robot or a person of this device)
+  /// at [index]. A remote person's place only frees up through [kick].
+  void setSlot(int index, RoomSlot slot) {
+    if (started || index < 0 || index >= _slots.length || _slots[index] is RemoteSlot || slot is RemoteSlot) return;
+    _slots[index] = slot;
+    _lobbyChanged();
+  }
+
+  /// Removes a device and its people from the room (spec 14.3).
+  void kick(String clientId) {
+    for (final conn in _conns.where((c) => c.clientId == clientId).toList()) {
+      conn.channel.send(const Kick());
+      _drop(conn);
+    }
+    if (!started) {
+      for (final (i, s) in _slots.indexed) {
+        if (s is RemoteSlot && s.clientId == clientId) _slots[i] = const OpenSlot();
+      }
+    }
+    _tokens.removeWhere((_, id) => id == clientId);
+    _lobbyChanged();
+  }
+
   /// A new device on the line; it must say [Hello] first.
   void accept(MessageChannel channel) {
     if (_disposed) {

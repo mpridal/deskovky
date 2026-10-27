@@ -1109,4 +1109,144 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get setupDifficultySolo => 'Obtížnost';
+
+  @override
+  String get whereLabel => 'Kde se hraje';
+
+  @override
+  String get whereHere => 'Na tomto zařízení';
+
+  @override
+  String get whereWifi => 'Každý na svém (Wi-Fi)';
+
+  @override
+  String get trialTag => 'Zkušební';
+
+  @override
+  String get noWifi =>
+      'Nejsi ve Wi-Fi. Připoj zařízení ke stejné Wi-Fi jako ostatní.';
+
+  @override
+  String get setupOpenRoom => 'Otevřít místnost';
+
+  @override
+  String get roomTitle => 'Místnost';
+
+  @override
+  String get roomCode => 'Kód místnosti';
+
+  @override
+  String get roomJoinHint =>
+      'Ostatní zvolí Připojit se ke hře, nebo naskenují QR kód.';
+
+  @override
+  String get slotOpen => 'Volné místo';
+
+  @override
+  String get slotHere => '🏠 Tady';
+
+  @override
+  String get slotOwnDevice => '📱 Na svém';
+
+  @override
+  String get slotReady => 'Připraven';
+
+  @override
+  String get slotWaiting => 'Čeká se';
+
+  @override
+  String get slotDisconnected => 'Odpojen';
+
+  @override
+  String get slotMakeRobot => 'Přidat robota';
+
+  @override
+  String get slotAddLocal => 'Přidat hráče z tohoto zařízení';
+
+  @override
+  String get slotLeaveOpen => 'Nechat volné';
+
+  @override
+  String get roomRemove => 'Odebrat hráče';
+
+  @override
+  String get roomStart => 'Spustit hru';
+
+  @override
+  String get roomWaitReady => 'Čeká se, až budou všichni připraveni.';
+
+  @override
+  String get roomNoServer => 'Místnost se nepodařilo otevřít.';
+
+  @override
+  String get homeJoin => 'Připojit se ke hře';
+
+  @override
+  String get joinWho => 'Kdo hraje na tomto zařízení';
+
+  @override
+  String get joinRooms => 'Místnosti v síti';
+
+  @override
+  String get joinSearching => 'Hledám místnosti…';
+
+  @override
+  String get joinByCode => 'Kód místnosti (4 číslice)';
+
+  @override
+  String get joinCodeNotFound => 'Místnost s tímto kódem jsem v síti nenašel.';
+
+  @override
+  String get joinAdvanced => 'Pokročilé';
+
+  @override
+  String get joinAddress => 'Adresa (IP:port)';
+
+  @override
+  String get joinConnect => 'Připojit';
+
+  @override
+  String get joinFailed => 'Nepodařilo se připojit.';
+
+  @override
+  String get joinPickSomeone => 'Vyber aspoň jednoho hráče.';
+
+  @override
+  String get byeVersion =>
+      'Hostitel má jinou verzi aplikace. Aktualizujte všichni na stejnou.';
+
+  @override
+  String get byeCode => 'Špatný kód místnosti.';
+
+  @override
+  String get byeFull => 'Místnost je plná.';
+
+  @override
+  String get byeStarted => 'Hra už začala.';
+
+  @override
+  String get byeKicked => 'Hostitel tě odebral z místnosti.';
+
+  @override
+  String get byeLost => 'Spojení s hostitelem se přerušilo.';
+
+  @override
+  String get lobbyReady => 'Jsem připraven';
+
+  @override
+  String get lobbyNotReady => 'Ještě ne';
+
+  @override
+  String get lobbySettings => 'Nastavení hry (vybírá hostitel)';
+
+  @override
+  String get lobbyWaitStart => 'Čeká se, až hostitel spustí hru.';
+
+  @override
+  String get leaveRoom => 'Odejít z místnosti';
+
+  @override
+  String joinFree(int count) {
+    return 'Volná místa: $count';
+  }
 }
