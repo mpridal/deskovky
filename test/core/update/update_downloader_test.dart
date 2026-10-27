@@ -18,6 +18,11 @@ ReleaseInfo _release(List<int> bytes, {String? sha}) => ReleaseInfo(
   notes: const {},
 );
 
+/// Finished APKs in [dir] (a `.part` of an unfinished download may stay).
+List<String> _apks(Directory dir) => [
+  for (final f in dir.listSync()) if (f.path.endsWith('.apk')) f.uri.pathSegments.last,
+];
+
 void main() {
   late Directory dir;
   final apk = List<int>.generate(300000, (i) => i % 251);
@@ -60,10 +65,20 @@ void main() {
     expect(requests, 1);
   });
 
-  test('an HTTP error fails without leaving a file', () async {
-    final downloader = UpdateDownloader(client: MockClient((_) async => http.Response('nope', 500)), directory: dir);
+  test('an HTTP error is tried again a few times, then fails without an APK to install', () async {
+    var requests = 0;
+    final downloader = UpdateDownloader(
+      client: MockClient((_) async {
+        requests++;
+        return http.Response('nope', 500);
+      }),
+      directory: dir,
+      attempts: 3,
+      retryDelay: Duration.zero,
+    );
     await expectLater(downloader.download(_release(apk)), throwsA(isA<http.ClientException>()));
-    expect(dir.listSync(), isEmpty);
+    expect(requests, 3);
+    expect(_apks(dir), isEmpty);
   });
 
   test('a download that stalls fails after the idle timeout instead of hanging forever', () async {
@@ -75,9 +90,106 @@ void main() {
       }),
       directory: dir,
       idleTimeout: const Duration(milliseconds: 100),
+      attempts: 2,
+      retryDelay: Duration.zero,
     );
     await expectLater(downloader.download(_release(apk)), throwsA(isA<TimeoutException>()));
-    expect(dir.listSync(), isEmpty);
+    expect(_apks(dir), isEmpty);
+  });
+
+  test('a broken download continues where it stopped instead of starting over', () async {
+    final ranges = <String?>[];
+    final downloader = UpdateDownloader(
+      client: MockClient.streaming((request, _) async {
+        ranges.add(request.headers['range']);
+        if (ranges.length == 1) {
+          // The line drops after the first 100 kB (screen locked, signal lost).
+          final broken = StreamController<List<int>>();
+          broken.add(apk.sublist(0, 100000));
+          broken.addError(const SocketException('Connection reset'));
+          broken.close();
+          return http.StreamedResponse(broken.stream, 200, contentLength: apk.length);
+        }
+        final from = int.parse(RegExp(r'bytes=(\d+)-').firstMatch(request.headers['range']!)!.group(1)!);
+        return http.StreamedResponse(
+          Stream.value(apk.sublist(from)),
+          206,
+          contentLength: apk.length - from,
+          headers: {'content-range': 'bytes $from-${apk.length - 1}/${apk.length}'},
+        );
+      }),
+      directory: dir,
+      retryDelay: Duration.zero,
+    );
+    final file = await downloader.download(_release(apk));
+    expect(ranges, [null, 'bytes=100000-']);
+    expect(await file.readAsBytes(), apk);
+  });
+
+  test('a download that ended short is continued too', () async {
+    final ranges = <String?>[];
+    final downloader = UpdateDownloader(
+      client: MockClient.streaming((request, _) async {
+        ranges.add(request.headers['range']);
+        if (ranges.length == 1) {
+          return http.StreamedResponse(Stream.value(apk.sublist(0, 5000)), 200, contentLength: apk.length);
+        }
+        return http.StreamedResponse(Stream.value(apk.sublist(5000)), 206, contentLength: apk.length - 5000);
+      }),
+      directory: dir,
+      retryDelay: Duration.zero,
+    );
+    final file = await downloader.download(_release(apk));
+    expect(ranges, [null, 'bytes=5000-']);
+    expect(await file.readAsBytes(), apk);
+  });
+
+  test('after a failed download the next tap continues from the part already downloaded', () async {
+    final failing = UpdateDownloader(
+      client: MockClient.streaming((request, _) async {
+        final stalled = StreamController<List<int>>();
+        stalled.add(apk.sublist(0, 7000));
+        return http.StreamedResponse(stalled.stream, 200, contentLength: apk.length);
+      }),
+      directory: dir,
+      idleTimeout: const Duration(milliseconds: 100),
+      attempts: 1,
+      retryDelay: Duration.zero,
+    );
+    await expectLater(failing.download(_release(apk)), throwsA(isA<TimeoutException>()));
+    String? range;
+    final later = UpdateDownloader(
+      client: MockClient.streaming((request, _) async {
+        range = request.headers['range'];
+        return http.StreamedResponse(Stream.value(apk.sublist(7000)), 206, contentLength: apk.length - 7000);
+      }),
+      directory: dir,
+    );
+    final file = await later.download(_release(apk));
+    expect(range, 'bytes=7000-');
+    expect(await file.readAsBytes(), apk);
+  });
+
+  test('a server that ignores the range sends the whole file again, and it is used from the start', () async {
+    var requests = 0;
+    final downloader = UpdateDownloader(
+      client: MockClient.streaming((request, _) async {
+        requests++;
+        if (requests == 1) {
+          return http.StreamedResponse(Stream.value(apk.sublist(0, 9000)), 200, contentLength: apk.length);
+        }
+        return http.StreamedResponse(Stream.value(apk), 200, contentLength: apk.length);
+      }),
+      directory: dir,
+      retryDelay: Duration.zero,
+    );
+    final file = await downloader.download(_release(apk));
+    expect(await file.readAsBytes(), apk);
+  });
+
+  test('patience: a minute without data, five attempts', () {
+    expect(UpdateDownloader.defaultIdleTimeout, const Duration(seconds: 60));
+    expect(UpdateDownloader.defaultAttempts, 5);
   });
 
   test('older downloads are cleaned up when a new one completes', () async {
