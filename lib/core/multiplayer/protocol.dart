@@ -35,7 +35,9 @@ class ProfileCard {
   int get hashCode => Object.hash(name, avatar.length);
 }
 
-enum SlotKind { host, local, remote, robot }
+/// host: a person on the host's device; open: a free place for someone
+/// joining.
+enum SlotKind { host, remote, robot, open }
 
 /// One place in the room as everybody sees it (spec 14.6: 🏠 / 📱 / 🤖).
 @immutable

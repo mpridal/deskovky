@@ -19,13 +19,26 @@ class TurnController<S> extends ChangeNotifier {
     required this.ai,
     required this.runner,
     required this.robotDelay,
-  });
+    this.localSeats,
+  }) {
+    // Moves applied from elsewhere (another device in a network game) move
+    // the game on too.
+    _appliedSub = transport.applied.listen((_) {
+      _notify();
+      _scheduleRobot();
+    });
+  }
 
   final GameSession<S> session;
   final MoveTransport transport;
   final AiPlayer<S>? ai;
   final AiRunner runner;
   final Duration robotDelay;
+
+  /// The seats played on this device in a network game (spec 14); null
+  /// means every person sits here.
+  final Set<int>? localSeats;
+  late final StreamSubscription<Move> _appliedSub;
 
   Timer? _robotTimer;
   bool _paused = false;
@@ -47,7 +60,8 @@ class TurnController<S> extends ChangeNotifier {
   /// The human seat that may act now, or null.
   int? get humanSeatToAct {
     final seat = currentSeat;
-    return seat == null || isRobotSeat(seat) || _paused ? null : seat;
+    if (seat == null || isRobotSeat(seat) || _paused) return null;
+    return localSeats == null || localSeats!.contains(seat) ? seat : null;
   }
 
   void start() => _scheduleRobot();
@@ -126,6 +140,7 @@ class TurnController<S> extends ChangeNotifier {
   void dispose() {
     _disposed = true;
     _robotTimer?.cancel();
+    _appliedSub.cancel();
     transport.dispose();
     super.dispose();
   }

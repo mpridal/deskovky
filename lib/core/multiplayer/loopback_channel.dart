@@ -53,6 +53,10 @@ class LoopbackChannel implements MessageChannel {
     _in.close();
   }
 
+  /// Hangs up after what was sent arrives, like a WebSocket close.
   @override
-  Future<void> close() async => drop();
+  Future<void> close() async {
+    await _last;
+    drop();
+  }
 }

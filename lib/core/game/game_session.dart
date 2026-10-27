@@ -48,6 +48,19 @@ class GameSession<S> {
     return true;
   }
 
+  /// Puts this session into [save]'s position in place, e.g. a network
+  /// client catching up with the host (spec 14.7); false and unchanged when
+  /// a saved move does not replay.
+  bool replaceWith(SavedGame save) {
+    final replay = GameSession.restore(rules, save);
+    if (replay == null) return false;
+    _state = replay._state;
+    _moves
+      ..clear()
+      ..addAll(replay._moves);
+    return true;
+  }
+
   SavedGame toSave({Duration elapsed = Duration.zero}) =>
       SavedGame(config: config, seed: seed, moves: moves, elapsedMs: elapsed.inMilliseconds);
 }
