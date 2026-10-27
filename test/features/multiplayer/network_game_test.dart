@@ -255,4 +255,109 @@ void main() {
     host.dispose();
     await _leave(tester);
   });
+
+  Future<void> playToResults(WidgetTester tester, HostRoom host, ClientRoom kuba) async {
+    for (var i = 0; i < 300 && !host.isOver; i++) {
+      await _playTurn(tester, host, kuba);
+    }
+    expect(host.isOver, isTrue);
+    await _settle(tester, 10);
+    await tester.pump(const Duration(seconds: 1));
+    await _settle(tester, 10);
+    expect(find.byType(ResultsScreen), findsOneWidget);
+  }
+
+  testWidgets('Odveta on the host starts the next game right away on this device and on the others', (tester) async {
+    final env = FakeNetworkEnv();
+    final (host, kuba, _) = await _hostGame(tester, db, env);
+    await playToResults(tester, host, kuba);
+    final firstSession = host.session;
+    await tester.tap(find.byKey(const ValueKey('netRematch')));
+    await _settle(tester, 10);
+    expect(host.session, isNot(same(firstSession)));
+    expect(find.byType(GameScreen), findsOneWidget, reason: 'the host is back in the game after one tap');
+    final screen = tester.state<GameScreenState>(find.byType(GameScreen));
+    expect(screen.debugSession, same(host.session));
+    expect(kuba.session!.hash, host.session!.hash);
+    kuba.dispose();
+    await _leave(tester);
+  });
+
+  testWidgets('a client on the results follows the rematch into the new game', (tester) async {
+    final host = HostRoom(
+      module: memoryModule,
+      roomCode: '4321',
+      slots: [LocalSlot(profileId: 500, card: ProfileCard(name: 'Táta', avatar: _avatar)), const OpenSlot()],
+      difficulty: Difficulty.easy,
+      robotSpeed: RobotSpeed.fast,
+      options: const {'cards': 12, 'set': 'animals'},
+      runner: const InlineAiRunner(),
+      robotDelay: Duration.zero,
+    );
+    await _player(tester, db, 'Kuba');
+    final env = FakeNetworkEnv(
+      found: [RoomInfo(code: '4321', gameId: 'memory', hostName: 'Táta', hostAvatar: _avatar, port: 1, free: 1, ip: '192.168.1.9')],
+      onConnect: host.accept,
+    );
+    await pumpApp(tester, size: const Size(412, 915), db: db, disableAnimations: true, overrides: [networkEnvProvider.overrideWithValue(env)]);
+    await _settle(tester);
+    await _go(tester, '/join');
+    await _settle(tester);
+    await tester.tap(find.byKey(const ValueKey('room4321')));
+    await _settle(tester);
+    await tester.tap(find.byKey(const ValueKey('lobbyReady')));
+    await _settle(tester);
+    await tester.runAsync(() async => host.start());
+    await _settle(tester);
+    final kuba = _rooms(tester).client!;
+    await playToResults(tester, host, kuba);
+    await tester.runAsync(() async => host.rematch());
+    await _settle(tester, 10);
+    expect(find.byType(GameScreen), findsOneWidget, reason: 'the client follows on the first rematch');
+    host.dispose();
+    await _leave(tester);
+  });
+
+  testWidgets('going back from the results closes the room for everyone (no server left open)', (tester) async {
+    final env = FakeNetworkEnv();
+    final (host, kuba, _) = await _hostGame(tester, db, env);
+    await playToResults(tester, host, kuba);
+    final rooms = _rooms(tester);
+    await tester.binding.handlePopRoute();
+    await _settle(tester, 5);
+    expect(rooms.host, isNull);
+    expect(kuba.closedReason, 'ended');
+    kuba.dispose();
+  });
+
+  testWidgets('the Čekat / Robot / Ukončit choice closes by itself when the player comes back', (tester) async {
+    final env = FakeNetworkEnv();
+    final (host, kuba, line) = await _hostGame(tester, db, env);
+    final token = kuba.token!;
+    line.drop();
+    await _settle(tester);
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 400)));
+    await _settle(tester);
+    expect(find.text('Nahradit robotem'), findsOneWidget);
+    final (hostSide, clientSide) = LoopbackChannel.pair();
+    env.deliver(hostSide);
+    final back = ClientRoom(
+      channel: clientSide,
+      hello: Hello(
+        protocolVersion: protocolVersion,
+        appVersion: '0.4.0',
+        roomCode: host.roomCode,
+        token: token,
+        profiles: [ProfileCard(name: 'Kuba', avatar: _avatar)],
+      ),
+      localProfileIds: const [99],
+    );
+    await _settle(tester, 8);
+    expect(host.waitingFor, isEmpty);
+    expect(find.text('Nahradit robotem'), findsNothing, reason: 'nobody to decide about any more');
+    expect(host.paused, isFalse);
+    kuba.dispose();
+    back.dispose();
+    await _leave(tester);
+  });
 }

@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../app/multiplayer_providers.dart';
 import '../../app/providers.dart';
 import '../../core/game/game_config.dart';
+import '../../core/multiplayer/network_rooms.dart';
 import '../../app/stats_service.dart';
 import '../../games/badge_texts.dart';
 import '../../core/points/points_math.dart';
@@ -52,7 +53,14 @@ class ResultsScreen extends StatelessWidget {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) context.go('/games');
+        if (didPop) return;
+        if (outcome.network) {
+          // Leaving the results leaves the room too: no server or line stays open.
+          final router = GoRouter.of(context);
+          leaveNetworkRoom(ProviderScope.containerOf(context).read(networkRoomsProvider)).then((_) => router.go('/games'));
+        } else {
+          context.go('/games');
+        }
       },
       child: Scaffold(
         body: FeltBackground(
@@ -337,6 +345,15 @@ class _CanBuy extends ConsumerWidget {
   }
 }
 
+/// Leaves the network room after a game: a client says goodbye, the host
+/// ends the room for everyone, then every line and the server close.
+Future<void> leaveNetworkRoom(NetworkRooms rooms) async {
+  final client = rooms.client;
+  if (client != null && client.closedReason == null) client.leave();
+  rooms.host?.endGame();
+  await rooms.leave();
+}
+
 /// After a network game (spec 14.2 step 8): the host offers a rematch in the
 /// same room, the others wait for it; anyone can go home and leave the room.
 class _NetworkActions extends ConsumerStatefulWidget {
@@ -349,14 +366,18 @@ class _NetworkActions extends ConsumerStatefulWidget {
 }
 
 class _NetworkActionsState extends ConsumerState<_NetworkActions> {
-  late final _rooms = ref.read(networkRoomsProvider);
-  late final Object? _finished = _rooms.host?.session ?? _rooms.client?.session;
+  late final NetworkRooms _rooms;
+
+  /// The game that just ended; any other session in the room is a rematch.
+  Object? _finished;
   ChangeNotifier? _room;
   var _moved = false;
 
   @override
   void initState() {
     super.initState();
+    _rooms = ref.read(networkRoomsProvider);
+    _finished = _rooms.host?.session ?? _rooms.client?.session;
     _room = _rooms.host ?? _rooms.client;
     _room?.addListener(_onRoom);
   }
@@ -380,10 +401,7 @@ class _NetworkActionsState extends ConsumerState<_NetworkActions> {
 
   Future<void> _home() async {
     final router = GoRouter.of(context);
-    final client = _rooms.client;
-    if (client != null && client.closedReason == null) client.leave();
-    _rooms.host?.endGame();
-    await _rooms.leave();
+    await leaveNetworkRoom(_rooms);
     router.go('/games');
   }
 

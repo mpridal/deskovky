@@ -72,7 +72,8 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
             profileIds: [for (final p in who) p.id],
             appVersion: version,
           );
-      if (mounted) await context.push('/join/lobby');
+      // Replaces this screen, so looking for rooms (and the multicast lock) stops.
+      if (mounted) context.pushReplacement('/lobby');
     } on Object {
       if (mounted) showAppToast(context, l10n.joinFailed);
     } finally {

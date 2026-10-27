@@ -256,6 +256,10 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
   /// The host's turns belong to its room; this screen only watches them.
   bool _ownsTurns = true;
   bool _deciding = false;
+
+  /// The open Čekat / Robot / Ukončit dialog, to close it when nobody is
+  /// waited for any more.
+  BuildContext? _decisionDialog;
   bool _movedOn = false;
 
   GameModule<S> get _module => widget.module;
@@ -352,6 +356,12 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
       _clock.start();
     }
     if (host != null && host.needsDecision && !_deciding) _decide(host);
+    final dialog = _decisionDialog;
+    if (host != null && host.waitingFor.isEmpty && dialog != null) {
+      // The player came back meanwhile: nothing left to decide.
+      _decisionDialog = null;
+      Navigator.of(dialog).pop('back');
+    }
     setState(() {});
   }
 
@@ -371,6 +381,12 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              Builder(
+                builder: (context) {
+                  _decisionDialog = context;
+                  return const SizedBox.shrink();
+                },
+              ),
               Text(l10n.netDecideTitle, textAlign: TextAlign.center, style: AppTypography.h2(color: AppColors.ink)),
               const SizedBox(height: 16),
               PrimaryButton(label: l10n.netReplaceRobot, onPressed: () => Navigator.of(context).pop('robot')),
@@ -387,8 +403,11 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
       ),
     );
     _deciding = false;
+    _decisionDialog = null;
     if (!mounted) return;
     switch (choice) {
+      case 'back':
+        break;
       case 'robot':
         host.replaceWithRobot();
       case 'end':
@@ -420,7 +439,7 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
     try {
       if (await widget.network?.rejoin() == null) return;
       _movedOn = true;
-      router.pushReplacement('/join/lobby');
+      router.pushReplacement('/lobby');
     } on Object {
       if (mounted) showAppToast(context, l10n.joinFailed);
     }

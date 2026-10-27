@@ -181,6 +181,27 @@ void main() {
       expect(last.lines.first.reason, isNot(PointsReason.capped));
     });
 
+    test('after ten easy solo wins today a network game with a guest is still a game of people (spec 14.5)', () async {
+      final solo = config([HumanSeat(tereza), const RobotSeat()], difficulty: Difficulty.easy);
+      for (var i = 0; i < 10; i++) {
+        await service.recordFinished(
+          config: solo,
+          result: const GameResult(places: [1, 2], scores: [1, 0], stars: [0, 0]),
+          events: const [],
+          duration: Duration.zero,
+        );
+      }
+      const guest = RemoteSeat(clientId: 'c1', name: 'Babička', avatar: {});
+      final network = config([HumanSeat(tereza), guest, const RobotSeat()], difficulty: Difficulty.easy);
+      final points = (await service.recordFinished(
+        config: network,
+        result: const GameResult(places: [1, 2, 3], scores: [1, 0, 0], stars: [0, 0, 0]),
+        events: const [],
+        duration: Duration.zero,
+      )).points[tereza]!;
+      expect(points.lines.first.reason, isNot(PointsReason.capped));
+    });
+
     test('a guest is in the history but gets no points and no leaderboard place', () async {
       const guest = RemoteSeat(clientId: 'c1', name: 'Babička', avatar: {});
       final rewards = await service.recordFinished(

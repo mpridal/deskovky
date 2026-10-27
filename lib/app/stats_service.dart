@@ -215,7 +215,8 @@ class StatsService {
     return PointsInput(
       difficulty: match.difficulty,
       seats: match.participants.length,
-      humans: match.participants.where((p) => p.playerId != null).length,
+      // Guests from other devices are people too (spec 14.5).
+      humans: match.participants.where((p) => !p.robot).length,
       place: me.place,
       draw: match.isDraw(me),
       stars: me.stars,

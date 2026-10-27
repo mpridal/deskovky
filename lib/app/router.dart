@@ -56,11 +56,9 @@ GoRouter buildRouter({String? startGame}) {
       ),
       // Network play (spec 14): the host's room, joining and the joined room.
       GoRoute(path: '/room', builder: (_, _) => const HostRoomScreen()),
-      GoRoute(
-        path: '/join',
-        builder: (_, _) => const JoinScreen(),
-        routes: [GoRoute(path: 'lobby', builder: (_, _) => const ClientLobbyScreen())],
-      ),
+      GoRoute(path: '/join', builder: (_, _) => const JoinScreen()),
+      // Not under /join: the join screen (and its search) must not stay below.
+      GoRoute(path: '/lobby', builder: (_, _) => const ClientLobbyScreen()),
       StatefulShellRoute.indexedStack(
         builder: (context, state, shell) => AppShell(shell: shell),
         branches: [

@@ -45,8 +45,21 @@ class FakeNetworkEnv extends NetworkEnv {
     return _FakeAnnouncement(this);
   }
 
+  /// True while some screen listens for rooms (on Android: holds the lock).
+  var searching = false;
+
   @override
-  Stream<List<RoomInfo>> rooms() => Stream.value(found);
+  Stream<List<RoomInfo>> rooms() {
+    late final StreamController<List<RoomInfo>> out;
+    out = StreamController<List<RoomInfo>>(
+      onListen: () {
+        searching = true;
+        out.add(found);
+      },
+      onCancel: () => searching = false,
+    );
+    return out.stream;
+  }
 
   @override
   Future<MessageChannel> connect(String ip, int port) async {

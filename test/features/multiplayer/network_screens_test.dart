@@ -204,6 +204,8 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('room4321')));
     await _settle(tester);
     expect(find.byType(ClientLobbyScreen), findsOneWidget);
+    expect(env.searching, isFalse, reason: 'joined: no more looking for rooms (battery, multicast lock)');
+    expect(find.byType(JoinScreen, skipOffstage: false), findsNothing);
     expect(host.slots[1], isA<RemoteSlot>());
     expect((host.slots[1] as RemoteSlot).card.name, 'Kuba');
     expect(find.text('Těžká'), findsOneWidget, reason: 'the difficulty is shown');
