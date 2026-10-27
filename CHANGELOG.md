@@ -2,6 +2,15 @@
 
 Každá verze má sekci `## x.y.z` s poznámkami `### cs`, `### en`, `### es` – z nich se při vydání tvoří `latest.json` a karta „Je tu nová verze“. Volitelný řádek `Minimální verze: x.y.z` udělá aktualizaci povinnou pro starší verze.
 
+## 0.4.0
+
+### cs
+Pexeso po Wi-Fi (zkušební): každý hraje na svém telefonu nebo tabletu. Hostitel v nastavení hry zvolí „Každý na svém (Wi-Fi)“ a otevře místnost s kódem a QR, ostatní se připojí z hlavní stránky přes „Připojit se ke hře“. Kdo je na tahu, tomu telefon cinkne; pauza platí pro všechny a když někomu vypadne Wi-Fi, hra na něj počká nebo ho zastoupí robot.
+### en
+Memory over Wi-Fi (trial): everyone plays on their own phone or tablet. The host picks “Each on their own (Wi-Fi)” in the game setup and opens a room with a code and a QR code; the others join from the home screen with “Join a game”. The phone of whoever’s turn it is chimes; a pause stops everyone, and if someone’s Wi-Fi drops, the game waits for them or a robot stands in.
+### es
+Memoria por Wi-Fi (de prueba): cada uno juega en su teléfono o tableta. El anfitrión elige «Cada uno en el suyo (Wi-Fi)» en los ajustes y abre una sala con un código y un código QR; los demás se unen desde la pantalla principal con «Unirse a una partida». Suena el teléfono de quien tiene el turno; la pausa vale para todos y, si a alguien se le cae la Wi-Fi, la partida le espera o un robot juega por él.
+
 ## 0.3.0
 
 ### cs
