@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:deskovky/core/game/difficulty.dart';
 import 'package:deskovky/core/game/game_config.dart';
 import 'package:deskovky/core/game/game_module.dart';
@@ -572,6 +574,10 @@ void main() {
       );
       await loadPictures(tester);
       await expectLater(find.byType(Row).first, matchesGoldenFile('goldens/rule_steps.png'));
-    });
+    },
+      // The captions use the app fonts, which Linux (CI) antialiases differently
+      // from Windows, where the golden was made; the pictures are checked there.
+      skip: !Platform.isWindows,
+    );
   });
 }
