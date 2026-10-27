@@ -94,6 +94,14 @@ abstract class GameModule<S> {
   String get musicTrack;
   bool get supportsSaveResume;
   bool get available => true;
+
+  /// Each player may play on their own device over Wi-Fi (spec 14). On by
+  /// default: the state follows from seed and moves, so any game can; a game
+  /// that cannot (e.g. hidden information on one device) says false.
+  bool get supportsNetwork => true;
+
+  /// "Každý na svém (Wi-Fi)" is offered: a finished game for 2+ players.
+  bool get playableOnNetwork => supportsNetwork && available && maxPlayers >= 2;
   GameRules<S> get rules;
   AiPlayer<S>? get ai;
 
