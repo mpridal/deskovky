@@ -33,6 +33,7 @@ class GameBoardView<S> {
     required this.host,
     this.elapsed = _noTime,
     this.firstGame = false,
+    this.canEndForAll = true,
   });
 
   final S state;
@@ -51,6 +52,11 @@ class GameBoardView<S> {
   /// True on the first game of this game by the person to act (spec 13.4:
   /// a gentle hint how to play).
   final bool firstGame;
+
+  /// This device may end the game for everyone (a move like Člověče's
+  /// "Ukončit a seřadit"): always on one device, only the host in a network
+  /// game (spec 14.4).
+  final bool canEndForAll;
 }
 
 Duration _noTime() => Duration.zero;

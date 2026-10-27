@@ -224,6 +224,12 @@ void main() {
     expect(find.text('Ukončit a seřadit'), findsNothing);
   });
 
+  testWidgets('on a network client "Ukončit a seřadit" is not offered: only the host ends the game for everyone', (tester) async {
+    final table = _Fixed(state: position([[3, base], [41, base]]), canEndForAll: false);
+    await table.pump(tester, GameTestHost());
+    expect(find.byKey(const ValueKey('ludoStop')), findsNothing);
+  });
+
   testWidgets('"Ukončit a seřadit" asks first, then ends the game', (tester) async {
     final table = _Fixed(state: position([[3, base], [41, base]]));
     await table.pump(tester, GameTestHost());
@@ -358,10 +364,13 @@ void main() {
 
 /// A board with a fixed state (the test swaps states by hand).
 class _Fixed {
-  _Fixed({required this.state, this.firstGame = false});
+  _Fixed({required this.state, this.firstGame = false, this.canEndForAll = true});
 
   LudoState state;
   final bool firstGame;
+
+  /// False on a network client: only the host ends the game for everyone.
+  final bool canEndForAll;
   final sent = <Move>[];
   final _key = GlobalKey<_HolderState>();
 
@@ -440,6 +449,7 @@ class _HolderState extends State<_Holder> {
         },
         host: widget.host,
         firstGame: widget.fixed.firstGame,
+        canEndForAll: widget.fixed.canEndForAll,
       ),
     );
   }

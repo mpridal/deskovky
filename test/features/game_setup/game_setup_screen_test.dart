@@ -145,9 +145,15 @@ void main() {
       await PlayerRepository(db).delete(ids[1]);
     });
     await _openSetup(tester, db);
+    expect(find.text('Hráči · 1 člověk + 2 roboti'), findsOneWidget);
+    // At the end of the setup list, below "Kde se hraje".
+    await tester.scrollUntilVisible(
+      find.textContaining('Nastavení načteno z minulé hry'),
+      120,
+      scrollable: find.byWidgetPredicate((w) => w is Scrollable && w.axisDirection == AxisDirection.down).first,
+    );
     expect(find.textContaining('Nastavení načteno z minulé hry'), findsOneWidget);
     expect(find.textContaining('volné sloty doplněny roboty'), findsOneWidget);
-    expect(find.text('Hráči · 1 člověk + 2 roboti'), findsOneWidget);
     expect(find.descendant(of: _slot(1), matching: find.text('Čipík')), findsOneWidget);
   });
 

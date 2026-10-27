@@ -789,6 +789,8 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
       submit: (Move move) => _turns.submitHuman(move),
       host: _host,
       elapsed: () => _elapsed,
+      // In a network game only the host ends it for everyone (spec 14.4).
+      canEndForAll: !_isNet || _hostRoom != null,
       firstGame: switch (mySeat == null ? null : _config.seats[mySeat]) {
         HumanSeat(:final profileId) => !widget.played.contains(profileId),
         _ => false,
@@ -800,8 +802,11 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
       final who = seats[current];
       if (who.isRobot || _turns.isRobotSeat(current)) {
         bubble = l10n.robotThinking(who.name);
+      } else if (_isNet && who.isRemote) {
+        bubble = l10n.netTurnRemote(who.name);
       } else if (_isNet) {
-        bubble = who.isRemote ? l10n.netTurnRemote(who.name) : l10n.netYourTurn(who.name);
+        // This device's person: the game's own hint, it says the name too.
+        bubble = _module.turnHint(context, _session.state, who.name) ?? l10n.netYourTurn(who.name);
       } else {
         bubble = _module.turnHint(context, _session.state, who.name) ?? l10n.turnOf(who.name);
       }

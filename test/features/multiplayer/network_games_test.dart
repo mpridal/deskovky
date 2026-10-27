@@ -8,6 +8,7 @@ import 'package:deskovky/core/game/game_config.dart';
 import 'package:deskovky/core/game/seeded_random.dart';
 import 'package:deskovky/core/multiplayer/client_room.dart';
 import 'package:deskovky/core/multiplayer/host_room.dart';
+import 'package:deskovky/core/multiplayer/network_rooms.dart';
 import 'package:deskovky/core/multiplayer/protocol.dart';
 import 'package:deskovky/core/players/player_repository.dart';
 import 'package:deskovky/features/game_play/game_screen.dart';
@@ -43,7 +44,16 @@ void main() {
         size: const Size(412, 915),
         db: db,
         disableAnimations: true,
-        overrides: [startGameProvider.overrideWithValue(module.id), networkEnvProvider.overrideWithValue(env)],
+        overrides: [
+          startGameProvider.overrideWithValue(module.id),
+          networkEnvProvider.overrideWithValue(env),
+          // The same deal every run: no robot or random guess wins before Kuba's turn.
+          networkRoomsProvider.overrideWith((ref) {
+            final rooms = NetworkRooms(env, seed: 17);
+            ref.onDispose(rooms.leave);
+            return rooms;
+          }),
+        ],
       );
       await _settle(tester);
       // The setup's vertical list (option pills scroll sideways).

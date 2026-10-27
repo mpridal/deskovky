@@ -12,9 +12,12 @@ import 'room_info.dart';
 /// The one network room this device is in, hosting or joined; it outlives
 /// the screens (room → game → results) until [leave].
 class NetworkRooms {
-  NetworkRooms(this.env);
+  NetworkRooms(this.env, {this.seed});
 
   final NetworkEnv env;
+
+  /// Deals every hosted game from this seed (tests); random in the app.
+  final int? seed;
 
   HostRoom? _host;
   ClientRoom? _client;
@@ -54,6 +57,7 @@ class NetworkRooms {
       options: options,
       runner: runner,
       reconnectGrace: reconnectGrace,
+      seed: seed,
     );
     _serverSub = server.channels.listen(room.accept);
     final info = _info = RoomInfo(
