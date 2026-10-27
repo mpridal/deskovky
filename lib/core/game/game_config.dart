@@ -107,6 +107,19 @@ class GameConfig {
   int get humans => seats.whereType<HumanSeat>().length;
   int get robots => seats.whereType<RobotSeat>().length;
 
+  /// People at the table: on this device and on others (spec 14).
+  int get people => humans + seats.whereType<RemoteSeat>().length;
+
+  /// This device's view of a network game's shared config (spec 14.5): the
+  /// seats in [localProfiles] (seat → profile id) become [HumanSeat]s, the
+  /// other people stay [RemoteSeat]s, robots stay robots.
+  GameConfig forDevice(Map<int, int> localProfiles) => copyWith(
+    seats: [
+      for (final (i, seat) in seats.indexed)
+        if (localProfiles[i] case final id?) HumanSeat(id) else seat,
+    ],
+  );
+
   GameConfig copyWith({
     List<SeatConfig>? seats,
     Difficulty? difficulty,
