@@ -802,5 +802,41 @@
         "type": "int"
       }
     }
-  }
+  },
+  "netDecideTitle": "A player did not come back",
+  "netWaitMore": "Wait longer",
+  "netReplaceRobot": "Replace with a robot",
+  "netEndGame": "End the game",
+  "netLeave": "Leave the game",
+  "netRematch": "Rematch",
+  "netWaitHost": "Waiting for the host…",
+  "byeEnded": "The host ended the game.",
+  "netYourTurn": "{name}, it is your turn!",
+  "@netYourTurn": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "netTurnRemote": "{name}'s turn (on their device)",
+  "@netTurnRemote": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "netWaiting": "{name}: disconnected – waiting ({time})",
+  "@netWaiting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "netReconnect": "Reconnect"
 }

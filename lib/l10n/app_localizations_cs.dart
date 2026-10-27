@@ -1249,4 +1249,46 @@ class AppLocalizationsCs extends AppLocalizations {
   String joinFree(int count) {
     return 'Volná místa: $count';
   }
+
+  @override
+  String get netDecideTitle => 'Hráč se nevrátil';
+
+  @override
+  String get netWaitMore => 'Čekat dál';
+
+  @override
+  String get netReplaceRobot => 'Nahradit robotem';
+
+  @override
+  String get netEndGame => 'Ukončit hru';
+
+  @override
+  String get netLeave => 'Odejít ze hry';
+
+  @override
+  String get netRematch => 'Odveta';
+
+  @override
+  String get netWaitHost => 'Čeká se na hostitele…';
+
+  @override
+  String get byeEnded => 'Hostitel hru ukončil.';
+
+  @override
+  String netYourTurn(String name) {
+    return '$name, jsi na tahu!';
+  }
+
+  @override
+  String netTurnRemote(String name) {
+    return 'Na tahu: $name (na svém zařízení)';
+  }
+
+  @override
+  String netWaiting(String name, String time) {
+    return '$name: odpojeno – čekám ($time)';
+  }
+
+  @override
+  String get netReconnect => 'Připojit znovu';
 }

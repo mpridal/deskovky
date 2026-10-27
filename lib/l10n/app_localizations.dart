@@ -2259,6 +2259,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Free places: {count}'**
   String joinFree(int count);
+
+  /// No description provided for @netDecideTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A player did not come back'**
+  String get netDecideTitle;
+
+  /// No description provided for @netWaitMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Wait longer'**
+  String get netWaitMore;
+
+  /// No description provided for @netReplaceRobot.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace with a robot'**
+  String get netReplaceRobot;
+
+  /// No description provided for @netEndGame.
+  ///
+  /// In en, this message translates to:
+  /// **'End the game'**
+  String get netEndGame;
+
+  /// No description provided for @netLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave the game'**
+  String get netLeave;
+
+  /// No description provided for @netRematch.
+  ///
+  /// In en, this message translates to:
+  /// **'Rematch'**
+  String get netRematch;
+
+  /// No description provided for @netWaitHost.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for the host…'**
+  String get netWaitHost;
+
+  /// No description provided for @byeEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'The host ended the game.'**
+  String get byeEnded;
+
+  /// No description provided for @netYourTurn.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, it is your turn!'**
+  String netYourTurn(String name);
+
+  /// No description provided for @netTurnRemote.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}\'s turn (on their device)'**
+  String netTurnRemote(String name);
+
+  /// No description provided for @netWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}: disconnected – waiting ({time})'**
+  String netWaiting(String name, String time);
+
+  /// No description provided for @netReconnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnect'**
+  String get netReconnect;
 }
 
 class _AppLocalizationsDelegate

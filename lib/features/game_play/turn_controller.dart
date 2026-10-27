@@ -40,6 +40,9 @@ class TurnController<S> extends ChangeNotifier {
   final Set<int>? localSeats;
   late final StreamSubscription<Move> _appliedSub;
 
+  /// Seats of people a robot plays for now (their device left, spec 14.4).
+  final _standIns = <int>{};
+
   Timer? _robotTimer;
   bool _paused = false;
   bool _disposed = false;
@@ -49,7 +52,14 @@ class TurnController<S> extends ChangeNotifier {
   bool get paused => _paused;
   int? get currentSeat => session.rules.currentSeat(session.state);
 
-  bool isRobotSeat(int seat) => session.config.seats[seat] is RobotSeat;
+  bool isRobotSeat(int seat) => session.config.seats[seat] is RobotSeat || _standIns.contains(seat);
+
+  /// A robot plays [seat] until the person comes back (spec 14.4).
+  void setStandIn(int seat, bool robot) {
+    if (robot ? !_standIns.add(seat) : !_standIns.remove(seat)) return;
+    _notify();
+    _scheduleRobot();
+  }
 
   /// A robot is to move (waiting for its delay or computing).
   bool get robotThinking {
@@ -112,7 +122,9 @@ class TurnController<S> extends ChangeNotifier {
         debugPrint('TurnController: AI failed, playing a legal move instead: $e');
       }
       // The AI may finish after a pause, dispose or another move.
-      if (_disposed || _paused || session.moves.length != movesBefore || currentSeat != seat) return;
+      if (_disposed || _paused || session.moves.length != movesBefore || currentSeat != seat || !isRobotSeat(seat)) {
+        return;
+      }
       if (move != null) {
         if (await _send(move)) return;
         debugPrint('TurnController: AI answered an illegal move $move, playing a legal move instead');

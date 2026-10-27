@@ -359,5 +359,17 @@
   "lobbySettings": "Ajustes (los elige el anfitrión)",
   "lobbyWaitStart": "Esperando a que el anfitrión empiece.",
   "leaveRoom": "Salir de la sala",
-  "joinFree": "Plazas libres: {count}"
+  "joinFree": "Plazas libres: {count}",
+  "netDecideTitle": "Un jugador no ha vuelto",
+  "netWaitMore": "Esperar más",
+  "netReplaceRobot": "Sustituir por un robot",
+  "netEndGame": "Terminar la partida",
+  "netLeave": "Salir de la partida",
+  "netRematch": "Revancha",
+  "netWaitHost": "Esperando al anfitrión…",
+  "byeEnded": "El anfitrión terminó la partida.",
+  "netYourTurn": "¡{name}, te toca!",
+  "netTurnRemote": "Turno de {name} (en su dispositivo)",
+  "netWaiting": "{name}: desconectado – esperando ({time})",
+  "netReconnect": "Reconectar"
 }

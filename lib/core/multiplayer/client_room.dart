@@ -46,6 +46,8 @@ class ClientRoom extends ChangeNotifier {
   var _seq = 0;
   var _awaitingSnapshot = false;
   var _disposed = false;
+  var _paused = false;
+  PeerStatus? _peers;
 
   String? get clientId => _clientId;
 
@@ -61,6 +63,24 @@ class ClientRoom extends ChangeNotifier {
   GameConfig? get deviceConfig => _deviceConfig;
   Set<int> get mySeats => _mySeats;
   int get seq => _seq;
+
+  /// Paused by someone, or waiting for a dropped device (spec 14.4).
+  bool get paused => _paused;
+
+  /// Which remote seats are connected and how long the game still waits.
+  PeerStatus? get peers => _peers;
+
+  void requestPause() => _send(const Pause());
+
+  void requestResume() => _send(const Resume());
+
+  /// Leaves on purpose: a robot takes this device's places (spec 14.4).
+  void leave() {
+    _send(const Bye(reason: 'left'));
+    _closedReason ??= 'left';
+    channel.close();
+    notifyListeners();
+  }
 
   void setReady(bool ready) => _send(Ready(ready));
 
@@ -86,6 +106,12 @@ class ClientRoom extends ChangeNotifier {
         _onSnapshot(message);
       case Ping(:final t):
         _send(Pong(t));
+      case Pause():
+        _paused = true;
+      case Resume():
+        _paused = false;
+      case PeerStatus():
+        _peers = message;
       case Bye(:final reason):
         _closedReason = reason;
         channel.close();
@@ -105,7 +131,8 @@ class ClientRoom extends ChangeNotifier {
       channel.close();
       return;
     }
-    _session = GameSession.start(module.rules, start.config, start.seed);
+    _session = module.withType(<T>(m) => GameSession<T>.start(m.rules, start.config, start.seed) as GameSession<Object?>);
+    _paused = false;
     _seq = 0;
     _awaitingSnapshot = false;
     _mySeats = start.yourSeats.keys.toSet();

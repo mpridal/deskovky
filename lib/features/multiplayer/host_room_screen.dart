@@ -109,7 +109,12 @@ class HostRoomScreen extends ConsumerWidget {
               key: const ValueKey('roomStart'),
               label: l10n.roomStart,
               icon: Icons.play_arrow,
-              onPressed: room.canStart ? room.start : null,
+              onPressed: room.canStart
+                  ? () {
+                      room.start();
+                      context.pushReplacement('/play/${room.module.id}/net');
+                    }
+                  : null,
             ),
           ),
         );

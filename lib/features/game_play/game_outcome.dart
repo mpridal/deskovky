@@ -13,6 +13,7 @@ class GameOutcomeView {
     required this.result,
     required this.seats,
     this.rewards = MatchRewards.none,
+    this.network = false,
   });
 
   final GameConfig config;
@@ -22,8 +23,11 @@ class GameOutcomeView {
   /// Badges and points people earned with this game (spec 5.6, 5.9).
   final MatchRewards rewards;
 
+  /// Played each on their own device (spec 14): the room offers a rematch.
+  final bool network;
+
   List<EarnedBadge> get newBadges => rewards.badges;
 
   GameOutcomeView withRewards(MatchRewards rewards) =>
-      GameOutcomeView(config: config, result: result, seats: seats, rewards: rewards);
+      GameOutcomeView(config: config, result: result, seats: seats, rewards: rewards, network: network);
 }

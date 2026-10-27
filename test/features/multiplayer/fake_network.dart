@@ -16,8 +16,14 @@ class FakeNetworkEnv extends NetworkEnv {
   /// Where [connect] delivers the host's end; the served room by default.
   void Function(MessageChannel hostSide)? onConnect;
   final _incoming = StreamController<MessageChannel>.broadcast();
+
+  /// Sees the client's end of every [connect], e.g. to cut it.
+  void Function(LoopbackChannel clientSide)? onLine;
   final announced = <RoomInfo>[];
   var announcing = false;
+
+  /// Hands [hostSide] of a line to the served room.
+  void deliver(MessageChannel hostSide) => _incoming.add(hostSide);
 
   /// A device joining the served room.
   MessageChannel connectToServed() {
@@ -45,6 +51,7 @@ class FakeNetworkEnv extends NetworkEnv {
   @override
   Future<MessageChannel> connect(String ip, int port) async {
     final (hostSide, clientSide) = LoopbackChannel.pair();
+    onLine?.call(clientSide);
     final target = onConnect;
     if (target != null) {
       target(hostSide);

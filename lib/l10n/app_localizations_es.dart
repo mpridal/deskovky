@@ -1242,4 +1242,46 @@ class AppLocalizationsEs extends AppLocalizations {
   String joinFree(int count) {
     return 'Plazas libres: $count';
   }
+
+  @override
+  String get netDecideTitle => 'Un jugador no ha vuelto';
+
+  @override
+  String get netWaitMore => 'Esperar más';
+
+  @override
+  String get netReplaceRobot => 'Sustituir por un robot';
+
+  @override
+  String get netEndGame => 'Terminar la partida';
+
+  @override
+  String get netLeave => 'Salir de la partida';
+
+  @override
+  String get netRematch => 'Revancha';
+
+  @override
+  String get netWaitHost => 'Esperando al anfitrión…';
+
+  @override
+  String get byeEnded => 'El anfitrión terminó la partida.';
+
+  @override
+  String netYourTurn(String name) {
+    return '¡$name, te toca!';
+  }
+
+  @override
+  String netTurnRemote(String name) {
+    return 'Turno de $name (en su dispositivo)';
+  }
+
+  @override
+  String netWaiting(String name, String time) {
+    return '$name: desconectado – esperando ($time)';
+  }
+
+  @override
+  String get netReconnect => 'Reconectar';
 }

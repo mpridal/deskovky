@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../app/multiplayer_providers.dart';
 import '../../app/providers.dart';
 import '../../core/game/game_config.dart';
 import '../../app/stats_service.dart';
@@ -94,24 +95,28 @@ class ResultsScreen extends StatelessWidget {
                     if (outcome.rewards.points.isNotEmpty) _Points(outcome: outcome),
                     if (outcome.newBadges.isNotEmpty) _NewBadges(outcome: outcome),
                     const SizedBox(height: 16),
-                    PrimaryButton(
-                      label: l10n.resultPlayAgain,
-                      onPressed: () => context.pushReplacement('/play/${config.gameId}', extra: config),
-                    ),
-                    const SizedBox(height: 8),
-                    PrimaryButton(
-                      label: l10n.resultChangeSettings,
-                      secondary: true,
-                      onPressed: () => context.pushReplacement('/play/${config.gameId}/setup', extra: config),
-                    ),
-                    const SizedBox(height: 4),
-                    Center(
-                      child: TextButton(
-                        onPressed: () => context.go('/games'),
-                        style: TextButton.styleFrom(minimumSize: const Size(48, 48)),
-                        child: Text(l10n.resultHome, style: AppTypography.button(color: AppColors.paper)),
+                    if (outcome.network)
+                      _NetworkActions(gameId: config.gameId)
+                    else ...[
+                      PrimaryButton(
+                        label: l10n.resultPlayAgain,
+                        onPressed: () => context.pushReplacement('/play/${config.gameId}', extra: config),
                       ),
-                    ),
+                      const SizedBox(height: 8),
+                      PrimaryButton(
+                        label: l10n.resultChangeSettings,
+                        secondary: true,
+                        onPressed: () => context.pushReplacement('/play/${config.gameId}/setup', extra: config),
+                      ),
+                      const SizedBox(height: 4),
+                      Center(
+                        child: TextButton(
+                          onPressed: () => context.go('/games'),
+                          style: TextButton.styleFrom(minimumSize: const Size(48, 48)),
+                          child: Text(l10n.resultHome, style: AppTypography.button(color: AppColors.paper)),
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -328,6 +333,82 @@ class _CanBuy extends ConsumerWidget {
         textAlign: TextAlign.end,
         style: AppTypography.button(color: AppColors.gold),
       ),
+    );
+  }
+}
+
+/// After a network game (spec 14.2 step 8): the host offers a rematch in the
+/// same room, the others wait for it; anyone can go home and leave the room.
+class _NetworkActions extends ConsumerStatefulWidget {
+  const _NetworkActions({required this.gameId});
+
+  final String gameId;
+
+  @override
+  ConsumerState<_NetworkActions> createState() => _NetworkActionsState();
+}
+
+class _NetworkActionsState extends ConsumerState<_NetworkActions> {
+  late final _rooms = ref.read(networkRoomsProvider);
+  late final Object? _finished = _rooms.host?.session ?? _rooms.client?.session;
+  ChangeNotifier? _room;
+  var _moved = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _room = _rooms.host ?? _rooms.client;
+    _room?.addListener(_onRoom);
+  }
+
+  @override
+  void dispose() {
+    _room?.removeListener(_onRoom);
+    super.dispose();
+  }
+
+  void _onRoom() {
+    final session = _rooms.host?.session ?? _rooms.client?.session;
+    if (_moved || !mounted) return;
+    if (session != null && !identical(session, _finished)) {
+      _moved = true;
+      context.pushReplacement('/play/${widget.gameId}/net');
+      return;
+    }
+    setState(() {});
+  }
+
+  Future<void> _home() async {
+    final router = GoRouter.of(context);
+    final client = _rooms.client;
+    if (client != null && client.closedReason == null) client.leave();
+    _rooms.host?.endGame();
+    await _rooms.leave();
+    router.go('/games');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final host = _rooms.host;
+    final client = _rooms.client;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (host != null)
+          PrimaryButton(key: const ValueKey('netRematch'), label: l10n.netRematch, onPressed: host.rematch)
+        else if (client != null && client.closedReason == null)
+          Text(l10n.netWaitHost, textAlign: TextAlign.center, style: AppTypography.body(color: AppColors.paper)),
+        const SizedBox(height: 4),
+        Center(
+          child: TextButton(
+            key: const ValueKey('netResultsHome'),
+            onPressed: _home,
+            style: TextButton.styleFrom(minimumSize: const Size(48, 48)),
+            child: Text(l10n.resultHome, style: AppTypography.button(color: AppColors.paper)),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -84,9 +84,10 @@ class HostRoom extends ChangeNotifier {
     this.runner = const IsolateAiRunner(),
     Duration? robotDelay,
     int? seed,
+    this.reconnectGrace = const Duration(seconds: 30),
   }) : _slots = [...slots],
        robotDelay = robotDelay ?? robotSpeed.delay,
-       seed = seed ?? Random().nextInt(1 << 31);
+       _seed = seed ?? Random().nextInt(1 << 31);
 
   /// The `clientId` of the host's own players in the shared config.
   static const hostId = 'host';
@@ -98,7 +99,12 @@ class HostRoom extends ChangeNotifier {
   final Map<String, Object?> options;
   final AiRunner runner;
   final Duration robotDelay;
-  final int seed;
+
+  /// How long the game waits for a dropped device before the host decides
+  /// (spec 14.4: 30 s).
+  final Duration reconnectGrace;
+  int _seed;
+  int get seed => _seed;
 
   final List<RoomSlot> _slots;
   final _conns = <_Conn>[];
@@ -107,6 +113,17 @@ class HostRoom extends ChangeNotifier {
   var _nextClient = 0;
   var _seq = 0;
   var _disposed = false;
+
+  /// Paused by someone (not by a dropout).
+  var _pausedByPlayer = false;
+
+  /// Seats whose device dropped and is waited for.
+  final _waiting = <int>{};
+  DateTime? _waitUntil;
+  Timer? _waitTimer;
+
+  /// Devices that said goodbye: no waiting, a robot plays on.
+  final _left = <String>{};
 
   GameSession<Object?>? _session;
   TurnController<Object?>? _controller;
@@ -125,6 +142,26 @@ class HostRoom extends ChangeNotifier {
   bool get started => _session != null;
   bool get isOver => _session != null && _session!.rules.isOver(_session!.state);
   int get seq => _seq;
+
+  bool get paused => _controller?.paused ?? false;
+
+  /// Seats waited for after a dropout (spec 14.4).
+  Set<int> get waitingFor => Set.unmodifiable(_waiting);
+
+  /// Whole seconds left of the wait, null when nobody is waited for.
+  int? get waitSeconds {
+    final until = _waitUntil;
+    if (until == null) return null;
+    final left = until.difference(DateTime.now());
+    return left.isNegative ? 0 : (left.inMilliseconds / 1000).ceil();
+  }
+
+  /// The wait ran out: the host chooses Čekat dál / Nahradit robotem / Ukončit hru.
+  bool get needsDecision => _waiting.isNotEmpty && waitSeconds == 0;
+
+  /// Ended by the host for everyone.
+  bool get ended => _ended;
+  var _ended = false;
 
   String? ownerOf(int seat) => seat >= 0 && seat < _owners.length ? _owners[seat] : null;
 
@@ -202,21 +239,144 @@ class HostRoom extends ChangeNotifier {
     );
     _owners = owners;
     _deviceConfig = config.forDevice(localProfiles);
-    final session = _session = GameSession.start(module.rules, config, seed);
+    _begin(config, localProfiles.keys.toSet());
+  }
+
+  /// The same players again with a new deal (spec 14.2 step 8: Odveta).
+  void rematch() {
+    final session = _session;
+    if (session == null || _ended) return;
+    final previous = _seed;
+    while (_seed == previous) {
+      _seed = Random().nextInt(1 << 31);
+    }
+    _controller?.dispose();
+    _begin(session.config, _controller?.localSeats ?? const {});
+  }
+
+  /// Starts [config] on this device and on every connected one.
+  void _begin(GameConfig config, Set<int> localSeats) {
+    _seq = 0;
+    _pausedByPlayer = false;
+    _clearWait();
     final transport = _transport = HostTransport(_applyMove);
+    final (session, controller) = module.withType(<T>(m) {
+      final session = GameSession<T>.start(m.rules, config, _seed);
+      return (
+        session as GameSession<Object?>,
+        TurnController<T>(
+              session: session,
+              transport: transport,
+              ai: m.ai,
+              runner: runner,
+              robotDelay: robotDelay,
+              localSeats: localSeats,
+            )
+            as TurnController<Object?>,
+      );
+    });
+    _session = session;
+    _controller = controller;
     for (final conn in _conns) {
       final id = conn.clientId;
-      if (id != null) conn.channel.send(Start(config: config, seed: seed, yourSeats: _seatsOf(id)));
+      if (id != null) conn.channel.send(Start(config: config, seed: _seed, yourSeats: _seatsOf(id)));
     }
-    _controller = TurnController<Object?>(
-      session: session,
-      transport: transport,
-      ai: module.ai,
-      runner: runner,
-      robotDelay: robotDelay,
-      localSeats: localProfiles.keys.toSet(),
-    )..start();
+    // Whoever is not here any more is played by a robot.
+    for (final (seat, owner) in _owners.indexed) {
+      if (owner != null && owner != hostId && !_conns.any((c) => c.clientId == owner)) {
+        controller.setStandIn(seat, true);
+      }
+    }
+    controller.start();
     notifyListeners();
+  }
+
+  /// Anyone may pause (spec 14.4); every device shows it.
+  void pause({int? bySeat}) {
+    final controller = _controller;
+    if (controller == null || _ended) return;
+    _pausedByPlayer = true;
+    controller.pause();
+    _broadcast(Pause(bySeat: bySeat));
+    notifyListeners();
+  }
+
+  /// Ends a pause; a dropped device still waited for keeps the game paused.
+  void resume() {
+    final controller = _controller;
+    if (controller == null || _ended) return;
+    _pausedByPlayer = false;
+    if (_waiting.isNotEmpty) return notifyListeners();
+    controller.resume();
+    _broadcast(const Resume());
+    notifyListeners();
+  }
+
+  /// After the wait: give the dropped device another [reconnectGrace].
+  void waitLonger() {
+    if (_waiting.isEmpty) return;
+    _startWait();
+  }
+
+  /// After the wait: robots play for the dropped people until they return.
+  void replaceWithRobot() {
+    final controller = _controller;
+    if (controller == null) return;
+    for (final seat in _waiting) {
+      controller.setStandIn(seat, true);
+    }
+    _clearWait();
+    _broadcastPeers();
+    if (!_pausedByPlayer) {
+      controller.resume();
+      _broadcast(const Resume());
+    }
+    notifyListeners();
+  }
+
+  /// Ends the game for everyone (only the host can, spec 14.4).
+  void endGame() {
+    if (_ended) return;
+    _ended = true;
+    _clearWait();
+    _controller?.pause();
+    for (final conn in [..._conns]) {
+      if (conn.clientId != null) conn.channel.send(const Bye(reason: 'ended'));
+      _drop(conn);
+    }
+    notifyListeners();
+  }
+
+  void _startWait() {
+    _waitUntil = DateTime.now().add(reconnectGrace);
+    _waitTimer?.cancel();
+    final tick = reconnectGrace < const Duration(seconds: 1) ? reconnectGrace ~/ 4 : const Duration(seconds: 1);
+    _waitTimer = Timer.periodic(tick, (_) {
+      _broadcastPeers();
+      notifyListeners();
+      if (waitSeconds == 0) _waitTimer?.cancel();
+    });
+    _broadcastPeers();
+    notifyListeners();
+  }
+
+  void _clearWait() {
+    _waiting.clear();
+    _waitUntil = null;
+    _waitTimer?.cancel();
+    _waitTimer = null;
+  }
+
+  void _broadcastPeers() {
+    _broadcast(
+      PeerStatus(
+        connected: {
+          for (final (seat, owner) in _owners.indexed)
+            if (owner != null && owner != hostId) seat: !_waiting.contains(seat),
+        },
+        waitSeconds: waitSeconds,
+      ),
+    );
   }
 
   /// A move by a person on this device.
@@ -253,6 +413,15 @@ class HostRoom extends ChangeNotifier {
         if (_session case final session?) conn.channel.send(StateSnapshot(seq: _seq, saved: session.toSave()));
       case Ping(:final t):
         conn.channel.send(Pong(t));
+      case Pause():
+        pause(bySeat: _seatsOf(clientId).keys.firstOrNull);
+      case Resume():
+        resume();
+      case Bye():
+        // Leaving on purpose: a robot takes over without waiting.
+        _left.add(clientId);
+        _drop(conn);
+        _onGone(conn);
       default:
         break;
     }
@@ -268,11 +437,26 @@ class HostRoom extends ChangeNotifier {
         _drop(other);
       }
       conn.clientId = known;
+      _left.remove(known);
       conn.channel.send(Welcome(clientId: known, token: hello.token!));
       _setClient(known, (s) => s.copyWith(connected: true));
       if (_session case final session?) {
-        conn.channel.send(Start(config: session.config, seed: seed, yourSeats: _seatsOf(known)));
+        conn.channel.send(Start(config: session.config, seed: _seed, yourSeats: _seatsOf(known)));
         conn.channel.send(StateSnapshot(seq: _seq, saved: session.toSave()));
+        // Their places are theirs again, from a robot or from the wait.
+        for (final seat in _seatsOf(known).keys) {
+          _waiting.remove(seat);
+          _controller?.setStandIn(seat, false);
+        }
+        if (_waiting.isEmpty) {
+          _clearWait();
+          if (!_pausedByPlayer && !_ended) {
+            _controller?.resume();
+            _broadcast(const Resume());
+          }
+        }
+        _broadcastPeers();
+        notifyListeners();
       }
       return;
     }
@@ -317,6 +501,20 @@ class HostRoom extends ChangeNotifier {
     if (_disposed || clientId == null || _conns.any((c) => c.clientId == clientId)) return;
     if (started) {
       _setClient(clientId, (s) => s.copyWith(connected: false));
+      final seats = _seatsOf(clientId).keys;
+      if (_ended || isOver || seats.isEmpty) return;
+      if (_left.contains(clientId)) {
+        for (final seat in seats) {
+          _controller?.setStandIn(seat, true);
+        }
+        _broadcastPeers();
+        return;
+      }
+      // A dropout (spec 14.4): everybody waits, the host decides after the grace.
+      _waiting.addAll(seats);
+      _controller?.pause();
+      _broadcast(const Pause());
+      _startWait();
     } else {
       // Left the room before the game: the places are free again.
       for (final (i, s) in _slots.indexed) {
@@ -386,6 +584,7 @@ class HostRoom extends ChangeNotifier {
   @override
   void dispose() {
     _disposed = true;
+    _waitTimer?.cancel();
     for (final conn in [..._conns]) {
       _drop(conn);
     }

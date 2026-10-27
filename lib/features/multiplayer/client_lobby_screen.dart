@@ -25,6 +25,7 @@ class ClientLobbyScreen extends ConsumerStatefulWidget {
 
 class _ClientLobbyScreenState extends ConsumerState<ClientLobbyScreen> {
   var _ready = false;
+  var _started = false;
 
   Future<void> _leave() async {
     await ref.read(networkRoomsProvider).leave();
@@ -42,6 +43,14 @@ class _ClientLobbyScreenState extends ConsumerState<ClientLobbyScreen> {
         final lobby = room.lobby;
         final module = lobby == null ? null : moduleById(lobby.gameId);
         final closed = room.closedReason;
+        if (room.session case final session? when closed == null && !_started) {
+          // The host started the game (spec 14.2 step 6), or this device came back to it.
+          _started = true;
+          final gameId = session.config.gameId;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) context.pushReplacement('/play/$gameId/net');
+          });
+        }
         Widget body;
         if (closed != null) {
           body = Padding(

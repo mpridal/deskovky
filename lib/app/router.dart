@@ -45,6 +45,10 @@ GoRouter buildRouter({String? startGame}) {
         builder: (_, state) => GameScreen(gameId: state.pathParameters['gameId']!, start: state.extra),
       ),
       GoRoute(
+        path: '/play/:gameId/net',
+        builder: (_, state) => GameScreen(gameId: state.pathParameters['gameId']!, start: const NetworkStart()),
+      ),
+      GoRoute(
         path: '/play/:gameId/results',
         builder: (_, state) => state.extra is GameOutcomeView
             ? ResultsScreen(outcome: state.extra! as GameOutcomeView)

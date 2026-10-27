@@ -199,5 +199,6 @@ String byeText(AppLocalizations l10n, String reason) => switch (reason) {
   'full' => l10n.byeFull,
   'started' => l10n.byeStarted,
   'kicked' => l10n.byeKicked,
+  'ended' => l10n.byeEnded,
   _ => l10n.byeLost,
 };

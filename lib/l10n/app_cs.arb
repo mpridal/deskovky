@@ -359,5 +359,17 @@
   "lobbySettings": "Nastavení hry (vybírá hostitel)",
   "lobbyWaitStart": "Čeká se, až hostitel spustí hru.",
   "leaveRoom": "Odejít z místnosti",
-  "joinFree": "Volná místa: {count}"
+  "joinFree": "Volná místa: {count}",
+  "netDecideTitle": "Hráč se nevrátil",
+  "netWaitMore": "Čekat dál",
+  "netReplaceRobot": "Nahradit robotem",
+  "netEndGame": "Ukončit hru",
+  "netLeave": "Odejít ze hry",
+  "netRematch": "Odveta",
+  "netWaitHost": "Čeká se na hostitele…",
+  "byeEnded": "Hostitel hru ukončil.",
+  "netYourTurn": "{name}, jsi na tahu!",
+  "netTurnRemote": "Na tahu: {name} (na svém zařízení)",
+  "netWaiting": "{name}: odpojeno – čekám ({time})",
+  "netReconnect": "Připojit znovu"
 }

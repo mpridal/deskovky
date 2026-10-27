@@ -22,6 +22,7 @@ class NetworkRooms {
   Announcement? _announcement;
   StreamSubscription<Object?>? _serverSub;
   RoomInfo? _info;
+  ({JoinTicket ticket, List<ProfileCard> profiles, List<int> profileIds, String appVersion})? _joined;
 
   HostRoom? get host => _host;
   ClientRoom? get client => _client;
@@ -38,6 +39,7 @@ class NetworkRooms {
     required Map<String, Object?> options,
     required AiRunner runner,
     required ProfileCard hostCard,
+    Duration reconnectGrace = const Duration(seconds: 30),
   }) async {
     await leave();
     final ip = await env.wifiAddress();
@@ -51,6 +53,7 @@ class NetworkRooms {
       robotSpeed: robotSpeed,
       options: options,
       runner: runner,
+      reconnectGrace: reconnectGrace,
     );
     _serverSub = server.channels.listen(room.accept);
     final info = _info = RoomInfo(
@@ -86,6 +89,7 @@ class NetworkRooms {
   }) async {
     await leave();
     final channel = await env.connect(ticket.ip, ticket.port);
+    _joined = (ticket: ticket, profiles: profiles, profileIds: profileIds, appVersion: appVersion);
     return _client = ClientRoom(
       channel: channel,
       hello: Hello(
@@ -99,6 +103,27 @@ class NetworkRooms {
     );
   }
 
+  /// Comes back to the same room after a lost line, with the token the host
+  /// gave (spec 14.4); null when there is nothing to come back to.
+  Future<ClientRoom?> rejoin() async {
+    final old = _client, joined = _joined;
+    final token = old?.token;
+    if (old == null || joined == null || token == null) return null;
+    final channel = await env.connect(joined.ticket.ip, joined.ticket.port);
+    old.dispose();
+    return _client = ClientRoom(
+      channel: channel,
+      hello: Hello(
+        protocolVersion: protocolVersion,
+        appVersion: joined.appVersion,
+        roomCode: joined.ticket.code,
+        token: token,
+        profiles: joined.profiles,
+      ),
+      localProfileIds: joined.profileIds,
+    );
+  }
+
   /// Closes the room, the server and every line.
   Future<void> leave() async {
     _announcement?.close();
@@ -109,6 +134,7 @@ class NetworkRooms {
     _host = null;
     _client?.dispose();
     _client = null;
+    _joined = null;
     final server = _server;
     _server = null;
     _info = null;
