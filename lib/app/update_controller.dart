@@ -123,6 +123,15 @@ class UpdateController extends Notifier<UpdateState> {
 
   void dismiss() => state = state.copyWith(dismissed: true);
 
+  /// A screen that cannot stay on must never stop the update.
+  Future<void> _keepScreenOn(ApkInstaller installer, bool on) async {
+    try {
+      await installer.keepScreenOn(on);
+    } on Object catch (e) {
+      debugPrint('UpdateController: keepScreenOn($on) failed: $e');
+    }
+  }
+
   /// Downloads, verifies and installs; false if Android does not allow
   /// installing yet (the UI explains and opens the settings).
   Future<bool> update() async {
@@ -142,9 +151,15 @@ class UpdateController extends Notifier<UpdateState> {
         return false;
       }
       state = state.copyWith(progress: () => 0, preparing: false);
-      final File apk = await ref
-          .read(updateDownloaderProvider)
-          .download(release, onProgress: (p) => state = state.copyWith(progress: () => p));
+      final File apk;
+      await _keepScreenOn(installer, true);
+      try {
+        apk = await ref
+            .read(updateDownloaderProvider)
+            .download(release, onProgress: (p) => state = state.copyWith(progress: () => p));
+      } finally {
+        await _keepScreenOn(installer, false);
+      }
       await installer.install(apk.path);
       _handedOffAt = DateTime.now();
       state = state.copyWith(progress: () => null);

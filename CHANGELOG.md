@@ -2,6 +2,15 @@
 
 Každá verze má sekci `## x.y.z` s poznámkami `### cs`, `### en`, `### es` – z nich se při vydání tvoří `latest.json` a karta „Je tu nová verze“. Volitelný řádek `Minimální verze: x.y.z` udělá aktualizaci povinnou pro starší verze.
 
+## 0.4.1
+
+### cs
+Spolehlivější stahování aktualizace: když se spojení přeruší (slabý signál, mobilní data), stahování pokračuje tam, kde skončilo, a samo to zkusí znovu. Během stahování displej nezhasne, aby se telefon nezamkl.
+### en
+More reliable update downloads: when the connection drops (weak signal, mobile data), the download continues where it stopped and retries on its own. The screen stays on while it downloads, so the phone does not lock.
+### es
+Descarga de actualizaciones más fiable: si se corta la conexión (poca señal, datos móviles), la descarga sigue donde se quedó y lo vuelve a intentar sola. La pantalla no se apaga mientras descarga, así el teléfono no se bloquea.
+
 ## 0.4.0
 
 ### cs

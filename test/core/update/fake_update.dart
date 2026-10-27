@@ -53,6 +53,12 @@ class FakeApkInstaller implements ApkInstaller {
 
   @override
   Future<void> install(String path) async => installed.add(path);
+
+  /// Every keepScreenOn call, in order.
+  final screenOn = <bool>[];
+
+  @override
+  Future<void> keepScreenOn(bool on) async => screenOn.add(on);
 }
 
 /// Pretends to download: no network, no files.

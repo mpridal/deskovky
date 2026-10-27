@@ -137,6 +137,27 @@ void main() {
     expect(installer.installed, isEmpty);
   });
 
+  testWidgets('the screen stays on while the update downloads, and may turn off again after', (tester) async {
+    final installer = FakeApkInstaller();
+    await start(tester, releases: FakeReleaseSource(fakeRelease('0.1.1')), installer: installer, downloader: FakeUpdateDownloader());
+    await tester.tap(find.text('Aktualizovat'));
+    await settle(tester);
+    expect(installer.screenOn, [true, false]);
+  });
+
+  testWidgets('a failed download lets the screen turn off again too', (tester) async {
+    final installer = FakeApkInstaller();
+    await start(
+      tester,
+      releases: FakeReleaseSource(fakeRelease('0.1.1')),
+      installer: installer,
+      downloader: FakeUpdateDownloader(fail: true),
+    );
+    await tester.tap(find.text('Aktualizovat'));
+    await settle(tester);
+    expect(installer.screenOn, [true, false]);
+  });
+
   testWidgets('a mandatory update cannot be postponed', (tester) async {
     await start(tester, releases: FakeReleaseSource(fakeRelease('0.3.0', minSupported: '0.2.0')));
     expect(find.text('Tahle verze už je moc stará – aktualizuj prosím.'), findsOneWidget);
