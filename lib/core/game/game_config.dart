@@ -16,6 +16,7 @@ sealed class SeatConfig {
     return switch (json['type']) {
       'robot' => const RobotSeat(),
       'human' when profileId is int => HumanSeat(profileId),
+      'remote' => RemoteSeat.fromJson(json),
       _ => null,
     };
   }
@@ -53,6 +54,37 @@ class RobotSeat extends SeatConfig {
 
   @override
   String toString() => 'RobotSeat()';
+}
+
+/// A person playing on another device in a network game (spec 14): this
+/// device only knows their name and avatar. In the host's shared config every
+/// person is a [RemoteSeat]; each device turns its own back into [HumanSeat]s.
+class RemoteSeat extends SeatConfig {
+  const RemoteSeat({required this.clientId, required this.name, required this.avatar});
+
+  /// The device they play on ('host' for the host's own players).
+  final String clientId;
+  final String name;
+  final Map<String, Object?> avatar;
+
+  @override
+  Map<String, Object?> toJson() => {'type': 'remote', 'clientId': clientId, 'name': name, 'avatar': avatar};
+
+  static RemoteSeat? fromJson(Map<String, Object?> json) {
+    final clientId = json['clientId'], name = json['name'], avatar = json['avatar'];
+    if (clientId is! String || name is! String || avatar is! Map<String, Object?>) return null;
+    return RemoteSeat(clientId: clientId, name: name, avatar: avatar);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      other is RemoteSeat && other.clientId == clientId && other.name == name && mapEquals(other.avatar, avatar);
+
+  @override
+  int get hashCode => Object.hash(clientId, name);
+
+  @override
+  String toString() => 'RemoteSeat($clientId, $name)';
 }
 
 /// Everything chosen on the setup screen; remembered per game (spec 5.7).

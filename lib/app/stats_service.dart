@@ -130,6 +130,16 @@ class StatsService {
               score: result.scores[seat],
               stars: result.stars[seat],
             ),
+            // Someone on another device: a guest here (spec 14.5) – in the
+            // history, but without points, badges or a leaderboard place.
+            RemoteSeat() => MatchParticipant(
+              seat: seat,
+              playerId: null,
+              robot: false,
+              place: result.places[seat],
+              score: result.scores[seat],
+              stars: result.stars[seat],
+            ),
             RobotSeat() => MatchParticipant(
               seat: seat,
               playerId: null,
