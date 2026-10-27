@@ -38,10 +38,13 @@ Future<void> _startGame(WidgetTester tester, AppDatabase db, Object extra) async
 }
 
 /// Lets real database I/O started inside fake time finish, then settles.
-Future<void> _settleIo(WidgetTester tester) async {
-  for (var i = 0; i < 4; i++) {
-    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 30)));
+/// With [until], keeps going (up to 5 s of real time) until it is on screen,
+/// so a slow CI machine never leaves a read half done.
+Future<void> _settleIo(WidgetTester tester, {Finder? until}) async {
+  for (var i = 0; i < 100; i++) {
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
     await tester.pumpAndSettle();
+    if (until == null ? i >= 3 : until.evaluate().isNotEmpty) return;
   }
 }
 
@@ -112,7 +115,7 @@ void main() {
     expect(find.text('Rozehraná hra se uloží.'), findsOneWidget);
     await tester.tap(find.text('Ukončit'));
     // Saving the game and the home bar's players are real database I/O.
-    await _settleIo(tester);
+    await _settleIo(tester, until: find.byType(ActivePlayerBar));
     expect(find.byType(GameScreen), findsNothing);
     expect(find.byType(ActivePlayerBar), findsOneWidget);
     expect(await tester.runAsync(() => GameStore(db).savedSession('sample')), isNotNull);
@@ -120,9 +123,9 @@ void main() {
     // "Restart" the app with the same database and continue.
     await tester.pumpWidget(const SizedBox());
     await pumpApp(tester, size: const Size(800, 1280), db: db, disableAnimations: true);
-    await _settleIo(tester);
+    await _settleIo(tester, until: find.text('Pokračovat: Hádej číslo'));
     await tester.tap(find.text('Pokračovat: Hádej číslo'));
-    await _settleIo(tester);
+    await _settleIo(tester, until: find.byType(GameScreen));
     final restored = _screen(tester).debugSession!;
     expect(restored.hash, hash);
     expect(restored.rules.currentSeat(restored.state), seat);
@@ -134,9 +137,9 @@ void main() {
       () => GameStore(db).saveSession(SavedGame(config: _config([HumanSeat(t), const RobotSeat()]), seed: 1, moves: const [], elapsedMs: 5000)),
     );
     await pumpApp(tester, size: const Size(800, 1280), db: db, disableAnimations: true);
-    await _settleIo(tester);
+    await _settleIo(tester, until: find.text('Pokračovat: Hádej číslo'));
     await tester.tap(find.text('Pokračovat: Hádej číslo'));
-    await _settleIo(tester);
+    await _settleIo(tester, until: find.byType(GameScreen));
     expect(_screen(tester).debugElapsed, greaterThanOrEqualTo(const Duration(seconds: 5)));
 
     await tester.tap(find.bySemanticsLabel(RegExp('^Pauza')));

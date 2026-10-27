@@ -179,9 +179,10 @@ void _playable<S>(GameModule<S> m, int maxMoves) {
       expect(result.scores, hasLength(n));
       expect(result.stars, hasLength(n));
       for (final place in result.places) {
-        expect(place, inInclusiveRange(1, n));
+        // Alone, a lost game is place 2 (spec 5.6); otherwise places 1..n.
+        expect(place, inInclusiveRange(1, n == 1 ? 2 : n));
       }
-      expect(result.places, contains(1));
+      if (n > 1) expect(result.places, contains(1));
       for (final stars in result.stars) {
         expect(stars, inInclusiveRange(0, 3));
       }

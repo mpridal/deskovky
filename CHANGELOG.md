@@ -2,6 +2,15 @@
 
 Každá verze má sekci `## x.y.z` s poznámkami `### cs`, `### en`, `### es` – z nich se při vydání tvoří `latest.json` a karta „Je tu nová verze“. Volitelný řádek `Minimální verze: x.y.z` udělá aktualizaci povinnou pro starší verze.
 
+## 0.3.0
+
+### cs
+Čtyři nové hry: Piškvorky (3×3 i velká deska), Pexeso (4 sady obrázků), Miny (sólo i Střídačka) a Člověče, nezlob se – proti robotům ve třech obtížnostech i s rodinou. Každá hra má vlastní hudbu, ilustrovaná pravidla, odznaky a hvězdy.
+### en
+Four new games: Tic-tac-toe (3×3 and big boards), Memory (4 picture sets), Minesweeper (solo and Take turns) and Ludo – against robots on three levels or with the family. Each game has its own music, illustrated rules, badges and stars.
+### es
+Cuatro juegos nuevos: Tres en raya (3×3 y tableros grandes), Memoria (4 juegos de dibujos), Buscaminas (solo y Por turnos) y Parchís – contra robots en tres niveles o en familia. Cada juego tiene su música, reglas ilustradas, insignias y estrellas.
+
 ## 0.2.0
 
 ### cs

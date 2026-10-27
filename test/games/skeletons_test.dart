@@ -11,11 +11,10 @@ import '../helpers/pump_app.dart';
 void main() {
   const coming = ['tictactoe', 'memory', 'minesweeper', 'ludo', 'checkers'];
 
-  test('every phase-2 game is registered now, not yet available', () {
+  // Whether a game is already playable is its own session's call
+  // (`available` in its manifest); the registry itself never changes.
+  test('every phase-2 game is registered from the start', () {
     expect([for (final m in gameModules) m.id], ['sample', ...coming]);
-    for (final id in coming) {
-      expect(moduleById(id)!.available, isFalse, reason: id);
-    }
   });
 
   test('their names, descriptions and rules exist in all three languages', () {
@@ -29,7 +28,7 @@ void main() {
     }
   });
 
-  testWidgets('the home grid shows them with their own names and "Brzy"', (tester) async {
+  testWidgets('the home grid shows them with their own names', (tester) async {
     await pumpApp(tester, size: const Size(800, 1280));
     for (final name in ['Hádej číslo', 'Piškvorky', 'Pexeso', 'Miny', 'Člověče, nezlob se', 'Dáma']) {
       await tester.scrollUntilVisible(find.text(name), 200, scrollable: find.byType(Scrollable).first);

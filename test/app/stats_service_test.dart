@@ -36,6 +36,19 @@ void main() {
     options: const {'range': 20},
   );
 
+  test('a game ended early (endedEarly) counts nothing: no match, points, wins or badges (spec 5.6)', () async {
+    final rewards = await service.recordFinished(
+      config: config([HumanSeat(tereza), const RobotSeat()]),
+      result: const GameResult(places: [1, 2], scores: [3, 1], stars: [0, 0], stats: {'endedEarly': true}),
+      events: const [],
+      duration: const Duration(minutes: 2),
+    );
+    expect(rewards.points, isEmpty);
+    expect(rewards.badges, isEmpty);
+    expect(await repo.allMatches(), isEmpty);
+    expect(await PointsRepository(db).balance(tereza), 0);
+  });
+
   test('stores the match with robots and the difficulty; the human winner earns badges', () async {
     final earned = (await service.recordFinished(
       config: config([HumanSeat(tereza), const RobotSeat()]),

@@ -7,6 +7,9 @@ import 'package:deskovky/core/points/points_repository.dart';
 import 'package:deskovky/core/stats/match_record.dart';
 import 'package:deskovky/core/stats/stats_repository.dart';
 import 'package:deskovky/features/players/player_stats_screen.dart';
+import 'package:deskovky/games/registry.dart';
+import 'package:deskovky/games/game_texts.dart';
+import 'package:deskovky/l10n/app_localizations_cs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -65,8 +68,10 @@ void main() {
 
   testWidgets('the game filter lists only games you can play, not the "Brzy" ones', (tester) async {
     await _open(tester, db);
-    expect(find.text('Hádej číslo'), findsOneWidget);
-    expect(find.text('Piškvorky'), findsNothing);
+    final l10n = AppLocalizationsCs();
+    for (final m in gameModules) {
+      expect(find.text(gameText(l10n, m.titleKey)), m.available ? findsOneWidget : findsNothing, reason: m.id);
+    }
   });
 
   testWidgets('all time: people ranked by wins, robots never listed', (tester) async {
