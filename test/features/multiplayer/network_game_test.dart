@@ -132,7 +132,8 @@ void main() {
   testWidgets('a move on the other device shows here; whose turn it is is clear on each device', (tester) async {
     final env = FakeNetworkEnv();
     final (host, kuba, _) = await _hostGame(tester, db, env);
-    expect(find.text('Táta, jsi na tahu!'), findsOneWidget);
+    // The device on turn shows the game's own hint (Pexeso: "…, otoč kartu").
+    expect(find.text('Táta, otoč kartu'), findsOneWidget);
     // Play until it is Kuba's turn on his device.
     for (var i = 0; i < 20 && host.session!.rules.currentSeat(host.session!.state) == 0; i++) {
       await _playTurn(tester, host, kuba);

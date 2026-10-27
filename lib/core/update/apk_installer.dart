@@ -14,6 +14,10 @@ abstract class ApkInstaller {
 
   /// Starts the system installer for a verified APK in `cache/updates/`.
   Future<void> install(String path);
+
+  /// Keeps the screen from locking while the update downloads: a locked
+  /// phone sends the app to the background, where mobile data often stops.
+  Future<void> keepScreenOn(bool on);
 }
 
 class PlatformApkInstaller implements ApkInstaller {
@@ -32,4 +36,7 @@ class PlatformApkInstaller implements ApkInstaller {
 
   @override
   Future<void> install(String path) => _channel.invokeMethod<void>('install', {'path': path});
+
+  @override
+  Future<void> keepScreenOn(bool on) => _channel.invokeMethod<void>('keepScreenOn', {'on': on});
 }

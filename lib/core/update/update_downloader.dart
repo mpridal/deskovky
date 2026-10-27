@@ -20,21 +20,39 @@ class UpdateIntegrityException implements Exception {
 
 /// Downloads a release APK into [directory] and verifies its SHA-256
 /// (spec 4.6). One download at a time; a second request joins the first.
+///
+/// On mobile data the line often drops (screen locked, weak signal): the
+/// unfinished `.part` file is kept and every next attempt – a retry after
+/// [retryDelay], or the next tap on Aktualizovat – continues where it
+/// stopped (HTTP Range). Only a file with the right hash becomes the APK.
 class UpdateDownloader {
-  UpdateDownloader({required this.client, required Directory directory, this.idleTimeout = defaultIdleTimeout})
-    : _directory = (() async => directory);
+  UpdateDownloader({
+    required this.client,
+    required Directory directory,
+    this.idleTimeout = defaultIdleTimeout,
+    this.attempts = defaultAttempts,
+    this.retryDelay = defaultRetryDelay,
+  }) : _directory = (() async => directory);
 
   /// Downloads into `cache/updates/`, the only place the installer accepts.
   UpdateDownloader.cache({required this.client})
     : idleTimeout = defaultIdleTimeout,
+      attempts = defaultAttempts,
+      retryDelay = defaultRetryDelay,
       _directory = (() async => Directory('${(await getApplicationCacheDirectory()).path}/updates').create(recursive: true));
 
-  static const defaultIdleTimeout = Duration(seconds: 30);
+  static const defaultIdleTimeout = Duration(seconds: 60);
+  static const defaultAttempts = 5;
+  static const defaultRetryDelay = Duration(seconds: 3);
 
   final http.Client client;
 
-  /// A download that receives nothing for this long fails (Wi-Fi gone).
+  /// An attempt that receives nothing for this long gives up (Wi-Fi gone).
   final Duration idleTimeout;
+
+  /// Attempts per download before it fails; each continues the last one.
+  final int attempts;
+  final Duration retryDelay;
   final Future<Directory> Function() _directory;
 
   Future<File>? _running;
@@ -46,51 +64,73 @@ class UpdateDownloader {
     final directory = await _directory();
     final target = File('${directory.path}/deskovky-${release.version}.apk');
     final part = File('${target.path}.part');
-    try {
-      final response = await client.send(http.Request('GET', release.apkUrl)).timeout(idleTimeout);
-      if (response.statusCode != 200) {
-        throw http.ClientException('HTTP ${response.statusCode}', release.apkUrl);
-      }
-      final total = response.contentLength;
-      var received = 0;
-      final sink = part.openWrite();
-      final digest = _DigestSink();
-      final hasher = sha256.startChunkedConversion(digest);
+    for (var attempt = 1; ; attempt++) {
       try {
-        await for (final chunk in response.stream.timeout(idleTimeout)) {
-          sink.add(chunk);
-          hasher.add(chunk);
-          received += chunk.length;
-          if (total != null && total > 0) onProgress?.call(received / total);
-        }
-      } finally {
-        await sink.close();
-        hasher.close();
+        await _fetch(release, part, onProgress);
+        break;
+      } on UpdateIntegrityException {
+        // Damaged or forged: never kept, never continued.
+        if (part.existsSync()) await part.delete();
+        rethrow;
+      } catch (_) {
+        if (attempt >= attempts) rethrow;
+        await Future<void>.delayed(retryDelay);
       }
-      final actual = digest.value.toString();
-      if (actual != release.sha256) throw UpdateIntegrityException(release.sha256, actual);
-      onProgress?.call(1);
-      if (target.existsSync()) await target.delete();
-      final done = await part.rename(target.path);
-      // Older downloads would only take space (~24 MB each).
-      String name(File f) => f.path.split(RegExp(r'[\\/]')).last;
-      for (final old in directory.listSync().whereType<File>()) {
-        if (name(old) != name(done)) await old.delete();
+    }
+    final actual = await _hashOf(part);
+    if (actual != release.sha256) {
+      await part.delete();
+      throw UpdateIntegrityException(release.sha256, actual);
+    }
+    onProgress?.call(1);
+    if (target.existsSync()) await target.delete();
+    final done = await part.rename(target.path);
+    // Older downloads would only take space (~37 MB each).
+    String name(File f) => f.uri.pathSegments.last;
+    for (final old in directory.listSync().whereType<File>()) {
+      if (name(old) != name(done)) await old.delete();
+    }
+    return done;
+  }
+
+  /// One attempt: continues [part] from its length; throws when the line
+  /// fails or ends before the whole file arrived.
+  Future<void> _fetch(ReleaseInfo release, File part, void Function(double)? onProgress) async {
+    final have = part.existsSync() ? part.lengthSync() : 0;
+    final request = http.Request('GET', release.apkUrl);
+    if (have > 0) request.headers['range'] = 'bytes=$have-';
+    final response = await client.send(request).timeout(idleTimeout);
+    final int start;
+    if (response.statusCode == 206 && have > 0) {
+      start = have;
+    } else if (response.statusCode == 200) {
+      // The server ignored the range: the whole file again, from the start.
+      start = 0;
+    } else {
+      await response.stream.drain<void>().catchError((Object _) {});
+      if (response.statusCode == 416) {
+        // The part is not a prefix of this file (or already whole): start over.
+        await part.delete();
       }
-      return done;
-    } catch (_) {
-      if (part.existsSync()) await part.delete();
-      rethrow;
+      throw http.ClientException('HTTP ${response.statusCode}', release.apkUrl);
+    }
+    final length = response.contentLength;
+    final total = length == null || length <= 0 ? null : start + length;
+    var received = start;
+    final sink = part.openWrite(mode: start == 0 ? FileMode.write : FileMode.append);
+    try {
+      await for (final chunk in response.stream.timeout(idleTimeout)) {
+        sink.add(chunk);
+        received += chunk.length;
+        if (total != null) onProgress?.call(received / total);
+      }
+    } finally {
+      await sink.close();
+    }
+    if (total != null && received < total) {
+      throw http.ClientException('Download ended at $received of $total bytes', release.apkUrl);
     }
   }
-}
 
-class _DigestSink implements Sink<Digest> {
-  late Digest value;
-
-  @override
-  void add(Digest data) => value = data;
-
-  @override
-  void close() {}
+  static Future<String> _hashOf(File file) async => (await sha256.bind(file.openRead()).first).toString();
 }

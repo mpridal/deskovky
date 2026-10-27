@@ -365,8 +365,8 @@ class _GameSetupScreenState extends ConsumerState<GameSetupScreen> {
                 ),
               ],
               for (final option in module.options) ..._optionEditor(l10n, option, config),
-              if (networkGames.contains(module.id)) _whereChoice(l10n),
-              if (_wifi && networkGames.contains(module.id) && _noWifi)
+              if (module.playableOnNetwork) _whereChoice(l10n),
+              if (_wifi && module.playableOnNetwork && _noWifi)
                 Padding(
                   padding: const EdgeInsets.only(top: 6),
                   child: Text(l10n.noWifi, style: AppTypography.body(color: AppColors.paper)),
@@ -396,7 +396,7 @@ class _GameSetupScreenState extends ConsumerState<GameSetupScreen> {
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: _wifi && networkGames.contains(module.id)
+                child: _wifi && module.playableOnNetwork
                     ? PrimaryButton(
                         key: ValueKey(_noWifi ? 'setupOpenRoomOff' : 'setupOpenRoom'),
                         label: l10n.setupOpenRoom,

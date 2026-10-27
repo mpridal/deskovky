@@ -93,6 +93,12 @@ void main() {
     // The setup opens with the last choices.
     GoRouter.of(tester.element(find.byType(Navigator).first)).go('/play/tictactoe/setup');
     await _settleIo(tester);
+    // At the end of the setup list, below "Kde se hraje".
+    await tester.scrollUntilVisible(
+      find.textContaining('Nastavení načteno z minulé hry'),
+      120,
+      scrollable: find.byWidgetPredicate((w) => w is Scrollable && w.axisDirection == AxisDirection.down).first,
+    );
     expect(find.textContaining('Nastavení načteno z minulé hry'), findsOneWidget);
   });
 

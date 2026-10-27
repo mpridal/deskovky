@@ -299,6 +299,27 @@ void main() {
     });
   });
 
+  testWidgets('Střídačka over the network: a move from another device that ends the game still reports the win', (tester) async {
+    // Táta (seat 0) plays on another device and hits a mine: Kuba (seat 1) wins here.
+    final h = Harness(board([(0, 0), (8, 8), (4, 4)], seats: 2))..canAct = false;
+    await h.pump(tester);
+    expect(h.state.over, isFalse);
+    h.notifier.value = rules.apply(h.state, reveal(0, 0, seat: 0));
+    await tester.pump();
+    expect(h.state.over, isTrue);
+    expect([for (final (id, data) in h.host.events) (id, data['seat'])], [('minesweeper.win', 1)]);
+  });
+
+  testWidgets('Střídačka: ending the game with my own move reports the win once', (tester) async {
+    final h = Harness(board([(0, 0), (8, 8), (4, 4)], seats: 2));
+    await h.pump(tester);
+    expect(h.state.over, isFalse);
+    await tester.tap(cell(0, 0));
+    await tester.pump();
+    expect(h.state.over, isTrue);
+    expect([for (final (id, data) in h.host.events) (id, data['seat'])], [('minesweeper.win', 1)]);
+  });
+
   testWidgets('the rule steps and the turn hint draw in every language', (tester) async {
     for (final locale in ['cs', 'en', 'es']) {
       tester.view.devicePixelRatio = 1;

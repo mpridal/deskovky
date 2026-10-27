@@ -2,6 +2,15 @@
 
 Každá verze má sekci `## x.y.z` s poznámkami `### cs`, `### en`, `### es` – z nich se při vydání tvoří `latest.json` a karta „Je tu nová verze“. Volitelný řádek `Minimální verze: x.y.z` udělá aktualizaci povinnou pro starší verze.
 
+## 0.5.0
+
+### cs
+Po Wi-Fi teď jdou hrát všechny hry pro více hráčů: Hádej číslo, Piškvorky, Pexeso, Miny i Člověče, nezlob se – každý na svém telefonu nebo tabletu (zkušební). Spolehlivější stahování aktualizace: po přerušení spojení pokračuje, kde skončilo, a během stahování displej nezhasne.
+### en
+All multiplayer games can now be played over Wi-Fi: Guess the number, Tic-tac-toe, Memory, Minesweeper and Ludo – everyone on their own phone or tablet (trial). More reliable update downloads: after a dropped connection the download continues where it stopped, and the screen stays on while it downloads.
+### es
+Ahora todos los juegos para varios jugadores se pueden jugar por Wi-Fi: Adivina el número, Tres en raya, Memoria, Buscaminas y Parchís, cada uno en su teléfono o tableta (de prueba). Descarga de actualizaciones más fiable: si se corta la conexión, sigue donde se quedó, y la pantalla no se apaga mientras descarga.
+
 ## 0.4.0
 
 ### cs

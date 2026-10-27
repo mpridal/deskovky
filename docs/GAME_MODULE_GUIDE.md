@@ -100,6 +100,14 @@ Všechny animace respektují omezení pohybu (`MediaQuery.disableAnimationsOf`).
 - barvy hráčů `AppColors.players[0..3]`;
 - písmo `AppTypography`.
 
+## Síťová hra (každý na svém zařízení)
+
+- Hra pro 2+ hráče jde po Wi-Fi automaticky (`supportsNetwork` je výchozí `true`); kontrakt her odehraje síťovou partii přes loopback. Hra, která to nezvládne, vrátí `supportsNetwork => false`.
+- Stav musí plynout jen ze seedu a tahů – nic náhodného ani časového mimo tah (čas patří do dat tahu, jako u Min).
+- Deska dostává tahy i z jiných zařízení: zvuky a animace dělej v `didUpdateWidget` podle změny stavu, ne jen při vlastním klepnutí.
+- Události pro odznaky (`host.reportEvent`), které popisují konec hry nebo cizí tah, hlas ze změny stavu (`didUpdateWidget`), ne jen z vlastního tahu – každé zařízení si pak připíše své hráče. Události za vlastní tah mohou zůstat u klepnutí.
+- Tah, který ukončí hru pro všechny (např. „Ukončit a seřadit“), nabízej jen při `view.canEndForAll`; v síťové hře je to jen hostitel.
+
 ## Assety
 
 - Obrázky a vlastní efekty dávej do `assets/games/<id>/…`. Složky jsou předem uvedené v `pubspec.yaml`:

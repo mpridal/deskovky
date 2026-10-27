@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:deskovky/core/avatar/avatar_spec.dart';
+import 'package:deskovky/core/game/ai_player.dart';
 import 'package:deskovky/core/game/difficulty.dart';
 import 'package:deskovky/core/game/game_config.dart';
 import 'package:deskovky/core/game/game_module.dart';
@@ -8,6 +10,10 @@ import 'package:deskovky/core/game/game_option.dart';
 import 'package:deskovky/core/game/game_session.dart';
 import 'package:deskovky/core/game/move.dart';
 import 'package:deskovky/core/game/seeded_random.dart';
+import 'package:deskovky/core/multiplayer/client_room.dart';
+import 'package:deskovky/core/multiplayer/host_room.dart';
+import 'package:deskovky/core/multiplayer/loopback_channel.dart';
+import 'package:deskovky/core/multiplayer/protocol.dart';
 import 'package:deskovky/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -27,6 +33,8 @@ void runGameContract(GameModule<Object?> module, {bool playable = true, int maxM
     group('contract ${m.id}', () {
       _manifest(m);
       if (playable) _playable(m, maxMoves);
+      // Every game for 2+ players plays over the network by default (spec 14.1).
+      if (playable && m.playableOnNetwork) _network(m, maxMoves);
     });
     return null;
   });
@@ -260,4 +268,69 @@ void _playable<S>(GameModule<S> m, int maxMoves) {
 /// A context for building an icon outside the widget tree.
 abstract final class _Context {
   static BuildContext of(WidgetTester tester) => tester.binding.rootElement!;
+}
+
+/// A whole game over loopback lines: the host's person, a person on another
+/// device and – where there is room and an AI – a robot played by the host.
+/// Every device must end with the same state and result (spec 14.7).
+void _network<S>(GameModule<S> m, int maxMoves) {
+  test('plays a whole game over the network with the same state and result on every device', () async {
+    final card = ProfileCard(name: 'A', avatar: AvatarSpec.defaults.toJson());
+    final robots = m.supportsAi && m.maxPlayers >= 3 ? 1 : 0;
+    final host = HostRoom(
+      module: m,
+      roomCode: '1234',
+      slots: [LocalSlot(profileId: 1, card: card), const OpenSlot(), for (var r = 0; r < robots; r++) const RobotSlot()],
+      difficulty: Difficulty.easy,
+      robotSpeed: RobotSpeed.fast,
+      options: {for (final o in m.options) o.id: o.defaultValue},
+      runner: const InlineAiRunner(),
+      robotDelay: Duration.zero,
+      seed: 21,
+    );
+    final (hostSide, clientSide) = LoopbackChannel.pair();
+    host.accept(hostSide);
+    final client = ClientRoom(
+      channel: clientSide,
+      hello: Hello(protocolVersion: protocolVersion, appVersion: 'test', roomCode: '1234', token: null, profiles: [card]),
+      localProfileIds: const [2],
+      findModule: (id) => id == m.id ? m : null,
+    );
+    Future<void> settle() => Future<void>.delayed(const Duration(milliseconds: 5));
+    await settle();
+    client.setReady(true);
+    await settle();
+    expect(host.canStart, isTrue);
+    host.start();
+    await settle();
+    final random = SeededRandom(4);
+    for (var i = 0; i < maxMoves && !host.isOver; i++) {
+      final session = host.session!;
+      final seat = m.rules.currentSeat(session.state as S);
+      if (seat == null) break;
+      final owner = host.ownerOf(seat);
+      if (owner == HostRoom.hostId) {
+        final legal = m.rules.legalMoves(session.state as S, seat);
+        expect(await host.submitLocal(legal[random.nextInt(legal.length)]), isTrue);
+      } else if (owner != null) {
+        while (client.seq != host.seq) {
+          await settle();
+        }
+        final legal = m.rules.legalMoves(client.session!.state as S, seat);
+        expect(await client.submit(legal[random.nextInt(legal.length)]), isTrue, reason: 'move $i of seat $seat');
+      } else {
+        await settle();
+      }
+    }
+    expect(host.isOver, isTrue, reason: 'the game ends within $maxMoves moves');
+    while (client.seq != host.seq) {
+      await settle();
+    }
+    expect(client.session!.hash, host.session!.hash);
+    final hostResult = m.rules.result(host.session!.state as S), clientResult = m.rules.result(client.session!.state as S);
+    expect(clientResult.places, hostResult.places);
+    expect(clientResult.scores, hostResult.scores);
+    host.dispose();
+    client.dispose();
+  }, timeout: const Timeout(Duration(minutes: 2)));
 }

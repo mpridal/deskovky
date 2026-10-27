@@ -212,7 +212,7 @@ class _LudoBoardState extends State<LudoBoard> {
 
   Future<void> _stop() async {
     final seat = _view.mySeat;
-    if (!_view.canAct || seat == null) return;
+    if (!_view.canAct || !_view.canEndForAll || seat == null) return;
     final t = ludoTexts;
     final yes = await showAppConfirmDialog(
       context,
@@ -337,7 +337,7 @@ class _LudoBoardState extends State<LudoBoard> {
       ),
       if (_s.noMove && !rolling) _pill(t.of(context, 'ludo.noMove')),
       if (hint != null) _note(hint),
-      if (seat != null && _view.canAct && LudoRules.canStop(_s))
+      if (seat != null && _view.canAct && _view.canEndForAll && LudoRules.canStop(_s))
         TextButton(
           key: const ValueKey('ludoStop'),
           onPressed: _stop,

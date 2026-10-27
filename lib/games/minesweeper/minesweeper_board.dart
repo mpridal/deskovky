@@ -62,6 +62,9 @@ class _MinesweeperBoardState extends State<MinesweeperBoard> with SingleTickerPr
     super.didUpdateWidget(old);
     final before = old.view.state, now = s;
     if (!identical(before, now)) _sounds(before, now);
+    // Střídačka ends with anyone's move – on another device too (spec 14):
+    // every device reports the winner; only the winner's own device keeps it.
+    if (!before.over && now.over && !now.solo) _reportTurnsWin(now);
     _syncClock();
   }
 
@@ -130,27 +133,26 @@ class _MinesweeperBoardState extends State<MinesweeperBoard> with SingleTickerPr
     view.submit(move);
   }
 
-  /// Badge events (spec 13.7), reported before the move ends the game.
+  /// Solo badge events (spec 13.7), reported before the move ends the game.
   void _reportEvents(MinesweeperState next, int seat) {
-    if (!next.over) return;
+    if (!next.over || !next.solo || !next.cleared || next.exploded.isNotEmpty) return;
     final host = view.host;
-    if (next.solo) {
-      if (!next.cleared || next.exploded.isNotEmpty) return;
-      host.reportEvent('minesweeper.win', {'seat': seat});
-      if (next.level == MinesweeperLevel.hard) host.reportEvent('minesweeper.defuser', {'seat': seat});
-      if (next.flagsPlaced == 0) host.reportEvent('minesweeper.noflag', {'seat': seat});
-      final ms = next.finishMs ?? 0;
-      if (next.level == MinesweeperLevel.easy && ms > 0 && ms < 20000) {
-        host.reportEvent('minesweeper.blitz', {'seat': seat});
-      }
-      return;
+    host.reportEvent('minesweeper.win', {'seat': seat});
+    if (next.level == MinesweeperLevel.hard) host.reportEvent('minesweeper.defuser', {'seat': seat});
+    if (next.flagsPlaced == 0) host.reportEvent('minesweeper.noflag', {'seat': seat});
+    final ms = next.finishMs ?? 0;
+    if (next.level == MinesweeperLevel.easy && ms > 0 && ms < 20000) {
+      host.reportEvent('minesweeper.blitz', {'seat': seat});
     }
+  }
+
+  void _reportTurnsWin(MinesweeperState next) {
     final places = MinesweeperRules.placesOf(next);
     final winners = [
       for (var p = 0; p < places.length; p++)
         if (places[p] == 1) p,
     ];
-    if (winners.length == 1) host.reportEvent('minesweeper.win', {'seat': winners.single});
+    if (winners.length == 1) view.host.reportEvent('minesweeper.win', {'seat': winners.single});
   }
 
   CellLook _look(int cell) {

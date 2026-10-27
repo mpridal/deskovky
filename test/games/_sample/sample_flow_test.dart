@@ -94,7 +94,13 @@ void main() {
     await tester.tap(find.text('Hádej číslo').last);
     await tester.pumpAndSettle();
     expect(find.byType(GameSetupScreen), findsOneWidget);
-    expect(find.textContaining('Nastavení načteno z minulé hry'), findsOneWidget);
     expect(find.text('Hráči · 2 lidé + 2 roboti'), findsOneWidget);
+    // At the end of the setup list, below "Kde se hraje".
+    await tester.scrollUntilVisible(
+      find.textContaining('Nastavení načteno z minulé hry'),
+      120,
+      scrollable: find.byWidgetPredicate((w) => w is Scrollable && w.axisDirection == AxisDirection.down).first,
+    );
+    expect(find.textContaining('Nastavení načteno z minulé hry'), findsOneWidget);
   });
 }

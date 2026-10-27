@@ -116,5 +116,5 @@ Flutter není v PATH starších terminálů – v případě potřeby `export PA
 
 - Kód v `lib/core/multiplayer/` (protokol, hostitel, klient, WebSocket, UDP hledání) a `lib/features/multiplayer/` (Místnost, Připojit se, lobby). Popis v `docs/ARCHITECTURE.md`.
 - Testy bez sítě: `LoopbackChannel` a `test/features/multiplayer/fake_network.dart` (`FakeNetworkEnv`). Ve widget testech posílej tahy bez `runAsync` a pumpuj (`_settle`) – odpověď hostitele běží ve falešném čase, `await` uvnitř `runAsync` by čekal věčně.
-- Hra jde po síti, jen když je v `networkGames` (`lib/app/multiplayer_providers.dart`). Hra pro síť nesmí v pravidlech záviset na `RobotSeat` u míst, za která může zaskočit robot (Pexeso ne; Piškvorky a Člověče ano – řešit ve fázi 3b).
+- Po síti jde automaticky každá hotová hra pro 2+ hráče (`GameModule.playableOnNetwork`); nová hra nic nedělá, kontrakt her u ní síťovou partii ověří. Hra, která síť nezvládne, nastaví `supportsNetwork => false`. Zástupný robot (vypadlý hráč) zůstává ve sdílené konfiguraci `RemoteSeat`, takže stav v pravidlech, který čte `RobotSeat` (Piškvorky, Člověče – jen pro odznaky), se nemění.
 - Ruční test na emulátoru: otevři místnost na tabletu, port najdeš v `/proc/net/tcp` (uid aplikace, stav 0A), `adb forward tcp:P tcp:P` a připoj se z testu přes `SocketChannel.connect('127.0.0.1', P)`.
