@@ -13,7 +13,9 @@ const ai = TictactoeAi();
 
 /// Hard with a shorter think, so hundreds of big-board games fit in the test
 /// run; the same code as the 700 ms robot, just fewer search levels.
-const quick = TictactoeAi(timeLimit: Duration(milliseconds: 40));
+// Hard limited by depth, not time: the result is the same on a busy CI machine
+// (depth 3 beats easy 18–19 of 20; the 700 ms version below is opt-in).
+const quick = TictactoeAi(timeLimit: Duration(seconds: 30), hardDepth: 3);
 const instant = TictactoeAi(timeLimit: Duration(milliseconds: 8));
 
 /// `TICTACTOE_FULL=1 flutter test test/games/tictactoe` also plays big-board

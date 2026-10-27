@@ -101,7 +101,10 @@ void main() {
 
   testWidgets('exit asks, saves the game and returns home; resume restores the same game', (tester) async {
     final t = await _player(tester, db, 'Tereza');
-    await _startGame(tester, db, _config([HumanSeat(t), const RobotSeat()]));
+    final k = await _player(tester, db, 'Kuba');
+    // Two people: a robot could guess the (random) secret and end the game
+    // before the exit – that made this test fail now and then.
+    await _startGame(tester, db, _config([HumanSeat(t), HumanSeat(k)]));
     // A miss on purpose: hitting the secret would end the game (seeds vary).
     final secret = (_screen(tester).debugSession!.state as SampleState).secret;
     await _tapNumber(tester, secret == 1 ? 2 : 1);
