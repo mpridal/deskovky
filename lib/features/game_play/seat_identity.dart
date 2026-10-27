@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/avatar/avatar_spec.dart';
 import '../../core/game/difficulty.dart';
 import '../../core/game/game_config.dart';
 import '../../core/players/player_profile.dart';
@@ -20,7 +21,13 @@ String robotName(AppLocalizations l10n, int seat) => switch (seat) {
 /// avatar, or a robot in the seat colour.
 @immutable
 class SeatIdentity {
-  const SeatIdentity({required this.seat, required this.name, required this.profile, required this.difficulty});
+  const SeatIdentity({
+    required this.seat,
+    required this.name,
+    required this.profile,
+    required this.difficulty,
+    this.remoteAvatar,
+  });
 
   final int seat;
   final String name;
@@ -31,13 +38,17 @@ class SeatIdentity {
   /// The robots' difficulty, null for humans.
   final Difficulty? difficulty;
 
-  bool get isRobot => profile == null;
+  /// A person on another device (spec 14): their avatar as sent over the network.
+  final AvatarSpec? remoteAvatar;
+
+  bool get isRemote => remoteAvatar != null;
+  bool get isRobot => profile == null && !isRemote;
   Color get color => AppColors.players[seat];
 
   /// [thinking] makes a robot blink its eyes (spec 5.7.1).
   Widget avatar(double size, {bool thinking = false}) => isRobot
       ? RobotAvatar(color: color, size: size, semanticLabel: name, blinking: thinking)
-      : AvatarView(spec: profile!.avatar, size: size, semanticLabel: name);
+      : AvatarView(spec: remoteAvatar ?? profile!.avatar, size: size, semanticLabel: name);
 
   static List<SeatIdentity> forConfig(GameConfig config, List<PlayerProfile> profiles, AppLocalizations l10n) => [
     for (final (seat, s) in config.seats.indexed)
@@ -47,6 +58,13 @@ class SeatIdentity {
           name: profiles.firstWhere((p) => p.id == profileId).name,
           profile: profiles.firstWhere((p) => p.id == profileId),
           difficulty: null,
+        ),
+        RemoteSeat(:final name, :final avatar) => SeatIdentity(
+          seat: seat,
+          name: name,
+          profile: null,
+          difficulty: null,
+          remoteAvatar: AvatarSpec.fromJson(avatar),
         ),
         _ => SeatIdentity(seat: seat, name: robotName(l10n, seat), profile: null, difficulty: config.difficulty),
       },

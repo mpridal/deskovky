@@ -1098,4 +1098,185 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get setupDifficultySolo => 'Difficulty';
+
+  @override
+  String get whereLabel => 'Where to play';
+
+  @override
+  String get whereHere => 'On this device';
+
+  @override
+  String get whereWifi => 'Each on their own (Wi-Fi)';
+
+  @override
+  String get trialTag => 'Trial';
+
+  @override
+  String get noWifi =>
+      'You are not on Wi-Fi. Connect to the same Wi-Fi as the others.';
+
+  @override
+  String get setupOpenRoom => 'Open the room';
+
+  @override
+  String get roomTitle => 'Room';
+
+  @override
+  String get roomCode => 'Room code';
+
+  @override
+  String get roomJoinHint => 'The others tap Join a game, or scan the QR code.';
+
+  @override
+  String get slotOpen => 'Free place';
+
+  @override
+  String get slotHere => '🏠 Here';
+
+  @override
+  String get slotOwnDevice => '📱 Own device';
+
+  @override
+  String get slotReady => 'Ready';
+
+  @override
+  String get slotWaiting => 'Waiting';
+
+  @override
+  String get slotDisconnected => 'Disconnected';
+
+  @override
+  String get slotMakeRobot => 'Add a robot';
+
+  @override
+  String get slotAddLocal => 'Add a player from this device';
+
+  @override
+  String get slotLeaveOpen => 'Leave it free';
+
+  @override
+  String get roomRemove => 'Remove player';
+
+  @override
+  String get roomStart => 'Start the game';
+
+  @override
+  String get roomWaitReady => 'Waiting for everyone to be ready.';
+
+  @override
+  String get roomNoServer => 'The room could not be opened.';
+
+  @override
+  String get homeJoin => 'Join a game';
+
+  @override
+  String get joinWho => 'Who plays on this device';
+
+  @override
+  String get joinRooms => 'Rooms on the network';
+
+  @override
+  String get joinSearching => 'Looking for rooms…';
+
+  @override
+  String get joinByCode => 'Room code (4 digits)';
+
+  @override
+  String get joinCodeNotFound => 'No room with this code on the network.';
+
+  @override
+  String get joinAdvanced => 'Advanced';
+
+  @override
+  String get joinAddress => 'Address (IP:port)';
+
+  @override
+  String get joinConnect => 'Connect';
+
+  @override
+  String get joinFailed => 'Could not connect.';
+
+  @override
+  String get joinPickSomeone => 'Pick at least one player.';
+
+  @override
+  String get byeVersion =>
+      'The host has another version of the app. Update everyone to the same one.';
+
+  @override
+  String get byeCode => 'Wrong room code.';
+
+  @override
+  String get byeFull => 'The room is full.';
+
+  @override
+  String get byeStarted => 'The game has already started.';
+
+  @override
+  String get byeKicked => 'The host removed you from the room.';
+
+  @override
+  String get byeLost => 'The connection to the host was lost.';
+
+  @override
+  String get lobbyReady => 'I am ready';
+
+  @override
+  String get lobbyNotReady => 'Not yet';
+
+  @override
+  String get lobbySettings => 'Game settings (the host chooses)';
+
+  @override
+  String get lobbyWaitStart => 'Waiting for the host to start.';
+
+  @override
+  String get leaveRoom => 'Leave the room';
+
+  @override
+  String joinFree(int count) {
+    return 'Free places: $count';
+  }
+
+  @override
+  String get netDecideTitle => 'A player did not come back';
+
+  @override
+  String get netWaitMore => 'Wait longer';
+
+  @override
+  String get netReplaceRobot => 'Replace with a robot';
+
+  @override
+  String get netEndGame => 'End the game';
+
+  @override
+  String get netLeave => 'Leave the game';
+
+  @override
+  String get netRematch => 'Rematch';
+
+  @override
+  String get netWaitHost => 'Waiting for the host…';
+
+  @override
+  String get byeEnded => 'The host ended the game.';
+
+  @override
+  String netYourTurn(String name) {
+    return '$name, it is your turn!';
+  }
+
+  @override
+  String netTurnRemote(String name) {
+    return '$name\'s turn (on their device)';
+  }
+
+  @override
+  String netWaiting(String name, String time) {
+    return '$name: disconnected – waiting ($time)';
+  }
+
+  @override
+  String get netReconnect => 'Reconnect';
 }

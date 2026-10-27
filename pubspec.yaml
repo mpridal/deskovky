@@ -1,7 +1,7 @@
 name: deskovky
 description: "Rodinná kolekce deskových her pro Android."
 publish_to: 'none'
-version: 0.3.0+300
+version: 0.4.0+400
 
 environment:
   sdk: ^3.13.7
@@ -21,6 +21,7 @@ dependencies:
   intl: any
   just_audio: ^0.10.6
   path_provider: ^2.1.6
+  qr_flutter: ^4.1.0
 
 dev_dependencies:
   flutter_test:

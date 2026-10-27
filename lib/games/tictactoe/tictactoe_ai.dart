@@ -19,10 +19,14 @@ import 'tictactoe_rules.dart';
 /// moves and always blocks a four; hard looks for a forced win by fours
 /// (VCF), then searches alpha-beta four and more moves deep within 700 ms.
 class TictactoeAi implements AiPlayer<TictactoeState> {
-  const TictactoeAi({this.timeLimit = const Duration(milliseconds: 700)});
+  const TictactoeAi({this.timeLimit = const Duration(milliseconds: 700), this.hardDepth = 6});
 
   /// Hard's thinking time on a big board (spec 13.5).
   final Duration timeLimit;
+
+  /// How deep hard searches at most; tests use a small depth with a long
+  /// [timeLimit], so the result does not depend on the machine's speed.
+  final int hardDepth;
 
   static const _rules = TictactoeRules();
 
@@ -200,7 +204,7 @@ class TictactoeAi implements AiPlayer<TictactoeState> {
         final watch = Stopwatch()..start();
         final vcf = eval.vcf(cells, seat, watch: watch, limit: timeLimit ~/ 4);
         if (vcf != null) return vcf;
-        return _search(s, seat, eval, depth: 6, width: 10, limit: timeLimit - watch.elapsed, random: random);
+        return _search(s, seat, eval, depth: hardDepth, width: 10, limit: timeLimit - watch.elapsed, random: random);
     }
   }
 

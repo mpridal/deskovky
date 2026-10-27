@@ -166,6 +166,55 @@ void main() {
       expect(last.lines.first.reason, PointsReason.capped);
     });
   
+    test('a network game with a guest from another device is a game of people: no anti-farming cap (spec 14.5)', () async {
+      const guest = RemoteSeat(clientId: 'c1', name: 'Babička', avatar: {});
+      final easy = config([HumanSeat(tereza), guest, const RobotSeat()], difficulty: Difficulty.easy);
+      late PlayerPoints last;
+      for (var i = 0; i < 11; i++) {
+        last = (await service.recordFinished(
+          config: easy,
+          result: const GameResult(places: [1, 2, 3], scores: [1, 0, 0], stars: [0, 0, 0]),
+          events: const [],
+          duration: Duration.zero,
+        )).points[tereza]!;
+      }
+      expect(last.lines.first.reason, isNot(PointsReason.capped));
+    });
+
+    test('after ten easy solo wins today a network game with a guest is still a game of people (spec 14.5)', () async {
+      final solo = config([HumanSeat(tereza), const RobotSeat()], difficulty: Difficulty.easy);
+      for (var i = 0; i < 10; i++) {
+        await service.recordFinished(
+          config: solo,
+          result: const GameResult(places: [1, 2], scores: [1, 0], stars: [0, 0]),
+          events: const [],
+          duration: Duration.zero,
+        );
+      }
+      const guest = RemoteSeat(clientId: 'c1', name: 'Babička', avatar: {});
+      final network = config([HumanSeat(tereza), guest, const RobotSeat()], difficulty: Difficulty.easy);
+      final points = (await service.recordFinished(
+        config: network,
+        result: const GameResult(places: [1, 2, 3], scores: [1, 0, 0], stars: [0, 0, 0]),
+        events: const [],
+        duration: Duration.zero,
+      )).points[tereza]!;
+      expect(points.lines.first.reason, isNot(PointsReason.capped));
+    });
+
+    test('a guest is in the history but gets no points and no leaderboard place', () async {
+      const guest = RemoteSeat(clientId: 'c1', name: 'Babička', avatar: {});
+      final rewards = await service.recordFinished(
+        config: config([guest, HumanSeat(tereza)]),
+        result: const GameResult(places: [1, 2], scores: [3, 1], stars: [3, 1]),
+        events: const [],
+        duration: Duration.zero,
+      );
+      expect(rewards.points.keys, [tereza]);
+      final match = (await repo.allMatches()).single;
+      expect([for (final p in match.participants) (p.playerId, p.robot)], [(null, false), (tereza, false)]);
+    });
+
     test('a one-player game uses its own difficulty and the anti-farming cap (spec 5.6, 13.7)', () async {
       final solo = config([HumanSeat(tereza)], difficulty: Difficulty.easy);
       final points = <PlayerPoints>[];

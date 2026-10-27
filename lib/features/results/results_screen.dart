@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../app/multiplayer_providers.dart';
 import '../../app/providers.dart';
 import '../../core/game/game_config.dart';
+import '../../core/multiplayer/network_rooms.dart';
 import '../../app/stats_service.dart';
 import '../../games/badge_texts.dart';
 import '../../core/points/points_math.dart';
@@ -51,7 +53,14 @@ class ResultsScreen extends StatelessWidget {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) context.go('/games');
+        if (didPop) return;
+        if (outcome.network) {
+          // Leaving the results leaves the room too: no server or line stays open.
+          final router = GoRouter.of(context);
+          leaveNetworkRoom(ProviderScope.containerOf(context).read(networkRoomsProvider)).then((_) => router.go('/games'));
+        } else {
+          context.go('/games');
+        }
       },
       child: Scaffold(
         body: FeltBackground(
@@ -94,24 +103,28 @@ class ResultsScreen extends StatelessWidget {
                     if (outcome.rewards.points.isNotEmpty) _Points(outcome: outcome),
                     if (outcome.newBadges.isNotEmpty) _NewBadges(outcome: outcome),
                     const SizedBox(height: 16),
-                    PrimaryButton(
-                      label: l10n.resultPlayAgain,
-                      onPressed: () => context.pushReplacement('/play/${config.gameId}', extra: config),
-                    ),
-                    const SizedBox(height: 8),
-                    PrimaryButton(
-                      label: l10n.resultChangeSettings,
-                      secondary: true,
-                      onPressed: () => context.pushReplacement('/play/${config.gameId}/setup', extra: config),
-                    ),
-                    const SizedBox(height: 4),
-                    Center(
-                      child: TextButton(
-                        onPressed: () => context.go('/games'),
-                        style: TextButton.styleFrom(minimumSize: const Size(48, 48)),
-                        child: Text(l10n.resultHome, style: AppTypography.button(color: AppColors.paper)),
+                    if (outcome.network)
+                      _NetworkActions(gameId: config.gameId)
+                    else ...[
+                      PrimaryButton(
+                        label: l10n.resultPlayAgain,
+                        onPressed: () => context.pushReplacement('/play/${config.gameId}', extra: config),
                       ),
-                    ),
+                      const SizedBox(height: 8),
+                      PrimaryButton(
+                        label: l10n.resultChangeSettings,
+                        secondary: true,
+                        onPressed: () => context.pushReplacement('/play/${config.gameId}/setup', extra: config),
+                      ),
+                      const SizedBox(height: 4),
+                      Center(
+                        child: TextButton(
+                          onPressed: () => context.go('/games'),
+                          style: TextButton.styleFrom(minimumSize: const Size(48, 48)),
+                          child: Text(l10n.resultHome, style: AppTypography.button(color: AppColors.paper)),
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -328,6 +341,92 @@ class _CanBuy extends ConsumerWidget {
         textAlign: TextAlign.end,
         style: AppTypography.button(color: AppColors.gold),
       ),
+    );
+  }
+}
+
+/// Leaves the network room after a game: a client says goodbye, the host
+/// ends the room for everyone, then every line and the server close.
+Future<void> leaveNetworkRoom(NetworkRooms rooms) async {
+  final client = rooms.client;
+  if (client != null && client.closedReason == null) client.leave();
+  rooms.host?.endGame();
+  await rooms.leave();
+}
+
+/// After a network game (spec 14.2 step 8): the host offers a rematch in the
+/// same room, the others wait for it; anyone can go home and leave the room.
+class _NetworkActions extends ConsumerStatefulWidget {
+  const _NetworkActions({required this.gameId});
+
+  final String gameId;
+
+  @override
+  ConsumerState<_NetworkActions> createState() => _NetworkActionsState();
+}
+
+class _NetworkActionsState extends ConsumerState<_NetworkActions> {
+  late final NetworkRooms _rooms;
+
+  /// The game that just ended; any other session in the room is a rematch.
+  Object? _finished;
+  ChangeNotifier? _room;
+  var _moved = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _rooms = ref.read(networkRoomsProvider);
+    _finished = _rooms.host?.session ?? _rooms.client?.session;
+    _room = _rooms.host ?? _rooms.client;
+    _room?.addListener(_onRoom);
+  }
+
+  @override
+  void dispose() {
+    _room?.removeListener(_onRoom);
+    super.dispose();
+  }
+
+  void _onRoom() {
+    final session = _rooms.host?.session ?? _rooms.client?.session;
+    if (_moved || !mounted) return;
+    if (session != null && !identical(session, _finished)) {
+      _moved = true;
+      context.pushReplacement('/play/${widget.gameId}/net');
+      return;
+    }
+    setState(() {});
+  }
+
+  Future<void> _home() async {
+    final router = GoRouter.of(context);
+    await leaveNetworkRoom(_rooms);
+    router.go('/games');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final host = _rooms.host;
+    final client = _rooms.client;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (host != null)
+          PrimaryButton(key: const ValueKey('netRematch'), label: l10n.netRematch, onPressed: host.rematch)
+        else if (client != null && client.closedReason == null)
+          Text(l10n.netWaitHost, textAlign: TextAlign.center, style: AppTypography.body(color: AppColors.paper)),
+        const SizedBox(height: 4),
+        Center(
+          child: TextButton(
+            key: const ValueKey('netResultsHome'),
+            onPressed: _home,
+            style: TextButton.styleFrom(minimumSize: const Size(48, 48)),
+            child: Text(l10n.resultHome, style: AppTypography.button(color: AppColors.paper)),
+          ),
+        ),
+      ],
     );
   }
 }

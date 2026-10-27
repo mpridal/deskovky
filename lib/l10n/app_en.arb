@@ -750,5 +750,93 @@
   "shopNotEnough": "You don't have enough points for that now.",
   "shopFailed": "That didn't work. Try again.",
   "updatePreparing": "Preparing the update…",
-  "setupDifficultySolo": "Difficulty"
+  "setupDifficultySolo": "Difficulty",
+  "whereLabel": "Where to play",
+  "whereHere": "On this device",
+  "whereWifi": "Each on their own (Wi-Fi)",
+  "trialTag": "Trial",
+  "noWifi": "You are not on Wi-Fi. Connect to the same Wi-Fi as the others.",
+  "setupOpenRoom": "Open the room",
+  "roomTitle": "Room",
+  "roomCode": "Room code",
+  "roomJoinHint": "The others tap Join a game, or scan the QR code.",
+  "slotOpen": "Free place",
+  "slotHere": "🏠 Here",
+  "slotOwnDevice": "📱 Own device",
+  "slotReady": "Ready",
+  "slotWaiting": "Waiting",
+  "slotDisconnected": "Disconnected",
+  "slotMakeRobot": "Add a robot",
+  "slotAddLocal": "Add a player from this device",
+  "slotLeaveOpen": "Leave it free",
+  "roomRemove": "Remove player",
+  "roomStart": "Start the game",
+  "roomWaitReady": "Waiting for everyone to be ready.",
+  "roomNoServer": "The room could not be opened.",
+  "homeJoin": "Join a game",
+  "joinWho": "Who plays on this device",
+  "joinRooms": "Rooms on the network",
+  "joinSearching": "Looking for rooms…",
+  "joinByCode": "Room code (4 digits)",
+  "joinCodeNotFound": "No room with this code on the network.",
+  "joinAdvanced": "Advanced",
+  "joinAddress": "Address (IP:port)",
+  "joinConnect": "Connect",
+  "joinFailed": "Could not connect.",
+  "joinPickSomeone": "Pick at least one player.",
+  "byeVersion": "The host has another version of the app. Update everyone to the same one.",
+  "byeCode": "Wrong room code.",
+  "byeFull": "The room is full.",
+  "byeStarted": "The game has already started.",
+  "byeKicked": "The host removed you from the room.",
+  "byeLost": "The connection to the host was lost.",
+  "lobbyReady": "I am ready",
+  "lobbyNotReady": "Not yet",
+  "lobbySettings": "Game settings (the host chooses)",
+  "lobbyWaitStart": "Waiting for the host to start.",
+  "leaveRoom": "Leave the room",
+  "joinFree": "Free places: {count}",
+  "@joinFree": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "netDecideTitle": "A player did not come back",
+  "netWaitMore": "Wait longer",
+  "netReplaceRobot": "Replace with a robot",
+  "netEndGame": "End the game",
+  "netLeave": "Leave the game",
+  "netRematch": "Rematch",
+  "netWaitHost": "Waiting for the host…",
+  "byeEnded": "The host ended the game.",
+  "netYourTurn": "{name}, it is your turn!",
+  "@netYourTurn": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "netTurnRemote": "{name}'s turn (on their device)",
+  "@netTurnRemote": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "netWaiting": "{name}: disconnected – waiting ({time})",
+  "@netWaiting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "netReconnect": "Reconnect"
 }

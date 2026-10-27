@@ -1,6 +1,8 @@
 package cz.mpridal.deskovky
 
+import android.content.Context
 import android.content.Intent
+import android.net.wifi.WifiManager
 import android.net.Uri
 import android.provider.Settings
 import androidx.core.content.FileProvider
@@ -10,8 +12,31 @@ import io.flutter.plugin.common.MethodChannel
 import java.io.File
 
 class MainActivity : FlutterActivity() {
+    private var multicastLock: WifiManager.MulticastLock? = null
+
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        // Network play (spec 14): Android drops Wi-Fi broadcasts unless the app
+        // holds a multicast lock, so the join screen holds one while it looks
+        // for rooms.
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "deskovky/multicast").setMethodCallHandler { call, result ->
+            when (call.method) {
+                "acquire" -> {
+                    val lock = multicastLock
+                        ?: (applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager)
+                            .createMulticastLock("deskovky")
+                            .apply { setReferenceCounted(false) }
+                    if (!lock.isHeld) lock.acquire()
+                    multicastLock = lock
+                    result.success(lock.isHeld)
+                }
+                "release" -> {
+                    releaseMulticast()
+                    result.success(true)
+                }
+                else -> result.notImplemented()
+            }
+        }
         // Self-update (spec 4): app version, the "unknown apps" permission and
         // handing a verified APK from cache/updates/ to the system installer.
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "deskovky/update").setMethodCallHandler { call, result ->
@@ -43,5 +68,14 @@ class MainActivity : FlutterActivity() {
                 else -> result.notImplemented()
             }
         }
+    }
+
+    private fun releaseMulticast() {
+        multicastLock?.let { if (it.isHeld) it.release() }
+    }
+
+    override fun onDestroy() {
+        releaseMulticast()
+        super.onDestroy()
     }
 }

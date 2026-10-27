@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../app/multiplayer_providers.dart';
 import '../../app/providers.dart';
 import '../../core/game/difficulty.dart';
 import '../../core/game/game_config.dart';
 import '../../core/game/game_module.dart';
 import '../../core/game/game_option.dart';
+import '../../core/multiplayer/host_room.dart';
+import '../../core/multiplayer/protocol.dart';
 import '../../core/players/player_profile.dart';
 import '../../games/game_texts.dart';
 import '../../games/registry.dart';
@@ -46,6 +49,10 @@ class _GameSetupScreenState extends ConsumerState<GameSetupScreen> {
   GameConfig? _config;
   bool _loadedFromLast = false;
   bool _filled = false;
+
+  /// "Každý na svém (Wi-Fi)" (spec 14.2 step 1).
+  bool _wifi = false;
+  bool _opening = false;
 
   @override
   void initState() {
@@ -120,6 +127,93 @@ class _GameSetupScreenState extends ConsumerState<GameSetupScreen> {
     if (mounted) context.pushReplacement('/play/${config.gameId}', extra: config);
   }
 
+  /// Opens a network room with this setup: its people stay on this device,
+  /// its robots stay robots, the other places are free for other devices.
+  Future<void> _openRoom(GameModule<Object?> module, List<PlayerProfile> profiles) async {
+    final config = _config!;
+    final l10n = AppLocalizations.of(context);
+    final byId = {for (final p in profiles) p.id: p};
+    ProfileCard card(PlayerProfile p) => ProfileCard(name: p.name, avatar: p.avatar.toJson());
+    final slots = <RoomSlot>[
+      for (final seat in config.seats)
+        if (seat is HumanSeat && byId[seat.profileId] != null)
+          LocalSlot(profileId: seat.profileId, card: card(byId[seat.profileId]!))
+        else if (seat is RobotSeat)
+          const RobotSlot(),
+    ];
+    // At least one free place: a robot gives way when the table is full.
+    if (slots.length >= module.maxPlayers) {
+      final robot = slots.lastIndexWhere((s) => s is RobotSlot);
+      if (robot >= 0) slots.removeAt(robot);
+    }
+    while (slots.length < module.maxPlayers) {
+      slots.add(const OpenSlot());
+    }
+    final host = byId[config.seats.whereType<HumanSeat>().firstOrNull?.profileId] ?? profiles.firstOrNull;
+    if (host == null) return;
+    setState(() => _opening = true);
+    await ref.read(gameStoreProvider).saveLastConfig(config);
+    final room = await ref
+        .read(networkRoomsProvider)
+        .openHost(
+          module: module,
+          slots: slots,
+          difficulty: config.difficulty,
+          robotSpeed: config.robotSpeed,
+          options: config.options,
+          runner: ref.read(aiRunnerProvider),
+          hostCard: card(host),
+        )
+        .catchError((Object _) => null);
+    if (!mounted) return;
+    setState(() => _opening = false);
+    if (room == null) {
+      showAppToast(context, l10n.roomNoServer);
+      return;
+    }
+    await context.push('/room');
+  }
+
+  Widget _whereChoice(AppLocalizations l10n) {
+    Widget row(Key key, String label, bool wifi, {String? tag}) => Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Semantics(
+        button: true,
+        selected: _wifi == wifi,
+        child: GestureDetector(
+          key: key,
+          onTap: () => setState(() => _wifi = wifi),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            decoration: BoxDecoration(
+              color: _wifi == wifi ? AppColors.gold : AppColors.paper,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                Icon(wifi ? Icons.wifi : Icons.tablet_android, color: AppColors.ink),
+                const SizedBox(width: 10),
+                Expanded(child: Text(label, style: AppTypography.body(color: AppColors.ink))),
+                if (tag != null) ...[
+                  const SizedBox(width: 6),
+                  Text(tag, style: AppTypography.caption(color: AppColors.wood)),
+                ],
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _label(l10n.whereLabel),
+        row(const ValueKey('whereHere'), l10n.whereHere, false),
+        row(const ValueKey('whereWifi'), l10n.whereWifi, true, tag: l10n.trialTag),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -177,6 +271,9 @@ class _GameSetupScreenState extends ConsumerState<GameSetupScreen> {
       ),
     );
   }
+
+  /// Not on Wi-Fi (or not yet known): the room cannot be opened.
+  bool get _noWifi => ref.watch(wifiAddressProvider).value == null;
 
   Widget _label(String text) => Padding(
     padding: const EdgeInsets.fromLTRB(4, 16, 4, 6),
@@ -268,6 +365,12 @@ class _GameSetupScreenState extends ConsumerState<GameSetupScreen> {
                 ),
               ],
               for (final option in module.options) ..._optionEditor(l10n, option, config),
+              if (networkGames.contains(module.id)) _whereChoice(l10n),
+              if (_wifi && networkGames.contains(module.id) && _noWifi)
+                Padding(
+                  padding: const EdgeInsets.only(top: 6),
+                  child: Text(l10n.noWifi, style: AppTypography.body(color: AppColors.paper)),
+                ),
               if (_loadedFromLast)
                 Padding(
                   padding: const EdgeInsets.only(top: 12),
@@ -293,7 +396,16 @@ class _GameSetupScreenState extends ConsumerState<GameSetupScreen> {
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: PrimaryButton(label: l10n.setupPlay, onPressed: SeatEditor.isValid(config.seats) ? _play : null),
+                child: _wifi && networkGames.contains(module.id)
+                    ? PrimaryButton(
+                        key: ValueKey(_noWifi ? 'setupOpenRoomOff' : 'setupOpenRoom'),
+                        label: l10n.setupOpenRoom,
+                        icon: Icons.wifi,
+                        onPressed: _noWifi || _opening || !SeatEditor.isValid(config.seats)
+                            ? null
+                            : () => _openRoom(module, profiles),
+                      )
+                    : PrimaryButton(label: l10n.setupPlay, onPressed: SeatEditor.isValid(config.seats) ? _play : null),
               ),
             ],
           ),

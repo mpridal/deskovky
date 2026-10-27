@@ -3,6 +3,10 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <!-- Installs a downloaded newer version of this app (spec 4.6). -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+    <!-- Network play on the home Wi-Fi (spec 14): this device's Wi-Fi address
+         and receiving room announcements (UDP broadcast). -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
     <application
         android:label="Deskovky"
         android:name="${applicationName}"

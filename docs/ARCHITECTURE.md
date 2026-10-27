@@ -84,3 +84,13 @@ Framework (lib/features/game_play):
 - **Herní čas** bez pauz se ukládá se partií (`SavedGame.elapsedMs`) a deska ho dostává v `GameBoardView.elapsed`.
 - **Kontrakt** `test/games/contract.dart` musí projít každá hra; **`tool/check_scope.dart`** v CI drží větve `game/<id>` v jejich složce. Návod: `docs/GAME_MODULE_GUIDE.md`.
 
+## Síťová hra (fáze 3a)
+
+- **Hostitel je jediný zdroj pravdy** (`lib/core/multiplayer/host_room.dart`). Každý tah klienta (`MoveRequest` se `basedOn` = poslední seq) ověří: místo patří tomu zařízení, je na tahu, stav není starý, hra neběží v pauze a tah je legální. Pak ho aplikuje a všem rozešle `MoveApplied(seq, move, hash)`.
+- **Klient** (`client_room.dart`) drží vlastní kopii hry a aplikuje tahy v pořadí. Mezera v seq, nelegální tah nebo jiný hash → `SnapshotRequest` → `StateSnapshot` → `GameSession.replaceWith` (obnova na místě, obrazovka drží stejnou session).
+- **Sdílená konfigurace** má každého člověka jako `RemoteSeat` (hostitelovi lidé mají `clientId 'host'`); hry se ptají jen na `is RobotSeat`, takže stav je na všech zařízeních stejný. Každé zařízení si ji převede přes `GameConfig.forDevice` – své lidi na `HumanSeat`, ostatní zůstanou hosté. Statistiky a body tak každé zařízení zapíše jen svým profilům.
+- **Spojení:** zprávy JSON (`protocol.dart`, `protocolVersion`), `MessageChannel` = WebSocket (`socket_channel.dart`, `net_server.dart`, ping 3 s, ztráta po 8 s) nebo `LoopbackChannel` v testech (zpoždění, přerušení).
+- **Hledání:** hostitel posílá každé 2 s UDP oznámení (port 47123) na 255.255.255.255 a /24 broadcast; `RoomFinder` místnost zahodí po 6 s ticha. Android potřebuje `MulticastLock` (Kotlin kanál `deskovky/multicast`, drží ho jen obrazovka Připojit se). QR obsahuje `deskovky://join?ip&port&code`.
+- **Výpadky:** odpojený klient → pauza u všech a odpočet 30 s (`reconnectGrace`), pak hostitel volí Čekat dál / Nahradit robotem / Ukončit hru. Robot hraje přes `TurnController.setStandIn` (sdílená konfigurace se nemění). Návrat se stejným tokenem (`NetworkRooms.rejoin`) vrátí místa.
+- **Vrstvy:** `NetworkEnv` (skutečná síť / falešná v testech) → `NetworkRooms` (jediná místnost zařízení, přežije obrazovky) → obrazovky `lib/features/multiplayer/` a síťový režim `GameScreen` (`/play/<id>/net`).
+- Ve verzi 0.4.0 jen Pexeso (`networkGames`), jako „Zkušební“. Síťová partie se neukládá pro pozdější pokračování.
