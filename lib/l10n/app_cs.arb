@@ -378,5 +378,6 @@
   "netTurnRemote": "Na tahu: {name} (na svém zařízení)",
   "netWaiting": "{name}: odpojeno – čekám ({time})",
   "netReconnect": "Připojit znovu",
-  "resultNotThisTime": "{name}, tentokrát to nevyšlo"
+  "resultNotThisTime": "{name}, tentokrát to nevyšlo",
+  "joinLinkBusy": "Už hraješ. Nejdřív odejdi z rozehrané hry nebo místnosti."
 }

@@ -1316,4 +1316,8 @@ class AppLocalizationsCs extends AppLocalizations {
   String resultNotThisTime(String name) {
     return '$name, tentokrát to nevyšlo';
   }
+
+  @override
+  String get joinLinkBusy =>
+      'Už hraješ. Nejdřív odejdi z rozehrané hry nebo místnosti.';
 }

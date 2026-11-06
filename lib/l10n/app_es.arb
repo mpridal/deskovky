@@ -378,5 +378,6 @@
   "netTurnRemote": "Turno de {name} (en su dispositivo)",
   "netWaiting": "{name}: desconectado – esperando ({time})",
   "netReconnect": "Reconectar",
-  "resultNotThisTime": "{name}, esta vez no ha podido ser"
+  "resultNotThisTime": "{name}, esta vez no ha podido ser",
+  "joinLinkBusy": "Ya estás jugando. Sal primero de la partida o de la sala."
 }

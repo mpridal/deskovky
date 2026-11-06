@@ -174,6 +174,30 @@ void main() {
       await _leave(tester);
     });
 
+    testWidgets('a link while this device is already in a room does not throw anyone out', (tester) async {
+      final host = _memoryHost();
+      final env = FakeNetworkEnv(onConnect: host.accept);
+      final links = FakeJoinLinks(initial: _link);
+      await _players(tester, db, ['Kuba']);
+      await _pump(tester, db, env, links: links);
+      await tester.tap(_ticketConnect);
+      await _settle(tester);
+      expect(find.byType(ClientLobbyScreen), findsOneWidget);
+      final rooms = ProviderScope.containerOf(tester.element(find.byType(Scaffold).first)).read(networkRoomsProvider);
+      final client = rooms.client;
+
+      // The room QR is scanned again with the phone camera.
+      links.open('deskovky://join?ip=192.168.1.10&port=50506&code=0042');
+      await _settle(tester);
+      expect(find.byType(ClientLobbyScreen), findsOneWidget, reason: 'stays in the room');
+      expect(find.byType(JoinScreen, skipOffstage: false), findsNothing);
+      expect(rooms.client, same(client));
+      expect(client!.closedReason, isNull);
+      expect(find.text('Už hraješ. Nejdřív odejdi z rozehrané hry nebo místnosti.'), findsOneWidget);
+      host.dispose();
+      await _leave(tester);
+    });
+
     testWidgets('while the app runs a link opens joining; a second link replaces the first', (tester) async {
       final env = FakeNetworkEnv();
       final links = FakeJoinLinks();

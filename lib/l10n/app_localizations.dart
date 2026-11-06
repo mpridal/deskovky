@@ -2373,6 +2373,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name}, not this time'**
   String resultNotThisTime(String name);
+
+  /// No description provided for @joinLinkBusy.
+  ///
+  /// In en, this message translates to:
+  /// **'You are already playing. Leave the game or room first.'**
+  String get joinLinkBusy;
 }
 
 class _AppLocalizationsDelegate

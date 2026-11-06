@@ -1305,4 +1305,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String resultNotThisTime(String name) {
     return '$name, not this time';
   }
+
+  @override
+  String get joinLinkBusy =>
+      'You are already playing. Leave the game or room first.';
 }

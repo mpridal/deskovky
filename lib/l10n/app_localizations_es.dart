@@ -1309,4 +1309,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String resultNotThisTime(String name) {
     return '$name, esta vez no ha podido ser';
   }
+
+  @override
+  String get joinLinkBusy =>
+      'Ya estás jugando. Sal primero de la partida o de la sala.';
 }

@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../core/l10n/locale_resolution.dart';
 import '../core/multiplayer/room_info.dart';
 import '../l10n/app_localizations.dart';
+import '../ui_kit/components/app_toast.dart';
 import '../ui_kit/tokens/app_theme.dart';
 import 'audio_director.dart';
 import 'multiplayer_providers.dart';
@@ -46,9 +47,18 @@ class _DeskovkyAppState extends ConsumerState<DeskovkyApp> {
 
   /// Opens joining the room of a `deskovky://join` link; anything else is
   /// ignored. A newer link replaces a join screen that is already open.
+  /// While this device is in a room or a game the link only explains why it
+  /// waits: joining would close that room and throw people out of the game.
   void _openLink(String link) {
     final ticket = JoinTicket.parse(link);
     if (ticket == null) return;
+    final rooms = ref.read(networkRoomsProvider);
+    final location = _router.state.uri.path;
+    if (rooms.host != null || rooms.client != null || location.startsWith('/play/')) {
+      final context = _router.routerDelegate.navigatorKey.currentContext;
+      if (context != null) showAppToast(context, AppLocalizations.of(context).joinLinkBusy);
+      return;
+    }
     if (_router.state.path == '/join') {
       _router.pushReplacement('/join', extra: ticket);
     } else {

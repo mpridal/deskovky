@@ -852,5 +852,6 @@
         "type": "String"
       }
     }
-  }
+  },
+  "joinLinkBusy": "You are already playing. Leave the game or room first."
 }
