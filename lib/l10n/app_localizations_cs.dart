@@ -1291,4 +1291,9 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get netReconnect => 'Připojit znovu';
+
+  @override
+  String resultNotThisTime(String name) {
+    return '$name, tentokrát to nevyšlo';
+  }
 }

@@ -1279,4 +1279,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get netReconnect => 'Reconnect';
+
+  @override
+  String resultNotThisTime(String name) {
+    return '$name, not this time';
+  }
 }

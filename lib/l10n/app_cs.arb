@@ -371,5 +371,6 @@
   "netYourTurn": "{name}, jsi na tahu!",
   "netTurnRemote": "Na tahu: {name} (na svém zařízení)",
   "netWaiting": "{name}: odpojeno – čekám ({time})",
-  "netReconnect": "Připojit znovu"
+  "netReconnect": "Připojit znovu",
+  "resultNotThisTime": "{name}, tentokrát to nevyšlo"
 }
