@@ -2,6 +2,15 @@
 
 Každá verze má sekci `## x.y.z` s poznámkami `### cs`, `### en`, `### es` – z nich se při vydání tvoří `latest.json` a karta „Je tu nová verze“. Volitelný řádek `Minimální verze: x.y.z` udělá aktualizaci povinnou pro starší verze.
 
+## 0.6.0
+
+### cs
+Dvě nové hry: Sirky (kdo vezme poslední sirku, prohrává) a Dáma (česká i mezinárodní pravidla) – proti robotům, spolu na jednom telefonu i po Wi-Fi. Do síťové hry se teď připojíš i naskenováním QR kódu fotoaparátem nebo přímo v aplikaci. Oprava: v Minách pro jednoho hráče už šlápnutí na minu nehlásí výhru.
+### en
+Two new games: Matches (whoever takes the last match loses) and Checkers (Czech and international rules) – against robots, together on one phone or over Wi-Fi. You can now join a network game by scanning its QR code with the camera or right in the app. Fix: in single-player Minesweeper, stepping on a mine no longer says you won.
+### es
+Dos juegos nuevos: Cerillas (quien coge la última cerilla pierde) y Damas (reglas checas e internacionales), contra robots, juntos en un teléfono o por Wi-Fi. Ahora puedes unirte a una partida en red escaneando su código QR con la cámara o desde la app. Corrección: en el Buscaminas de un jugador, pisar una mina ya no dice que has ganado.
+
 ## 0.5.0
 
 ### cs
