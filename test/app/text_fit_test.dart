@@ -3,6 +3,7 @@ import 'package:deskovky/core/players/player_repository.dart';
 import 'package:deskovky/games/game_texts.dart';
 import 'package:deskovky/l10n/app_localizations.dart';
 import 'package:deskovky/ui_kit/components/primary_button.dart';
+import 'package:deskovky/games/registry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -52,7 +53,12 @@ void main() {
 
         testWidgets('"coming soon" badges are fully visible: $name', (tester) async {
           await pumpApp(tester, size: size, locale: locale, textScale: scale);
-          // With seven games the last card (Dáma) is below the fold on a phone on its side.
+          // Every game on the grid is finished: no "Brzy" card to check.
+          if (gameModules.where((m) => m.available).length >= homeGridSlots) {
+            expect(find.text(l10n.comingSoon), findsNothing);
+            return;
+          }
+          // With seven cards the last one is below the fold on a phone on its side.
           await tester.scrollUntilVisible(find.text(l10n.comingSoon), 200, scrollable: find.byType(Scrollable).first);
           final badges = find.text(l10n.comingSoon);
           expect(badges, findsWidgets);

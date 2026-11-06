@@ -32,8 +32,8 @@ GENERATED = "Deskovky (vygenerováno)"
 # Each track is a quiet 4 s chord loop; whole-Hz frequencies make 4 s an
 # exact number of periods, so the loop is seamless. Tremolo speed differs
 # per track so the tracks are told apart.
-MUSIC = {
-    "checkers": ([165, 196, 247], 0.5),
+MUSIC: dict = {
+    # Every game has its real music now (Dáma: Gymnopedie No 1, Sirky: Easy Lemon).
 }
 
 # Each game's own effects (spec 13.5–13.8), ids `<game>.<name>`. Piškvorky
