@@ -167,7 +167,9 @@ class CheckersState {
   /// The board as text, one row per line (for tests and debugging).
   String get picture => [
     for (var r = 0; r < size; r++)
-      [for (var c = 0; c < size; c++) const ['.', 'w', 'W', 'b', 'B'][board[r * size + c]]].join(),
+      [
+        for (var c = 0; c < size; c++) const ['.', 'w', 'W', 'b', 'B'][board[r * size + c]],
+      ].join(),
   ].join('\n');
 }
 
@@ -204,7 +206,17 @@ class CheckersRules implements GameRules<CheckersState> {
 
   static const _diagonals = [(-1, -1), (1, -1), (-1, 1), (1, 1)];
 
-  static Move moveOf(int seat, List<int> path) => Move(seat: seat, type: move, data: {'path': path});
+  /// A piece move: the squares it lands on, start first, as text (`"46-37"`)
+  /// – moves compare their data by value, which a list would not.
+  static Move moveOf(int seat, List<int> path) => Move(seat: seat, type: move, data: {'path': path.join('-')});
+
+  /// The squares of a `move`, or null when it names none.
+  static List<int>? pathOf(Move m) {
+    final raw = m.data['path'];
+    if (m.type != move || raw is! String) return null;
+    final squares = [for (final part in raw.split('-')) int.tryParse(part)];
+    return squares.contains(null) ? null : squares.cast<int>();
+  }
 
   @override
   CheckersState initialState(GameConfig config, int seed) {
@@ -276,11 +288,19 @@ class CheckersRules implements GameRules<CheckersState> {
 
   /// Every legal move of [seat] on [board] (also used by the AI).
   static List<CheckersStep> generate(List<int> board, int size, bool international, int seat) {
+    final jumpers = <int>[];
+    for (var i = 0; i < board.length; i++) {
+      final piece = board[i];
+      if (piece == CheckersPiece.empty || CheckersPiece.owner(piece) != seat) continue;
+      final can = CheckersPiece.isKing(piece)
+          ? _kingCanJump(board, size, seat, i, const [])
+          : _manCanJump(board, size, international, seat, i);
+      if (can) jumpers.add(i);
+    }
     final work = List.of(board);
     final kingCaptures = <CheckersStep>[], manCaptures = <CheckersStep>[];
-    for (var i = 0; i < work.length; i++) {
+    for (final i in jumpers) {
       final piece = work[i];
-      if (piece == CheckersPiece.empty || CheckersPiece.owner(piece) != seat) continue;
       // The moving piece leaves its square: a king may pass or land there.
       work[i] = CheckersPiece.empty;
       if (CheckersPiece.isKing(piece)) {
@@ -290,13 +310,18 @@ class CheckersRules implements GameRules<CheckersState> {
       }
       work[i] = piece;
     }
-    var captures = international ? [...kingCaptures, ...manCaptures] : (kingCaptures.isNotEmpty ? kingCaptures : manCaptures);
+    var captures = international
+        ? [...kingCaptures, ...manCaptures]
+        : (kingCaptures.isNotEmpty ? kingCaptures : manCaptures);
     if (international && captures.isNotEmpty) {
       var most = 0;
       for (final c in captures) {
         if (c.captured.length > most) most = c.captured.length;
       }
-      captures = [for (final c in captures) if (c.captured.length == most) c];
+      captures = [
+        for (final c in captures)
+          if (c.captured.length == most) c,
+      ];
     }
     if (captures.isNotEmpty) {
       return [for (final c in captures) CheckersStep(c.path, c.captured, _crowns(board[c.from], c.to, size))];
@@ -331,6 +356,19 @@ class CheckersRules implements GameRules<CheckersState> {
 
   static bool _enemy(int piece, int seat) => piece != CheckersPiece.empty && CheckersPiece.owner(piece) != seat;
 
+  /// Whether the man on [at] can take a piece at all (a quick look first).
+  static bool _manCanJump(List<int> b, int size, bool international, int seat, int at) {
+    final c = at % size, r = at ~/ size;
+    final forward = seat == 0 ? -1 : 1;
+    for (final (dc, dr) in _diagonals) {
+      if (!international && dr != forward) continue;
+      final lc = c + 2 * dc, lr = r + 2 * dr;
+      if (lc < 0 || lr < 0 || lc >= size || lr >= size) continue;
+      if (_enemy(b[(r + dr) * size + c + dc], seat) && b[lr * size + lc] == CheckersPiece.empty) return true;
+    }
+    return false;
+  }
+
   static void _manJumps(
     List<int> b,
     int size,
@@ -356,7 +394,15 @@ class CheckersRules implements GameRules<CheckersState> {
     if (!more && captured.isNotEmpty) out.add(CheckersStep(path, captured, false));
   }
 
-  static void _kingJumps(List<int> b, int size, int seat, int at, List<int> path, List<int> captured, List<CheckersStep> out) {
+  static void _kingJumps(
+    List<int> b,
+    int size,
+    int seat,
+    int at,
+    List<int> path,
+    List<int> captured,
+    List<CheckersStep> out,
+  ) {
     final c = at % size, r = at ~/ size;
     var more = false;
     for (final (dc, dr) in _diagonals) {
@@ -379,7 +425,10 @@ class CheckersRules implements GameRules<CheckersState> {
       more = true;
       final taken = [...captured, hit];
       // A king lands where it can capture on, when there is such a square.
-      final onward = [for (final l in landings) if (_kingCanJump(b, size, seat, l, taken)) l];
+      final onward = [
+        for (final l in landings)
+          if (_kingCanJump(b, size, seat, l, taken)) l,
+      ];
       for (final land in onward.isEmpty ? landings : onward) {
         _kingJumps(b, size, seat, land, [...path, land], taken, out);
       }
@@ -438,14 +487,15 @@ class CheckersRules implements GameRules<CheckersState> {
       s.log.length >= 2;
 
   /// Whether [seat] may offer a draw now.
-  static bool canOffer(CheckersState s, int seat) => !s.over && s.offerBy == null && s.current == seat && s.noOfferBy != seat;
+  static bool canOffer(CheckersState s, int seat) =>
+      !s.over && s.offerBy == null && s.current == seat && s.noOfferBy != seat;
 
   /// The step a `move` names, or null.
   static CheckersStep? stepOf(CheckersState s, Move m) {
-    final raw = m.data['path'];
-    if (m.type != move || raw is! List || raw.length < 2) return null;
+    final raw = pathOf(m);
+    if (raw == null || raw.length < 2) return null;
     for (final square in raw) {
-      if (square is! int || square < 0 || square >= s.board.length) return null;
+      if (square < 0 || square >= s.board.length) return null;
     }
     for (final step in steps(s)) {
       if (listEquals(step.path, raw)) return step;

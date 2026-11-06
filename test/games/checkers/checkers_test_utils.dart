@@ -16,7 +16,9 @@ GameConfig config({
   bool rotate = false,
 }) => GameConfig(
   gameId: 'checkers',
-  seats: robotFirst ? const [RobotSeat(), HumanSeat(1)] : [const HumanSeat(1), robot ? const RobotSeat() : const HumanSeat(2)],
+  seats: robotFirst
+      ? const [RobotSeat(), HumanSeat(1)]
+      : [const HumanSeat(1), robot ? const RobotSeat() : const HumanSeat(2)],
   difficulty: difficulty,
   robotSpeed: RobotSpeed.fast,
   options: {'rules': variant, 'undo': undo, 'hint': hint, 'rotate': rotate},
@@ -64,9 +66,7 @@ List<String> board(Map<(int, int), String> pieces, [int size = 8]) => [
 ];
 
 /// Paths of every legal piece move, as lists of (column, row).
-Set<String> paths(CheckersState s) => {
-  for (final step in CheckersRules.steps(s)) _name(step.path, s.size),
-};
+Set<String> paths(CheckersState s) => {for (final step in CheckersRules.steps(s)) _name(step.path, s.size)};
 
 String _name(List<int> path, int size) => path.map((i) => '${i % size},${i ~/ size}').join('>');
 
@@ -82,5 +82,5 @@ CheckersState play(CheckersState s, List<(int, int)> squares) {
   return rules.apply(s, move);
 }
 
-/// The squares of a `move` (moves compare their data maps by identity).
-List<int> pathOf(Move m) => [for (final i in m.data['path']! as List) i as int];
+/// The squares of a `move`.
+List<int> pathOf(Move m) => CheckersRules.pathOf(m)!;

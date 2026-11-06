@@ -11,8 +11,15 @@ import 'checkers_test_utils.dart';
 
 const ai = CheckersAi();
 
-/// Depth limits with plenty of time: the same games on any machine.
+/// The real depths with plenty of time: the same games on any machine.
 const deep = CheckersAi(
+  easyTime: Duration(minutes: 1),
+  mediumTime: Duration(minutes: 1),
+  hardTime: Duration(minutes: 1),
+);
+
+/// Shallower for the bigger international board, so the test stays quick.
+const deep10 = CheckersAi(
   mediumDepth: 4,
   hardDepth: 5,
   easyTime: Duration(minutes: 1),
@@ -34,7 +41,8 @@ final full = Platform.environment['CHECKERS_FULL'] == '1';
 /// A player: a difficulty of [robot], or a 7-year-old ([child]).
 typedef Player = Move Function(CheckersState s, int seat, SeededRandom random);
 
-Player robotOf(Difficulty d, [CheckersAi robot = deep]) => (s, seat, random) => robot.chooseMove(s, seat, d, random);
+Player robotOf(Difficulty d, [CheckersAi robot = deep]) =>
+    (s, seat, random) => robot.chooseMove(s, seat, d, random);
 
 /// A child of about seven: takes the biggest capture, never leaves a piece
 /// where it is taken at once if it can help it, otherwise moves at random.
@@ -43,7 +51,10 @@ Move child(CheckersState s, int seat, SeededRandom random) {
   final steps = CheckersRules.steps(s);
   if (steps.first.captured.isNotEmpty) {
     final most = steps.map((st) => st.captured.length).reduce((a, b) => a > b ? a : b);
-    final best = [for (final st in steps) if (st.captured.length == most) st];
+    final best = [
+      for (final st in steps)
+        if (st.captured.length == most) st,
+    ];
     return CheckersRules.moveOf(seat, best[random.nextInt(best.length)].path);
   }
   final safe = [
@@ -91,7 +102,11 @@ void main() {
     test('medium and hard take two pieces rather than one (Czech free choice)', () {
       final s = diagram(board({(1, 6): 'w', (2, 5): 'b', (4, 3): 'b', (7, 4): 'w', (6, 3): 'b', (0, 1): 'b'}));
       for (final d in [Difficulty.medium, Difficulty.hard]) {
-        expect(pathOf(deep.chooseMove(s, 0, d, SeededRandom(1))), pathOf(go(s, [(1, 6), (3, 4), (5, 2)])), reason: '$d');
+        expect(
+          pathOf(deep.chooseMove(s, 0, d, SeededRandom(1))),
+          pathOf(go(s, [(1, 6), (3, 4), (5, 2)])),
+          reason: '$d',
+        );
       }
     });
 
@@ -100,14 +115,21 @@ void main() {
       final s = diagram(board({(4, 5): 'w', (6, 3): 'b', (7, 2): 'b', (0, 7): 'w'}));
       for (final d in [Difficulty.medium, Difficulty.hard]) {
         for (var seed = 0; seed < 5; seed++) {
-          expect(pathOf(deep.chooseMove(s, 0, d, SeededRandom(seed))), isNot(pathOf(go(s, [(4, 5), (5, 4)]))), reason: '$d $seed');
+          expect(
+            pathOf(deep.chooseMove(s, 0, d, SeededRandom(seed))),
+            isNot(pathOf(go(s, [(4, 5), (5, 4)]))),
+            reason: '$d $seed',
+          );
         }
       }
     });
 
     test('hard crowns a man when nothing stops it', () {
       final s = diagram(board({(2, 1): 'w', (7, 6): 'b', (6, 7): 'w'}));
-      expect(pathOf(deep.chooseMove(s, 0, Difficulty.hard, SeededRandom(1))), anyOf(equals([sq(2, 1), sq(1, 0)]), equals([sq(2, 1), sq(3, 0)])));
+      expect(
+        pathOf(deep.chooseMove(s, 0, Difficulty.hard, SeededRandom(1))),
+        anyOf(equals([sq(2, 1), sq(1, 0)]), equals([sq(2, 1), sq(3, 0)])),
+      );
     });
 
     test('a draw offer is accepted when the robot is behind and declined when ahead', () {
@@ -139,7 +161,12 @@ void main() {
     });
 
     test('Těžká beats Lehká on the international board too', () {
-      final (wins, losses) = match(robotOf(Difficulty.hard), robotOf(Difficulty.easy), 10, variant: 'international');
+      final (wins, losses) = match(
+        robotOf(Difficulty.hard, deep10),
+        robotOf(Difficulty.easy, deep10),
+        10,
+        variant: 'international',
+      );
       // ignore: avoid_print
       print('international Těžká vs Lehká: $wins wins, $losses losses of 10');
       expect(wins, greaterThanOrEqualTo(8));
@@ -169,7 +196,11 @@ void main() {
   test('100 self-play games on every difficulty without an illegal move', () {
     for (final d in Difficulty.values) {
       for (var seed = 0; seed < 100; seed++) {
-        final s = duel([robotOf(d, instant), robotOf(d, instant)], seed, variant: seed.isEven ? 'czech' : 'international');
+        final s = duel(
+          [robotOf(d, instant), robotOf(d, instant)],
+          seed,
+          variant: seed.isEven ? 'czech' : 'international',
+        );
         expect(rules.isOver(s), isTrue, reason: '$d $seed');
       }
     }

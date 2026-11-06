@@ -47,27 +47,41 @@ void main() {
   group('men', () {
     test('move one square diagonally forward only', () {
       final s = diagram(board({(3, 4): 'w', (0, 1): 'b'}));
-      expect(paths(s), {p([(3, 4), (2, 3)]), p([(3, 4), (4, 3)])});
+      expect(paths(s), {
+        p([(3, 4), (2, 3)]),
+        p([(3, 4), (4, 3)]),
+      });
       final t = diagram(board({(3, 4): 'w', (0, 1): 'b'}), current: 1);
-      expect(paths(t), {p([(0, 1), (1, 2)])});
+      expect(paths(t), {
+        p([(0, 1), (1, 2)]),
+      });
     });
 
     test('capturing is compulsory', () {
       final s = diagram(board({(3, 4): 'w', (4, 3): 'b', (0, 7): 'w'}));
-      expect(paths(s), {p([(3, 4), (5, 2)])});
+      expect(paths(s), {
+        p([(3, 4), (5, 2)]),
+      });
       expect(rules.isLegal(s, go(s, [(0, 7), (1, 6)])), isFalse);
     });
 
     test('Czech men do not capture backwards, international men do', () {
       final cz = diagram(board({(3, 4): 'w', (4, 5): 'b'}));
-      expect(paths(cz), {p([(3, 4), (2, 3)]), p([(3, 4), (4, 3)])});
+      expect(paths(cz), {
+        p([(3, 4), (2, 3)]),
+        p([(3, 4), (4, 3)]),
+      });
       final intl = diagram(board({(3, 4): 'w', (4, 5): 'b'}, 10));
-      expect(paths(intl), {p([(3, 4), (5, 6)])});
+      expect(paths(intl), {
+        p([(3, 4), (5, 6)]),
+      });
     });
 
     test('a multiple capture is finished – stopping half way is illegal', () {
       final s = diagram(board({(1, 6): 'w', (2, 5): 'b', (4, 3): 'b'}));
-      expect(paths(s), {p([(1, 6), (3, 4), (5, 2)])});
+      expect(paths(s), {
+        p([(1, 6), (3, 4), (5, 2)]),
+      });
       expect(rules.isLegal(s, go(s, [(1, 6), (3, 4)])), isFalse);
       final after = play(s, [(1, 6), (3, 4), (5, 2)]);
       expect(after.count(1), 0);
@@ -76,12 +90,17 @@ void main() {
 
     test('Czech: any capture may be chosen, not only the longest', () {
       final s = diagram(board({(1, 6): 'w', (2, 5): 'b', (4, 3): 'b', (7, 4): 'w', (6, 3): 'b'}));
-      expect(paths(s), {p([(1, 6), (3, 4), (5, 2)]), p([(7, 4), (5, 2)])});
+      expect(paths(s), {
+        p([(1, 6), (3, 4), (5, 2)]),
+        p([(7, 4), (5, 2)]),
+      });
     });
 
     test('international: the capture of the most pieces is compulsory', () {
       final s = diagram(board({(1, 8): 'w', (2, 7): 'b', (4, 5): 'b', (9, 6): 'w', (8, 5): 'b'}, 10));
-      expect(paths(s), {p([(1, 8), (3, 6), (5, 4)])});
+      expect(paths(s), {
+        p([(1, 8), (3, 6), (5, 4)]),
+      });
     });
 
     test('Czech: a man reaching the last row is crowned, also by a capture', () {
@@ -99,7 +118,9 @@ void main() {
 
     test('international: crowned only when the move ends on the last row', () {
       final through = diagram(board({(1, 2): 'w', (2, 1): 'b', (4, 1): 'b', (9, 8): 'b'}, 10));
-      expect(paths(through), {p([(1, 2), (3, 0), (5, 2)])});
+      expect(paths(through), {
+        p([(1, 2), (3, 0), (5, 2)]),
+      });
       final a = play(through, [(1, 2), (3, 0), (5, 2)]);
       expect(a.board[sq(5, 2, 10)], CheckersPiece.man(0));
       expect(a.lastPromoted, isFalse);
@@ -120,12 +141,22 @@ void main() {
 
     test('capture from a distance and land on any free square behind', () {
       final s = diagram(board({(0, 7): 'W', (3, 4): 'b'}));
-      expect(paths(s), {p([(0, 7), (4, 3)]), p([(0, 7), (5, 2)]), p([(0, 7), (6, 1)]), p([(0, 7), (7, 0)])});
+      expect(paths(s), {
+        p([(0, 7), (4, 3)]),
+        p([(0, 7), (5, 2)]),
+        p([(0, 7), (6, 1)]),
+        p([(0, 7), (7, 0)]),
+      });
     });
 
     test('cannot jump two pieces in a row or their own', () {
       final s = diagram(board({(0, 7): 'W', (3, 4): 'b', (4, 3): 'b', (6, 7): 'w'}));
-      expect(paths(s), {p([(0, 7), (1, 6)]), p([(0, 7), (2, 5)]), p([(6, 7), (5, 6)]), p([(6, 7), (7, 6)])});
+      expect(paths(s), {
+        p([(0, 7), (1, 6)]),
+        p([(0, 7), (2, 5)]),
+        p([(6, 7), (5, 6)]),
+        p([(6, 7), (7, 6)]),
+      });
     });
 
     test('Czech: when a king can capture, a king must capture', () {
@@ -315,11 +346,17 @@ void main() {
     test('only well-formed moves of the seat to move are legal', () {
       final s = rules.initialState(config(), 1);
       expect(rules.isLegal(s, const Move(seat: 0, type: 'move', data: {'path': 'x'})), isFalse);
-      expect(rules.isLegal(s, const Move(seat: 0, type: 'move', data: {'path': [1]})), isFalse);
-      expect(rules.isLegal(s, const Move(seat: 0, type: 'move', data: {'path': [999, 1]})), isFalse);
+      expect(rules.isLegal(s, const Move(seat: 0, type: 'move', data: {'path': '1'})), isFalse);
+      expect(rules.isLegal(s, const Move(seat: 0, type: 'move', data: {'path': '999-1'})), isFalse);
       expect(rules.isLegal(s, const Move(seat: 0, type: 'jump')), isFalse);
       expect(rules.isLegal(s, CheckersRules.moveOf(1, [sq(1, 2), sq(0, 3)])), isFalse);
       expect(rules.isLegal(s, CheckersRules.moveOf(0, [sq(0, 5), sq(1, 4)])), isTrue);
+    });
+
+    test('a move survives JSON and stays equal (its path is text, not a list)', () {
+      final m = CheckersRules.moveOf(0, [sq(1, 6), sq(3, 4), sq(5, 2)]);
+      expect(Move.fromJson(jsonDecode(jsonEncode(m.toJson()))), m);
+      expect(CheckersRules.pathOf(m), [sq(1, 6), sq(3, 4), sq(5, 2)]);
     });
 
     test('a game in the middle survives JSON and replays the same', () {
