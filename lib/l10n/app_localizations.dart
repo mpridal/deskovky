@@ -2041,7 +2041,7 @@ abstract class AppLocalizations {
   /// No description provided for @roomJoinHint.
   ///
   /// In en, this message translates to:
-  /// **'The others tap Join a game, or scan the QR code.'**
+  /// **'The others scan the QR code with the camera, or tap Join a game.'**
   String get roomJoinHint;
 
   /// No description provided for @slotOpen.
@@ -2188,6 +2188,42 @@ abstract class AppLocalizations {
   /// **'Pick at least one player.'**
   String get joinPickSomeone;
 
+  /// No description provided for @joinScanQr.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan QR'**
+  String get joinScanQr;
+
+  /// No description provided for @joinQrRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Room from the QR code'**
+  String get joinQrRoom;
+
+  /// No description provided for @joinOtherRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose another room'**
+  String get joinOtherRoom;
+
+  /// No description provided for @qrNotRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'This is not a Deskovky QR code. Scan the code on the Room screen.'**
+  String get qrNotRoom;
+
+  /// No description provided for @qrCameraDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Without the camera I can\'t read the QR code. Allow it in the phone settings, or type the room code.'**
+  String get qrCameraDenied;
+
+  /// No description provided for @qrScanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Point at the QR code'**
+  String get qrScanTitle;
+
   /// No description provided for @byeVersion.
   ///
   /// In en, this message translates to:
@@ -2331,6 +2367,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reconnect'**
   String get netReconnect;
+
+  /// No description provided for @resultNotThisTime.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, not this time'**
+  String resultNotThisTime(String name);
+
+  /// No description provided for @joinLinkBusy.
+  ///
+  /// In en, this message translates to:
+  /// **'You are already playing. Leave the game or room first.'**
+  String get joinLinkBusy;
 }
 
 class _AppLocalizationsDelegate

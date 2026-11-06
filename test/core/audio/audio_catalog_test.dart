@@ -1,14 +1,25 @@
 import 'package:deskovky/core/audio/audio_catalog.dart';
+import 'package:deskovky/games/registry.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('the standard catalog has the menu music and a track for every game (spec 7.2)', () {
     expect(
       AudioCatalog.standard.music.keys,
-      containsAll(['menu', 'sample', 'tictactoe', 'memory', 'minesweeper', 'ludo', 'checkers']),
+      containsAll(['menu', 'sample', 'tictactoe', 'memory', 'minesweeper', 'ludo', 'matches', 'checkers']),
     );
     for (final path in AudioCatalog.standard.music.values) {
       expect(path, startsWith('music/'));
+    }
+  });
+
+  test('Sirky have their music in the catalog (without it the game would play silently)', () {
+    expect(AudioCatalog.standard.music['matches'], 'music/matches.ogg');
+  });
+
+  test('every registered game has its music in the catalog', () {
+    for (final module in gameModules) {
+      expect(AudioCatalog.standard.music[module.musicTrack], 'music/${module.musicTrack}.ogg', reason: module.id);
     }
   });
 

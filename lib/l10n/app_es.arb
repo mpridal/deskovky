@@ -323,7 +323,7 @@
   "setupOpenRoom": "Abrir la sala",
   "roomTitle": "Sala",
   "roomCode": "Código de sala",
-  "roomJoinHint": "Los demás pulsan Unirse a una partida o escanean el código QR.",
+  "roomJoinHint": "Los demás escanean el código QR con la cámara o pulsan Unirse a una partida.",
   "slotOpen": "Plaza libre",
   "slotHere": "🏠 Aquí",
   "slotOwnDevice": "📱 En el suyo",
@@ -348,6 +348,12 @@
   "joinConnect": "Conectar",
   "joinFailed": "No se pudo conectar.",
   "joinPickSomeone": "Elige al menos un jugador.",
+  "joinScanQr": "Escanear QR",
+  "joinQrRoom": "Sala del código QR",
+  "joinOtherRoom": "Elegir otra sala",
+  "qrNotRoom": "Este no es un código QR de Deskovky. Escanea el código de la pantalla Sala.",
+  "qrCameraDenied": "Sin la cámara no puedo leer el código QR. Permítela en los ajustes del teléfono o escribe el código de la sala.",
+  "qrScanTitle": "Apunta al código QR",
   "byeVersion": "El anfitrión tiene otra versión de la app. Actualizad todos a la misma.",
   "byeCode": "Código de sala incorrecto.",
   "byeFull": "La sala está llena.",
@@ -371,5 +377,7 @@
   "netYourTurn": "¡{name}, te toca!",
   "netTurnRemote": "Turno de {name} (en su dispositivo)",
   "netWaiting": "{name}: desconectado – esperando ({time})",
-  "netReconnect": "Reconectar"
+  "netReconnect": "Reconectar",
+  "resultNotThisTime": "{name}, esta vez no ha podido ser",
+  "joinLinkBusy": "Ya estás jugando. Sal primero de la partida o de la sala."
 }

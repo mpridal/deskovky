@@ -36,12 +36,12 @@ void main() {
 
   testWidgets('the sample game comes first and is playable; games not done yet say "Brzy"', (tester) async {
     await pumpApp(tester, size: const Size(1280, 800));
-    expect(_card, findsNWidgets(6));
+    expect(_card, findsNWidgets(homeGridSlots));
     final first = _card.at(0);
     expect(find.descendant(of: first, matching: find.text('Hádej číslo')), findsOneWidget);
     expect(find.descendant(of: first, matching: find.text('1–4 hráči')), findsOneWidget);
     expect(find.descendant(of: first, matching: find.text('Brzy')), findsNothing);
-    for (var i = 1; i < 6; i++) {
+    for (var i = 1; i < homeGridSlots; i++) {
       // A game's own session flips `available` when it is done.
       final soon = !gameModules[i].available;
       expect(find.descendant(of: _card.at(i), matching: find.text('Brzy')), soon ? findsOneWidget : findsNothing);

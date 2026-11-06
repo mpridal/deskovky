@@ -7,8 +7,8 @@ class AudioCatalog {
   const AudioCatalog({required this.music, required this.sfx});
 
   /// Paths are relative to `assets/audio/`; game effects (`games/<id>/…`)
-  /// to `assets/`. Music is `music/<id>.ogg`; the WAV effects and
-  /// `music/checkers.ogg` are placeholders (tool/generate_placeholder_audio.py).
+  /// to `assets/`. Music is `music/<id>.ogg`; the WAV effects are
+  /// placeholders (tool/generate_placeholder_audio.py).
   static const standard = AudioCatalog(
     music: {
       'menu': 'music/menu.ogg',
@@ -17,6 +17,7 @@ class AudioCatalog {
       'memory': 'music/memory.ogg',
       'minesweeper': 'music/minesweeper.ogg',
       'ludo': 'music/ludo.ogg',
+      'matches': 'music/matches.ogg',
       'checkers': 'music/checkers.ogg',
     },
     sfx: {

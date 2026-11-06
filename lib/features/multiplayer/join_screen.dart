@@ -19,12 +19,17 @@ import '../../ui_kit/components/primary_button.dart';
 import '../../ui_kit/components/thinking_dots.dart';
 import '../../ui_kit/tokens/app_colors.dart';
 import '../../ui_kit/tokens/app_typography.dart';
+import 'qr_scanner.dart';
 import 'room_widgets.dart';
 
 /// "Připojit se ke hře" (spec 14.2 step 3–4): who plays on this device, the
 /// rooms found on the Wi-Fi, or a room code (and IP:port under Pokročilé).
+/// With a [ticket] (the room's QR code, read by the phone camera or by
+/// "Načíst QR") only who plays is left to choose.
 class JoinScreen extends ConsumerStatefulWidget {
-  const JoinScreen({super.key});
+  const JoinScreen({super.key, this.ticket});
+
+  final JoinTicket? ticket;
 
   @override
   ConsumerState<JoinScreen> createState() => _JoinScreenState();
@@ -35,6 +40,7 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
   final _code = TextEditingController();
   final _address = TextEditingController();
   Set<int>? _who;
+  late JoinTicket? _ticket = widget.ticket;
   var _advanced = false;
   var _joining = false;
   List<RoomInfo> _found = const [];
@@ -78,6 +84,25 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
       if (mounted) showAppToast(context, l10n.joinFailed);
     } finally {
       if (mounted) setState(() => _joining = false);
+    }
+  }
+
+  Future<void> _scanQr() async {
+    final l10n = AppLocalizations.of(context);
+    final result = await ref.read(qrScannerProvider).scan(context);
+    if (!mounted) return;
+    switch (result) {
+      case QrScanned(:final text):
+        final ticket = JoinTicket.parse(text);
+        if (ticket == null) {
+          showAppToast(context, l10n.qrNotRoom);
+        } else {
+          setState(() => _ticket = ticket);
+        }
+      case QrCameraDenied():
+        showAppToast(context, l10n.qrCameraDenied);
+      case QrScanCancelled():
+        break;
     }
   }
 
@@ -156,6 +181,45 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
                 ),
             ],
           ),
+          if (_ticket case final ticket?) ...[
+            roomLabel(l10n.joinQrRoom),
+            PaperCard(
+              key: const ValueKey('joinTicket'),
+              child: Row(
+                children: [
+                  const Icon(Icons.qr_code_2, color: AppColors.wood, size: 36),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      '${l10n.roomCode} ${ticket.code}',
+                      style: AppTypography.body(color: AppColors.ink).copyWith(fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            PrimaryButton(
+              key: const ValueKey('joinTicketConnect'),
+              label: l10n.joinConnect,
+              icon: Icons.wifi,
+              onPressed: _joining ? null : () => _join(ticket, profiles),
+            ),
+            TextButton(
+              key: const ValueKey('joinOtherRoom'),
+              onPressed: _joining ? null : () => setState(() => _ticket = null),
+              child: Text(l10n.joinOtherRoom, style: AppTypography.body(color: AppColors.paper)),
+            ),
+            const SizedBox(height: 24),
+          ] else
+            ..._chooseRoom(l10n, profiles),
+        ],
+      ),
+    );
+  }
+
+  /// The room list, "Načíst QR" and the room code.
+  List<Widget> _chooseRoom(AppLocalizations l10n, List<PlayerProfile> profiles) => [
           roomLabel(l10n.joinRooms),
           StreamBuilder<List<RoomInfo>>(
             stream: _rooms,
@@ -209,6 +273,14 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
               );
             },
           ),
+          const SizedBox(height: 8),
+          PrimaryButton(
+            key: const ValueKey('joinScanQr'),
+            label: l10n.joinScanQr,
+            icon: Icons.qr_code_scanner,
+            secondary: true,
+            onPressed: _joining ? null : _scanQr,
+          ),
           roomLabel(l10n.joinByCode),
           _field(const ValueKey('joinCode'), _code, l10n.roomCode, TextInputType.number),
           TextButton.icon(
@@ -228,10 +300,7 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
             onPressed: _joining ? null : () => _joinByCode(profiles),
           ),
           const SizedBox(height: 24),
-        ],
-      ),
-    );
-  }
+        ];
 
   Widget _field(Key key, TextEditingController controller, String label, TextInputType type) => TextField(
     key: key,

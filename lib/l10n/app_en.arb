@@ -759,7 +759,7 @@
   "setupOpenRoom": "Open the room",
   "roomTitle": "Room",
   "roomCode": "Room code",
-  "roomJoinHint": "The others tap Join a game, or scan the QR code.",
+  "roomJoinHint": "The others scan the QR code with the camera, or tap Join a game.",
   "slotOpen": "Free place",
   "slotHere": "🏠 Here",
   "slotOwnDevice": "📱 Own device",
@@ -784,6 +784,12 @@
   "joinConnect": "Connect",
   "joinFailed": "Could not connect.",
   "joinPickSomeone": "Pick at least one player.",
+  "joinScanQr": "Scan QR",
+  "joinQrRoom": "Room from the QR code",
+  "joinOtherRoom": "Choose another room",
+  "qrNotRoom": "This is not a Deskovky QR code. Scan the code on the Room screen.",
+  "qrCameraDenied": "Without the camera I can't read the QR code. Allow it in the phone settings, or type the room code.",
+  "qrScanTitle": "Point at the QR code",
   "byeVersion": "The host has another version of the app. Update everyone to the same one.",
   "byeCode": "Wrong room code.",
   "byeFull": "The room is full.",
@@ -838,5 +844,14 @@
       }
     }
   },
-  "netReconnect": "Reconnect"
+  "netReconnect": "Reconnect",
+  "resultNotThisTime": "{name}, not this time",
+  "@resultNotThisTime": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "joinLinkBusy": "You are already playing. Leave the game or room first."
 }

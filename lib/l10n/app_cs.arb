@@ -323,7 +323,7 @@
   "setupOpenRoom": "Otevřít místnost",
   "roomTitle": "Místnost",
   "roomCode": "Kód místnosti",
-  "roomJoinHint": "Ostatní zvolí Připojit se ke hře, nebo naskenují QR kód.",
+  "roomJoinHint": "Ostatní naskenují QR kód fotoaparátem, nebo zvolí Připojit se ke hře.",
   "slotOpen": "Volné místo",
   "slotHere": "🏠 Tady",
   "slotOwnDevice": "📱 Na svém",
@@ -348,6 +348,12 @@
   "joinConnect": "Připojit",
   "joinFailed": "Nepodařilo se připojit.",
   "joinPickSomeone": "Vyber aspoň jednoho hráče.",
+  "joinScanQr": "Načíst QR",
+  "joinQrRoom": "Místnost z QR kódu",
+  "joinOtherRoom": "Vybrat jinou místnost",
+  "qrNotRoom": "Tohle není QR kód Deskovek. Naskenuj kód z obrazovky Místnost.",
+  "qrCameraDenied": "Bez fotoaparátu QR kód nenačtu. Povol ho v nastavení telefonu, nebo napiš kód místnosti.",
+  "qrScanTitle": "Namiř na QR kód",
   "byeVersion": "Hostitel má jinou verzi aplikace. Aktualizujte všichni na stejnou.",
   "byeCode": "Špatný kód místnosti.",
   "byeFull": "Místnost je plná.",
@@ -371,5 +377,7 @@
   "netYourTurn": "{name}, jsi na tahu!",
   "netTurnRemote": "Na tahu: {name} (na svém zařízení)",
   "netWaiting": "{name}: odpojeno – čekám ({time})",
-  "netReconnect": "Připojit znovu"
+  "netReconnect": "Připojit znovu",
+  "resultNotThisTime": "{name}, tentokrát to nevyšlo",
+  "joinLinkBusy": "Už hraješ. Nejdřív odejdi z rozehrané hry nebo místnosti."
 }

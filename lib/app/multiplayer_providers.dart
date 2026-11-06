@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/multiplayer/join_links.dart';
 import '../core/multiplayer/network_env.dart';
 import '../core/multiplayer/network_rooms.dart';
+import '../features/multiplayer/qr_scanner.dart';
 
 final networkEnvProvider = Provider<NetworkEnv>((ref) => const DeviceNetworkEnv());
 
@@ -14,3 +16,9 @@ final networkRoomsProvider = Provider<NetworkRooms>((ref) {
 
 /// This device's Wi-Fi address, null when not on Wi-Fi.
 final wifiAddressProvider = FutureProvider.autoDispose<String?>((ref) => ref.watch(networkEnvProvider).wifiAddress());
+
+/// `deskovky://join` links from Android (the room QR code read by the camera).
+final joinLinksProvider = Provider<JoinLinks>((ref) => DeviceJoinLinks());
+
+/// The in-app QR reader on the join screen.
+final qrScannerProvider = Provider<QrScanner>((ref) => const CameraQrScanner());
