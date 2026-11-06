@@ -45,6 +45,8 @@ flutter:
     - assets/games/minesweeper/sfx/
     - assets/games/ludo/
     - assets/games/ludo/sfx/
+    - assets/games/matches/
+    - assets/games/matches/sfx/
     - assets/games/checkers/
     - assets/games/checkers/sfx/
     - assets/games/memory/cards/animals/

@@ -87,7 +87,7 @@ void main() {
     expect(pubspec, contains('- assets/audio/music/'));
     expect(pubspec, contains('- assets/audio/sfx/'));
     expect(pubspec, contains('- assets/audio/CREDITS.json'));
-    for (final id in ['tictactoe', 'memory', 'minesweeper', 'ludo', 'checkers']) {
+    for (final id in ['tictactoe', 'memory', 'minesweeper', 'ludo', 'matches', 'checkers']) {
       expect(pubspec, contains('- assets/games/$id/'), reason: id);
       expect(pubspec, contains('- assets/games/$id/sfx/'), reason: id);
     }

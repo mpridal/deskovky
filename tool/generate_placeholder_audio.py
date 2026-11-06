@@ -50,6 +50,11 @@ GAME_SFX = {
         "boing": ([392, 262], 0.12, "sine"),
         "home": ([523, 659, 784], 0.12, "bell"),
     },
+    "matches": {
+        "pick": ([1568], 0.04, "click"),
+        "take": ([262, 196], 0.06, "click"),
+        "strike": ([0, 0, 0], 0.09, "noise"),
+    },
 }
 
 # (notes in Hz, note length in s, waveform)
