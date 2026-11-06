@@ -2331,6 +2331,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reconnect'**
   String get netReconnect;
+
+  /// No description provided for @resultNotThisTime.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, not this time'**
+  String resultNotThisTime(String name);
 }
 
 class _AppLocalizationsDelegate

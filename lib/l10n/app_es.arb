@@ -371,5 +371,6 @@
   "netYourTurn": "¡{name}, te toca!",
   "netTurnRemote": "Turno de {name} (en su dispositivo)",
   "netWaiting": "{name}: desconectado – esperando ({time})",
-  "netReconnect": "Reconectar"
+  "netReconnect": "Reconectar",
+  "resultNotThisTime": "{name}, esta vez no ha podido ser"
 }

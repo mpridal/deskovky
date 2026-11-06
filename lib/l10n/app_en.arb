@@ -838,5 +838,13 @@
       }
     }
   },
-  "netReconnect": "Reconnect"
+  "netReconnect": "Reconnect",
+  "resultNotThisTime": "{name}, not this time",
+  "@resultNotThisTime": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

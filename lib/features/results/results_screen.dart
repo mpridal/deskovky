@@ -45,6 +45,8 @@ class ResultsScreen extends StatelessWidget {
     final winners = order.where((s) => result.places[s] == 1).toList();
     final winner = outcome.seats[order.first];
     final draw = winners.length > 1;
+    // Alone, a lost game has no first place (spec 5.6): no "vyhrává", no confetti.
+    final lost = winners.isEmpty;
     final gameName = module == null ? config.gameId : gameText(l10n, module.titleKey);
     final subtitle = config.robots > 0
         ? l10n.resultSubtitle(gameName, difficultyLabel(l10n, config.difficulty))
@@ -72,7 +74,11 @@ class ResultsScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(16),
                   children: [
                     Text(
-                      draw ? l10n.resultDraw : l10n.resultWins(winner.name),
+                      lost
+                          ? l10n.resultNotThisTime(winner.name)
+                          : draw
+                          ? l10n.resultDraw
+                          : l10n.resultWins(winner.name),
                       textAlign: TextAlign.center,
                       style: AppTypography.h1(color: AppColors.paper),
                     ),
@@ -128,7 +134,7 @@ class ResultsScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              if (!MediaQuery.disableAnimationsOf(context)) Positioned.fill(child: Confetti(color: winner.color)),
+              if (!lost && !MediaQuery.disableAnimationsOf(context)) Positioned.fill(child: Confetti(color: winner.color)),
             ],
           ),
         ),

@@ -1284,4 +1284,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get netReconnect => 'Reconectar';
+
+  @override
+  String resultNotThisTime(String name) {
+    return '$name, esta vez no ha podido ser';
+  }
 }

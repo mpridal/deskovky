@@ -122,6 +122,45 @@ void main() {
     await tester.pump(const Duration(seconds: 2));
   });
 
+  group('one player who did not make it (Miny: stepped on a mine)', () {
+    final solo = GameOutcomeView(
+      config: const GameConfig(
+        gameId: 'minesweeper',
+        seats: [HumanSeat(1)],
+        difficulty: Difficulty.easy,
+        robotSpeed: RobotSpeed.fast,
+        options: {},
+      ),
+      // Alone, a lost game is place 2 (spec 5.6).
+      result: const GameResult(places: [2], scores: [12], stars: [0]),
+      seats: [SeatIdentity(seat: 0, name: 'Tereza', profile: _tereza, difficulty: null)],
+    );
+
+    testWidgets('never says the player won', (tester) async {
+      await _showResults(tester, solo);
+      expect(find.textContaining('vyhrává'), findsNothing);
+      expect(find.text('Tereza, tentokrát to nevyšlo'), findsOneWidget);
+    });
+
+    testWidgets('no confetti for a lost game', (tester) async {
+      await _showResults(tester, solo, disableAnimations: false);
+      expect(find.byType(Confetti), findsNothing);
+      await tester.pump(const Duration(seconds: 2));
+    });
+
+    testWidgets('a cleared board alone is still a win', (tester) async {
+      await _showResults(
+        tester,
+        GameOutcomeView(
+          config: solo.config,
+          result: const GameResult(places: [1], scores: [71], stars: [3]),
+          seats: solo.seats,
+        ),
+      );
+      expect(find.text('Tereza vyhrává!'), findsOneWidget);
+    });
+  });
+
   group('fit', () {
     setUpAll(loadAppFonts);
 
