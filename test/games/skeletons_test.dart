@@ -9,7 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../helpers/pump_app.dart';
 
 void main() {
-  const coming = ['tictactoe', 'memory', 'minesweeper', 'ludo', 'checkers'];
+  const coming = ['tictactoe', 'memory', 'minesweeper', 'ludo', 'matches', 'checkers'];
 
   // Whether a game is already playable is its own session's call
   // (`available` in its manifest); the registry itself never changes.
@@ -30,7 +30,7 @@ void main() {
 
   testWidgets('the home grid shows them with their own names', (tester) async {
     await pumpApp(tester, size: const Size(800, 1280));
-    for (final name in ['Hádej číslo', 'Piškvorky', 'Pexeso', 'Miny', 'Člověče, nezlob se', 'Dáma']) {
+    for (final name in ['Hádej číslo', 'Piškvorky', 'Pexeso', 'Miny', 'Člověče, nezlob se', 'Sirky', 'Dáma']) {
       await tester.scrollUntilVisible(find.text(name), 200, scrollable: find.byType(Scrollable).first);
       expect(find.text(name), findsOneWidget, reason: name);
     }

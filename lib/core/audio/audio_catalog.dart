@@ -17,6 +17,7 @@ class AudioCatalog {
       'memory': 'music/memory.ogg',
       'minesweeper': 'music/minesweeper.ogg',
       'ludo': 'music/ludo.ogg',
+      'matches': 'music/matches.ogg',
       'checkers': 'music/checkers.ogg',
     },
     sfx: {
