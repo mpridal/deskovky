@@ -15,8 +15,26 @@ import java.io.File
 class MainActivity : FlutterActivity() {
     private var multicastLock: WifiManager.MulticastLock? = null
 
+    // Network play (spec 14.3): a room QR code read by the phone camera opens
+    // deskovky://join?ip&port&code. The link that started the app waits here
+    // until Dart asks for it; later ones go straight to Dart.
+    private var initialLink: String? = null
+    private var linksChannel: MethodChannel? = null
+
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        initialLink = joinLink(intent)
+        linksChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "deskovky/links").apply {
+            setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "initialLink" -> {
+                        result.success(initialLink)
+                        initialLink = null
+                    }
+                    else -> result.notImplemented()
+                }
+            }
+        }
         // Network play (spec 14): Android drops Wi-Fi broadcasts unless the app
         // holds a multicast lock, so the join screen holds one while it looks
         // for rooms.
@@ -79,6 +97,20 @@ class MainActivity : FlutterActivity() {
                 else -> result.notImplemented()
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        joinLink(intent)?.let { linksChannel?.invokeMethod("link", it) }
+    }
+
+    /** The deskovky:// link of [intent]; none when reopened from recent apps. */
+    private fun joinLink(intent: Intent?): String? {
+        if (intent?.action != Intent.ACTION_VIEW) return null
+        if (intent.flags and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY != 0) return null
+        val uri = intent.data ?: return null
+        return if (uri.scheme == "deskovky") uri.toString() else null
     }
 
     private fun releaseMulticast() {

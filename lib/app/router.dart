@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/game/game_config.dart';
+import '../core/multiplayer/room_info.dart';
 import '../features/game_play/game_outcome.dart';
 import '../features/game_play/game_screen.dart';
 import '../features/game_setup/game_setup_screen.dart';
@@ -56,7 +57,14 @@ GoRouter buildRouter({String? startGame}) {
       ),
       // Network play (spec 14): the host's room, joining and the joined room.
       GoRoute(path: '/room', builder: (_, _) => const HostRoomScreen()),
-      GoRoute(path: '/join', builder: (_, _) => const JoinScreen()),
+      // With a JoinTicket when a room QR code opened it (deep link, spec 14.3).
+      GoRoute(
+        path: '/join',
+        builder: (_, state) => switch (state.extra) {
+          final JoinTicket ticket => JoinScreen(key: ValueKey(ticket), ticket: ticket),
+          _ => const JoinScreen(),
+        },
+      ),
       // Not under /join: the join screen (and its search) must not stay below.
       GoRoute(path: '/lobby', builder: (_, _) => const ClientLobbyScreen()),
       StatefulShellRoute.indexedStack(

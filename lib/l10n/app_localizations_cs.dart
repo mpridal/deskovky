@@ -1137,7 +1137,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get roomJoinHint =>
-      'Ostatní zvolí Připojit se ke hře, nebo naskenují QR kód.';
+      'Ostatní naskenují QR kód fotoaparátem, nebo zvolí Připojit se ke hře.';
 
   @override
   String get slotOpen => 'Volné místo';
@@ -1210,6 +1210,26 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get joinPickSomeone => 'Vyber aspoň jednoho hráče.';
+
+  @override
+  String get joinScanQr => 'Načíst QR';
+
+  @override
+  String get joinQrRoom => 'Místnost z QR kódu';
+
+  @override
+  String get joinOtherRoom => 'Vybrat jinou místnost';
+
+  @override
+  String get qrNotRoom =>
+      'Tohle není QR kód Deskovek. Naskenuj kód z obrazovky Místnost.';
+
+  @override
+  String get qrCameraDenied =>
+      'Bez fotoaparátu QR kód nenačtu. Povol ho v nastavení telefonu, nebo napiš kód místnosti.';
+
+  @override
+  String get qrScanTitle => 'Namiř na QR kód';
 
   @override
   String get byeVersion =>
