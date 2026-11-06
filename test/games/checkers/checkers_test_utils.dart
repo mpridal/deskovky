@@ -81,3 +81,6 @@ CheckersState play(CheckersState s, List<(int, int)> squares) {
   if (!rules.isLegal(s, move)) throw StateError('illegal $move in\n${s.picture}');
   return rules.apply(s, move);
 }
+
+/// The squares of a `move` (moves compare their data maps by identity).
+List<int> pathOf(Move m) => [for (final i in m.data['path']! as List) i as int];
