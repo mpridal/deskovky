@@ -7,6 +7,11 @@
          and receiving room announcements (UDP broadcast). -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
+    <!-- "Načíst QR" on the join screen reads the room QR code (spec 14.3);
+         asked only when the camera view opens. Phones without a camera still
+         install the app and join by the room list or code. -->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <application
         android:label="Deskovky"
         android:name="${applicationName}"
@@ -32,6 +37,17 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- The room QR code read by the phone camera:
+                 deskovky://join?ip=…&port=…&code=… (handled in MainActivity,
+                 channel deskovky/links). -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="deskovky" android:host="join"/>
+            </intent-filter>
+            <!-- Links go through the deskovky/links channel, not to the router. -->
+            <meta-data android:name="flutter_deeplinking_enabled" android:value="false"/>
         </activity>
         <!-- Hands the downloaded update APK to the system installer. -->
         <provider

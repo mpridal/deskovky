@@ -90,14 +90,21 @@ class JoinTicket {
 
   Uri toUri() => Uri(scheme: 'deskovky', host: 'join', queryParameters: {'ip': ip, 'port': '$port', 'code': code});
 
+  /// The ticket in a `deskovky://join` link (the QR code, a deep link); null
+  /// for anything else, so foreign links and codes are ignored.
   static JoinTicket? parse(String text) {
     final uri = Uri.tryParse(text.trim());
     if (uri == null || uri.scheme != 'deskovky' || uri.host != 'join') return null;
     final ip = uri.queryParameters['ip'], code = uri.queryParameters['code'];
     final port = int.tryParse(uri.queryParameters['port'] ?? '');
-    if (ip == null || ip.isEmpty || code == null || port == null || port <= 0 || port > 65535) return null;
+    if (ip == null || !_ipv4.hasMatch(ip) || code == null || !_code.hasMatch(code)) return null;
+    if (port == null || port <= 0 || port > 65535) return null;
     return JoinTicket(ip: ip, port: port, code: code);
   }
+
+  /// Rooms live on the home Wi-Fi: a link naming a web server is not a room.
+  static final _ipv4 = RegExp(r'^((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$');
+  static final _code = RegExp(r'^\d{4}$');
 
   @override
   bool operator ==(Object other) => other is JoinTicket && other.ip == ip && other.port == port && other.code == code;

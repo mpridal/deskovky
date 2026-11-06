@@ -1129,7 +1129,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get roomJoinHint =>
-      'Los demás pulsan Unirse a una partida o escanean el código QR.';
+      'Los demás escanean el código QR con la cámara o pulsan Unirse a una partida.';
 
   @override
   String get slotOpen => 'Plaza libre';
@@ -1203,6 +1203,26 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get joinPickSomeone => 'Elige al menos un jugador.';
+
+  @override
+  String get joinScanQr => 'Escanear QR';
+
+  @override
+  String get joinQrRoom => 'Sala del código QR';
+
+  @override
+  String get joinOtherRoom => 'Elegir otra sala';
+
+  @override
+  String get qrNotRoom =>
+      'Este no es un código QR de Deskovky. Escanea el código de la pantalla Sala.';
+
+  @override
+  String get qrCameraDenied =>
+      'Sin la cámara no puedo leer el código QR. Permítela en los ajustes del teléfono o escribe el código de la sala.';
+
+  @override
+  String get qrScanTitle => 'Apunta al código QR';
 
   @override
   String get byeVersion =>
