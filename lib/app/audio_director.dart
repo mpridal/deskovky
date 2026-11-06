@@ -7,10 +7,11 @@ import '../games/registry.dart';
 import '../ui_kit/components/ui_feedback.dart';
 import 'providers.dart';
 
-/// The music for a route (spec 7.2): a game and its results play the game's
-/// own track, everything else (setup included) the menu music.
+/// The music for a route (spec 7.2): a game (on this device or over Wi-Fi,
+/// `/net`) and its results play the game's own track, everything else (setup,
+/// room and lobby included) the menu music.
 String musicForLocation(String path) {
-  final match = RegExp(r'^/play/([^/]+)(/results)?$').firstMatch(path);
+  final match = RegExp(r'^/play/([^/]+)(/results|/net)?$').firstMatch(path);
   return (match == null ? null : moduleById(match.group(1)!)?.musicTrack) ?? 'menu';
 }
 
