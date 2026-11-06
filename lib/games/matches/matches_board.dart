@@ -86,9 +86,14 @@ class _MatchesBoardState extends State<MatchesBoard> with TickerProviderStateMix
     _report(_s);
   }
 
+  /// The matches of [s] without a known history: centred in each row.
   static List<List<bool>> _fill(MatchesState s) => [
     for (var row = 0; row < MatchesRules.initialRows.length; row++)
-      [for (var i = 0; i < MatchesRules.initialRows[row]; i++) i < s.rows[row]],
+      [
+        for (var i = 0; i < MatchesRules.initialRows[row]; i++)
+          i >= (MatchesRules.initialRows[row] - s.rows[row]) ~/ 2 &&
+              i < (MatchesRules.initialRows[row] - s.rows[row]) ~/ 2 + s.rows[row],
+      ],
   ];
 
   bool get _still => MediaQuery.disableAnimationsOf(context);
