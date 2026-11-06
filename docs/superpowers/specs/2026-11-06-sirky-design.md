@@ -1,6 +1,6 @@
 # Sirky (`matches`) – zadání hry
 
-> Stav: **návrh ke schválení** (Miloš). Vývoj začne až po schválení; pak z něj vznikne implementační plán (`docs/superpowers/plans/`).
+> Stav: **schváleno Milošem 2026-11-06** včetně návrhů označených „můj návrh“. S vývojem (ani implementačním plánem) se začne až na jeho pokyn.
 > Navazuje na hlavní zadání `docs/ZADANI-deskovky.md`: kap. 13.4 (společná osnova každé hry a Definition of Done), kap. 8 (architektura her), kap. 14 (hra přes Wi-Fi) a `docs/GAME_MODULE_GUIDE.md`.
 
 ## 1. Proč a co
