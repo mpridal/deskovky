@@ -52,6 +52,8 @@ void main() {
 
         testWidgets('"coming soon" badges are fully visible: $name', (tester) async {
           await pumpApp(tester, size: size, locale: locale, textScale: scale);
+          // With seven games the last card (Dáma) is below the fold on a phone on its side.
+          await tester.scrollUntilVisible(find.text(l10n.comingSoon), 200, scrollable: find.byType(Scrollable).first);
           final badges = find.text(l10n.comingSoon);
           expect(badges, findsWidgets);
           for (var i = 0; i < badges.evaluate().length; i++) {
