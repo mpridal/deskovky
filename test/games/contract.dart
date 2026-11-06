@@ -297,12 +297,19 @@ void _network<S>(GameModule<S> m, int maxMoves) {
       findModule: (id) => id == m.id ? m : null,
     );
     Future<void> settle() => Future<void>.delayed(const Duration(milliseconds: 5));
-    await settle();
+    // Wait for the messages, not a fixed time: under load the loopback is slow.
+    Future<void> until(bool Function() done) async {
+      for (var i = 0; i < 400 && !done(); i++) {
+        await settle();
+      }
+      expect(done(), isTrue);
+    }
+
+    await until(() => client.clientId != null);
     client.setReady(true);
-    await settle();
-    expect(host.canStart, isTrue);
+    await until(() => host.canStart);
     host.start();
-    await settle();
+    await until(() => client.session != null);
     final random = SeededRandom(4);
     for (var i = 0; i < maxMoves && !host.isOver; i++) {
       final session = host.session!;
