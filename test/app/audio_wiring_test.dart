@@ -60,6 +60,13 @@ void main() {
     expect(musicForLocation('/play/nonexistent'), 'menu');
   });
 
+  test('a game over Wi-Fi plays its own track too, the room and the lobby the menu music', () {
+    expect(musicForLocation('/play/matches/net'), 'matches');
+    expect(musicForLocation('/play/checkers/net'), 'checkers');
+    expect(musicForLocation('/room'), 'menu');
+    expect(musicForLocation('/lobby'), 'menu');
+  });
+
   testWidgets('menu music at start, the sample game has its own track, home brings the menu back', (tester) async {
     final t = (await tester.runAsync(() => PlayerRepository(db).create(name: 'Tereza', avatar: AvatarSpec.defaults)))!;
     await pumpApp(tester, size: const Size(800, 1280), db: db, audio: audio, disableAnimations: true);

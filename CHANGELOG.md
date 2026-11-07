@@ -2,6 +2,15 @@
 
 Každá verze má sekci `## x.y.z` s poznámkami `### cs`, `### en`, `### es` – z nich se při vydání tvoří `latest.json` a karta „Je tu nová verze“. Volitelný řádek `Minimální verze: x.y.z` udělá aktualizaci povinnou pro starší verze.
 
+## 0.6.1
+
+### cs
+Oprava: ve hrách přes Wi-Fi teď hraje hudba dané hry místo hudby z hlavní stránky.
+### en
+Fix: games over Wi-Fi now play their own music instead of the home-screen music.
+### es
+Corrección: los juegos por Wi-Fi ahora suenan con su propia música en lugar de la de la pantalla principal.
+
 ## 0.6.0
 
 ### cs
