@@ -1,6 +1,7 @@
 import 'package:deskovky/app/family_providers.dart';
 import 'package:deskovky/core/avatar/avatar_spec.dart';
 import 'package:deskovky/core/db/app_database.dart';
+import 'package:deskovky/core/family/family_identity.dart';
 import 'package:deskovky/core/family/family_op.dart';
 import 'package:deskovky/core/family/family_store.dart';
 import 'package:deskovky/core/family/hlc.dart';
@@ -111,6 +112,8 @@ void main() {
       ]));
       await store.rebuild();
       await SettingsRepository(db).setActivePlayerId((await PlayerRepository(db).all()).last.id);
+      // Refunds only happen in a family.
+      await FamilyIdentity.create().save(db);
     });
     // Kuba is signed in: nothing for him.
     await pumpApp(tester, size: const Size(412, 915), db: db, disableAnimations: true, overrides: [familyNetProvider.overrideWithValue(FakeLan().device())]);

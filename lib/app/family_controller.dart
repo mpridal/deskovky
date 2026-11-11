@@ -293,6 +293,12 @@ class FamilyController extends ChangeNotifier {
 
   var _games = 0;
 
+  /// After a network game: family people from other devices show by name in
+  /// this device's history. Without a family nothing changes (spec 7.4).
+  Future<void> afterNetworkGame() async {
+    if (inFamily) await store.rebuild();
+  }
+
   /// Back in the app (or asked by hand): sync with everyone seen.
   void syncSoon() {
     if (_server == null) {

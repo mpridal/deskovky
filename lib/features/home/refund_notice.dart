@@ -39,6 +39,7 @@ class _RefundNoticeHostState extends ConsumerState<RefundNoticeHost> {
   Future<void> _check() async {
     final active = ref.read(activePlayerProvider).value;
     if (!mounted || _showing || active == null) return;
+    if (!_family.inFamily) return;
     final notices = await _family.unseenRefunds(active.id);
     if (!mounted || notices.isEmpty || _showing || ref.read(activePlayerProvider).value?.id != active.id) return;
     _showing = true;

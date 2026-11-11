@@ -1,5 +1,4 @@
 import 'dart:async';
-import '../../core/family/family_store.dart';
 import '../../app/family_providers.dart';
 import '../../app/family_controller.dart';
 import 'dart:math';
@@ -519,7 +518,7 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
         )
         .then((rewards) async {
           // Family people from other devices show by name in this device's history.
-          if (_isNet) await FamilyStore.of(ref.read(databaseProvider)).rebuild();
+          if (_isNet) await _family.afterNetworkGame();
           return rewards;
         })
         .catchError((Object e) {

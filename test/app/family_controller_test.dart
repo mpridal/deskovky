@@ -137,6 +137,17 @@ void main() {
     await sub.cancel();
   });
 
+  test('without a family a network game leaves the tables alone (review I9)', () async {
+    final tablet = device('Tablet');
+    final viky = await tablet.players.create(name: 'Viky', avatar: AvatarSpec.defaults);
+    await tablet.db.customStatement("UPDATE players SET name = 'Vikinka' WHERE id = ${viky.id}");
+    await tablet.controller.afterNetworkGame();
+    expect(await tablet.names(), {'Vikinka'}, reason: 'no family: nothing rebuilt');
+    await tablet.controller.createFamily(deviceName: 'Tablet');
+    await tablet.controller.afterNetworkGame();
+    expect(await tablet.names(), {'Viky'}, reason: 'in a family the log is the truth');
+  });
+
   test('a removed device gets nothing new', () async {
     final tablet = device('Tablet'), phone = device('Telefon');
     await tablet.controller.createFamily(deviceName: 'Tablet');
