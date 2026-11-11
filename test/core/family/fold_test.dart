@@ -261,4 +261,19 @@ void main() {
     expect(back.name, isNull);
     expect(back.avatar, {'face': 'hat'});
   });
+
+  test('a purchase taken back for lack of points comes off the avatar too (review I5)', () {
+    final o = _Ops();
+    o.add('tab', 1, _create('viky', 'Viky'));
+    o.add('tab', 2, _points('e1', 'viky', 100));
+    o.add('tab', 3, const ItemBought(itemUid: 'i1', playerUid: 'viky', itemId: 'crown', price: 80, atMs: 3));
+    o.add('pho', 4, const ItemBought(itemUid: 'i2', playerUid: 'viky', itemId: 'glasses', price: 80, atMs: 4));
+    o.add('pho', 5, const ProfileUpdated(uid: 'viky', avatar: {
+      'face': 'round',
+      'eq': {'head': {'id': 'crown'}, 'face': {'id': 'glasses', 'v': 'red'}, 'hand': {'id': 'trophy'}},
+    }));
+    final s = foldFamily(o.ops);
+    expect(s.refunds['viky']!.single.itemId, 'glasses');
+    expect(s.profiles['viky']!.avatar['eq'], {'head': {'id': 'crown'}, 'hand': {'id': 'trophy'}});
+  });
 }

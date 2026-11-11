@@ -61,6 +61,8 @@ FamilyState foldFamily(Iterable<FamilyOp> input) {
   final itemsAt = <String, Map<String, int>>{};
   final seenItems = <String>{};
   final refunds = <String, List<RefundNotice>>{};
+  // Items given back for lack of points; they come off the avatar too.
+  final takenBack = <String, Set<String>>{};
   final devices = <String, DeviceView>{};
   final balances = <String, int>{};
 
@@ -168,6 +170,7 @@ FamilyState foldFamily(Iterable<FamilyOp> input) {
             LedgerView(entryUid: 'refund:$itemUid', amount: price, reason: 'refund', detail: 'notEnough:$itemId', atMs: atMs),
           );
           (refunds[r] ??= []).add(RefundNotice(itemUid: itemUid, itemId: itemId, reason: RefundReason.notEnough));
+          (takenBack[r] ??= {}).add(itemId);
         } else {
           owned.add(itemId);
           (itemsAt[r] ??= {})[itemId] = atMs;
@@ -205,7 +208,9 @@ FamilyState foldFamily(Iterable<FamilyOp> input) {
   final holders = <String, String>{};
   final profiles = <String, ProfileView>{};
   for (final r in roots) {
-    final (name, avatar, favoriteSeat) = profileData[r]!;
+    final (name, saved, favoriteSeat) = profileData[r]!;
+    final gone = {...?takenBack[r]}..removeAll(items[r] ?? const <String>{});
+    final avatar = gone.isEmpty ? saved : _withoutItems(saved, gone);
     var shown = name;
     String? pair;
     if (holders[nameKeyOf(name)] case final first?) {
@@ -259,3 +264,18 @@ FamilyState foldFamily(Iterable<FamilyOp> input) {
     aliases: aliases,
   );
 }
+
+/// [avatar] with no equipped item from [gone].
+Map<String, Object?> _withoutItems(Map<String, Object?> avatar, Set<String> gone) {
+  if (avatar['eq'] case final Map<String, Object?> eq) {
+    final kept = {
+      for (final e in eq.entries)
+        if (!_isOneOf(e.value, gone)) e.key: e.value,
+    };
+    if (kept.length == eq.length) return avatar;
+    return {...avatar, 'eq': kept};
+  }
+  return avatar;
+}
+
+bool _isOneOf(Object? equipped, Set<String> ids) => equipped is Map && ids.contains(equipped['id']);
