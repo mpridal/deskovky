@@ -41,7 +41,9 @@ class FamilyStore {
 
   /// This device's id in the family, created on first use.
   Future<String> deviceId() async {
-    await (_marked ??= _checkMarker());
+    // Only with a marker: a future cached here would otherwise outlive the
+    // zone it was made in (widget tests' fake time never finishes it).
+    if (marker != null) await (_marked ??= _checkMarker());
     final existing = await _setting(deviceIdKey);
     if (existing != null) return existing;
     final id = newUid();
