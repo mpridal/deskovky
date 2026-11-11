@@ -1406,4 +1406,47 @@ class AppLocalizationsCs extends AppLocalizations {
   String familyRemoveTitle(String name) {
     return 'Odebrat $name z rodiny?';
   }
+
+  @override
+  String get pairTitle => 'Spárovat profily';
+
+  @override
+  String get pairQuestion => 'Je to stejná osoba?';
+
+  @override
+  String get pairMerge => 'Ano, spojit';
+
+  @override
+  String get pairKeep => 'Ne, jsou to dva lidé';
+
+  @override
+  String get pairLook => 'Vzhled po spojení';
+
+  @override
+  String get pairManual => 'Spárovat ručně';
+
+  @override
+  String get pairFirst => 'Profil';
+
+  @override
+  String get pairSecond => 'patří k';
+
+  @override
+  String get pairNone => 'Žádné další dvojice.';
+
+  @override
+  String get refundTitle => 'Body jsou zpátky';
+
+  @override
+  String get refundOk => 'Rozumím';
+
+  @override
+  String familyPairs(int count) {
+    return 'Možné dvojice ($count)';
+  }
+
+  @override
+  String refundNotice(String item) {
+    return 'Vrátili jsme ti body za $item – na obě věci nebylo dost bodů.';
+  }
 }

@@ -31,6 +31,7 @@ class _FamilyScreenState extends ConsumerState<FamilyScreen> {
   String? _message;
   var _busy = false;
   late Future<List<FamilyDeviceInfo>> _devices = ref.read(familyControllerProvider).familyDevices();
+  late Future<int> _pairs = ref.read(familyControllerProvider).pairCandidates().then((p) => p.length);
 
   // Kept in a field: ref must not be used in dispose.
   late final FamilyController _controller = ref.read(familyControllerProvider);
@@ -52,6 +53,7 @@ class _FamilyScreenState extends ConsumerState<FamilyScreen> {
     if (!mounted) return;
     setState(() {
       _devices = _controller.familyDevices();
+      _pairs = _controller.pairCandidates().then((p) => p.length);
     });
   }
 
@@ -99,6 +101,10 @@ class _FamilyScreenState extends ConsumerState<FamilyScreen> {
           _message = outcome.ok ? l10n.familyJoined : l10n.familyJoinFailed;
         });
         _refresh();
+        if (outcome.ok && (await _controller.pairCandidates()).isNotEmpty && mounted) {
+          await context.push('/settings/parents/family/pairs');
+          _refresh();
+        }
       case QrCameraDenied():
         showAppToast(context, l10n.qrCameraDenied);
       case QrScanCancelled():
@@ -177,6 +183,24 @@ class _FamilyScreenState extends ConsumerState<FamilyScreen> {
                   ],
                 ),
               ),
+            FutureBuilder(
+              future: _pairs,
+              builder: (context, snapshot) => (snapshot.data ?? 0) == 0
+                  ? const SizedBox.shrink()
+                  : Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: PrimaryButton(
+                        key: const ValueKey('familyPairs'),
+                        label: l10n.familyPairs(snapshot.data!),
+                        icon: Icons.merge,
+                        secondary: true,
+                        onPressed: () async {
+                          await context.push('/settings/parents/family/pairs');
+                          _refresh();
+                        },
+                      ),
+                    ),
+            ),
             roomLabel(l10n.familyDevices),
             FutureBuilder(
               future: _devices,

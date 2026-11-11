@@ -892,5 +892,32 @@
         "type": "String"
       }
     }
+  },
+  "pairTitle": "Pair profiles",
+  "pairQuestion": "Is this the same person?",
+  "pairMerge": "Yes, join them",
+  "pairKeep": "No, two people",
+  "pairLook": "Look after joining",
+  "pairManual": "Pair by hand",
+  "pairFirst": "Profile",
+  "pairSecond": "belongs with",
+  "pairNone": "No more pairs.",
+  "refundTitle": "Points are back",
+  "refundOk": "Got it",
+  "familyPairs": "Possible pairs ({count})",
+  "@familyPairs": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "refundNotice": "Your points for {item} are back – there were not enough points for both.",
+  "@refundNotice": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
   }
 }

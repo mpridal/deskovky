@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
@@ -6,6 +7,7 @@ import '../core/db/app_database.dart';
 import '../core/family/family_identity.dart';
 import '../core/family/family_net.dart';
 import '../core/family/family_op.dart';
+import '../core/family/family_state.dart';
 import '../core/family/family_store.dart';
 import '../core/family/family_sync.dart';
 import '../core/family/fold.dart';
@@ -265,6 +267,79 @@ class FamilyController extends ChangeNotifier {
   Future<void> removeDevice(String deviceId) async {
     _peers.remove(deviceId);
     await store.append(DeviceRemoved(deviceId: deviceId));
+  }
+
+  static const _declinedKey = 'pairDeclined';
+  static const _refundsSeenKey = 'refundsSeen';
+
+  /// Profiles that may be the same person (same name), not yet answered on
+  /// this device: (the earlier profile, the later one shown as "… 2").
+  Future<List<(ProfileView, ProfileView)>> pairCandidates() async {
+    final state = foldFamily(await store.all());
+    final declined = await _stringSet(_declinedKey);
+    return [
+      for (final p in state.profiles.values)
+        if (p.pairCandidate case final other? when state.profiles[other] != null && !declined.contains(_pairKey(other, p.uid)))
+          (state.profiles[other]!, p),
+    ];
+  }
+
+  /// "No, two people": not asked again on this device.
+  Future<void> declinePair(String a, String b) async {
+    await _setStringSet(_declinedKey, {...await _stringSet(_declinedKey), _pairKey(a, b)});
+    _notify();
+  }
+
+  /// "Yes, the same person" (spec 5.2): everything of [fromUid] belongs to
+  /// [intoUid]; its name stays, the look comes from [lookFromUid].
+  Future<void> mergeProfiles({required String intoUid, required String fromUid, required String lookFromUid}) async {
+    final state = foldFamily(await store.all());
+    final into = state.profiles[intoUid], look = state.profiles[lookFromUid];
+    if (into == null || state.profiles[fromUid] == null) return;
+    await store.append(ProfilesMerged(fromUid: fromUid, intoUid: intoUid));
+    await store.append(
+      ProfileUpdated(
+        uid: intoUid,
+        name: into.name,
+        avatar: (look ?? into).avatar,
+        favoriteSeat: (look ?? into).favoriteSeat,
+      ),
+    );
+    await store.rebuild();
+    _notify();
+  }
+
+  /// Purchases of [playerId] taken back for lack of points that the child
+  /// has not been told about yet (spec kap. 6).
+  Future<List<RefundNotice>> unseenRefunds(int playerId) async {
+    final row = await (db.select(db.players)..where((p) => p.id.equals(playerId))).getSingleOrNull();
+    if (row?.uid == null) return const [];
+    final state = foldFamily(await store.all());
+    final seen = await _stringSet(_refundsSeenKey);
+    return [
+      for (final r in state.refunds[state.resolve(row!.uid!)] ?? const <RefundNotice>[])
+        if (!seen.contains(r.itemUid)) r,
+    ];
+  }
+
+  Future<void> markRefundsSeen(Iterable<RefundNotice> notices) =>
+      _setStringSet(_refundsSeenKey, {for (final n in notices) n.itemUid});
+
+  static String _pairKey(String a, String b) => ([a, b]..sort()).join('|');
+
+  Future<Set<String>> _stringSet(String key) async {
+    final row = await (db.select(db.appSettings)..where((s) => s.key.equals(key))).getSingleOrNull();
+    if (row == null) return {};
+    try {
+      return {for (final v in jsonDecode(row.value) as List) v as String};
+    } on Object {
+      return {};
+    }
+  }
+
+  Future<void> _setStringSet(String key, Set<String> values) async {
+    final merged = key == _refundsSeenKey ? {...await _stringSet(key), ...values} : values;
+    await db.into(db.appSettings).insertOnConflictUpdate(AppSettingsCompanion.insert(key: key, value: jsonEncode([...merged]..sort())));
   }
 
   /// Every device the family knows, this one first.

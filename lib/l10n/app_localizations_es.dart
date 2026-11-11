@@ -1399,4 +1399,47 @@ class AppLocalizationsEs extends AppLocalizations {
   String familyRemoveTitle(String name) {
     return '¿Quitar $name de la familia?';
   }
+
+  @override
+  String get pairTitle => 'Emparejar perfiles';
+
+  @override
+  String get pairQuestion => '¿Es la misma persona?';
+
+  @override
+  String get pairMerge => 'Sí, unirlos';
+
+  @override
+  String get pairKeep => 'No, son dos personas';
+
+  @override
+  String get pairLook => 'Aspecto tras unirlos';
+
+  @override
+  String get pairManual => 'Emparejar a mano';
+
+  @override
+  String get pairFirst => 'Perfil';
+
+  @override
+  String get pairSecond => 'va con';
+
+  @override
+  String get pairNone => 'No hay más parejas.';
+
+  @override
+  String get refundTitle => 'Los puntos han vuelto';
+
+  @override
+  String get refundOk => 'Entendido';
+
+  @override
+  String familyPairs(int count) {
+    return 'Posibles parejas ($count)';
+  }
+
+  @override
+  String refundNotice(String item) {
+    return 'Te devolvimos los puntos de $item: no había puntos para ambas cosas.';
+  }
 }

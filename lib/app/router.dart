@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import '../features/family/pair_profiles_screen.dart';
 import '../features/family/family_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -120,7 +121,16 @@ GoRouter buildRouter({String? startGame}) {
                     path: 'parents',
                     parentNavigatorKey: rootKey,
                     builder: (_, _) => const ParentsScreen(),
-                    routes: [GoRoute(path: 'family', parentNavigatorKey: rootKey, builder: (_, _) => const FamilyScreen())],
+                    routes: [
+                      GoRoute(
+                        path: 'family',
+                        parentNavigatorKey: rootKey,
+                        builder: (_, _) => const FamilyScreen(),
+                        routes: [
+                          GoRoute(path: 'pairs', parentNavigatorKey: rootKey, builder: (_, _) => const PairProfilesScreen()),
+                        ],
+                      ),
+                    ],
                   ),
                   if (kDebugMode)
                     GoRoute(path: 'ui-kit', parentNavigatorKey: rootKey, builder: (_, _) => const UiKitCatalogScreen()),

@@ -1395,4 +1395,47 @@ class AppLocalizationsEn extends AppLocalizations {
   String familyRemoveTitle(String name) {
     return 'Remove $name from the family?';
   }
+
+  @override
+  String get pairTitle => 'Pair profiles';
+
+  @override
+  String get pairQuestion => 'Is this the same person?';
+
+  @override
+  String get pairMerge => 'Yes, join them';
+
+  @override
+  String get pairKeep => 'No, two people';
+
+  @override
+  String get pairLook => 'Look after joining';
+
+  @override
+  String get pairManual => 'Pair by hand';
+
+  @override
+  String get pairFirst => 'Profile';
+
+  @override
+  String get pairSecond => 'belongs with';
+
+  @override
+  String get pairNone => 'No more pairs.';
+
+  @override
+  String get refundTitle => 'Points are back';
+
+  @override
+  String get refundOk => 'Got it';
+
+  @override
+  String familyPairs(int count) {
+    return 'Possible pairs ($count)';
+  }
+
+  @override
+  String refundNotice(String item) {
+    return 'Your points for $item are back – there were not enough points for both.';
+  }
 }

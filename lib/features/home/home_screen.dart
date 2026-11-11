@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'refund_notice.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -48,7 +49,7 @@ class HomeScreen extends ConsumerWidget {
       slivers: [
         const SliverPadding(
           padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
-          sliver: SliverToBoxAdapter(child: ActivePlayerBar()),
+          sliver: SliverToBoxAdapter(child: Column(children: [ActivePlayerBar(), RefundNoticeHost()])),
         ),
         const SliverToBoxAdapter(child: UpdateCard()),
         const SliverPadding(

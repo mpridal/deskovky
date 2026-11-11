@@ -404,5 +404,18 @@
   "deviceTablet": "Tablet",
   "devicePhone": "Telefon",
   "familyLastSync": "naposledy {time}",
-  "familyRemoveTitle": "Odebrat {name} z rodiny?"
+  "familyRemoveTitle": "Odebrat {name} z rodiny?",
+  "pairTitle": "Spárovat profily",
+  "pairQuestion": "Je to stejná osoba?",
+  "pairMerge": "Ano, spojit",
+  "pairKeep": "Ne, jsou to dva lidé",
+  "pairLook": "Vzhled po spojení",
+  "pairManual": "Spárovat ručně",
+  "pairFirst": "Profil",
+  "pairSecond": "patří k",
+  "pairNone": "Žádné další dvojice.",
+  "refundTitle": "Body jsou zpátky",
+  "refundOk": "Rozumím",
+  "familyPairs": "Možné dvojice ({count})",
+  "refundNotice": "Vrátili jsme ti body za {item} – na obě věci nebylo dost bodů."
 }

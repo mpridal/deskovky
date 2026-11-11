@@ -2529,6 +2529,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Remove {name} from the family?'**
   String familyRemoveTitle(String name);
+
+  /// No description provided for @pairTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pair profiles'**
+  String get pairTitle;
+
+  /// No description provided for @pairQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Is this the same person?'**
+  String get pairQuestion;
+
+  /// No description provided for @pairMerge.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, join them'**
+  String get pairMerge;
+
+  /// No description provided for @pairKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'No, two people'**
+  String get pairKeep;
+
+  /// No description provided for @pairLook.
+  ///
+  /// In en, this message translates to:
+  /// **'Look after joining'**
+  String get pairLook;
+
+  /// No description provided for @pairManual.
+  ///
+  /// In en, this message translates to:
+  /// **'Pair by hand'**
+  String get pairManual;
+
+  /// No description provided for @pairFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get pairFirst;
+
+  /// No description provided for @pairSecond.
+  ///
+  /// In en, this message translates to:
+  /// **'belongs with'**
+  String get pairSecond;
+
+  /// No description provided for @pairNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No more pairs.'**
+  String get pairNone;
+
+  /// No description provided for @refundTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Points are back'**
+  String get refundTitle;
+
+  /// No description provided for @refundOk.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get refundOk;
+
+  /// No description provided for @familyPairs.
+  ///
+  /// In en, this message translates to:
+  /// **'Possible pairs ({count})'**
+  String familyPairs(int count);
+
+  /// No description provided for @refundNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Your points for {item} are back – there were not enough points for both.'**
+  String refundNotice(String item);
 }
 
 class _AppLocalizationsDelegate

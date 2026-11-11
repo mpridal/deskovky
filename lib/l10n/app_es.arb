@@ -404,5 +404,18 @@
   "deviceTablet": "Tableta",
   "devicePhone": "Teléfono",
   "familyLastSync": "última vez {time}",
-  "familyRemoveTitle": "¿Quitar {name} de la familia?"
+  "familyRemoveTitle": "¿Quitar {name} de la familia?",
+  "pairTitle": "Emparejar perfiles",
+  "pairQuestion": "¿Es la misma persona?",
+  "pairMerge": "Sí, unirlos",
+  "pairKeep": "No, son dos personas",
+  "pairLook": "Aspecto tras unirlos",
+  "pairManual": "Emparejar a mano",
+  "pairFirst": "Perfil",
+  "pairSecond": "va con",
+  "pairNone": "No hay más parejas.",
+  "refundTitle": "Los puntos han vuelto",
+  "refundOk": "Entendido",
+  "familyPairs": "Posibles parejas ({count})",
+  "refundNotice": "Te devolvimos los puntos de {item}: no había puntos para ambas cosas."
 }
