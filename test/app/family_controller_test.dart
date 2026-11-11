@@ -100,6 +100,26 @@ void main() {
     expect(await tablet.names(), {'Viky'});
   });
 
+  test('a rematch (next game opens before the last one closes) stays a game (review I2)', () async {
+    final tablet = device('Tablet'), phone = device('Telefon');
+    await tablet.controller.createFamily(deviceName: 'Tablet');
+    await phone.controller.joinFamily(tablet.controller.ticket!, deviceName: 'Telefon');
+    await _settle();
+    tablet.controller.setInGame(true);
+    for (var i = 0; i < 100 && (tablet.controller.syncing || phone.controller.syncing); i++) {
+      await _settle(20);
+    }
+    // pushReplacement: the new game screen starts, then the old one closes.
+    tablet.controller.setInGame(true);
+    tablet.controller.setInGame(false);
+    await phone.players.create(name: 'Viky', avatar: AvatarSpec.defaults);
+    await _settle(600);
+    expect(await tablet.names(), isEmpty, reason: 'the rematch is still a game');
+    tablet.controller.setInGame(false);
+    await _settle(600);
+    expect(await tablet.names(), {'Viky'});
+  });
+
   test('a removed device gets nothing new', () async {
     final tablet = device('Tablet'), phone = device('Telefon');
     await tablet.controller.createFamily(deviceName: 'Tablet');

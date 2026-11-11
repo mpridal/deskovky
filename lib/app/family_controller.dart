@@ -276,12 +276,17 @@ class FamilyController extends ChangeNotifier {
     _notify();
   }
 
-  /// No syncing during a game (spec 7.2); afterwards it catches up.
+  /// No syncing during a game (spec 7.2); afterwards it catches up. Counted:
+  /// a rematch opens the next game screen before the last one closes.
   void setInGame(bool inGame) {
-    if (_inGame == inGame) return;
-    _inGame = inGame;
-    if (!inGame) _syncAll();
+    _games = inGame ? _games + 1 : (_games - 1).clamp(0, 1 << 30);
+    final now = _games > 0;
+    if (_inGame == now) return;
+    _inGame = now;
+    if (!now) _syncAll();
   }
+
+  var _games = 0;
 
   /// Back in the app (or asked by hand): sync with everyone seen.
   void syncSoon() {
