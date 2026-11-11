@@ -134,6 +134,7 @@ sealed class NetMessage {
         'ping' => Ping(json['t']! as int),
         'pong' => Pong(json['t']! as int),
         'kick' => const Kick(),
+        'family' => FamilyMessage({...json}..remove('type')),
         _ => null,
       };
     } on Object {
@@ -452,4 +453,17 @@ class Kick extends NetMessage {
 
   @override
   Map<String, Object?> get body => const {};
+}
+
+/// A message of the family sync (lib/core/family/family_sync.dart), carried
+/// over the same lines as the game; its own `t` says which one. Older app
+/// versions ignore it like any unknown message.
+class FamilyMessage extends NetMessage {
+  const FamilyMessage(this.body);
+
+  @override
+  final Map<String, Object?> body;
+
+  @override
+  String get type => 'family';
 }

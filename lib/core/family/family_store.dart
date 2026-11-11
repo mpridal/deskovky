@@ -104,6 +104,17 @@ class FamilyStore {
       if (row.seq > (theirs[row.origin] ?? 0)) ?_decode(row),
   ];
 
+  /// Devices taken out of the family; they are refused (spec 7.2).
+  Future<Set<String>> removedDevices() async => {
+    for (final row in await _db.customSelect("SELECT json FROM sync_ops WHERE json LIKE '%\"t\":\"deviceRemoved\"%'").get())
+      if (FamilyOp.fromJson(jsonDecode(row.data['json'] as String))?.body case DeviceRemoved(:final deviceId)) deviceId,
+  };
+
+  /// Notes when this device last synced with [deviceId] (shown in Rodina).
+  Future<void> markSynced(String deviceId) => _db
+      .into(_db.familyDevices)
+      .insertOnConflictUpdate(FamilyDevicesCompanion.insert(deviceId: deviceId, lastSyncMs: Value(_now().millisecondsSinceEpoch)));
+
   Future<List<FamilyOp>> all() async => [for (final row in await _db.select(_db.syncOps).get()) ?_decode(row)];
 
   /// Computes the family state from every op and writes it to the tables.
