@@ -6,6 +6,7 @@ import 'package:deskovky/core/family/family_identity.dart';
 import 'package:deskovky/core/family/family_op.dart';
 import 'package:deskovky/core/family/family_store.dart';
 import 'package:deskovky/core/players/player_repository.dart';
+import 'package:deskovky/core/settings/settings_repository.dart';
 import 'package:deskovky/core/points/points_repository.dart';
 import 'package:deskovky/core/stats/match_record.dart';
 import 'package:deskovky/core/stats/stats_repository.dart';
@@ -118,6 +119,22 @@ void main() {
     tablet.controller.setInGame(false);
     await _settle(600);
     expect(await tablet.names(), {'Viky'});
+  });
+
+  test('the beacon follows the active player (review I6)', () async {
+    final tablet = device('Tablet');
+    final viky = await tablet.players.create(name: 'Viky', avatar: AvatarSpec.defaults);
+    final kuba = await tablet.players.create(name: 'Kuba', avatar: AvatarSpec.defaults);
+    await SettingsRepository(tablet.db).setActivePlayerId(viky.id);
+    await tablet.controller.createFamily(deviceName: 'Tablet');
+    final heard = <String?>[];
+    final sub = lan.device().beacons().listen((b) => heard.add(b.activeUid));
+    await _settle(200);
+    expect(heard.last, viky.uid);
+    await SettingsRepository(tablet.db).setActivePlayerId(kuba.id);
+    await _settle(300);
+    expect(heard.last, kuba.uid);
+    await sub.cancel();
   });
 
   test('a removed device gets nothing new', () async {

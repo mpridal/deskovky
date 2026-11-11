@@ -76,7 +76,7 @@ class FamilyController extends ChangeNotifier {
   String? _ip;
   OpenServer? _server;
   FamilyAnnouncement? _announcement;
-  StreamSubscription<Object?>? _serverSub, _beaconSub, _changesSub;
+  StreamSubscription<Object?>? _serverSub, _beaconSub, _changesSub, _activeSub;
   final _peers = <String, FamilyBeacon>{};
   final _lastSync = <String, DateTime>{};
   final _busy = <String>{};
@@ -125,6 +125,11 @@ class FamilyController extends ChangeNotifier {
     });
     _announcement = await net.announce(await _beacon());
     _beaconSub = net.beacons().listen(_heard);
+    // Invitations find the device by the child playing on it (spec 5.4).
+    _activeSub = SettingsRepository(db).watchActivePlayerId().skip(1).listen((_) async {
+      final beacon = await _beacon();
+      if (!_disposed) _announcement?.update(beacon);
+    });
     _changesSub = store.changes.listen((_) {
       _changedSince = {..._peers.keys};
       _syncAll();
@@ -436,6 +441,8 @@ class FamilyController extends ChangeNotifier {
     await _beaconSub?.cancel();
     await _serverSub?.cancel();
     await _changesSub?.cancel();
+    await _activeSub?.cancel();
+    _activeSub = null;
     _beaconSub = _serverSub = _changesSub = null;
     for (final channel in [..._open]) {
       await channel.close();
