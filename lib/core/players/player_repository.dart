@@ -60,6 +60,7 @@ class PlayerRepository {
     return _db.transaction(() async {
       if (await byId(id) == null) throw const ProfileException(ProfileError.notFound);
       if (clean != null) await _ensureNameFree(clean, exceptId: id);
+      final before = await (_db.select(_db.players)..where((p) => p.id.equals(id))).getSingle();
       await (_db.update(_db.players)..where((p) => p.id.equals(id))).write(PlayersCompanion(
         name: clean == null ? const Value.absent() : Value(clean),
         nameKey: clean == null ? const Value.absent() : Value(_key(clean)),
@@ -68,11 +69,12 @@ class PlayerRepository {
       ));
       final row = await (_db.select(_db.players)..where((p) => p.id.equals(id))).getSingle();
       await FamilyStore.of(_db).append(
+        // Only what changed (a shown "Viky 2" must not become the name).
         ProfileUpdated(
           uid: row.uid!,
-          name: row.name,
-          avatar: jsonDecode(row.avatarJson) as Map<String, Object?>,
-          favoriteSeat: row.favoriteSeat,
+          name: clean != null && clean != before.name ? clean : null,
+          avatar: avatar == null ? null : jsonDecode(row.avatarJson) as Map<String, Object?>,
+          favoriteSeat: favoriteSeat != null && favoriteSeat != before.favoriteSeat ? favoriteSeat : null,
         ),
       );
       return (await byId(id))!;

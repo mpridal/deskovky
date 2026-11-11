@@ -63,8 +63,8 @@ sealed class OpBody {
         ),
         'profileUpdated' => ProfileUpdated(
           uid: json['uid']! as String,
-          name: json['name']! as String,
-          avatar: json['avatar']! as Map<String, Object?>,
+          name: json['name'] as String?,
+          avatar: json['avatar'] as Map<String, Object?>?,
           favoriteSeat: json['fav'] as int?,
         ),
         'profileDeleted' => ProfileDeleted(uid: json['uid']! as String),
@@ -138,19 +138,21 @@ class ProfileCreated extends OpBody {
 }
 
 /// The whole editable profile after a change (the last change wins).
+/// Only the fields that changed are set; each field is last-change-wins on
+/// its own, so a rename and a new hat on two devices both stay.
 class ProfileUpdated extends OpBody {
-  const ProfileUpdated({required this.uid, required this.name, required this.avatar, this.favoriteSeat});
+  const ProfileUpdated({required this.uid, this.name, this.avatar, this.favoriteSeat});
 
   final String uid;
-  final String name;
-  final Map<String, Object?> avatar;
+  final String? name;
+  final Map<String, Object?>? avatar;
   final int? favoriteSeat;
 
   @override
   String get type => 'profileUpdated';
 
   @override
-  Map<String, Object?> get fields => {'uid': uid, 'name': name, 'avatar': avatar, 'fav': favoriteSeat};
+  Map<String, Object?> get fields => {'uid': uid, 'name': ?name, 'avatar': ?avatar, 'fav': ?favoriteSeat};
 }
 
 /// A deleted profile; it never comes back, whatever arrives for it later.

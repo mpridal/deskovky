@@ -243,4 +243,22 @@ void main() {
     expect(FamilyOp.fromJson(jsonDecode(jsonEncode(op.toJson()))), op);
     expect(FamilyOp.fromJson({'o': 'tab', 's': 2, 'c': Hlc(2, 0, 'tab').pack(), 'b': {'t': 'fromTheFuture'}}), isNull);
   });
+
+  test('a rename on one device and a new hat on another both stay (review I3)', () {
+    final o = _Ops();
+    o.add('tab', 1, _create('viky', 'Viky'));
+    o.add('tab', 5, const ProfileUpdated(uid: 'viky', name: 'Vikinka'));
+    o.add('pho', 6, const ProfileUpdated(uid: 'viky', avatar: {'face': 'hat'}));
+    final s = foldFamily(o.ops);
+    expect(s.profiles['viky']!.name, 'Vikinka');
+    expect(s.profiles['viky']!.avatar, {'face': 'hat'});
+  });
+
+  test('a look-only change survives the JSON trip without a name', () {
+    const body = ProfileUpdated(uid: 'viky', avatar: {'face': 'hat'});
+    final op = FamilyOp(origin: 'tab', seq: 1, clock: Hlc(1, 0, 'tab'), body: body);
+    final back = FamilyOp.fromJson(jsonDecode(jsonEncode(op.toJson())) as Map<String, Object?>)!.body as ProfileUpdated;
+    expect(back.name, isNull);
+    expect(back.avatar, {'face': 'hat'});
+  });
 }

@@ -88,7 +88,9 @@ FamilyState foldFamily(Iterable<FamilyOp> input) {
         if (uid == r || !created.containsKey(r)) created[r] = uid == r ? op.clock : (created[r] ?? op.clock);
       case ProfileUpdated(:final uid, :final name, :final avatar, :final favoriteSeat):
         if (dropped(uid)) break;
-        profileData[root(uid)] = (name, avatar, favoriteSeat);
+        final r = root(uid);
+        final (oldName, oldAvatar, oldSeat) = profileData[r] ?? ('', const <String, Object?>{}, null);
+        profileData[r] = (name ?? oldName, avatar ?? oldAvatar, favoriteSeat ?? oldSeat);
       case MatchRecorded():
         final m = op.body as MatchRecorded;
         final existing = matches[m.matchUid];

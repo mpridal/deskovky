@@ -167,4 +167,17 @@ void main() {
     final id = (await kuba).id;
     expect([for (final p in await players.all()) p.id], contains(id), reason: 'the row keeps its id');
   });
+
+  test('a look change does not send the name; a shown " 2" never becomes the real name (review I3)', () async {
+    final viky = (await players.create(name: 'Viky', avatar: AvatarSpec.defaults)).id;
+    await players.update(viky, avatar: AvatarSpec.defaults);
+    await players.update(viky, name: 'Viky', favoriteSeat: 1);
+    final updates = [for (final op in await FamilyStore(db).all()) if (op.body case final ProfileUpdated u) u];
+    expect(updates, hasLength(2));
+    expect(updates[0].name, isNull, reason: 'look only');
+    expect(updates[0].avatar, isNotNull);
+    expect(updates[1].name, isNull, reason: 'same name as before');
+    expect(updates[1].avatar, isNull);
+    expect(updates[1].favoriteSeat, 1);
+  });
 }
