@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'family_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,10 +27,18 @@ class DeskovkyApp extends ConsumerStatefulWidget {
 class _DeskovkyAppState extends ConsumerState<DeskovkyApp> {
   late final GoRouter _router = buildRouter(startGame: ref.read(startGameProvider));
   StreamSubscription<String>? _links;
+  late final AppLifecycleListener _lifecycle;
 
   @override
   void initState() {
     super.initState();
+    // The family (spec "Rodinná synchronizace"): in step whenever this device
+    // is open on the home Wi-Fi.
+    final family = ref.read(familyControllerProvider);
+    _lifecycle = AppLifecycleListener(onResume: family.syncSoon);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) family.start();
+    });
     // A room QR code read by the phone camera (deep link): while running and
     // the one that started the app.
     final links = ref.read(joinLinksProvider);
@@ -68,6 +77,7 @@ class _DeskovkyAppState extends ConsumerState<DeskovkyApp> {
 
   @override
   void dispose() {
+    _lifecycle.dispose();
     _links?.cancel();
     _router.dispose();
     super.dispose();

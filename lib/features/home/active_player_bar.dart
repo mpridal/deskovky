@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'sync_blip.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -41,6 +42,7 @@ class ActivePlayerBar extends ConsumerWidget {
     return Row(
       children: [
         Expanded(child: _switcher(context, l10n, active, level)),
+        const SyncBlip(),
         const SizedBox(width: 8),
         Semantics(
           button: true,

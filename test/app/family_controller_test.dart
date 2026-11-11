@@ -88,6 +88,10 @@ void main() {
     await phone.controller.joinFamily(tablet.controller.ticket!, deviceName: 'Telefon');
     await _settle();
     tablet.controller.setInGame(true);
+    // A sync already running when the game starts may finish; none starts after.
+    for (var i = 0; i < 100 && (tablet.controller.syncing || phone.controller.syncing); i++) {
+      await _settle(20);
+    }
     await phone.players.create(name: 'Viky', avatar: AvatarSpec.defaults);
     await _settle(600);
     expect(await tablet.names(), isEmpty, reason: 'busy with a game');

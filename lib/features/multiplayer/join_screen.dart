@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/family/family_identity.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -94,7 +95,10 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
     switch (result) {
       case QrScanned(:final text):
         final ticket = JoinTicket.parse(text);
-        if (ticket == null) {
+        if (ticket == null && FamilyTicket.parse(text) != null) {
+          // A family code: joining a family belongs to the parents' corner.
+          showAppToast(context, l10n.familyCodeInJoin);
+        } else if (ticket == null) {
           showAppToast(context, l10n.qrNotRoom);
         } else {
           setState(() => _ticket = ticket);

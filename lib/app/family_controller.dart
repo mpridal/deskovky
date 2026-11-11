@@ -57,6 +57,9 @@ class FamilyController extends ChangeNotifier {
   final _peers = <String, FamilyBeacon>{};
   final _lastSync = <String, DateTime>{};
   final _busy = <String>{};
+
+  /// Lines of syncs in progress; closed when this device stops.
+  final _open = <MessageChannel>{};
   var _changedSince = <String>{};
   var _inGame = false;
   var _disposed = false;
@@ -130,6 +133,9 @@ class FamilyController extends ChangeNotifier {
     if (isNew || last == null || DateTime.now().difference(last) > resyncAfter) _syncWith(beacon);
   }
 
+  /// A sync with another device is running now.
+  bool get syncing => _busy.isNotEmpty || _open.isNotEmpty;
+
   /// Family devices seen on the Wi-Fi now (for invitations, spec 5.4).
   List<FamilyBeacon> get peers => List.unmodifiable(_peers.values);
 
@@ -160,8 +166,15 @@ class FamilyController extends ChangeNotifier {
       await channel.close();
       return const SyncOutcome.failed('family');
     }
-    final outcome = await syncOver(channel, store: store, family: f, initiator: initiator);
-    await channel.close();
+    _open.add(channel);
+    final SyncOutcome outcome;
+    try {
+      outcome = await syncOver(channel, store: store, family: f, initiator: initiator);
+    } finally {
+      _open.remove(channel);
+      await channel.close();
+    }
+    if (_disposed) return outcome;
     if (outcome.ok) {
       _lastSync[outcome.peer!] = DateTime.now();
       if (_problem == FamilyProblem.otherVersion) _problem = null;
@@ -181,6 +194,13 @@ class FamilyController extends ChangeNotifier {
     for (final p in await db.select(db.players).get()) {
       await stats.checkBadges(p.id);
     }
+  }
+
+  /// As if new data had just come from the family (the home screen blip).
+  @visibleForTesting
+  void debugNewData() {
+    _lastSyncAt = DateTime.now();
+    _notify();
   }
 
   @visibleForTesting
@@ -272,6 +292,9 @@ class FamilyController extends ChangeNotifier {
     await _serverSub?.cancel();
     await _changesSub?.cancel();
     _beaconSub = _serverSub = _changesSub = null;
+    for (final channel in [..._open]) {
+      await channel.close();
+    }
     await _server?.close();
     _server = null;
     _peers.clear();

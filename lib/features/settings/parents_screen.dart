@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import '../../ui_kit/components/primary_button.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,7 +12,6 @@ import '../../l10n/app_localizations.dart';
 import '../../ui_kit/avatar/avatar_view.dart';
 import '../../ui_kit/components/app_dialog.dart';
 import '../../ui_kit/components/paper_card.dart';
-import '../../ui_kit/components/primary_button.dart';
 import '../../ui_kit/components/round_icon_button.dart';
 import '../../ui_kit/components/ui_feedback.dart';
 import '../../ui_kit/surfaces/felt_background.dart';
@@ -172,6 +173,15 @@ class _ParentsScreenState extends ConsumerState<ParentsScreen> {
                   const SizedBox(width: 12),
                   Expanded(child: Text(l10n.settingsParents, style: AppTypography.h1(color: AppColors.paper))),
                 ],
+              ),
+              const SizedBox(height: 16),
+              // Spec "Rodinná synchronizace" 5.1: the family's devices.
+              PrimaryButton(
+                key: const ValueKey('familyLink'),
+                label: l10n.familyTitle,
+                icon: Icons.devices,
+                secondary: true,
+                onPressed: () => context.push('/settings/parents/family'),
               ),
               const SizedBox(height: 16),
               Text(l10n.parentsGiftTitle, style: AppTypography.h2(color: AppColors.paper)),

@@ -1313,4 +1313,90 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get joinLinkBusy =>
       'Ya estás jugando. Sal primero de la partida o de la sala.';
+
+  @override
+  String get familyTitle => 'Familia';
+
+  @override
+  String get familyIntro =>
+      'Conecta los dispositivos de la familia: los perfiles, puntos, premios e historial serán iguales en todos. Basta la Wi-Fi de casa, sin internet.';
+
+  @override
+  String get familyCreate => 'Crear una familia';
+
+  @override
+  String get familyJoin => 'Unirse a una familia';
+
+  @override
+  String get familyJoinOther => 'Unirse a otra familia';
+
+  @override
+  String get familyJoinOtherWarning =>
+      'Este dispositivo ya está en una familia. Al unirse a otra la dejará; los perfiles de este dispositivo se ofrecerán para emparejar.';
+
+  @override
+  String get familyJoinOtherConfirm => 'Unirse igualmente';
+
+  @override
+  String get familyAddDevice => 'Añadir un dispositivo';
+
+  @override
+  String get familyQrHint =>
+      'En el dispositivo nuevo abre Ajustes → Zona de padres → Familia → Unirse a una familia y escanea este código. Ambos deben estar en la misma Wi-Fi.';
+
+  @override
+  String get familyDevices => 'Dispositivos de la familia';
+
+  @override
+  String get familyThisDevice => 'este dispositivo';
+
+  @override
+  String get familyNeverSynced => 'aún sin sincronizar';
+
+  @override
+  String get familyRemove => 'Quitar de la familia';
+
+  @override
+  String get familyRemoveMessage =>
+      'El dispositivo dejará de recibir perfiles y puntos. Los datos que ya tiene se quedan en él.';
+
+  @override
+  String get familyRemoved => 'quitado';
+
+  @override
+  String get familyJoined => '¡Listo, ya estás en la familia!';
+
+  @override
+  String get familyJoinFailed =>
+      'No se pudo unir a la familia. ¿Están ambos en la misma Wi-Fi y con Familia abierta en el otro?';
+
+  @override
+  String get familyNotACode => 'Esto no es un código de familia.';
+
+  @override
+  String get familyUpdateApps =>
+      'Algún dispositivo tiene otra versión de la app. Actualízala en todos los dispositivos.';
+
+  @override
+  String get familyCodeInJoin =>
+      'Es un código de familia. Añade el dispositivo en Ajustes → Zona de padres → Familia.';
+
+  @override
+  String get familySynced => 'Sincronizado con la familia';
+
+  @override
+  String get deviceTablet => 'Tableta';
+
+  @override
+  String get devicePhone => 'Teléfono';
+
+  @override
+  String familyLastSync(String time) {
+    return 'última vez $time';
+  }
+
+  @override
+  String familyRemoveTitle(String name) {
+    return '¿Quitar $name de la familia?';
+  }
 }

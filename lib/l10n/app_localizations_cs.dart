@@ -1320,4 +1320,90 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get joinLinkBusy =>
       'Už hraješ. Nejdřív odejdi z rozehrané hry nebo místnosti.';
+
+  @override
+  String get familyTitle => 'Rodina';
+
+  @override
+  String get familyIntro =>
+      'Propojte zařízení rodiny: profily, body, odměny a historie her budou na všech stejné. Stačí domácí Wi-Fi, internet není potřeba.';
+
+  @override
+  String get familyCreate => 'Založit rodinu';
+
+  @override
+  String get familyJoin => 'Připojit se k rodině';
+
+  @override
+  String get familyJoinOther => 'Připojit se k jiné rodině';
+
+  @override
+  String get familyJoinOtherWarning =>
+      'Toto zařízení už je v rodině. Připojením k jiné rodině tu současnou opustí; profily z tohoto zařízení se nabídnou ke spárování.';
+
+  @override
+  String get familyJoinOtherConfirm => 'Přesto připojit';
+
+  @override
+  String get familyAddDevice => 'Přidat zařízení';
+
+  @override
+  String get familyQrHint =>
+      'Na novém zařízení otevři Nastavení → Rodičovská zóna → Rodina → Připojit se k rodině a naskenuj tento kód. Obě zařízení musí být ve stejné Wi-Fi.';
+
+  @override
+  String get familyDevices => 'Zařízení v rodině';
+
+  @override
+  String get familyThisDevice => 'toto zařízení';
+
+  @override
+  String get familyNeverSynced => 'zatím se nesynchronizovalo';
+
+  @override
+  String get familyRemove => 'Odebrat z rodiny';
+
+  @override
+  String get familyRemoveMessage =>
+      'Zařízení přestane dostávat profily a body. Data, která na něm už jsou, mu zůstanou.';
+
+  @override
+  String get familyRemoved => 'odebráno';
+
+  @override
+  String get familyJoined => 'Hotovo – jsi v rodině!';
+
+  @override
+  String get familyJoinFailed =>
+      'Připojení k rodině se nepovedlo. Jsou obě zařízení ve stejné Wi-Fi a je na druhém otevřená Rodina?';
+
+  @override
+  String get familyNotACode => 'Tohle není rodinný kód.';
+
+  @override
+  String get familyUpdateApps =>
+      'Některé zařízení má jinou verzi aplikace. Aktualizujte aplikaci na všech zařízeních.';
+
+  @override
+  String get familyCodeInJoin =>
+      'Tohle je rodinný kód. Zařízení přidáš v Nastavení → Rodičovská zóna → Rodina.';
+
+  @override
+  String get familySynced => 'Synchronizováno s rodinou';
+
+  @override
+  String get deviceTablet => 'Tablet';
+
+  @override
+  String get devicePhone => 'Telefon';
+
+  @override
+  String familyLastSync(String time) {
+    return 'naposledy $time';
+  }
+
+  @override
+  String familyRemoveTitle(String name) {
+    return 'Odebrat $name z rodiny?';
+  }
 }
