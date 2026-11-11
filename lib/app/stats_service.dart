@@ -113,23 +113,34 @@ class StatsService {
         if (m.participants.any((p) => p.playerId == playerId && !p.robot)) m,
     ];
     if (mine.isEmpty) return const <String>[];
-    final last = mine.last;
-    final context = BadgeContext(
-      playerId: playerId,
-      stats: computePlayerStats(playerId, history),
-      counters: await _repo.counters(playerId),
-      match: last,
-      me: last.participants.firstWhere((p) => p.playerId == playerId && !p.robot),
-      events: const [],
-      availableGames: {for (final m in _modules) if (m.available) m.id},
-    );
+    final stats = computePlayerStats(playerId, history);
+    final counters = await _repo.counters(playerId);
     final already = (await _repo.earnedBadges(playerId)).keys.toSet();
     final awarded = <String>[];
-    for (final badge in evaluateBadges(allBadges, context, already)) {
-      if (!await _repo.awardBadge(playerId, badge.id)) continue;
-      awarded.add(badge.id);
-      if (badge.reward > 0) {
-        await _points.addGameLines(playerId, [PointsLine(PointsReason.badge, badge.reward, badgeId: badge.id)]);
+    // Each game's badges are judged by that game's last match only (a hard
+    // win in one game is no win in another); framework badges by the last.
+    final checks = <(List<BadgeDef>, MatchRecord)>[
+      (frameworkBadges, mine.last),
+      for (final m in _modules)
+        if (mine.where((r) => r.gameId == m.id).lastOrNull case final last?)
+          (m.badges, last),
+    ];
+    for (final (defs, last) in checks) {
+      final context = BadgeContext(
+        playerId: playerId,
+        stats: stats,
+        counters: counters,
+        match: last,
+        me: last.participants.firstWhere((p) => p.playerId == playerId && !p.robot),
+        events: const [],
+        availableGames: {for (final m in _modules) if (m.available) m.id},
+      );
+      for (final badge in evaluateBadges(defs, context, {...already, ...awarded})) {
+        if (!await _repo.awardBadge(playerId, badge.id)) continue;
+        awarded.add(badge.id);
+        if (badge.reward > 0) {
+          await _points.addGameLines(playerId, [PointsLine(PointsReason.badge, badge.reward, badgeId: badge.id)]);
+        }
       }
     }
     return awarded;

@@ -133,4 +133,26 @@ void main() {
     expect(await service.checkBadges(viky), isEmpty, reason: 'once');
     await expectRebuildChangesNothing('badge after sync');
   });
+
+  test('checkBadges never gives another game badge for this game win (review C1)', () async {
+    final viky = (await players.create(name: 'Viky', avatar: AvatarSpec.defaults)).id;
+    await service.recordFinished(
+      config: GameConfig(
+        gameId: 'tictactoe',
+        seats: [HumanSeat(viky), const RobotSeat()],
+        difficulty: Difficulty.hard,
+        robotSpeed: RobotSpeed.fast,
+        options: const {},
+      ),
+      result: const GameResult(places: [1, 2], scores: [1, 0], stars: [3, 1]),
+      events: const [],
+      duration: const Duration(minutes: 1),
+    );
+    final before = await points.balance(viky);
+    final awarded = await service.checkBadges(viky);
+    expect(awarded, isNot(contains('checkers.grandmaster')));
+    expect(awarded, isNot(contains('matches.master')));
+    expect((await stats.earnedBadges(viky)).keys, isNot(contains('checkers.grandmaster')));
+    expect(await points.balance(viky), before);
+  });
 }
