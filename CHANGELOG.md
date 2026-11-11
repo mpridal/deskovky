@@ -2,6 +2,15 @@
 
 Každá verze má sekci `## x.y.z` s poznámkami `### cs`, `### en`, `### es` – z nich se při vydání tvoří `latest.json` a karta „Je tu nová verze“. Volitelný řádek `Minimální verze: x.y.z` udělá aktualizaci povinnou pro starší verze.
 
+## 0.7.0
+
+### cs
+Rodina: propojte tablety a telefony doma přes Wi-Fi (bez internetu) – profily dětí, body, odměny, vzhled avatara, historie her i žebříčky budou na všech zařízeních stejné. Nové zařízení se připojí naskenováním QR kódu v Rodičovské zóně, stejná jména z různých zařízení jde spárovat do jednoho profilu. Do síťové hry teď můžeš pozvat člověka z rodiny přímo na jeho zařízení.
+### en
+Family: connect your tablets and phones over home Wi-Fi (no internet needed) – children's profiles, points, rewards, avatar looks, game history and leaderboards are the same on every device. A new device joins by scanning a QR code in the Parents' corner, and the same name from different devices can be paired into one profile. You can now invite a family member to a network game right on their own device.
+### es
+Familia: conecta tus tabletas y teléfonos por el Wi-Fi de casa (sin internet): los perfiles de los niños, los puntos, los premios, el aspecto del avatar, el historial de partidas y las clasificaciones serán iguales en todos los dispositivos. Un dispositivo nuevo se une escaneando un código QR en la Zona de padres, y el mismo nombre de distintos dispositivos se puede emparejar en un solo perfil. Ahora puedes invitar a alguien de la familia a una partida en red directamente en su dispositivo.
+
 ## 0.6.1
 
 ### cs

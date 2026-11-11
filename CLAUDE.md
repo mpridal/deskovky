@@ -119,3 +119,11 @@ Flutter není v PATH starších terminálů – v případě potřeby `export PA
 - Po síti jde automaticky každá hotová hra pro 2+ hráče (`GameModule.playableOnNetwork`); nová hra nic nedělá, kontrakt her u ní síťovou partii ověří. Hra, která síť nezvládne, nastaví `supportsNetwork => false`. Zástupný robot (vypadlý hráč) zůstává ve sdílené konfiguraci `RemoteSeat`, takže stav v pravidlech, který čte `RobotSeat` (Piškvorky, Člověče – jen pro odznaky), se nemění.
 - QR připojení: odkaz `deskovky://join` jde Kotlin kanálem `deskovky/links` (ne Flutter deep linking) → `joinLinksProvider`; kamera je za rozhraním `QrScanner` (`qrScannerProvider`, `mobile_scanner` připnutý přesně). Testy: `test/features/multiplayer/qr_join_test.dart` (`FakeJoinLinks`, `FakeQrScanner`). Na emulátoru: `adb shell am start -a android.intent.action.VIEW -d "deskovky://join?ip=10.0.2.2&port=1234&code=1234"`.
 - Ruční test na emulátoru: otevři místnost na tabletu, port najdeš v `/proc/net/tcp` (uid aplikace, stav 0A), `adb forward tcp:P tcp:P` a připoj se z testu přes `SocketChannel.connect('127.0.0.1', P)`.
+
+## Rodinná synchronizace
+
+- Kód v `lib/core/family/` (operace, skládání, materializace, synchronizace, UDP) a `lib/app/family_controller.dart`; UI v `lib/features/family/`. Popis v `docs/ARCHITECTURE.md`.
+- Pravidla skládání testuj čistě v `test/core/family/fold_test.dart`; zápisy repozitářů do záznamu v `write_through_test.dart`; synchronizaci přes `LoopbackChannel` v `family_sync_test.dart`.
+- Více zařízení v jednom testu: `FakeLan` / `FakeFamilyNet` (`test/app/fake_family_net.dart`) – každé `device()` má vlastní databázi a vidí ostatní. Ve widget testech spouštěj akce kontroléru bez `await` (`unawaited`) a pumpuj `_settle`; test zavři `pumpWidget(SizedBox())`, jinak zůstanou běžet časovače.
+- Nová operace = nová varianta `OpBody` + pravidlo ve `foldFamily` + test, že skládání nezávisí na pořadí operací.
+- Ruční test: Nastavení → Rodičovská zóna → Rodina → Založit rodinu (QR); druhé zařízení Připojit se k rodině. Mezi emulátory UDP nefunguje – synchronizaci ověř na skutečných zařízeních ve stejné Wi-Fi.

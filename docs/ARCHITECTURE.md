@@ -95,3 +95,13 @@ Framework (lib/features/game_play):
 - **Výpadky:** odpojený klient → pauza u všech a odpočet 30 s (`reconnectGrace`), pak hostitel volí Čekat dál / Nahradit robotem / Ukončit hru. Robot hraje přes `TurnController.setStandIn` (sdílená konfigurace se nemění). Návrat se stejným tokenem (`NetworkRooms.rejoin`) vrátí místa.
 - **Vrstvy:** `NetworkEnv` (skutečná síť / falešná v testech) → `NetworkRooms` (jediná místnost zařízení, přežije obrazovky) → obrazovky `lib/features/multiplayer/` a síťový režim `GameScreen` (`/play/<id>/net`).
 - Po síti jde každá hotová hra pro 2+ hráče (`GameModule.playableOnNetwork`; hra se může vyřadit `supportsNetwork => false`), stále jako „Zkušební“. Kontrakt her (`test/games/contract.dart`) u každé takové hry odehraje síťovou partii přes loopback. Síťová partie se neukládá pro pozdější pokračování.
+
+## Rodinná synchronizace (0.7.0)
+
+- **Záznam změn místo tabulek:** každá změna profilu, bodů, nákupu, odznaku, partie či zařízení je `FamilyOp` (původ = id zařízení, `seq`, hodiny `Hlc`, tělo) v tabulce `sync_ops` (`lib/core/family/`). Repozitáře dál zapisují do běžných tabulek a ve stejné transakci připíšou operaci (`FamilyStore.append`).
+- **Skládání:** čistá deterministická funkce `foldFamily(ops)` → `FamilyState`; `materialize` ji zapíše do existujících tabulek a zachová celočíselná id řádků (párování přes sloupce `uid`). Po přijetí cizích operací proběhne `FamilyStore.rebuild`. Pravidla: úpravy profilu poslední vyhrává (hodiny, pak id zařízení), smazání vyhrává, sloučení profilů přes aliasy, odměna za odznak jen jednou, duplicitní nákup → vrácení „duplicate“, nákup nad zůstatek → pozdější nákup se vrátí („notEnough“, dítě uvidí oznámení), stejné jméno → druhý profil dostane „ 2“ a nabídku spárování, síťová partie se slučuje podle `matchUid`.
+- **Přechod z v5:** při upgradu databáze na v6 `importLegacy` jednou převede stávající data na operace.
+- **Spojení:** `syncOver` (`family_sync.dart`) – handshake s HMAC-SHA256 (klíč rodiny z QR) přes oba nonce a id zařízení, výměna verzových vektorů a dávek ≤ 500 operací ve zprávě `FamilyMessage` (stejný `MessageChannel` jako síťová hra). Odmítnutí: jiná verze, jiná rodina, odebrané zařízení, špatný podpis.
+- **Hledání:** UDP beacon každých 10 s na portu 47124, tag = sha256 z id rodiny (cizí rodina ho nepozná); multicast lock jen během poslechu.
+- **`FamilyController`** (`lib/app/family_controller.dart`): server, beacony, synchronizace po změně / novém zařízení / návratu do aplikace; během hry pauza (příchozí synchronizace odmítá); pozvánky do síťové hry (`FamilyInvite` → dialog „… tě zve do hry“), párování profilů, oznámení o vrácených bodech.
+- Připojení zařízení: `deskovky://family?id&key&ip&port` v QR na obrazovce Rodina (Rodičovská zóna).
