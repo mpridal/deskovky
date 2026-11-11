@@ -1,0 +1,136 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:drift/drift.dart';
+
+import '../db/app_database.dart';
+import 'family_op.dart';
+import 'fold.dart';
+import 'hlc.dart';
+import 'materializer.dart';
+import 'uid.dart';
+
+/// The family's change log on this device (spec "Rodinná synchronizace"
+/// kap. 7): this device's own ops and those received from other family
+/// devices. The tables the screens read are rebuilt from it ([rebuild]).
+class FamilyStore {
+  FamilyStore(this._db, {DateTime Function()? now}) : _now = now ?? DateTime.now;
+
+  static const deviceIdKey = 'deviceId';
+  static const clockKey = 'familyClock';
+
+  final AppDatabase _db;
+  final DateTime Function() _now;
+  final _changes = StreamController<void>.broadcast();
+
+  /// Fires after new ops (own or received).
+  Stream<void> get changes => _changes.stream;
+
+  /// This device's id in the family, created on first use.
+  Future<String> deviceId() async {
+    final existing = await _setting(deviceIdKey);
+    if (existing != null) return existing;
+    final id = newUid();
+    await _db.into(_db.appSettings).insert(AppSettingsCompanion.insert(key: deviceIdKey, value: id), mode: InsertMode.insertOrIgnore);
+    return (await _setting(deviceIdKey))!;
+  }
+
+  /// The stamp for a new local op; never goes backwards on this device.
+  Future<Hlc> nextClock() => _db.transaction(() async {
+    final id = await deviceId();
+    final current = Hlc.unpack(await _setting(clockKey) ?? '') ?? Hlc(0, 0, id);
+    final next = Hlc(current.millis, current.counter, id).tick(_now().millisecondsSinceEpoch);
+    await _set(clockKey, next.pack());
+    return next;
+  });
+
+  /// Records a change made on this device.
+  Future<FamilyOp> append(OpBody body) async {
+    final op = await _db.transaction(() async {
+      final id = await deviceId();
+      final last = await _db
+          .customSelect('SELECT MAX(seq) AS s FROM sync_ops WHERE origin = ?', variables: [Variable.withString(id)])
+          .getSingle();
+      final op = FamilyOp(origin: id, seq: (last.data['s'] as int? ?? 0) + 1, clock: await nextClock(), body: body);
+      await _insert(op);
+      return op;
+    });
+    _changes.add(null);
+    return op;
+  }
+
+  /// Takes ops from another family device; returns how many were new.
+  Future<int> insertRemote(Iterable<FamilyOp> ops) async {
+    final added = await _db.transaction(() async {
+      var added = 0;
+      Hlc? latest;
+      for (final op in ops) {
+        final known = await (_db.select(_db.syncOps)
+              ..where((o) => o.origin.equals(op.origin) & o.seq.equals(op.seq)))
+            .getSingleOrNull();
+        if (known != null) continue;
+        await _insert(op);
+        added++;
+        if (latest == null || op.clock.compareTo(latest) > 0) latest = op.clock;
+      }
+      if (latest != null) {
+        final id = await deviceId();
+        final current = Hlc.unpack(await _setting(clockKey) ?? '') ?? Hlc(0, 0, id);
+        await _set(clockKey, current.receive(latest, _now().millisecondsSinceEpoch).pack());
+      }
+      return added;
+    });
+    if (added > 0) _changes.add(null);
+    return added;
+  }
+
+  /// For each device, the highest op number this device has from it.
+  Future<Map<String, int>> versionVector() async => {
+    for (final row in await _db.customSelect('SELECT origin, MAX(seq) AS s FROM sync_ops GROUP BY origin').get())
+      row.data['origin'] as String: row.data['s'] as int,
+  };
+
+  /// The ops another device is missing, given its [theirs] version vector.
+  Future<List<FamilyOp>> opsAfter(Map<String, int> theirs) async => [
+    for (final row in await (_db.select(_db.syncOps)..orderBy([(o) => OrderingTerm.asc(o.clock)])).get())
+      if (row.seq > (theirs[row.origin] ?? 0)) ?_decode(row),
+  ];
+
+  Future<List<FamilyOp>> all() async => [for (final row in await _db.select(_db.syncOps).get()) ?_decode(row)];
+
+  /// Computes the family state from every op and writes it to the tables.
+  Future<void> rebuild() async {
+    final ops = await all();
+    await _db.transaction(() => materialize(_db, foldFamily(ops)));
+  }
+
+  Future<void> _insert(FamilyOp op) => _db
+      .into(_db.syncOps)
+      .insert(
+        SyncOpsCompanion.insert(origin: op.origin, seq: op.seq, clock: op.clock.pack(), json: jsonEncode(op.toJson())),
+        mode: InsertMode.insertOrIgnore,
+      );
+
+  /// Writes ops made elsewhere in this device's name (the one-off import
+  /// of data from before the family, with their original times).
+  Future<void> insertOwn(List<FamilyOp> ops, Hlc clock) async {
+    for (final op in ops) {
+      await _insert(op);
+    }
+    await _set(clockKey, clock.pack());
+  }
+
+  static FamilyOp? _decode(SyncOpRow row) {
+    try {
+      return FamilyOp.fromJson(jsonDecode(row.json));
+    } on FormatException {
+      return null;
+    }
+  }
+
+  Future<String?> _setting(String key) async =>
+      (await (_db.select(_db.appSettings)..where((s) => s.key.equals(key))).getSingleOrNull())?.value;
+
+  Future<void> _set(String key, String value) =>
+      _db.into(_db.appSettings).insertOnConflictUpdate(AppSettingsCompanion.insert(key: key, value: value));
+}

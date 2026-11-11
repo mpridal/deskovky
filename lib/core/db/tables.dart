@@ -11,6 +11,9 @@ class Players extends Table {
   TextColumn get avatarJson => text()();
   IntColumn get favoriteSeat => integer().nullable()();
   DateTimeColumn get createdAt => dateTime()();
+
+  /// The profile's id in the family, the same on every device (schema v6).
+  TextColumn get uid => text().nullable()();
 }
 
 /// Simple key–value store for app-wide settings (active player, language…).
@@ -56,6 +59,9 @@ class Matches extends Table {
 
   /// Robots' difficulty; null when only people played.
   TextColumn get difficulty => text().nullable()();
+
+  /// The match's id in the family; one for a network game on every device.
+  TextColumn get uid => text().nullable()();
 }
 
 /// Everyone at the table of a [Matches] row, robots included (they rank in
@@ -109,6 +115,9 @@ class PointsLedger extends Table {
   TextColumn get detail => text().nullable()();
   IntColumn get matchId => integer().nullable().references(Matches, #id, onDelete: KeyAction.setNull)();
   IntColumn get at => integer()();
+
+  /// The entry's id in the family (schema v6).
+  TextColumn get uid => text().nullable()();
 }
 
 /// Avatar upgrades a player has bought (spec 5.6); badge items are not stored
@@ -120,4 +129,28 @@ class PlayerItems extends Table {
 
   @override
   Set<Column<Object>> get primaryKey => {playerId, itemId};
+}
+
+/// Every change to the family's shared data (`FamilyOp` JSON): this device's
+/// and those received from other family devices. Never changed or removed.
+@DataClassName('SyncOpRow')
+class SyncOps extends Table {
+  TextColumn get origin => text()();
+  IntColumn get seq => integer()();
+
+  /// `Hlc.pack()`, sortable as text.
+  TextColumn get clock => text()();
+  TextColumn get json => text()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {origin, seq};
+}
+
+/// What this device knows about other family devices locally (not synced).
+class FamilyDevices extends Table {
+  TextColumn get deviceId => text()();
+  IntColumn get lastSyncMs => integer().nullable()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {deviceId};
 }

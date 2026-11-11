@@ -1,4 +1,5 @@
 import 'package:deskovky/core/db/app_database.dart';
+import 'package:deskovky/core/family/family_store.dart';
 import 'package:deskovky/core/game/game_store.dart';
 import 'package:deskovky/core/players/player_repository.dart';
 import 'package:deskovky/core/settings/settings_repository.dart';
@@ -12,6 +13,7 @@ import 'generated/app/generated/schema_v1.dart' as v1;
 import 'generated/app/generated/schema_v2.dart' as v2;
 import 'generated/app/generated/schema_v3.dart' as v3;
 import 'generated/app/generated/schema_v4.dart' as v4;
+import 'generated/app/generated/schema_v5.dart' as v5;
 
 /// Every schema version must have a snapshot in drift_schemas/app and a step
 /// here that migrates from each older version (see CLAUDE.md).
@@ -49,7 +51,7 @@ void main() {
     expect((await SettingsRepository(db).watchLocale().first)?.languageCode, 'es');
   });
 
-  for (final from in [1, 2, 3, 4]) {
+  for (final from in [1, 2, 3, 4, 5]) {
     test('a fresh v$from database migrates to the current version', () async {
       final connection = await verifier.startAt(from);
       final db = AppDatabase(connection);
@@ -126,5 +128,63 @@ void main() {
     final kuba = (await PlayerRepository(db).all()).single;
     expect(kuba.avatar.equipped, isEmpty);
     expect(await db.select(db.playerItems).get(), isEmpty);
+  });
+
+  test('v5 → v6 keeps everything a family needs and gives it ids and ops; a rebuild changes nothing', () async {
+    final schema = await verifier.schemaAt(5);
+    final old = v5.DatabaseAtV5(schema.newConnection());
+    Future<void> sql(String q) => old.customStatement(q);
+    await sql("INSERT INTO players (name, name_key, avatar_json, favorite_seat, created_at) VALUES ('Viky', 'viky', '{\"eq\":{\"head\":{\"id\":\"cap\"}}}', 1, 1761400000)");
+    await sql("INSERT INTO players (name, name_key, avatar_json, favorite_seat, created_at) VALUES ('Kuba', 'kuba', '{}', NULL, 1761400100)");
+    await sql("INSERT INTO matches (game_id, played_at, duration_ms, difficulty) VALUES ('memory', 1761500000000, 60000, 'easy')");
+    await sql("INSERT INTO match_participants (match_id, seat, player_id, robot, place, score, stars) VALUES (1, 0, 1, 0, 1, 5, 3)");
+    await sql("INSERT INTO match_participants (match_id, seat, player_id, robot, place, score, stars) VALUES (1, 1, NULL, 1, 2, 3, 1)");
+    await sql("INSERT INTO matches (game_id, played_at, duration_ms, difficulty) VALUES ('tictactoe', 1761500100000, 30000, NULL)");
+    await sql("INSERT INTO match_participants (match_id, seat, player_id, robot, place, score, stars) VALUES (2, 0, 1, 0, 2, 0, 1)");
+    await sql("INSERT INTO match_participants (match_id, seat, player_id, robot, place, score, stars) VALUES (2, 1, 2, 0, 1, 1, 3)");
+    await sql("INSERT INTO points_ledger (player_id, amount, reason, detail, match_id, at) VALUES (1, 30, 'win', NULL, 1, 1761500000000)");
+    await sql("INSERT INTO points_ledger (player_id, amount, reason, detail, match_id, at) VALUES (1, 50, 'badge', 'first_win', 1, 1761500000000)");
+    await sql("INSERT INTO points_ledger (player_id, amount, reason, detail, match_id, at) VALUES (1, 100, 'gift', NULL, NULL, 1761500050000)");
+    await sql("INSERT INTO points_ledger (player_id, amount, reason, detail, match_id, at) VALUES (1, -40, 'purchase', 'hat', NULL, 1761500060000)");
+    await sql("INSERT INTO points_ledger (player_id, amount, reason, detail, match_id, at) VALUES (1, -60, 'purchase', 'cap', NULL, 1761500070000)");
+    await sql("INSERT INTO points_ledger (player_id, amount, reason, detail, match_id, at) VALUES (2, 25, 'win', NULL, 2, 1761500100000)");
+    await sql("INSERT INTO points_ledger (player_id, amount, reason, detail, match_id, at) VALUES (2, -25, 'reset', NULL, NULL, 1761500200000)");
+    // The hat was reset away later; only the cap is still owned.
+    await sql("INSERT INTO player_items (player_id, item_id, acquired_at) VALUES (1, 'cap', 1761500070000)");
+    await sql("INSERT INTO earned_badges (player_id, badge_id, earned_at) VALUES (1, 'first_win', 1761500000000)");
+    await sql("INSERT INTO player_counters (player_id, key, value) VALUES (1, 'memory.pairs', 6)");
+    await sql("INSERT INTO app_settings (key, value) VALUES ('activePlayerId', '2')");
+    await sql("INSERT INTO saved_sessions (game_id, save_json, updated_at) VALUES ('sample', "
+        "'{\"config\":{\"gameId\":\"sample\",\"seats\":[{\"type\":\"human\",\"profileId\":1},{\"type\":\"robot\"}],"
+        "\"difficulty\":\"easy\",\"robotSpeed\":\"fast\",\"options\":{}},\"seed\":3,\"moves\":[]}', 9)");
+    await old.close();
+
+    final db = AppDatabase(schema.newConnection());
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, 6);
+
+    Future<String> tables() async => [
+      for (final t in ['players', 'matches', 'match_participants', 'points_ledger', 'player_items', 'earned_badges', 'player_counters', 'app_settings', 'saved_sessions'])
+        '$t: ${(await db.customSelect('SELECT * FROM $t ORDER BY 1, 2').get()).map((r) => {...r.data}..remove('uid')).toList()}',
+    ].join('\n');
+    final points = PointsRepository(db);
+    expect(await points.balance(1), 30 + 50 + 100 - 40 - 60);
+    expect(await points.totalEarned(1), 180);
+    expect(await points.balance(2), 0);
+    expect((await db.select(db.playerItems).get()).map((i) => (i.playerId, i.itemId)), [(1, 'cap')]);
+    final stats = StatsRepository(db);
+    expect((await stats.earnedBadges(1)).keys, ['first_win']);
+    expect(await stats.counter(1, 'memory.pairs'), 6);
+    expect((await stats.allMatches()).map((m) => m.gameId), ['memory', 'tictactoe']);
+    expect(await SettingsRepository(db).watchActivePlayerId().first, 2);
+    expect((await GameStore(db).savedSession('sample'))?.config.seats.length, 2);
+    for (final t in ['players', 'matches', 'points_ledger']) {
+      expect((await db.customSelect('SELECT COUNT(*) AS n FROM $t WHERE uid IS NULL').getSingle()).data['n'], 0, reason: t);
+    }
+    expect(await db.select(db.syncOps).get(), isNotEmpty);
+
+    final before = await tables();
+    await FamilyStore(db).rebuild();
+    expect(await tables(), before, reason: 'the ops say exactly what the tables held');
   });
 }
