@@ -155,4 +155,16 @@ void main() {
     expect((await stats.earnedBadges(viky)).keys, isNot(contains('checkers.grandmaster')));
     expect(await points.balance(viky), before);
   });
+
+  test('a rebuild running alongside a local write never undoes it (review I1)', () async {
+    await players.create(name: 'Viky', avatar: AvatarSpec.defaults);
+    final store = FamilyStore.of(db);
+    final rebuilds = [store.rebuild(), store.rebuild()];
+    final kuba = players.create(name: 'Kuba', avatar: AvatarSpec.defaults);
+    rebuilds.add(store.rebuild());
+    await Future.wait([...rebuilds, kuba]);
+    expect([for (final p in await players.all()) p.name], containsAll(['Viky', 'Kuba']));
+    final id = (await kuba).id;
+    expect([for (final p in await players.all()) p.id], contains(id), reason: 'the row keeps its id');
+  });
 }

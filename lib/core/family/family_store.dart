@@ -118,10 +118,17 @@ class FamilyStore {
   Future<List<FamilyOp>> all() async => [for (final row in await _db.select(_db.syncOps).get()) ?_decode(row)];
 
   /// Computes the family state from every op and writes it to the tables.
-  Future<void> rebuild() async {
-    final ops = await all();
-    await _db.transaction(() => materialize(_db, foldFamily(ops)));
+  /// One at a time, and the ops are read inside the transaction, so a write
+  /// made meanwhile is never undone by an older picture of the log.
+  Future<void> rebuild() {
+    final run = _rebuilding.catchError((Object _) {}).then(
+      (_) => _db.transaction(() async => materialize(_db, foldFamily(await all()))),
+    );
+    _rebuilding = run;
+    return run;
   }
+
+  Future<void> _rebuilding = Future.value();
 
   Future<void> _insert(FamilyOp op) => _db
       .into(_db.syncOps)
