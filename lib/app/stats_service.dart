@@ -95,11 +95,12 @@ class StatsService {
     required List<GameEvent> events,
     required Duration duration,
     String? matchUid,
+    Map<int, String> familyUids = const {},
   }) async {
     // Spec 5.6: a game ended early (e.g. Člověče "Ukončit a seřadit") earns
     // nothing – like leaving a game, it is not recorded at all.
     if (result.stats['endedEarly'] == true) return MatchRewards.none;
-    return _record(config: config, result: result, events: events, duration: duration, matchUid: matchUid);
+    return _record(config: config, result: result, events: events, duration: duration, matchUid: matchUid, familyUids: familyUids);
   }
 
   /// Awards the badges [playerId] now qualifies for without a new game –
@@ -140,6 +141,7 @@ class StatsService {
     required List<GameEvent> events,
     required Duration duration,
     String? matchUid,
+    Map<int, String> familyUids = const {},
   }) => _repo.transaction(() async {
     final humanIds = {
       for (final s in config.seats)
@@ -187,7 +189,7 @@ class StatsService {
     );
     final config0 = _rewards;
     final before = await _repo.allMatches();
-    final matchId = await _repo.recordMatch(match, events: events, uid: matchUid);
+    final matchId = await _repo.recordMatch(match, events: events, uid: matchUid, familyUids: familyUids);
     final history = await _repo.allMatches();
     final defs = badgesFor(config.gameId);
     final available = {for (final m in _modules) if (m.available) m.id};

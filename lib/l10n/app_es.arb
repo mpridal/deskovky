@@ -417,5 +417,11 @@
   "refundTitle": "Los puntos han vuelto",
   "refundOk": "Entendido",
   "familyPairs": "Posibles parejas ({count})",
-  "refundNotice": "Te devolvimos los puntos de {item}: no había puntos para ambas cosas."
+  "refundNotice": "Te devolvimos los puntos de {item}: no había puntos para ambas cosas.",
+  "inviteFamily": "Invitar de la familia",
+  "inviteSent": "Invitación enviada.",
+  "inviteNoDevice": "No hay ningún dispositivo de la familia en la red.",
+  "invitePlay": "Jugar",
+  "inviteLater": "Ahora no",
+  "inviteTitle": "{host} te invita a {game}, ¿jugar?"
 }

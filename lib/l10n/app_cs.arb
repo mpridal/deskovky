@@ -417,5 +417,11 @@
   "refundTitle": "Body jsou zpátky",
   "refundOk": "Rozumím",
   "familyPairs": "Možné dvojice ({count})",
-  "refundNotice": "Vrátili jsme ti body za {item} – na obě věci nebylo dost bodů."
+  "refundNotice": "Vrátili jsme ti body za {item} – na obě věci nebylo dost bodů.",
+  "inviteFamily": "Pozvat z rodiny",
+  "inviteSent": "Pozvánka odeslána.",
+  "inviteNoDevice": "V síti jsem nenašel žádné rodinné zařízení.",
+  "invitePlay": "Hrát",
+  "inviteLater": "Teď ne",
+  "inviteTitle": "{host} tě zve do hry {game} – hrát?"
 }

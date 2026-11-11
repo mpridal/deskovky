@@ -130,6 +130,15 @@ class HostRoom extends ChangeNotifier {
   HostTransport? _transport;
   GameConfig? _deviceConfig;
 
+  /// One id for the current game on every device.
+  String get matchUid => '$roomCode-$_seed';
+
+  /// Seat → family id of the person there, where the room knows one.
+  Map<int, String> get seatUids => {
+    for (final (i, slot) in _slots.indexed)
+      if (slot case LocalSlot(card: ProfileCard(:final uid?)) || RemoteSlot(card: ProfileCard(:final uid?))) i: uid,
+  };
+
   /// Seat → device ('host', a clientId, or null for a robot).
   List<String?> _owners = const [];
 
@@ -279,7 +288,7 @@ class HostRoom extends ChangeNotifier {
     _controller = controller;
     for (final conn in _conns) {
       final id = conn.clientId;
-      if (id != null) conn.channel.send(Start(config: config, seed: _seed, yourSeats: _seatsOf(id)));
+      if (id != null) conn.channel.send(Start(config: config, seed: _seed, yourSeats: _seatsOf(id), matchUid: matchUid, seatUids: seatUids));
     }
     // Whoever is not here any more is played by a robot.
     for (final (seat, owner) in _owners.indexed) {
@@ -441,7 +450,7 @@ class HostRoom extends ChangeNotifier {
       conn.channel.send(Welcome(clientId: known, token: hello.token!));
       _setClient(known, (s) => s.copyWith(connected: true));
       if (_session case final session?) {
-        conn.channel.send(Start(config: session.config, seed: _seed, yourSeats: _seatsOf(known)));
+        conn.channel.send(Start(config: session.config, seed: _seed, yourSeats: _seatsOf(known), matchUid: matchUid, seatUids: seatUids));
         conn.channel.send(StateSnapshot(seq: _seq, saved: session.toSave()));
         // Their places are theirs again, from a robot or from the wait.
         for (final seat in _seatsOf(known).keys) {

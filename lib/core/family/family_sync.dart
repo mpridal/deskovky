@@ -52,6 +52,8 @@ Future<SyncOutcome> syncOver(
   required FamilyIdentity family,
   required bool initiator,
   Duration timeout = const Duration(seconds: 20),
+  Map<String, Object?>? invite,
+  void Function(Map<String, Object?> invite)? onInvite,
 }) async {
   final me = await store.deviceId();
   final inbox = StreamIterator(channel.incoming.where((m) => m is FamilyMessage).cast<FamilyMessage>());
@@ -93,8 +95,21 @@ Future<SyncOutcome> syncOver(
     final theirProof = await next('proof');
     if (theirProof['hmac'] != proof(peerId)) refuse('auth');
 
+    // An invitation instead of a sync (spec 5.4): proven family, nothing else.
+    if (invite != null) {
+      send({...invite, 't': 'invite'});
+      return SyncOutcome.ok(peer: peerId, sent: 0, received: 0);
+    }
     send({'t': 'have', 'vector': await store.versionVector()});
-    final have = await next('have');
+    if (!await inbox.moveNext().timeout(timeout, onTimeout: () => false)) throw const _Refused('lost');
+    final opening = inbox.current.body;
+    if (opening['t'] == 'invite') {
+      onInvite?.call(opening);
+      return SyncOutcome.ok(peer: peerId, sent: 0, received: 0);
+    }
+    if (opening['t'] == 'bye') throw _Refused(opening['reason'] as String? ?? 'bye');
+    if (opening['t'] != 'have') throw const _Refused('lost');
+    final have = opening;
     final vector = {
       for (final e in (have['vector'] as Map<String, Object?>? ?? const {}).entries)
         if (e.value case final int seq) e.key: seq,

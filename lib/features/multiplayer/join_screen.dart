@@ -75,7 +75,7 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
           .read(networkRoomsProvider)
           .join(
             ticket: ticket,
-            profiles: [for (final p in who) ProfileCard(name: p.name, avatar: p.avatar.toJson())],
+            profiles: [for (final p in who) ProfileCard(name: p.name, avatar: p.avatar.toJson(), uid: p.uid)],
             profileIds: [for (final p in who) p.id],
             appVersion: version,
           );

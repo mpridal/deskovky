@@ -1442,4 +1442,25 @@ class AppLocalizationsEs extends AppLocalizations {
   String refundNotice(String item) {
     return 'Te devolvimos los puntos de $item: no había puntos para ambas cosas.';
   }
+
+  @override
+  String get inviteFamily => 'Invitar de la familia';
+
+  @override
+  String get inviteSent => 'Invitación enviada.';
+
+  @override
+  String get inviteNoDevice =>
+      'No hay ningún dispositivo de la familia en la red.';
+
+  @override
+  String get invitePlay => 'Jugar';
+
+  @override
+  String get inviteLater => 'Ahora no';
+
+  @override
+  String inviteTitle(String host, String game) {
+    return '$host te invita a $game, ¿jugar?';
+  }
 }

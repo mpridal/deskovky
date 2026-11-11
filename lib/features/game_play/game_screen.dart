@@ -1,4 +1,5 @@
 import 'dart:async';
+import '../../core/family/family_store.dart';
 import '../../app/family_providers.dart';
 import '../../app/family_controller.dart';
 import 'dart:math';
@@ -512,7 +513,15 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
           result: outcome.result,
           events: List.of(_host.events),
           duration: _elapsed,
+          // A family network game: one record on every device (spec 7.3).
+          matchUid: _hostRoom?.matchUid ?? _clientRoom?.matchUid,
+          familyUids: _hostRoom?.seatUids ?? _clientRoom?.seatUids ?? const {},
         )
+        .then((rewards) async {
+          // Family people from other devices show by name in this device's history.
+          if (_isNet) await FamilyStore.of(ref.read(databaseProvider)).rebuild();
+          return rewards;
+        })
         .catchError((Object e) {
           // Statistics must never keep the results away.
           debugPrint('GameScreen: cannot record the game: $e');

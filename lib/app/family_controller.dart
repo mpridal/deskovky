@@ -1,4 +1,5 @@
 import 'dart:async';
+import '../core/multiplayer/room_info.dart';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -18,6 +19,26 @@ import 'stats_service.dart';
 
 /// Why the family cannot sync right now (shown in Rodina).
 enum FamilyProblem { noWifi, otherVersion }
+
+/// "Táta tě zve do Pexesa" (spec 5.4): a room to join and the child it is for.
+@immutable
+class FamilyInvite {
+  const FamilyInvite({required this.profileUid, required this.room, required this.gameId, required this.hostName});
+
+  final String profileUid;
+  final JoinTicket room;
+  final String gameId;
+  final String hostName;
+
+  Map<String, Object?> toJson() => {'profile': profileUid, 'room': room.toUri().toString(), 'game': gameId, 'host': hostName};
+
+  static FamilyInvite? fromJson(Map<String, Object?> json) {
+    final profile = json['profile'], room = json['room'], game = json['game'], host = json['host'];
+    if (profile is! String || room is! String || game is! String || host is! String) return null;
+    final ticket = JoinTicket.parse(room);
+    return ticket == null ? null : FamilyInvite(profileUid: profile, room: ticket, gameId: game, hostName: host);
+  }
+}
 
 /// A family device as Rodina lists it.
 @immutable
@@ -162,6 +183,39 @@ class FamilyController extends ChangeNotifier {
     if (_changedSince.remove(peer.deviceId) && !_inGame) unawaited(_syncWith(peer));
   }
 
+  final _invites = StreamController<FamilyInvite>.broadcast();
+
+  /// Invitations to network games from family devices.
+  Stream<FamilyInvite> get invites => _invites.stream;
+
+  /// Invites the child [profileUid] into a room: to the family device where
+  /// they play now, else to every family device on the Wi-Fi. False when no
+  /// family device took it.
+  Future<bool> invite({
+    required String profileUid,
+    required JoinTicket room,
+    required String gameId,
+    required String hostName,
+  }) async {
+    final f = _family;
+    if (f == null || _peers.isEmpty) return false;
+    final theirs = _peers.values.where((p) => p.activeUid == profileUid).toList();
+    final targets = theirs.isEmpty ? _peers.values.toList() : theirs;
+    final body = FamilyInvite(profileUid: profileUid, room: room, gameId: gameId, hostName: hostName).toJson();
+    var delivered = false;
+    for (final peer in targets) {
+      try {
+        final channel = await net.connect(peer.ip, peer.port);
+        final outcome = await syncOver(channel, store: store, family: f, initiator: true, invite: body);
+        await channel.close();
+        delivered |= outcome.ok;
+      } on Object catch (e) {
+        debugPrint('Family invite to ${peer.deviceId}: $e');
+      }
+    }
+    return delivered;
+  }
+
   Future<SyncOutcome> _run(MessageChannel channel, {required bool initiator}) async {
     final f = _family;
     if (f == null) {
@@ -171,7 +225,15 @@ class FamilyController extends ChangeNotifier {
     _open.add(channel);
     final SyncOutcome outcome;
     try {
-      outcome = await syncOver(channel, store: store, family: f, initiator: initiator);
+      outcome = await syncOver(
+        channel,
+        store: store,
+        family: f,
+        initiator: initiator,
+        onInvite: (json) {
+          if (FamilyInvite.fromJson(json) case final invite? when !_inGame && !_invites.isClosed) _invites.add(invite);
+        },
+      );
     } finally {
       _open.remove(channel);
       await channel.close();
@@ -197,6 +259,9 @@ class FamilyController extends ChangeNotifier {
       await stats.checkBadges(p.id);
     }
   }
+
+  @visibleForTesting
+  void debugReceiveInvite(FamilyInvite invite) => _invites.add(invite);
 
   /// As if new data had just come from the family (the home screen blip).
   @visibleForTesting
@@ -382,6 +447,7 @@ class FamilyController extends ChangeNotifier {
   @override
   void dispose() {
     _disposed = true;
+    unawaited(_invites.close());
     unawaited(_stop());
     super.dispose();
   }

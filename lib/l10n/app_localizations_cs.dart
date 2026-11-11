@@ -1449,4 +1449,24 @@ class AppLocalizationsCs extends AppLocalizations {
   String refundNotice(String item) {
     return 'Vrátili jsme ti body za $item – na obě věci nebylo dost bodů.';
   }
+
+  @override
+  String get inviteFamily => 'Pozvat z rodiny';
+
+  @override
+  String get inviteSent => 'Pozvánka odeslána.';
+
+  @override
+  String get inviteNoDevice => 'V síti jsem nenašel žádné rodinné zařízení.';
+
+  @override
+  String get invitePlay => 'Hrát';
+
+  @override
+  String get inviteLater => 'Teď ne';
+
+  @override
+  String inviteTitle(String host, String game) {
+    return '$host tě zve do hry $game – hrát?';
+  }
 }

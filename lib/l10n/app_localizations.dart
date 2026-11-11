@@ -2607,6 +2607,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your points for {item} are back – there were not enough points for both.'**
   String refundNotice(String item);
+
+  /// No description provided for @inviteFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite from the family'**
+  String get inviteFamily;
+
+  /// No description provided for @inviteSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation sent.'**
+  String get inviteSent;
+
+  /// No description provided for @inviteNoDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'No family device found on the network.'**
+  String get inviteNoDevice;
+
+  /// No description provided for @invitePlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get invitePlay;
+
+  /// No description provided for @inviteLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get inviteLater;
+
+  /// No description provided for @inviteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{host} invites you to {game} – play?'**
+  String inviteTitle(String host, String game);
 }
 
 class _AppLocalizationsDelegate

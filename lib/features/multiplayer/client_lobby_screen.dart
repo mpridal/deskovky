@@ -24,7 +24,7 @@ class ClientLobbyScreen extends ConsumerStatefulWidget {
 }
 
 class _ClientLobbyScreenState extends ConsumerState<ClientLobbyScreen> {
-  var _ready = false;
+  late var _ready = ref.read(networkRoomsProvider).client?.ready ?? false;
   var _started = false;
 
   Future<void> _leave() async {

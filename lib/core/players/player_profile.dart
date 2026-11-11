@@ -12,6 +12,7 @@ class PlayerProfile {
     required this.avatar,
     required this.favoriteSeat,
     required this.createdAt,
+    this.uid,
   });
 
   final int id;
@@ -21,6 +22,9 @@ class PlayerProfile {
   /// Preferred seat color 0–3, or null.
   final int? favoriteSeat;
   final DateTime createdAt;
+
+  /// The profile's id in the family (the same on every family device).
+  final String? uid;
 
   @override
   bool operator ==(Object other) =>

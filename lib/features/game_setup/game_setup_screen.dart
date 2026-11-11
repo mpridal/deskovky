@@ -133,7 +133,7 @@ class _GameSetupScreenState extends ConsumerState<GameSetupScreen> {
     final config = _config!;
     final l10n = AppLocalizations.of(context);
     final byId = {for (final p in profiles) p.id: p};
-    ProfileCard card(PlayerProfile p) => ProfileCard(name: p.name, avatar: p.avatar.toJson());
+    ProfileCard card(PlayerProfile p) => ProfileCard(name: p.name, avatar: p.avatar.toJson(), uid: p.uid);
     final slots = <RoomSlot>[
       for (final seat in config.seats)
         if (seat is HumanSeat && byId[seat.profileId] != null)

@@ -127,6 +127,7 @@ class PlayerRepository {
         avatar: AvatarSpec.fromJson(_decode(row.avatarJson)),
         favoriteSeat: row.favoriteSeat,
         createdAt: row.createdAt.toUtc(),
+        uid: row.uid,
       );
 
   static Map<String, Object?>? _decode(String json) {

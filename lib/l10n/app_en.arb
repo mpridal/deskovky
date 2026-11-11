@@ -919,5 +919,21 @@
         "type": "String"
       }
     }
+  },
+  "inviteFamily": "Invite from the family",
+  "inviteSent": "Invitation sent.",
+  "inviteNoDevice": "No family device found on the network.",
+  "invitePlay": "Play",
+  "inviteLater": "Not now",
+  "inviteTitle": "{host} invites you to {game} – play?",
+  "@inviteTitle": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "game": {
+        "type": "String"
+      }
+    }
   }
 }

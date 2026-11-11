@@ -28,7 +28,15 @@ class StatsRepository {
   /// Stores [match]; [events] add up in the human players' counters
   /// (`data['count']`, default 1; only the player at `data['seat']` when the
   /// event names a seat). Returns the match id.
-  Future<int> recordMatch(MatchRecord match, {List<GameEvent> events = const [], String? uid}) => _db.transaction(() async {
+  /// [familyUids] names people of the family who played on other devices
+  /// (seat → family id); only ids of profiles this device knows are kept,
+  /// so a stranger stays a guest.
+  Future<int> recordMatch(
+    MatchRecord match, {
+    List<GameEvent> events = const [],
+    String? uid,
+    Map<int, String> familyUids = const {},
+  }) => _db.transaction(() async {
     final matchUid = uid ?? newUid();
     final id = await _db
         .into(_db.matches)
@@ -45,6 +53,9 @@ class StatsRepository {
     for (final p in match.participants) {
       if (p.playerId case final playerId?) uids[playerId] = await FamilyStore.playerUid(_db, playerId);
     }
+    final known = {
+      for (final row in await (_db.select(_db.players)..where((p) => p.uid.isIn(familyUids.values))).get()) row.uid,
+    };
     final counterLines = <CounterLine>[];
     for (final p in match.participants) {
       await _db
@@ -86,7 +97,7 @@ class StatsRepository {
           for (final p in match.participants)
             MatchSeat(
               seat: p.seat,
-              playerUid: uids[p.playerId],
+              playerUid: uids[p.playerId] ?? (p.robot || !known.contains(familyUids[p.seat]) ? null : familyUids[p.seat]),
               robot: p.robot,
               place: p.place,
               score: p.score,
