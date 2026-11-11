@@ -1469,4 +1469,14 @@ class AppLocalizationsCs extends AppLocalizations {
   String inviteTitle(String host, String game) {
     return '$host tě zve do hry $game – hrát?';
   }
+
+  @override
+  String pointsRefundDuplicate(String item) {
+    return 'Vráceno: $item – koupeno dvakrát';
+  }
+
+  @override
+  String pointsRefundNotEnough(String item) {
+    return 'Vráceno: $item – nebylo dost bodů';
+  }
 }

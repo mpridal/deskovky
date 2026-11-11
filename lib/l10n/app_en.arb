@@ -935,5 +935,9 @@
         "type": "String"
       }
     }
-  }
+  },
+  "pointsRefundDuplicate": "Refunded: {item} – bought twice",
+  "pointsRefundNotEnough": "Refunded: {item} – not enough points",
+  "@pointsRefundDuplicate": {"placeholders": {"item": {"type": "String"}}},
+  "@pointsRefundNotEnough": {"placeholders": {"item": {"type": "String"}}}
 }

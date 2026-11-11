@@ -423,5 +423,7 @@
   "inviteNoDevice": "No hay ningún dispositivo de la familia en la red.",
   "invitePlay": "Jugar",
   "inviteLater": "Ahora no",
-  "inviteTitle": "{host} te invita a {game}, ¿jugar?"
+  "inviteTitle": "{host} te invita a {game}, ¿jugar?",
+  "pointsRefundDuplicate": "Devuelto: {item}: comprado dos veces",
+  "pointsRefundNotEnough": "Devuelto: {item}: no había puntos suficientes"
 }

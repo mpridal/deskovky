@@ -1458,4 +1458,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String inviteTitle(String host, String game) {
     return '$host invites you to $game – play?';
   }
+
+  @override
+  String pointsRefundDuplicate(String item) {
+    return 'Refunded: $item – bought twice';
+  }
+
+  @override
+  String pointsRefundNotEnough(String item) {
+    return 'Refunded: $item – not enough points';
+  }
 }

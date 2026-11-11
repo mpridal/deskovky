@@ -22,7 +22,16 @@ String pointsLabel(AppLocalizations l10n, PointsReason reason, {String? detail})
     PointsReason.gift => l10n.pointsGift,
     PointsReason.purchase => detail == null ? l10n.pointsPurchase : l10n.pointsPurchaseItem(itemName(l10n, detail)),
     PointsReason.reset => l10n.pointsReset,
+    PointsReason.refund => _refund(l10n, detail),
   };
+}
+
+/// Family refunds (spec "Rodinná synchronizace" kap. 6): detail is
+/// `duplicate:ITEM` or `notEnough:ITEM`.
+String _refund(AppLocalizations l10n, String? detail) {
+  final [kind, ...rest] = (detail ?? '').split(':');
+  final item = itemName(l10n, rest.join(':'));
+  return kind == 'duplicate' ? l10n.pointsRefundDuplicate(item) : l10n.pointsRefundNotEnough(item);
 }
 
 String _badgeTitle(AppLocalizations l10n, String? id) {

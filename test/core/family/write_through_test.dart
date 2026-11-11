@@ -15,6 +15,9 @@ import 'package:deskovky/core/shop/shop_catalog.dart';
 import 'package:deskovky/core/shop/shop_repository.dart';
 import 'package:deskovky/core/stats/stats_repository.dart';
 import 'package:drift/native.dart';
+import 'package:deskovky/features/results/points_labels.dart';
+import 'package:deskovky/l10n/app_localizations.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Every write still goes to the tables as before, and the same change is
@@ -179,5 +182,27 @@ void main() {
     expect(updates[1].name, isNull, reason: 'same name as before');
     expect(updates[1].avatar, isNull);
     expect(updates[1].favoriteSeat, 1);
+  });
+
+  test('the same thing bought on two devices: the refund is a refund, not earned points (review I4)', () async {
+    final viky = (await players.create(name: 'Viky', avatar: AvatarSpec.defaults)).id;
+    await points.gift(viky, 500);
+    expect((await shop.buy(viky, cheap[0].id)).outcome, BuyOutcome.bought);
+    final store = FamilyStore(db);
+    final vikyUid = await FamilyStore.playerUid(db, viky);
+    await store.insertRemote([
+      FamilyOp(
+        origin: 'pho',
+        seq: 1,
+        clock: await store.nextClock(),
+        body: ItemBought(itemUid: 'other', playerUid: vikyUid, itemId: cheap[0].id, price: cheap[0].price!, atMs: 1),
+      ),
+    ]);
+    await store.rebuild();
+    final refund = (await points.history(viky)).firstWhere((e) => e.amount == cheap[0].price && e.detail != null && e.detail!.startsWith('duplicate'));
+    expect(refund.reason, PointsReason.refund);
+    expect(await points.totalEarned(viky), 500, reason: 'a refund is not earned');
+    final cs = lookupAppLocalizations(const Locale('cs'));
+    expect(pointsLabel(cs, refund.reason, detail: refund.detail), startsWith('Vráceno'));
   });
 }

@@ -108,7 +108,7 @@ class PointsRepository {
   Future<int> balance(int playerId) async => (await history(playerId)).fold<int>(0, (s, e) => s + e.amount);
 
   Future<int> totalEarned(int playerId) async =>
-      (await history(playerId)).where((e) => e.amount > 0).fold<int>(0, (s, e) => s + e.amount);
+      (await history(playerId)).where((e) => e.amount > 0 && e.reason != PointsReason.refund).fold<int>(0, (s, e) => s + e.amount);
 
   /// Newest first.
   Future<List<PointsEntry>> history(int playerId) async => [

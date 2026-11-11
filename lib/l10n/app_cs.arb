@@ -423,5 +423,7 @@
   "inviteNoDevice": "V síti jsem nenašel žádné rodinné zařízení.",
   "invitePlay": "Hrát",
   "inviteLater": "Teď ne",
-  "inviteTitle": "{host} tě zve do hry {game} – hrát?"
+  "inviteTitle": "{host} tě zve do hry {game} – hrát?",
+  "pointsRefundDuplicate": "Vráceno: {item} – koupeno dvakrát",
+  "pointsRefundNotEnough": "Vráceno: {item} – nebylo dost bodů"
 }

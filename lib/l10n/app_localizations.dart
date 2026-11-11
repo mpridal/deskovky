@@ -2643,6 +2643,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{host} invites you to {game} – play?'**
   String inviteTitle(String host, String game);
+
+  /// No description provided for @pointsRefundDuplicate.
+  ///
+  /// In en, this message translates to:
+  /// **'Refunded: {item} – bought twice'**
+  String pointsRefundDuplicate(String item);
+
+  /// No description provided for @pointsRefundNotEnough.
+  ///
+  /// In en, this message translates to:
+  /// **'Refunded: {item} – not enough points'**
+  String pointsRefundNotEnough(String item);
 }
 
 class _AppLocalizationsDelegate

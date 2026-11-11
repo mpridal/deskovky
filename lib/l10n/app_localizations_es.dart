@@ -1463,4 +1463,14 @@ class AppLocalizationsEs extends AppLocalizations {
   String inviteTitle(String host, String game) {
     return '$host te invita a $game, ¿jugar?';
   }
+
+  @override
+  String pointsRefundDuplicate(String item) {
+    return 'Devuelto: $item: comprado dos veces';
+  }
+
+  @override
+  String pointsRefundNotEnough(String item) {
+    return 'Devuelto: $item: no había puntos suficientes';
+  }
 }
