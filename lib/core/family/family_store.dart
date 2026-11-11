@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:drift/drift.dart';
 
 import '../db/app_database.dart';
+import 'device_marker.dart';
 import 'family_op.dart';
 import 'fold.dart';
 import 'hlc.dart';
@@ -24,7 +25,11 @@ class FamilyStore {
   static Future<String> playerUid(AppDatabase db, int id) async =>
       (await (db.select(db.players)..where((p) => p.id.equals(id))).getSingle()).uid!;
 
+  /// Set by `main()`; tests without it never check for copied data.
+  static DeviceMarker? marker;
+
   static const deviceIdKey = 'deviceId';
+  static const markedKey = 'deviceMarked';
   static const clockKey = 'familyClock';
 
   final AppDatabase _db;
@@ -36,11 +41,42 @@ class FamilyStore {
 
   /// This device's id in the family, created on first use.
   Future<String> deviceId() async {
+    await (_marked ??= _checkMarker());
     final existing = await _setting(deviceIdKey);
     if (existing != null) return existing;
     final id = newUid();
     await _db.into(_db.appSettings).insert(AppSettingsCompanion.insert(key: deviceIdKey, value: id), mode: InsertMode.insertOrIgnore);
-    return (await _setting(deviceIdKey))!;
+    final kept = (await _setting(deviceIdKey))!;
+    await _mark(kept);
+    return kept;
+  }
+
+  Future<void>? _marked;
+
+  /// Data copied from another device (backup, phone transfer) must not
+  /// write in that device's name: the copy gets an id of its own; the
+  /// copied ops keep theirs.
+  Future<void> _checkMarker() async {
+    final m = marker;
+    if (m == null) return;
+    final id = await _setting(deviceIdKey);
+    if (id == null) return;
+    final onDisk = await m.read();
+    if (onDisk == id) return;
+    if (onDisk == null && await _setting(markedKey) == null) {
+      // First start of a version with the marker: this is the device.
+      await _mark(id);
+      return;
+    }
+    await _set(deviceIdKey, newUid());
+    await _mark((await _setting(deviceIdKey))!);
+  }
+
+  Future<void> _mark(String id) async {
+    final m = marker;
+    if (m == null) return;
+    await m.write(id);
+    await _set(markedKey, '1');
   }
 
   /// The stamp for a new local op; never goes backwards on this device.
