@@ -105,6 +105,7 @@ sealed class OpBody {
           playerUid: json['player']! as String,
           amount: json['amount']! as int,
           itemIds: [for (final i in json['items']! as List) i as String],
+          atMs: json['at'] as int? ?? 0,
         ),
         'countersAdded' => CountersAdded(
           playerUid: json['player']! as String,
@@ -371,18 +372,25 @@ class BadgeAwarded extends OpBody {
 /// A parent's reset: takes away exactly the [amount] and [itemIds] the
 /// resetting device knew (spec kap. 6), nothing that arrives later.
 class PointsReset extends OpBody {
-  const PointsReset({required this.resetUid, required this.playerUid, required this.amount, required this.itemIds});
+  const PointsReset({
+    required this.resetUid,
+    required this.playerUid,
+    required this.amount,
+    required this.itemIds,
+    this.atMs = 0,
+  });
 
   final String resetUid;
   final String playerUid;
   final int amount;
   final List<String> itemIds;
+  final int atMs;
 
   @override
   String get type => 'pointsReset';
 
   @override
-  Map<String, Object?> get fields => {'reset': resetUid, 'player': playerUid, 'amount': amount, 'items': itemIds};
+  Map<String, Object?> get fields => {'reset': resetUid, 'player': playerUid, 'amount': amount, 'items': itemIds, 'at': atMs};
 }
 
 /// Badge counters added outside a match (imported from before the family).

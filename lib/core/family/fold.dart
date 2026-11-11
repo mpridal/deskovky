@@ -170,9 +170,9 @@ FamilyState foldFamily(Iterable<FamilyOp> input) {
           owned.add(itemId);
           (itemsAt[r] ??= {})[itemId] = atMs;
         }
-      case PointsReset(:final resetUid, :final playerUid, :final amount, :final itemIds):
+      case PointsReset(:final resetUid, :final playerUid, :final amount, :final itemIds, :final atMs):
         if (dropped(playerUid)) break;
-        addEntry(playerUid, LedgerView(entryUid: resetUid, amount: -amount, reason: 'reset', atMs: op.clock.millis));
+        if (amount != 0) addEntry(playerUid, LedgerView(entryUid: resetUid, amount: -amount, reason: 'reset', atMs: atMs));
         final r = root(playerUid);
         items[r]?.removeAll(itemIds);
         itemsAt[r]?.removeWhere((id, _) => itemIds.contains(id));

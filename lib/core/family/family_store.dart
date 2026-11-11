@@ -16,6 +16,14 @@ import 'uid.dart';
 class FamilyStore {
   FamilyStore(this._db, {DateTime Function()? now}) : _now = now ?? DateTime.now;
 
+  /// The store of [db] shared by the repositories and the sync.
+  static FamilyStore of(AppDatabase db) => _shared[db] ??= FamilyStore(db);
+  static final _shared = Expando<FamilyStore>();
+
+  /// The family uid of profile row [id] (every row has one since v6).
+  static Future<String> playerUid(AppDatabase db, int id) async =>
+      (await (db.select(db.players)..where((p) => p.id.equals(id))).getSingle()).uid!;
+
   static const deviceIdKey = 'deviceId';
   static const clockKey = 'familyClock';
 

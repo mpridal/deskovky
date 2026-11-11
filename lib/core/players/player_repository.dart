@@ -5,6 +5,9 @@ import 'package:drift/drift.dart';
 
 import '../avatar/avatar_spec.dart';
 import '../db/app_database.dart';
+import '../family/family_op.dart';
+import '../family/family_store.dart';
+import '../family/uid.dart';
 import '../settings/settings_repository.dart';
 import 'player_profile.dart';
 
@@ -33,13 +36,18 @@ class PlayerRepository {
       final count = await _db.players.count().getSingle();
       if (count >= maxProfiles) throw const ProfileException(ProfileError.limitReached);
       await _ensureNameFree(clean);
+      final uid = newUid();
       final id = await _db.into(_db.players).insert(PlayersCompanion.insert(
             name: clean,
             nameKey: _key(clean),
             avatarJson: jsonEncode(avatar.toJson()),
             favoriteSeat: Value(favoriteSeat),
             createdAt: DateTime.now().toUtc(),
+            uid: Value(uid),
           ));
+      await FamilyStore.of(_db).append(
+        ProfileCreated(uid: uid, name: clean, avatar: avatar.toJson(), favoriteSeat: favoriteSeat),
+      );
       // The first player (or the first after the active one vanished) plays.
       final active = await _activeId();
       if (active == null || await byId(active) == null) await _setActive(id);
@@ -58,13 +66,24 @@ class PlayerRepository {
         avatarJson: avatar == null ? const Value.absent() : Value(jsonEncode(avatar.toJson())),
         favoriteSeat: favoriteSeat == null ? const Value.absent() : Value(favoriteSeat),
       ));
+      final row = await (_db.select(_db.players)..where((p) => p.id.equals(id))).getSingle();
+      await FamilyStore.of(_db).append(
+        ProfileUpdated(
+          uid: row.uid!,
+          name: row.name,
+          avatar: jsonDecode(row.avatarJson) as Map<String, Object?>,
+          favoriteSeat: row.favoriteSeat,
+        ),
+      );
       return (await byId(id))!;
     });
   }
 
   Future<void> delete(int id) => _db.transaction(() async {
-        final deleted = await (_db.delete(_db.players)..where((p) => p.id.equals(id))).go();
-        if (deleted == 0) throw const ProfileException(ProfileError.notFound);
+        final row = await (_db.select(_db.players)..where((p) => p.id.equals(id))).getSingleOrNull();
+        if (row == null) throw const ProfileException(ProfileError.notFound);
+        await _db.delete(_db.players).delete(row);
+        await FamilyStore.of(_db).append(ProfileDeleted(uid: row.uid!));
         // Deleting the active player hands the turn to the oldest one left.
         if (await _activeId() == id) {
           final remaining = await _ordered().get();
