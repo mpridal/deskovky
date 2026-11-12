@@ -57,6 +57,7 @@ flutter:
     - assets/games/memory/cards/food/
     - assets/games/memory/cards/transport/
     - assets/games/memory/cards/space/
+    - assets/games/memory/cards/flags/
     - assets/config/rewards.json
     - assets/config/shop_items.json
     - assets/fonts/OFL-Baloo2.txt
