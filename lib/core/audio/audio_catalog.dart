@@ -19,6 +19,7 @@ class AudioCatalog {
       'ludo': 'music/ludo.ogg',
       'matches': 'music/matches.ogg',
       'checkers': 'music/checkers.ogg',
+      'war': 'music/war.ogg',
     },
     sfx: {
       'tap': 'sfx/tap.wav',

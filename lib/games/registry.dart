@@ -6,6 +6,7 @@ import 'matches/matches_module.dart';
 import 'memory/memory_module.dart';
 import 'minesweeper/minesweeper_module.dart';
 import 'tictactoe/tictactoe_module.dart';
+import 'war/war_module.dart';
 
 /// All games known to the app, in home-grid order (spec 8: one registry file).
 /// The phase-2 games are registered from the start (milestone 9), so their
@@ -18,9 +19,10 @@ const List<GameModule<Object?>> gameModules = [
   ludoModule,
   matchesModule,
   checkersModule,
+  warModule,
 ];
 
 /// How many cards the home grid shows; missing ones are "coming soon".
-const homeGridSlots = 7;
+const homeGridSlots = 8;
 
 GameModule<Object?>? moduleById(String id) => gameModules.where((m) => m.id == id).firstOrNull;

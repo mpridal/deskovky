@@ -344,7 +344,9 @@ class _GameSetupScreenState extends ConsumerState<GameSetupScreen> {
                     ),
                   ),
                 ),
-              if (module.difficultyWithoutRobots || (config.robots > 0 && module.supportsAi)) ...[
+              // One difficulty (Válka: pure luck) is nothing to choose.
+              if (module.difficulties.length > 1 &&
+                  (module.difficultyWithoutRobots || (config.robots > 0 && module.supportsAi))) ...[
                 _label(config.robots > 0 ? l10n.setupDifficulty : l10n.setupDifficultySolo),
                 SegmentedControl<Difficulty>(
                   segments: [for (final d in module.difficulties) (d, difficultyLabel(l10n, d))],
