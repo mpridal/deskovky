@@ -32,3 +32,6 @@ coverage/
 Thumbs.db
 desktop.ini
 .superpowers/
+
+# Git worktrees of this repo (git worktree add .worktrees/<name>)
+.worktrees/

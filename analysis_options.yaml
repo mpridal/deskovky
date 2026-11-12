@@ -6,3 +6,4 @@ analyzer:
     - android/**
     - "**/*.g.dart"
     - test/core/db/generated/**
+    - .worktrees/**
