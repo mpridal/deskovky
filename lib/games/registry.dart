@@ -5,6 +5,7 @@ import 'ludo/ludo_module.dart';
 import 'matches/matches_module.dart';
 import 'memory/memory_module.dart';
 import 'minesweeper/minesweeper_module.dart';
+import 'ships/ships_module.dart';
 import 'tictactoe/tictactoe_module.dart';
 import 'war/war_module.dart';
 
@@ -20,9 +21,10 @@ const List<GameModule<Object?>> gameModules = [
   matchesModule,
   checkersModule,
   warModule,
+  shipsModule,
 ];
 
 /// How many cards the home grid shows; missing ones are "coming soon".
-const homeGridSlots = 8;
+const homeGridSlots = 9;
 
 GameModule<Object?>? moduleById(String id) => gameModules.where((m) => m.id == id).firstOrNull;

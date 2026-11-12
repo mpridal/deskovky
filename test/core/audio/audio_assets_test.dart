@@ -75,11 +75,12 @@ void main() {
     }
   });
 
-  test('music fits the 15 MB budget (spec 7.1)', () {
+  // 15 MB in spec 7.1; raised to 17 MB for Lodě (Miloš, 2026-11-12).
+  test('music fits the 17 MB budget (spec 7.1)', () {
     final bytes = Directory(
       'assets/audio/music',
     ).listSync().whereType<File>().fold<int>(0, (sum, f) => sum + f.lengthSync());
-    expect(bytes, lessThanOrEqualTo(15 * 1024 * 1024));
+    expect(bytes, lessThanOrEqualTo(17 * 1024 * 1024));
   });
 
   test('pubspec bundles the audio folders and credits', () {

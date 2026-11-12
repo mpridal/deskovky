@@ -297,7 +297,7 @@ Jednotný styl: barevný pastelový podklad, tmavá kresba, akcent v barvách hr
 - Při událostech (výhra, odznak) se hudba krátce ztlumí (ducking −8 dB).
 - Při přechodu aplikace do pozadí se hudba pozastaví.
 - Hra registruje svou hudbu a případné vlastní efekty v manifestu (kap. 8).
-- Formát OGG Vorbis (hudba ~96 kb/s, efekty 64 kb/s mono), hlasitost normalizovaná na cca −16 LUFS. Rozpočet: hudba celkem ≤ 15 MB.
+- Formát OGG Vorbis (hudba ~96 kb/s, efekty 64 kb/s mono), hlasitost normalizovaná na cca −16 LUFS. Rozpočet: hudba celkem ≤ 17 MB (původně 15 MB, zvýšeno 2026-11-12 kvůli hudbě Lodí).
 
 ### 7.2 Hudba – každá hra má vlastní podkres
 | Kontext | Nálada | Kandidáti (Kevin MacLeod, incompetech.com, CC BY 4.0) | Soubor v projektu |
