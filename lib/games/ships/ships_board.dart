@@ -254,8 +254,14 @@ class _ShipsBoardState extends State<ShipsBoard> {
           onTap: (at) => _editTap(seat, at),
           cellBuilder: (context, c, r) {
             final cell = r * s.size + c;
+            // Its own node, so a screen reader can walk the sea cell by cell.
             return Semantics(
+              container: true,
+              excludeSemantics: true,
+              button: true,
+              selected: pieces.containsKey(cell) && _selected != null && selected.contains((c, r)),
               label: shipsTexts.of(context, pieces.containsKey(cell) ? 'ships.cell.ship' : 'ships.cell', {'cell': _name(c, r)}),
+              onTap: () => _editTap(seat, (c, r)),
               child: ShipsCell(look: ShipsLook.sea, piece: pieces[cell]),
             );
           },
@@ -335,9 +341,13 @@ class _ShipsBoardState extends State<ShipsBoard> {
           ShipsLook.hit => 'ships.cell.hit',
           ShipsLook.sea => piece == null ? 'ships.cell' : (piece.sunk ? 'ships.cell.sunk' : 'ships.cell.ship'),
         };
+        final open = canShoot && look == ShipsLook.sea && piece == null;
         return Semantics(
-          button: canShoot && look == ShipsLook.sea && piece == null,
+          container: true,
+          excludeSemantics: true,
+          button: open,
           label: shipsTexts.of(context, key, {'cell': _name(c, r)}),
+          onTap: open ? () => _shoot(cell) : null,
           child: ShipsCell(look: look, piece: piece, shot: piece != null && shot.contains(cell)),
         );
       },
