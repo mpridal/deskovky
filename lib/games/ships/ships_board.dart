@@ -13,6 +13,14 @@ import 'ships_events.dart';
 import 'ships_rules.dart';
 import 'ships_texts.dart';
 
+/// Seeds the fleet the editor offers first. Not part of the game's
+/// determinism (the placed fleet travels in the move), so every game starts
+/// from a different one; tests pin it.
+int defaultShipsDraftSeed() => Random().nextInt(1 << 30);
+
+@visibleForTesting
+int Function() shipsDraftSeed = defaultShipsDraftSeed;
+
 /// Board of Lodě, always seen by one seat (the viewer, see [_viewer]):
 /// the other seat's sea to shoot at, big, and the viewer's own fleet, small.
 /// While a seat places its fleet it gets an editor instead.
@@ -41,9 +49,13 @@ class _ShipsBoardState extends State<ShipsBoard> {
   List<Ship>? _draft;
   int? _selected;
   var _shuffles = 0;
+  int _draftBase = shipsDraftSeed();
 
   /// Key of the last shot's result (`ships.miss` / `.hit` / `.sunk`).
   String? _result;
+
+  /// Who fired the shot of [_result].
+  int? _resultSeat;
 
   ShipsState get _s => widget.view.state;
 
@@ -51,6 +63,9 @@ class _ShipsBoardState extends State<ShipsBoard> {
   void initState() {
     super.initState();
     _seen = widget.view.mySeat;
+    // A battle resumed here may be two people's: show nothing until the one
+    // on turn says so.
+    _covered = _seen != null && !_s.placing && !_s.over;
     _report(_s);
   }
 
@@ -64,6 +79,8 @@ class _ShipsBoardState extends State<ShipsBoard> {
       _seen = my;
       _draft = null;
       _selected = null;
+      _shuffles = 0;
+      _draftBase = shipsDraftSeed();
     }
     final before = old.view.state, now = _s;
     if (identical(before, now)) return;
@@ -71,6 +88,7 @@ class _ShipsBoardState extends State<ShipsBoard> {
       if (now.placing || now.shots[seat].length <= before.shots[seat].length) continue;
       final cell = now.shots[seat].last;
       final other = ShipsState.other(seat);
+      _resultSeat = seat;
       if (now.sunkShips(other).length > before.sunkShips(other).length) {
         _result = 'ships.sunk';
         widget.view.host.playSfx('ships.sunk');
@@ -172,7 +190,7 @@ class _ShipsBoardState extends State<ShipsBoard> {
 
   // --- placing ---------------------------------------------------------
 
-  List<Ship> _draftFor(int seat) => _draft ??= ShipsRules.randomFleet(_s.size, _s.fleet, SeededRandom(seat * 1000 + _shuffles + 1));
+  List<Ship> _draftFor(int seat) => _draft ??= ShipsRules.randomFleet(_s.size, _s.fleet, SeededRandom(_draftBase + _shuffles));
 
   void _editTap(int seat, (int, int) at) {
     final s = _s;
@@ -381,7 +399,7 @@ class _ShipsBoardState extends State<ShipsBoard> {
       children: [
         Text(shipsTexts.of(context, 'ships.enemySea'), style: AppTypography.caption(color: AppColors.paper)),
         Text(shipsTexts.of(context, 'ships.shipsLeft', {'count': left}), style: AppTypography.caption(color: AppColors.paper2)),
-        if (_result != null)
+        if (_result != null && _resultSeat == viewer)
           DecoratedBox(
             key: const ValueKey('shipsResult'),
             decoration: BoxDecoration(

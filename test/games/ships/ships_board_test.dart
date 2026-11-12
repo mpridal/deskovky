@@ -4,6 +4,7 @@ import 'package:deskovky/core/game/difficulty.dart';
 import 'package:deskovky/core/game/game_config.dart';
 import 'package:deskovky/core/game/game_module.dart';
 import 'package:deskovky/core/game/move.dart';
+import 'package:deskovky/games/ships/ships_board.dart';
 import 'package:deskovky/games/ships/ships_events.dart';
 import 'package:deskovky/games/ships/ships_module.dart';
 import 'package:deskovky/games/ships/ships_rules.dart';
@@ -122,7 +123,7 @@ Future<(GameTestHost, List<Move>)> pumpBoard(
   return (host, sent);
 }
 
-_TableState table(WidgetTester tester) => tester.state<_TableState>(find.byType(_Table));
+_TableState _table(WidgetTester tester) => tester.state<_TableState>(find.byType(_Table));
 final target = find.byKey(const ValueKey('shipsTarget'));
 final editor = find.byKey(const ValueKey('shipsEditor'));
 final ready = find.byKey(const ValueKey('shipsReady'));
@@ -136,8 +137,45 @@ Future<void> tapCell(WidgetTester tester, Finder grid, int cell, {int size = 8})
   await tester.pump(const Duration(milliseconds: 300));
 }
 
+/// Taps "Jsem na řadě" when a resumed game starts covered.
+Future<void> uncover(WidgetTester tester) async {
+  if (ready.evaluate().isEmpty) return;
+  await tester.tap(ready);
+  await tester.pump(const Duration(milliseconds: 300));
+}
+
 void main() {
   setUpAll(loadAppFonts);
+  setUp(() => shipsDraftSeed = () => 1);
+  tearDown(() => shipsDraftSeed = defaultShipsDraftSeed);
+
+  testWidgets('the offered fleet differs from game to game', (tester) async {
+    shipsDraftSeed = defaultShipsDraftSeed;
+    final fleets = <Object?>{};
+    for (var i = 0; i < 3; i++) {
+      final (_, sent) = await pumpBoard(tester, fresh(), humans: {0});
+      await tester.tap(find.byKey(const ValueKey('shipsDone')));
+      await tester.pump(const Duration(milliseconds: 300));
+      fleets.add(sent.single.data['ships']);
+    }
+    expect(fleets.length, greaterThan(1));
+  });
+
+  testWidgets('a battle resumed on this device starts covered, so nobody sees a fleet by accident', (tester) async {
+    await pumpBoard(tester, placed());
+    expect(ready, findsOneWidget);
+    expect(find.byKey(const ValueKey('shipsOwn')), findsNothing);
+  });
+
+  testWidgets('the robot sinking your ship does not say "Potopeno!" beside the other sea', (tester) async {
+    var s = rules.apply(placed(), ShipsRules.shoot(0, 63));
+    s = rules.apply(s, ShipsRules.shoot(1, 48));
+    await pumpBoard(tester, s, humans: {0});
+    await uncover(tester);
+    _table(tester).play(ShipsRules.shoot(1, 49)); // sinks seat 0's 2-ship
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(find.text('Potopeno!'), findsNothing);
+  });
 
   testWidgets('placing: shuffle, select, move, turn, then Hotovo sends a legal fleet', (tester) async {
     final (host, sent) = await pumpBoard(tester, fresh(), humans: {0});
@@ -175,7 +213,7 @@ void main() {
   testWidgets('a robot placing first: the board waits, then you place', (tester) async {
     await pumpBoard(tester, fresh(), humans: {1});
     expect(find.byKey(const ValueKey('shipsWaiting')), findsOneWidget);
-    table(tester).play(ShipsRules.place(0, fleetA));
+    _table(tester).play(ShipsRules.place(0, fleetA));
     await tester.pump(const Duration(milliseconds: 300));
     expect(editor, findsOneWidget);
   });
@@ -183,6 +221,7 @@ void main() {
   testWidgets('shooting: a miss splashes, a hit booms, a sunk ship sinks with its water shown', (tester) async {
     final semantics = tester.ensureSemantics();
     final (host, sent) = await pumpBoard(tester, placed(), humans: {0});
+    await uncover(tester);
     await tapCell(tester, target, 35);
     expect(sent.last, ShipsRules.shoot(0, 35));
     expect(host.sfx.last, 'ships.hit');
@@ -203,10 +242,11 @@ void main() {
 
   testWidgets('against a robot: no cover, its shots show on your fleet, the target waits', (tester) async {
     final (_, sent) = await pumpBoard(tester, placed(), humans: {0});
+    await uncover(tester);
     await tapCell(tester, target, 63); // miss: the robot's turn
     await tapCell(tester, target, 62);
     expect(sent, [ShipsRules.shoot(0, 63)], reason: 'not your turn');
-    table(tester).play(ShipsRules.shoot(1, 0));
+    _table(tester).play(ShipsRules.shoot(1, 0));
     await tester.pump(const Duration(milliseconds: 300));
     expect(ready, findsNothing);
     expect(find.byKey(const ValueKey('shipsOwn')), findsOneWidget);
@@ -214,6 +254,7 @@ void main() {
 
   testWidgets('two people on one device: the turn passing covers the board until "Jsem na řadě"', (tester) async {
     final (_, sent) = await pumpBoard(tester, placed());
+    await uncover(tester);
     await tapCell(tester, target, 63); // miss
     expect(ready, findsOneWidget);
     expect(target, findsNothing);
@@ -242,12 +283,14 @@ void main() {
       s = rules.apply(s, ShipsRules.shoot(0, c));
     }
     final (host, _) = await pumpBoard(tester, s, humans: {0});
+    await uncover(tester);
     await tapCell(tester, target, 36);
     expect([for (final (id, _) in host.events) id], containsAll([ShipsEvents.sharp, ShipsEvents.untouched]));
   });
 
   testWidgets('the first game shows a hint on the target sea', (tester) async {
     await pumpBoard(tester, placed(), humans: {0}, firstGame: true);
+    await uncover(tester);
     expect(find.text('Klepni do moře soupeře'), findsOneWidget);
   });
 
@@ -269,6 +312,7 @@ void main() {
         }
         await pumpBoard(tester, s, size: size, humans: {rules.currentSeat(s)!}, textScale: 1.3);
         expect(tester.takeException(), isNull);
+        await uncover(tester);
         final own = tester.getRect(find.byKey(const ValueKey('shipsOwn')));
         expect(own.bottom, lessThanOrEqualTo(size.height));
         expect(own.right, lessThanOrEqualTo(size.width));
@@ -307,6 +351,7 @@ void main() {
     ]) {
       final s = battle(sea);
       await pumpBoard(tester, s, size: size, humans: {rules.currentSeat(s)!});
+      await uncover(tester);
       await tester.pump(const Duration(seconds: 1));
       await expectLater(find.byType(FeltBackground), matchesGoldenFile('goldens/board_$name.png'));
     }
