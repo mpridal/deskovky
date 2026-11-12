@@ -2,6 +2,15 @@
 
 Každá verze má sekci `## x.y.z` s poznámkami `### cs`, `### en`, `### es` – z nich se při vydání tvoří `latest.json` a karta „Je tu nová verze“. Volitelný řádek `Minimální verze: x.y.z` udělá aktualizaci povinnou pro starší verze.
 
+## 0.10.0
+
+### cs
+Pexeso má novou sadu Vlajky států: 195 států světa, na kartě je vlajka a pod ní název státu. Každá hra vybere jiné státy a podobné vlajky (třeba Čad a Rumunsko) se v jedné hře nepotkají.
+### en
+Memory has a new set, Flags of the world: 195 countries, each card shows the flag with the country's name under it. Every game picks other countries, and look-alike flags (such as Chad and Romania) never meet in one game.
+### es
+Memoria tiene una colección nueva, Banderas del mundo: 195 países, cada carta muestra la bandera con el nombre del país debajo. Cada partida elige otros países y las banderas parecidas (como Chad y Rumanía) nunca coinciden en la misma partida.
+
 ## 0.9.0
 
 ### cs

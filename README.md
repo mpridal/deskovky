@@ -9,7 +9,7 @@ Rodinná kolekce klasických deskových a karetních her pro Android, pro telefo
 | Hra | Hráči | O co jde | Volby |
 |---|---|---|---|
 | **Piškvorky** | 2 | Kdo první složí řadu (3 na desce 3 × 3, 5 na větších). | deska 3 × 3 / 10 × 10 / 15 × 15, kdo začíná, potvrzení tahu |
-| **Pexeso** | 1–4 | Najdi dvojice obrázků. Sólo na co nejméně tahů, ve více lidech na nejvíc párů. | 12–48 karet, sady Zvířátka, Ovoce a zelenina, Doprava, Vesmír |
+| **Pexeso** | 1–4 | Najdi dvojice obrázků. Sólo na co nejméně tahů, ve více lidech na nejvíc párů. | 12–48 karet, sady Zvířátka, Ovoce a zelenina, Doprava, Vesmír a Vlajky států (195 států s názvy, v každé hře jiné) |
 | **Miny** | 1–4 | Klasické Miny na čas, ve více lidech „Střídačka“. | velikost desky podle obtížnosti, otazníky, ovládání vlajek |
 | **Člověče, nezlob se** | 2–4 | Česká klasika s kostkou: dostaň figurky domů první. | délka hry, povinné vyhazování, 3 pokusy na nasazení, dohrát pořadí |
 | **Sirky** | 2 | Řady 3, 5 a 7 sirek. Bere se jen z jedné řady a kdo vezme poslední sirku, prohrává. | kdo začíná |

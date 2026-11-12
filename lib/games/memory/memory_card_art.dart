@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../ui_kit/tokens/app_colors.dart';
+import '../../ui_kit/tokens/app_typography.dart';
 import 'memory_cards.dart';
+import 'memory_flags.dart';
 
 /// Back of a card (spec 13.6): wood with the app logo – a felt disc with the
 /// four player dots and a wooden ring holding two dice.
@@ -104,17 +106,83 @@ class MemoryCardFace extends StatelessWidget {
           border: Border.all(color: frame ?? AppColors.paper2, width: frame == null ? s * 0.03 : s * 0.06),
           boxShadow: [BoxShadow(color: const Color(0x66000000), offset: Offset(0, s * 0.04))],
         ),
-        child: Padding(
-          padding: EdgeInsets.all(s * 0.13),
-          child: Image.asset(
-            memoryCardAsset(set, motif),
-            fit: BoxFit.contain,
-            filterQuality: FilterQuality.medium,
-            gaplessPlayback: true,
-            errorBuilder: (context, error, stack) => const SizedBox.shrink(),
-          ),
-        ),
+        child: set == memoryFlagsSet
+            ? Padding(
+                padding: EdgeInsets.all(s * 0.07),
+                child: _FlagFace(motif: motif),
+              )
+            : Padding(
+                padding: EdgeInsets.all(s * 0.13),
+                child: Image.asset(
+                  memoryCardAsset(set, motif),
+                  fit: BoxFit.contain,
+                  filterQuality: FilterQuality.medium,
+                  gaplessPlayback: true,
+                  errorBuilder: (context, error, stack) => const SizedBox.shrink(),
+                ),
+              ),
       );
     },
   );
+}
+
+/// A flag with the state's name under it, in the app's language; the name
+/// takes the largest size at which it fits in two lines.
+class _FlagFace extends StatelessWidget {
+  const _FlagFace({required this.motif});
+
+  final int motif;
+
+  @override
+  Widget build(BuildContext context) {
+    final name = memoryFlags[motif].name(Localizations.maybeLocaleOf(context)?.languageCode ?? 'cs');
+    return LayoutBuilder(
+      builder: (context, box) {
+        final w = box.maxWidth, h = box.maxHeight;
+        final nameH = h * 0.4;
+        final scaler = MediaQuery.maybeTextScalerOf(context) ?? TextScaler.noScaling;
+        var size = h * 0.17;
+        TextStyle style(double size) =>
+            AppTypography.caption(color: AppColors.ink).copyWith(fontSize: size, height: 1.05);
+        while (size > 3) {
+          final painter = TextPainter(
+            text: TextSpan(text: name, style: style(size)),
+            textDirection: TextDirection.ltr,
+            textAlign: TextAlign.center,
+            textScaler: scaler,
+            maxLines: 2,
+          )..layout(maxWidth: w);
+          final fits = !painter.didExceedMaxLines && painter.height <= nameH && painter.width <= w;
+          painter.dispose();
+          if (fits) break;
+          size *= 0.92;
+        }
+        return Column(
+          children: [
+            Expanded(
+              child: Center(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(border: Border.all(color: AppColors.paper2, width: 1)),
+                  child: Image.asset(
+                    memoryFlagAsset(motif),
+                    fit: BoxFit.contain,
+                    filterQuality: FilterQuality.medium,
+                    gaplessPlayback: true,
+                    errorBuilder: (context, error, stack) => const SizedBox.shrink(),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: nameH,
+              width: w,
+              child: Center(
+                child: Text(name, textAlign: TextAlign.center, maxLines: 2, style: style(size)),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

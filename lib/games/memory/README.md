@@ -12,7 +12,8 @@ Hra pro 1–4 hráče (lidé i roboti v libovolných místech) podle zadání, k
   - Lehká: na začátku jsou 2 s vidět všechny karty (ťuknutí náhled ukončí).
   - Střední: bez náhledu.
   - Těžká: po každé 4. neshodě se dvě jiné zakryté karty s různými obrázky viditelně prohodí.
-- **Volby:** počet karet 12 / 16 / 24 / 36 / 48 a sada obrázků (Zvířátka, Ovoce a zelenina, Doprava, Vesmír).
+- **Volby:** počet karet 12 / 16 / 24 / 36 / 48 a sada obrázků (Zvířátka, Ovoce a zelenina, Doprava, Vesmír, Vlajky států).
+- **Vlajky států:** 195 států (193 členů OSN, Vatikán a Palestina). Na kartě je vlajka a pod ní název státu v jazyce aplikace. Každá hra vybere ze seedu jiné státy, takže se vlajky střídají. Podobné vlajky (rodina `MemoryFlag.family`, např. Čad a Rumunsko, Indonésie a Monako) nikdy nejsou ve stejné hře.
 - **Hodnocení:**
   - sólo: tahy ≤ 1,5 × páry ★★★, ≤ 2 × páry ★★, jinak ★;
   - více hráčů: 1. místo ★★★, 2. místo ★★, jinak ★.
@@ -44,6 +45,7 @@ Hra pro 1–4 hráče (lidé i roboti v libovolných místech) podle zadání, k
 | `memory_layout.dart` | `MemoryGrid.fit`: počet sloupců a velikost karet pro danou plochu (čistá funkce) |
 | `memory_card_art.dart` | rub (dřevo s logem aplikace, kreslený kódem) a líc karty (papír s obrázkem) |
 | `memory_cards.dart` | sady obrázků: 4 × 24 Noto Emoji (`assets/games/memory/cards/<sada>/<kód>.png`) |
+| `memory_flags.dart` | sada Vlajky států: 195 států s názvy cs/en/es a rodinami podobných vlajek; obrázky `assets/games/memory/cards/flags/<iso>.png` (flagcdn.com, public domain) |
 | `memory_rule_step.dart` | ilustrované kroky pravidel (`ruleSteps`) |
 | `memory_texts.dart` | texty cs/en/es |
 | `memory_module.dart` | manifest |

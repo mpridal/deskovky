@@ -7,6 +7,7 @@ import '../../core/game/game_rules.dart';
 import '../../core/game/move.dart';
 import '../../core/game/seeded_random.dart';
 import 'memory_cards.dart';
+import 'memory_flags.dart';
 
 /// A running game of Pexeso. Cards are positions 0..n-1 in reading order;
 /// [faces] holds the motif at each position, [owner] the seat that found it.
@@ -140,9 +141,11 @@ class MemoryRules implements GameRules<MemoryState> {
     final rawCards = config.options['cards'];
     final cards = cardCounts.contains(rawCards) ? rawCards! as int : defaultCards;
     final rawSet = config.options['set'];
-    final set = memorySets.containsKey(rawSet) ? rawSet! as String : memoryDefaultSet;
+    final set = memorySets.containsKey(rawSet) || rawSet == memoryFlagsSet ? rawSet! as String : memoryDefaultSet;
     final random = SeededRandom(seed);
-    final motifs = _shuffled(List.generate(memoryMotifs, (i) => i), random).take(cards ~/ 2);
+    final motifs = set == memoryFlagsSet
+        ? _flags(cards ~/ 2, random)
+        : _shuffled(List.generate(memoryMotifs, (i) => i), random).take(cards ~/ 2);
     final faces = _shuffled([...motifs, ...motifs], random);
     final seats = config.seats.length;
     return MemoryState(
@@ -165,6 +168,20 @@ class MemoryRules implements GameRules<MemoryState> {
       known: List.filled(cards, false),
       timeMs: 0,
     );
+  }
+
+  /// [pairs] states out of all of them, chosen afresh from the seed, so the
+  /// flags rotate from game to game; never two flags of one look-alike family.
+  static List<int> _flags(int pairs, SeededRandom random) {
+    final families = <String>{};
+    final chosen = <int>[];
+    for (final i in _shuffled(List.generate(memoryFlags.length, (i) => i), random)) {
+      final family = memoryFlags[i].family;
+      if (family != null && !families.add(family)) continue;
+      chosen.add(i);
+      if (chosen.length == pairs) break;
+    }
+    return chosen;
   }
 
   static List<int> _shuffled(List<int> list, SeededRandom random) {

@@ -8,6 +8,7 @@ import '../../core/game/game_rules.dart';
 import '../../core/game/game_texts.dart';
 import 'memory_ai.dart';
 import 'memory_board.dart';
+import 'memory_flags.dart';
 import 'memory_icon.dart';
 import 'memory_rule_step.dart';
 import 'memory_rules.dart';
@@ -64,6 +65,7 @@ class MemoryModule extends GameModule<MemoryState> {
         ('food', 'memory.option.set.food'),
         ('transport', 'memory.option.set.transport'),
         ('space', 'memory.option.set.space'),
+        (memoryFlagsSet, 'memory.option.set.flags'),
       ],
       defaultValue: 'animals',
     ),
