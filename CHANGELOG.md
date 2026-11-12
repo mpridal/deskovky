@@ -2,6 +2,15 @@
 
 Každá verze má sekci `## x.y.z` s poznámkami `### cs`, `### en`, `### es` – z nich se při vydání tvoří `latest.json` a karta „Je tu nová verze“. Volitelný řádek `Minimální verze: x.y.z` udělá aktualizaci povinnou pro starší verze.
 
+## 0.9.0
+
+### cs
+Nová hra Lodě: rozmísti svou flotilu a potop tu soupeřovu dřív, než on tvou. Moře 8 × 8 nebo 10 × 10, po zásahu střílíš znovu, kolem potopené lodi se voda označí sama. Proti robotovi na tři obtížnosti, ve dvou na jednom zařízení (obrazovka se při předání zakryje) i každý na svém po Wi-Fi, se čtyřmi novými odznaky a pirátskou hudbou.
+### en
+New game, Sea Battle: place your fleet and sink the other one before yours goes down. An 8 × 8 or 10 × 10 sea, a hit lets you shoot again, and the water around a sunk ship is marked for you. Against a robot on three levels, two people on one device (the screen hides itself when you pass it on) or each on their own over Wi-Fi, with four new badges and pirate music.
+### es
+Juego nuevo, Batalla naval: coloca tu flota y hunde la del rival antes de que hunda la tuya. Mar de 8 × 8 o 10 × 10, tras un tocado vuelves a disparar y el agua alrededor de un barco hundido se marca sola. Contra un robot en tres niveles, dos personas en un dispositivo (la pantalla se tapa al pasarlo) o cada uno en el suyo por Wi-Fi, con cuatro insignias nuevas y música pirata.
+
 ## 0.8.0
 
 ### cs
