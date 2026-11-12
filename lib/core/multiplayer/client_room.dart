@@ -82,7 +82,14 @@ class ClientRoom extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setReady(bool ready) => _send(Ready(ready));
+  /// Whether this device said it is ready (an invited child joins ready).
+  bool get ready => _ready;
+  var _ready = false;
+
+  void setReady(bool ready) {
+    _ready = ready;
+    _send(Ready(ready));
+  }
 
   /// Asks the host to play [move]; true once the host applied it.
   Future<bool> submit(Move move) => _transport?.submit(move) ?? Future.value(false);
@@ -124,7 +131,18 @@ class ClientRoom extends ChangeNotifier {
     notifyListeners();
   }
 
+  String? _matchUid;
+  Map<int, String> _seatUids = const {};
+
+  /// The host's id for the current game (see [Start.matchUid]).
+  String? get matchUid => _matchUid;
+
+  /// Seat → family id of the person there (see [Start.seatUids]).
+  Map<int, String> get seatUids => _seatUids;
+
   void _onStart(Start start) {
+    _matchUid = start.matchUid;
+    _seatUids = start.seatUids;
     final module = findModule(start.config.gameId);
     if (module == null) {
       _closedReason = 'unknownGame';

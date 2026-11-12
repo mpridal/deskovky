@@ -853,5 +853,91 @@
       }
     }
   },
-  "joinLinkBusy": "You are already playing. Leave the game or room first."
+  "joinLinkBusy": "You are already playing. Leave the game or room first.",
+  "familyTitle": "Family",
+  "familyIntro": "Connect your family’s devices: profiles, points, rewards and game history will be the same on all of them. Home Wi-Fi is enough, no internet needed.",
+  "familyCreate": "Create a family",
+  "familyJoin": "Join a family",
+  "familyJoinOther": "Join another family",
+  "familyJoinOtherWarning": "This device is already in a family. Joining another one leaves the current family; the profiles on this device will be offered for pairing.",
+  "familyJoinOtherConfirm": "Join anyway",
+  "familyAddDevice": "Add a device",
+  "familyQrHint": "On the new device open Settings → Parents’ corner → Family → Join a family and scan this code. Both devices must be on the same Wi-Fi.",
+  "familyDevices": "Devices in the family",
+  "familyThisDevice": "this device",
+  "familyNeverSynced": "not synced yet",
+  "familyRemove": "Remove from the family",
+  "familyRemoveMessage": "The device will stop getting profiles and points. The data already on it stays there.",
+  "familyRemoved": "removed",
+  "familyJoined": "Done – you are in the family!",
+  "familyJoinFailed": "Joining the family did not work. Are both devices on the same Wi-Fi, with Family open on the other one?",
+  "familyNotACode": "This is not a family code.",
+  "familyUpdateApps": "A device has another version of the app. Update the app on every device.",
+  "familyCodeInJoin": "This is a family code. Add the device in Settings → Parents’ corner → Family.",
+  "familySynced": "Synced with the family",
+  "deviceTablet": "Tablet",
+  "devicePhone": "Phone",
+  "familyLastSync": "last synced {time}",
+  "@familyLastSync": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "familyRemoveTitle": "Remove {name} from the family?",
+  "@familyRemoveTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pairTitle": "Pair profiles",
+  "pairQuestion": "Is this the same person?",
+  "pairMerge": "Yes, join them",
+  "pairKeep": "No, two people",
+  "pairLook": "Look after joining",
+  "pairManual": "Pair by hand",
+  "pairFirst": "Profile",
+  "pairSecond": "belongs with",
+  "pairNone": "No more pairs.",
+  "refundTitle": "Points are back",
+  "refundOk": "Got it",
+  "familyPairs": "Possible pairs ({count})",
+  "@familyPairs": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "refundNotice": "Your points for {item} are back – there were not enough points for both.",
+  "@refundNotice": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteFamily": "Invite from the family",
+  "inviteSent": "Invitation sent.",
+  "inviteNoDevice": "No family device found on the network.",
+  "invitePlay": "Play",
+  "inviteLater": "Not now",
+  "inviteTitle": "{host} invites you to {game} – play?",
+  "@inviteTitle": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "game": {
+        "type": "String"
+      }
+    }
+  },
+  "pointsRefundDuplicate": "Refunded: {item} – bought twice",
+  "pointsRefundNotEnough": "Refunded: {item} – not enough points",
+  "@pointsRefundDuplicate": {"placeholders": {"item": {"type": "String"}}},
+  "@pointsRefundNotEnough": {"placeholders": {"item": {"type": "String"}}}
 }

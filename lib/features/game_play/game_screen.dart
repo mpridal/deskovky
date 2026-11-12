@@ -1,4 +1,6 @@
 import 'dart:async';
+import '../../app/family_providers.dart';
+import '../../app/family_controller.dart';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -234,6 +236,7 @@ abstract interface class _Timed {
 
 class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingObserver implements _Timed {
   late final TurnController<S> _turns;
+  late final FamilyController _family;
   late final _host = _Host(
     vibrationOn: () => ref.read(vibrationOnProvider).value ?? true,
     sfx: (id) => ref.read(audioServiceProvider).playSfx(id),
@@ -278,6 +281,8 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    // No family sync during a game (it catches up right after).
+    _family = ref.read(familyControllerProvider)..setInGame(true);
     final host = _hostRoom, client = _clientRoom;
     if (host?.controller case final controller?) {
       _turns = controller as TurnController<S>;
@@ -312,6 +317,7 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _family.setInGame(false);
     _finishTimer?.cancel();
     (_hostRoom ?? _clientRoom)?.removeListener(_onRoom);
     _turns.removeListener(_onTurn);
@@ -506,7 +512,15 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
           result: outcome.result,
           events: List.of(_host.events),
           duration: _elapsed,
+          // A family network game: one record on every device (spec 7.3).
+          matchUid: _hostRoom?.matchUid ?? _clientRoom?.matchUid,
+          familyUids: _hostRoom?.seatUids ?? _clientRoom?.seatUids ?? const {},
         )
+        .then((rewards) async {
+          // Family people from other devices show by name in this device's history.
+          if (_isNet) await _family.afterNetworkGame();
+          return rewards;
+        })
         .catchError((Object e) {
           // Statistics must never keep the results away.
           debugPrint('GameScreen: cannot record the game: $e');

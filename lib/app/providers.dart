@@ -14,6 +14,7 @@ import '../core/game/game_store.dart';
 import '../core/players/active_player.dart';
 import '../core/players/player_profile.dart';
 import '../core/players/player_repository.dart';
+import '../core/points/points_math.dart';
 import '../core/points/points_repository.dart';
 import '../core/points/rewards_config.dart';
 import '../core/settings/settings_repository.dart';
@@ -138,7 +139,7 @@ final pointsSummaryProvider = Provider<Map<int, ({int balance, int earned})>>((r
   final totals = <int, ({int balance, int earned})>{};
   for (final e in ref.watch(pointsLedgerProvider).value ?? const <PointsEntry>[]) {
     final t = totals[e.playerId] ?? (balance: 0, earned: 0);
-    totals[e.playerId] = (balance: t.balance + e.amount, earned: t.earned + (e.amount > 0 ? e.amount : 0));
+    totals[e.playerId] = (balance: t.balance + e.amount, earned: t.earned + (e.amount > 0 && e.reason != PointsReason.refund ? e.amount : 0));
   }
   return totals;
 });

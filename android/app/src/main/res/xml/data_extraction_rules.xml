@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 12+: cloud backup and phone-to-phone transfer keep everything
+     except the family device marker (see lib/core/family/device_marker.dart). -->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="file" path="family_device" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="file" path="family_device" />
+    </device-transfer>
+</data-extraction-rules>

@@ -5,6 +5,9 @@ import 'package:drift/drift.dart';
 
 import '../avatar/avatar_spec.dart';
 import '../db/app_database.dart';
+import '../family/family_op.dart';
+import '../family/family_store.dart';
+import '../family/uid.dart';
 import '../settings/settings_repository.dart';
 import 'player_profile.dart';
 
@@ -33,13 +36,18 @@ class PlayerRepository {
       final count = await _db.players.count().getSingle();
       if (count >= maxProfiles) throw const ProfileException(ProfileError.limitReached);
       await _ensureNameFree(clean);
+      final uid = newUid();
       final id = await _db.into(_db.players).insert(PlayersCompanion.insert(
             name: clean,
             nameKey: _key(clean),
             avatarJson: jsonEncode(avatar.toJson()),
             favoriteSeat: Value(favoriteSeat),
             createdAt: DateTime.now().toUtc(),
+            uid: Value(uid),
           ));
+      await FamilyStore.of(_db).append(
+        ProfileCreated(uid: uid, name: clean, avatar: avatar.toJson(), favoriteSeat: favoriteSeat),
+      );
       // The first player (or the first after the active one vanished) plays.
       final active = await _activeId();
       if (active == null || await byId(active) == null) await _setActive(id);
@@ -52,19 +60,32 @@ class PlayerRepository {
     return _db.transaction(() async {
       if (await byId(id) == null) throw const ProfileException(ProfileError.notFound);
       if (clean != null) await _ensureNameFree(clean, exceptId: id);
+      final before = await (_db.select(_db.players)..where((p) => p.id.equals(id))).getSingle();
       await (_db.update(_db.players)..where((p) => p.id.equals(id))).write(PlayersCompanion(
         name: clean == null ? const Value.absent() : Value(clean),
         nameKey: clean == null ? const Value.absent() : Value(_key(clean)),
         avatarJson: avatar == null ? const Value.absent() : Value(jsonEncode(avatar.toJson())),
         favoriteSeat: favoriteSeat == null ? const Value.absent() : Value(favoriteSeat),
       ));
+      final row = await (_db.select(_db.players)..where((p) => p.id.equals(id))).getSingle();
+      await FamilyStore.of(_db).append(
+        // Only what changed (a shown "Viky 2" must not become the name).
+        ProfileUpdated(
+          uid: row.uid!,
+          name: clean != null && clean != before.name ? clean : null,
+          avatar: avatar == null ? null : jsonDecode(row.avatarJson) as Map<String, Object?>,
+          favoriteSeat: favoriteSeat != null && favoriteSeat != before.favoriteSeat ? favoriteSeat : null,
+        ),
+      );
       return (await byId(id))!;
     });
   }
 
   Future<void> delete(int id) => _db.transaction(() async {
-        final deleted = await (_db.delete(_db.players)..where((p) => p.id.equals(id))).go();
-        if (deleted == 0) throw const ProfileException(ProfileError.notFound);
+        final row = await (_db.select(_db.players)..where((p) => p.id.equals(id))).getSingleOrNull();
+        if (row == null) throw const ProfileException(ProfileError.notFound);
+        await _db.delete(_db.players).delete(row);
+        await FamilyStore.of(_db).append(ProfileDeleted(uid: row.uid!));
         // Deleting the active player hands the turn to the oldest one left.
         if (await _activeId() == id) {
           final remaining = await _ordered().get();
@@ -108,6 +129,7 @@ class PlayerRepository {
         avatar: AvatarSpec.fromJson(_decode(row.avatarJson)),
         favoriteSeat: row.favoriteSeat,
         createdAt: row.createdAt.toUtc(),
+        uid: row.uid,
       );
 
   static Map<String, Object?>? _decode(String json) {

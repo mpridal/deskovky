@@ -94,18 +94,65 @@ class StatsService {
     required GameResult result,
     required List<GameEvent> events,
     required Duration duration,
+    String? matchUid,
+    Map<int, String> familyUids = const {},
   }) async {
     // Spec 5.6: a game ended early (e.g. Člověče "Ukončit a seřadit") earns
     // nothing – like leaving a game, it is not recorded at all.
     if (result.stats['endedEarly'] == true) return MatchRewards.none;
-    return _record(config: config, result: result, events: events, duration: duration);
+    return _record(config: config, result: result, events: events, duration: duration, matchUid: matchUid, familyUids: familyUids);
   }
+
+  /// Awards the badges [playerId] now qualifies for without a new game –
+  /// after the family's data came together (counters from other devices).
+  /// Returns the ids of the new badges.
+  Future<List<String>> checkBadges(int playerId) => _repo.transaction(() async {
+    final history = await _repo.allMatches();
+    final mine = [
+      for (final m in history)
+        if (m.participants.any((p) => p.playerId == playerId && !p.robot)) m,
+    ];
+    if (mine.isEmpty) return const <String>[];
+    final stats = computePlayerStats(playerId, history);
+    final counters = await _repo.counters(playerId);
+    final already = (await _repo.earnedBadges(playerId)).keys.toSet();
+    final awarded = <String>[];
+    // Each game's badges are judged by that game's last match only (a hard
+    // win in one game is no win in another); framework badges by the last.
+    final checks = <(List<BadgeDef>, MatchRecord)>[
+      (frameworkBadges, mine.last),
+      for (final m in _modules)
+        if (mine.where((r) => r.gameId == m.id).lastOrNull case final last?)
+          (m.badges, last),
+    ];
+    for (final (defs, last) in checks) {
+      final context = BadgeContext(
+        playerId: playerId,
+        stats: stats,
+        counters: counters,
+        match: last,
+        me: last.participants.firstWhere((p) => p.playerId == playerId && !p.robot),
+        events: const [],
+        availableGames: {for (final m in _modules) if (m.available) m.id},
+      );
+      for (final badge in evaluateBadges(defs, context, {...already, ...awarded})) {
+        if (!await _repo.awardBadge(playerId, badge.id)) continue;
+        awarded.add(badge.id);
+        if (badge.reward > 0) {
+          await _points.addGameLines(playerId, [PointsLine(PointsReason.badge, badge.reward, badgeId: badge.id)]);
+        }
+      }
+    }
+    return awarded;
+  });
 
   Future<MatchRewards> _record({
     required GameConfig config,
     required GameResult result,
     required List<GameEvent> events,
     required Duration duration,
+    String? matchUid,
+    Map<int, String> familyUids = const {},
   }) => _repo.transaction(() async {
     final humanIds = {
       for (final s in config.seats)
@@ -153,7 +200,7 @@ class StatsService {
     );
     final config0 = _rewards;
     final before = await _repo.allMatches();
-    final matchId = await _repo.recordMatch(match, events: events);
+    final matchId = await _repo.recordMatch(match, events: events, uid: matchUid, familyUids: familyUids);
     final history = await _repo.allMatches();
     final defs = badgesFor(config.gameId);
     final available = {for (final m in _modules) if (m.available) m.id};

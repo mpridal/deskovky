@@ -1320,4 +1320,163 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get joinLinkBusy =>
       'Už hraješ. Nejdřív odejdi z rozehrané hry nebo místnosti.';
+
+  @override
+  String get familyTitle => 'Rodina';
+
+  @override
+  String get familyIntro =>
+      'Propojte zařízení rodiny: profily, body, odměny a historie her budou na všech stejné. Stačí domácí Wi-Fi, internet není potřeba.';
+
+  @override
+  String get familyCreate => 'Založit rodinu';
+
+  @override
+  String get familyJoin => 'Připojit se k rodině';
+
+  @override
+  String get familyJoinOther => 'Připojit se k jiné rodině';
+
+  @override
+  String get familyJoinOtherWarning =>
+      'Toto zařízení už je v rodině. Připojením k jiné rodině tu současnou opustí; profily z tohoto zařízení se nabídnou ke spárování.';
+
+  @override
+  String get familyJoinOtherConfirm => 'Přesto připojit';
+
+  @override
+  String get familyAddDevice => 'Přidat zařízení';
+
+  @override
+  String get familyQrHint =>
+      'Na novém zařízení otevři Nastavení → Rodičovská zóna → Rodina → Připojit se k rodině a naskenuj tento kód. Obě zařízení musí být ve stejné Wi-Fi.';
+
+  @override
+  String get familyDevices => 'Zařízení v rodině';
+
+  @override
+  String get familyThisDevice => 'toto zařízení';
+
+  @override
+  String get familyNeverSynced => 'zatím se nesynchronizovalo';
+
+  @override
+  String get familyRemove => 'Odebrat z rodiny';
+
+  @override
+  String get familyRemoveMessage =>
+      'Zařízení přestane dostávat profily a body. Data, která na něm už jsou, mu zůstanou.';
+
+  @override
+  String get familyRemoved => 'odebráno';
+
+  @override
+  String get familyJoined => 'Hotovo – jsi v rodině!';
+
+  @override
+  String get familyJoinFailed =>
+      'Připojení k rodině se nepovedlo. Jsou obě zařízení ve stejné Wi-Fi a je na druhém otevřená Rodina?';
+
+  @override
+  String get familyNotACode => 'Tohle není rodinný kód.';
+
+  @override
+  String get familyUpdateApps =>
+      'Některé zařízení má jinou verzi aplikace. Aktualizujte aplikaci na všech zařízeních.';
+
+  @override
+  String get familyCodeInJoin =>
+      'Tohle je rodinný kód. Zařízení přidáš v Nastavení → Rodičovská zóna → Rodina.';
+
+  @override
+  String get familySynced => 'Synchronizováno s rodinou';
+
+  @override
+  String get deviceTablet => 'Tablet';
+
+  @override
+  String get devicePhone => 'Telefon';
+
+  @override
+  String familyLastSync(String time) {
+    return 'naposledy $time';
+  }
+
+  @override
+  String familyRemoveTitle(String name) {
+    return 'Odebrat $name z rodiny?';
+  }
+
+  @override
+  String get pairTitle => 'Spárovat profily';
+
+  @override
+  String get pairQuestion => 'Je to stejná osoba?';
+
+  @override
+  String get pairMerge => 'Ano, spojit';
+
+  @override
+  String get pairKeep => 'Ne, jsou to dva lidé';
+
+  @override
+  String get pairLook => 'Vzhled po spojení';
+
+  @override
+  String get pairManual => 'Spárovat ručně';
+
+  @override
+  String get pairFirst => 'Profil';
+
+  @override
+  String get pairSecond => 'patří k';
+
+  @override
+  String get pairNone => 'Žádné další dvojice.';
+
+  @override
+  String get refundTitle => 'Body jsou zpátky';
+
+  @override
+  String get refundOk => 'Rozumím';
+
+  @override
+  String familyPairs(int count) {
+    return 'Možné dvojice ($count)';
+  }
+
+  @override
+  String refundNotice(String item) {
+    return 'Vrátili jsme ti body za $item – na obě věci nebylo dost bodů.';
+  }
+
+  @override
+  String get inviteFamily => 'Pozvat z rodiny';
+
+  @override
+  String get inviteSent => 'Pozvánka odeslána.';
+
+  @override
+  String get inviteNoDevice => 'V síti jsem nenašel žádné rodinné zařízení.';
+
+  @override
+  String get invitePlay => 'Hrát';
+
+  @override
+  String get inviteLater => 'Teď ne';
+
+  @override
+  String inviteTitle(String host, String game) {
+    return '$host tě zve do hry $game – hrát?';
+  }
+
+  @override
+  String pointsRefundDuplicate(String item) {
+    return 'Vráceno: $item – koupeno dvakrát';
+  }
+
+  @override
+  String pointsRefundNotEnough(String item) {
+    return 'Vráceno: $item – nebylo dost bodů';
+  }
 }

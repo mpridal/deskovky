@@ -1,6 +1,9 @@
 import 'package:drift/drift.dart';
 
 import '../db/app_database.dart';
+import '../family/family_op.dart';
+import '../family/family_store.dart';
+import '../family/uid.dart';
 import '../game/difficulty.dart';
 import 'match_record.dart';
 
@@ -25,7 +28,16 @@ class StatsRepository {
   /// Stores [match]; [events] add up in the human players' counters
   /// (`data['count']`, default 1; only the player at `data['seat']` when the
   /// event names a seat). Returns the match id.
-  Future<int> recordMatch(MatchRecord match, {List<GameEvent> events = const []}) => _db.transaction(() async {
+  /// [familyUids] names people of the family who played on other devices
+  /// (seat → family id); only ids of profiles this device knows are kept,
+  /// so a stranger stays a guest.
+  Future<int> recordMatch(
+    MatchRecord match, {
+    List<GameEvent> events = const [],
+    String? uid,
+    Map<int, String> familyUids = const {},
+  }) => _db.transaction(() async {
+    final matchUid = uid ?? newUid();
     final id = await _db
         .into(_db.matches)
         .insert(
@@ -34,8 +46,17 @@ class StatsRepository {
             playedAt: match.playedAt.millisecondsSinceEpoch,
             durationMs: match.duration.inMilliseconds,
             difficulty: Value(match.difficulty?.name),
+            uid: Value(matchUid),
           ),
         );
+    final uids = <int, String>{};
+    for (final p in match.participants) {
+      if (p.playerId case final playerId?) uids[playerId] = await FamilyStore.playerUid(_db, playerId);
+    }
+    final known = {
+      for (final row in await (_db.select(_db.players)..where((p) => p.uid.isIn(familyUids.values))).get()) row.uid,
+    };
+    final counterLines = <CounterLine>[];
     for (final p in match.participants) {
       await _db
           .into(_db.matchParticipants)
@@ -62,8 +83,31 @@ class StatsRepository {
           'ON CONFLICT (player_id, key) DO UPDATE SET value = value + excluded.value',
           [player, key, count],
         );
+        counterLines.add(CounterLine(playerUid: uids[player]!, key: key, delta: count));
       }
     }
+    await FamilyStore.of(_db).append(
+      MatchRecorded(
+        matchUid: matchUid,
+        gameId: match.gameId,
+        playedAtMs: match.playedAt.millisecondsSinceEpoch,
+        durationMs: match.duration.inMilliseconds,
+        difficulty: match.difficulty?.name,
+        participants: [
+          for (final p in match.participants)
+            MatchSeat(
+              seat: p.seat,
+              playerUid: uids[p.playerId] ?? (p.robot || !known.contains(familyUids[p.seat]) ? null : familyUids[p.seat]),
+              robot: p.robot,
+              place: p.place,
+              score: p.score,
+              stars: p.stars,
+            ),
+        ],
+        points: const [],
+        counters: counterLines,
+      ),
+    );
     return id;
   });
 
@@ -142,11 +186,11 @@ class StatsRepository {
           ..where((b) => b.playerId.equals(playerId) & b.badgeId.equals(badgeId)))
         .getSingleOrNull();
     if (existing != null) return false;
-    await _db
-        .into(_db.earnedBadges)
-        .insert(
-          EarnedBadgesCompanion.insert(playerId: playerId, badgeId: badgeId, earnedAt: _now().millisecondsSinceEpoch),
-        );
+    final at = _now().millisecondsSinceEpoch;
+    await _db.into(_db.earnedBadges).insert(EarnedBadgesCompanion.insert(playerId: playerId, badgeId: badgeId, earnedAt: at));
+    await FamilyStore.of(_db).append(
+      BadgeAwarded(playerUid: await FamilyStore.playerUid(_db, playerId), badgeId: badgeId, atMs: at),
+    );
     return true;
   });
 

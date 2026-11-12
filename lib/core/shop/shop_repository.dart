@@ -2,6 +2,9 @@ import 'package:flutter/foundation.dart';
 
 import '../avatar/avatar_spec.dart';
 import '../db/app_database.dart';
+import '../family/family_op.dart';
+import '../family/family_store.dart';
+import '../family/uid.dart';
 import '../players/player_repository.dart';
 import '../points/levels.dart';
 import '../points/points_math.dart';
@@ -67,12 +70,13 @@ class ShopRepository {
     if (bought.contains(itemId)) return const BuyResult(BuyOutcome.alreadyOwned);
     if (levelFor(await points.totalEarned(playerId)) < item.minLevel) return const BuyResult(BuyOutcome.levelTooLow);
     if (await points.balance(playerId) < price) return const BuyResult(BuyOutcome.notEnoughPoints);
-    await _db
-        .into(_db.playerItems)
-        .insert(
-          PlayerItemsCompanion.insert(playerId: playerId, itemId: itemId, acquiredAt: _now().millisecondsSinceEpoch),
-        );
-    await points.spend(playerId, price, itemId: itemId);
+    final at = _now().millisecondsSinceEpoch;
+    final itemUid = newUid();
+    await _db.into(_db.playerItems).insert(PlayerItemsCompanion.insert(playerId: playerId, itemId: itemId, acquiredAt: at));
+    await points.spend(playerId, price, itemId: itemId, uid: 'buy:$itemUid', at: at);
+    await FamilyStore.of(_db).append(
+      ItemBought(itemUid: itemUid, playerUid: await FamilyStore.playerUid(_db, playerId), itemId: itemId, price: price, atMs: at),
+    );
     String? newBadge;
     if (bought.length + 1 >= collectorCount && await stats.awardBadge(playerId, collectorBadge)) {
       newBadge = collectorBadge;
@@ -106,8 +110,21 @@ class ShopRepository {
   /// worn. Total earned, level and badges stay.
   Future<void> reset(int playerId) => _db.transaction(() async {
     final balance = await points.balance(playerId);
-    if (balance > 0) await points.addReset(playerId, -balance);
+    final bought = await _bought(playerId);
+    final at = _now().millisecondsSinceEpoch;
+    final resetUid = newUid();
+    if (balance > 0) await points.addReset(playerId, -balance, uid: resetUid, at: at);
     await (_db.delete(_db.playerItems)..where((i) => i.playerId.equals(playerId))).go();
+    // Only what this device knows is taken away (spec kap. 6).
+    await FamilyStore.of(_db).append(
+      PointsReset(
+        resetUid: resetUid,
+        playerUid: await FamilyStore.playerUid(_db, playerId),
+        amount: balance > 0 ? balance : 0,
+        itemIds: [...bought],
+        atMs: at,
+      ),
+    );
     await _changeAvatar(playerId, (_) => const {});
   });
 }

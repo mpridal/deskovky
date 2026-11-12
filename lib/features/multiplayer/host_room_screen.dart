@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../ui_kit/components/app_toast.dart';
+import '../../app/family_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -86,7 +88,7 @@ class HostRoomScreen extends ConsumerWidget {
                   seat: i,
                   slot: lobby.slots[i],
                   connected: slot is! RemoteSlot || slot.connected,
-                  onTap: room.started ? null : () => _editSlot(context, room, i, profiles),
+                  onTap: room.started ? null : () => _editSlot(context, ref, room, i, profiles),
                 ),
               roomLabel(l10n.lobbySettings),
               RoomSettingsSummary(
@@ -124,13 +126,24 @@ class HostRoomScreen extends ConsumerWidget {
 
   /// A free or robot place gets a robot, a person of this device or stays
   /// free; a remote person can be removed.
-  Future<void> _editSlot(BuildContext context, HostRoom room, int index, List<PlayerProfile> profiles) async {
+  Future<void> _editSlot(BuildContext context, WidgetRef ref, HostRoom room, int index, List<PlayerProfile> profiles) async {
     final l10n = AppLocalizations.of(context);
     final slot = room.slots[index];
     final seated = {
       for (final s in room.slots)
         if (s is LocalSlot) s.profileId,
     };
+    // Family people may play on their own device: invite them (spec 5.4).
+    final family = ref.read(familyControllerProvider);
+    final seatedUids = {
+      for (final s in room.slots)
+        if (s case LocalSlot(card: ProfileCard(:final uid?)) || RemoteSlot(card: ProfileCard(:final uid?))) uid,
+    };
+    final invitable = [
+      if (family.inFamily && slot is OpenSlot)
+        for (final p in profiles)
+          if (p.uid != null && !seatedUids.contains(p.uid)) p,
+    ];
     final choice = await showModalBottomSheet<Object>(
       context: context,
       backgroundColor: AppColors.paper,
@@ -162,6 +175,22 @@ class HostRoomScreen extends ConsumerWidget {
                     ),
                   for (final p in profiles)
                     if (!seated.contains(p.id)) tile(AvatarView(spec: p.avatar, size: 36), p.name, p),
+                  if (invitable.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(l10n.inviteFamily, style: AppTypography.caption(color: AppColors.wood)),
+                      ),
+                    ),
+                  for (final p in invitable)
+                    ListTile(
+                      key: ValueKey('invite_${p.id}'),
+                      leading: AvatarView(spec: p.avatar, size: 36),
+                      title: Text(p.name, style: AppTypography.body(color: AppColors.ink)),
+                      trailing: const Icon(Icons.send_to_mobile, color: AppColors.wood),
+                      onTap: () => Navigator.of(context).pop(('invite', p)),
+                    ),
                   if (slot is! OpenSlot) tile(const Icon(Icons.person_add_alt, color: AppColors.ink), l10n.slotLeaveOpen, 'open'),
                 ],
                 const SizedBox(height: 8),
@@ -179,7 +208,13 @@ class HostRoomScreen extends ConsumerWidget {
       case 'open':
         room.setSlot(index, const OpenSlot());
       case PlayerProfile p:
-        room.setSlot(index, LocalSlot(profileId: p.id, card: ProfileCard(name: p.name, avatar: p.avatar.toJson())));
+        room.setSlot(index, LocalSlot(profileId: p.id, card: ProfileCard(name: p.name, avatar: p.avatar.toJson(), uid: p.uid)));
+      case ('invite', PlayerProfile p):
+        final ticket = ref.read(networkRoomsProvider).ticket;
+        final hostName = [for (final s in room.slots) if (s is LocalSlot) s.card.name].firstOrNull ?? '';
+        final sent = ticket != null &&
+            await family.invite(profileUid: p.uid!, room: ticket, gameId: room.module.id, hostName: hostName);
+        if (context.mounted) showAppToast(context, sent ? l10n.inviteSent : l10n.inviteNoDevice);
     }
   }
 }

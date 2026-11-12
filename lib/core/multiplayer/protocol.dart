@@ -14,22 +14,27 @@ const protocolVersion = 1;
 /// A player as another device shows them: name and avatar JSON.
 @immutable
 class ProfileCard {
-  const ProfileCard({required this.name, required this.avatar});
+  const ProfileCard({required this.name, required this.avatar, this.uid});
 
   final String name;
   final Map<String, Object?> avatar;
 
-  Map<String, Object?> toJson() => {'name': name, 'avatar': avatar};
+  /// The profile's family id, when the device is in a family (a family
+  /// network game then counts as one match for everybody).
+  final String? uid;
+
+  Map<String, Object?> toJson() => {'name': name, 'avatar': avatar, 'uid': ?uid};
 
   static ProfileCard? fromJson(Object? json) {
     if (json is! Map<String, Object?>) return null;
-    final name = json['name'], avatar = json['avatar'];
+    final name = json['name'], avatar = json['avatar'], uid = json['uid'];
     if (name is! String || avatar is! Map<String, Object?>) return null;
-    return ProfileCard(name: name, avatar: avatar);
+    return ProfileCard(name: name, avatar: avatar, uid: uid is String ? uid : null);
   }
 
   @override
-  bool operator ==(Object other) => other is ProfileCard && other.name == name && mapEquals(other.avatar, avatar);
+  bool operator ==(Object other) =>
+      other is ProfileCard && other.name == name && mapEquals(other.avatar, avatar) && other.uid == uid;
 
   @override
   int get hashCode => Object.hash(name, avatar.length);
@@ -134,6 +139,7 @@ sealed class NetMessage {
         'ping' => Ping(json['t']! as int),
         'pong' => Pong(json['t']! as int),
         'kick' => const Kick(),
+        'family' => FamilyMessage({...json}..remove('type')),
         _ => null,
       };
     } on Object {
@@ -259,11 +265,23 @@ class Ready extends NetMessage {
 /// [RemoteSeat]; [yourSeats] maps this device's seats to its profile index
 /// in its [Hello].
 class Start extends NetMessage {
-  const Start({required this.config, required this.seed, required this.yourSeats});
+  const Start({
+    required this.config,
+    required this.seed,
+    required this.yourSeats,
+    this.matchUid,
+    this.seatUids = const {},
+  });
 
   final GameConfig config;
   final int seed;
   final Map<int, int> yourSeats;
+
+  /// One id for this game on every device (family records merge into one).
+  final String? matchUid;
+
+  /// Seat → the person's family id, where the host knows one.
+  final Map<int, String> seatUids;
 
   @override
   String get type => 'start';
@@ -273,6 +291,8 @@ class Start extends NetMessage {
     'config': config.toJson(),
     'seed': seed,
     'yourSeats': {for (final e in yourSeats.entries) '${e.key}': e.value},
+    'match': matchUid,
+    'seatUids': {for (final e in seatUids.entries) '${e.key}': e.value},
   };
 
   static Start _from(Map<String, Object?> j) => Start(
@@ -280,6 +300,11 @@ class Start extends NetMessage {
     seed: j['seed']! as int,
     yourSeats: {
       for (final e in (j['yourSeats']! as Map<String, Object?>).entries) int.parse(e.key): e.value! as int,
+    },
+    matchUid: j['match'] as String?,
+    seatUids: {
+      for (final e in (j['seatUids'] as Map<String, Object?>? ?? const {}).entries)
+        if (e.value case final String uid) int.parse(e.key): uid,
     },
   );
 }
@@ -452,4 +477,17 @@ class Kick extends NetMessage {
 
   @override
   Map<String, Object?> get body => const {};
+}
+
+/// A message of the family sync (lib/core/family/family_sync.dart), carried
+/// over the same lines as the game; its own `t` says which one. Older app
+/// versions ignore it like any unknown message.
+class FamilyMessage extends NetMessage {
+  const FamilyMessage(this.body);
+
+  @override
+  final Map<String, Object?> body;
+
+  @override
+  String get type => 'family';
 }

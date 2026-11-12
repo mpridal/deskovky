@@ -2379,6 +2379,282 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You are already playing. Leave the game or room first.'**
   String get joinLinkBusy;
+
+  /// No description provided for @familyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Family'**
+  String get familyTitle;
+
+  /// No description provided for @familyIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect your family’s devices: profiles, points, rewards and game history will be the same on all of them. Home Wi-Fi is enough, no internet needed.'**
+  String get familyIntro;
+
+  /// No description provided for @familyCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a family'**
+  String get familyCreate;
+
+  /// No description provided for @familyJoin.
+  ///
+  /// In en, this message translates to:
+  /// **'Join a family'**
+  String get familyJoin;
+
+  /// No description provided for @familyJoinOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Join another family'**
+  String get familyJoinOther;
+
+  /// No description provided for @familyJoinOtherWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This device is already in a family. Joining another one leaves the current family; the profiles on this device will be offered for pairing.'**
+  String get familyJoinOtherWarning;
+
+  /// No description provided for @familyJoinOtherConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Join anyway'**
+  String get familyJoinOtherConfirm;
+
+  /// No description provided for @familyAddDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a device'**
+  String get familyAddDevice;
+
+  /// No description provided for @familyQrHint.
+  ///
+  /// In en, this message translates to:
+  /// **'On the new device open Settings → Parents’ corner → Family → Join a family and scan this code. Both devices must be on the same Wi-Fi.'**
+  String get familyQrHint;
+
+  /// No description provided for @familyDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'Devices in the family'**
+  String get familyDevices;
+
+  /// No description provided for @familyThisDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'this device'**
+  String get familyThisDevice;
+
+  /// No description provided for @familyNeverSynced.
+  ///
+  /// In en, this message translates to:
+  /// **'not synced yet'**
+  String get familyNeverSynced;
+
+  /// No description provided for @familyRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from the family'**
+  String get familyRemove;
+
+  /// No description provided for @familyRemoveMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'The device will stop getting profiles and points. The data already on it stays there.'**
+  String get familyRemoveMessage;
+
+  /// No description provided for @familyRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'removed'**
+  String get familyRemoved;
+
+  /// No description provided for @familyJoined.
+  ///
+  /// In en, this message translates to:
+  /// **'Done – you are in the family!'**
+  String get familyJoined;
+
+  /// No description provided for @familyJoinFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Joining the family did not work. Are both devices on the same Wi-Fi, with Family open on the other one?'**
+  String get familyJoinFailed;
+
+  /// No description provided for @familyNotACode.
+  ///
+  /// In en, this message translates to:
+  /// **'This is not a family code.'**
+  String get familyNotACode;
+
+  /// No description provided for @familyUpdateApps.
+  ///
+  /// In en, this message translates to:
+  /// **'A device has another version of the app. Update the app on every device.'**
+  String get familyUpdateApps;
+
+  /// No description provided for @familyCodeInJoin.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a family code. Add the device in Settings → Parents’ corner → Family.'**
+  String get familyCodeInJoin;
+
+  /// No description provided for @familySynced.
+  ///
+  /// In en, this message translates to:
+  /// **'Synced with the family'**
+  String get familySynced;
+
+  /// No description provided for @deviceTablet.
+  ///
+  /// In en, this message translates to:
+  /// **'Tablet'**
+  String get deviceTablet;
+
+  /// No description provided for @devicePhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get devicePhone;
+
+  /// No description provided for @familyLastSync.
+  ///
+  /// In en, this message translates to:
+  /// **'last synced {time}'**
+  String familyLastSync(String time);
+
+  /// No description provided for @familyRemoveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {name} from the family?'**
+  String familyRemoveTitle(String name);
+
+  /// No description provided for @pairTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pair profiles'**
+  String get pairTitle;
+
+  /// No description provided for @pairQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Is this the same person?'**
+  String get pairQuestion;
+
+  /// No description provided for @pairMerge.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, join them'**
+  String get pairMerge;
+
+  /// No description provided for @pairKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'No, two people'**
+  String get pairKeep;
+
+  /// No description provided for @pairLook.
+  ///
+  /// In en, this message translates to:
+  /// **'Look after joining'**
+  String get pairLook;
+
+  /// No description provided for @pairManual.
+  ///
+  /// In en, this message translates to:
+  /// **'Pair by hand'**
+  String get pairManual;
+
+  /// No description provided for @pairFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get pairFirst;
+
+  /// No description provided for @pairSecond.
+  ///
+  /// In en, this message translates to:
+  /// **'belongs with'**
+  String get pairSecond;
+
+  /// No description provided for @pairNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No more pairs.'**
+  String get pairNone;
+
+  /// No description provided for @refundTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Points are back'**
+  String get refundTitle;
+
+  /// No description provided for @refundOk.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get refundOk;
+
+  /// No description provided for @familyPairs.
+  ///
+  /// In en, this message translates to:
+  /// **'Possible pairs ({count})'**
+  String familyPairs(int count);
+
+  /// No description provided for @refundNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Your points for {item} are back – there were not enough points for both.'**
+  String refundNotice(String item);
+
+  /// No description provided for @inviteFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite from the family'**
+  String get inviteFamily;
+
+  /// No description provided for @inviteSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation sent.'**
+  String get inviteSent;
+
+  /// No description provided for @inviteNoDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'No family device found on the network.'**
+  String get inviteNoDevice;
+
+  /// No description provided for @invitePlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get invitePlay;
+
+  /// No description provided for @inviteLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get inviteLater;
+
+  /// No description provided for @inviteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{host} invites you to {game} – play?'**
+  String inviteTitle(String host, String game);
+
+  /// No description provided for @pointsRefundDuplicate.
+  ///
+  /// In en, this message translates to:
+  /// **'Refunded: {item} – bought twice'**
+  String pointsRefundDuplicate(String item);
+
+  /// No description provided for @pointsRefundNotEnough.
+  ///
+  /// In en, this message translates to:
+  /// **'Refunded: {item} – not enough points'**
+  String pointsRefundNotEnough(String item);
 }
 
 class _AppLocalizationsDelegate
