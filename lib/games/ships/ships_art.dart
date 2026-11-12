@@ -92,27 +92,104 @@ void _cross(Canvas canvas, Rect r, Color colour) {
     ..drawLine(r.center.translate(d, -d), r.center.translate(-d, d), p);
 }
 
-/// A wooden hull piece: rounded at the bow and the stern, one plank line.
+/// The slice of a whole ship that lies on cell [r]: the ship is drawn in
+/// one piece and clipped to the cell, so it reads as one vessel across cells.
 void _paintPiece(Canvas canvas, Rect r, ShipPiece piece) {
   final side = r.shortestSide;
-  final inset = side * 0.14;
-  final first = piece.index == 0, last = piece.index == piece.length - 1;
-  final round = Radius.circular(side * 0.4);
-  final body = piece.horizontal
-      ? Rect.fromLTRB(first ? r.left + inset : r.left, r.top + inset, last ? r.right - inset : r.right, r.bottom - inset)
-      : Rect.fromLTRB(r.left + inset, first ? r.top + inset : r.top, r.right - inset, last ? r.bottom - inset : r.bottom);
-  final rrect = piece.horizontal
-      ? RRect.fromRectAndCorners(body, topLeft: first ? round : Radius.zero, bottomLeft: first ? round : Radius.zero, topRight: last ? round : Radius.zero, bottomRight: last ? round : Radius.zero)
-      : RRect.fromRectAndCorners(body, topLeft: first ? round : Radius.zero, topRight: first ? round : Radius.zero, bottomLeft: last ? round : Radius.zero, bottomRight: last ? round : Radius.zero);
-  canvas.drawRRect(rrect, Paint()..color = piece.sunk ? ShipsColors.wreck : AppColors.wood);
-  final plank = Paint()
-    ..color = (piece.sunk ? Colors.black : AppColors.woodLight).withValues(alpha: 0.6)
-    ..strokeWidth = max(1, side * 0.05);
+  canvas
+    ..save()
+    ..clipRect(r);
   if (piece.horizontal) {
-    canvas.drawLine(Offset(body.left + (first ? side * 0.2 : 0), body.center.dy), Offset(body.right - (last ? side * 0.2 : 0), body.center.dy), plank);
+    canvas.translate(r.left - piece.index * side, r.top);
   } else {
-    canvas.drawLine(Offset(body.center.dx, body.top + (first ? side * 0.2 : 0)), Offset(body.center.dx, body.bottom - (last ? side * 0.2 : 0)), plank);
+    // Bow down: the ship's length runs along the screen's y axis.
+    canvas
+      ..translate(r.left + side, r.top - piece.index * side)
+      ..rotate(pi / 2);
   }
+  paintShip(canvas, piece.length, side, sunk: piece.sunk);
+  canvas.restore();
+}
+
+/// A grey warship seen from above, [length] cells long and one cell
+/// ([side]) wide, bow to the right: a hull with a pointed bow, a deck, a
+/// white bridge and gun turrets. A sunk one is dark and burnt.
+void paintShip(Canvas canvas, int length, double side, {bool sunk = false}) {
+  final h = side, l = length * side;
+  final m = h * 0.16;
+  final top = m, bottom = h - m, mid = h / 2;
+  final stern = m * 0.8, bowTip = l - m * 0.5, bowStart = l - h * 0.95;
+  final c = h * 0.14;
+  Path hull(double inset) {
+    final t = top + inset, b = bottom - inset, s = stern + inset, tip = bowTip - inset * 1.8;
+    return Path()
+      ..moveTo(s + c, t)
+      ..lineTo(bowStart, t)
+      ..quadraticBezierTo(tip - h * 0.2, t, tip, mid)
+      ..quadraticBezierTo(tip - h * 0.2, b, bowStart, b)
+      ..lineTo(s + c, b)
+      ..quadraticBezierTo(s, b, s, b - c)
+      ..lineTo(s, t + c)
+      ..quadraticBezierTo(s, t, s + c, t)
+      ..close();
+  }
+
+  final hullColour = sunk ? const Color(0xFF3A3F45) : const Color(0xFF6E7B88);
+  final outline = sunk ? const Color(0xFF1F2226) : const Color(0xFF39434D);
+  final deckColour = sunk ? const Color(0xFF50565D) : const Color(0xFFA7B2BC);
+  final cabinColour = sunk ? const Color(0xFF6A6F75) : const Color(0xFFF1F2F3);
+  final gunColour = sunk ? const Color(0xFF2A2D31) : const Color(0xFF46515C);
+
+  // A soft shadow on the water, then the hull, then the deck.
+  if (!sunk) {
+    canvas.drawPath(hull(0).shift(Offset(h * 0.03, h * 0.05)), Paint()..color = ShipsColors.seaDeep.withValues(alpha: 0.25));
+  }
+  canvas.drawPath(hull(0), Paint()..color = hullColour);
+  canvas.drawPath(
+    hull(0),
+    Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = max(1, h * 0.04)
+      ..color = outline,
+  );
+  canvas.drawPath(hull(h * 0.08), Paint()..color = deckColour);
+
+  final stroke = max(1.0, h * 0.06);
+  void turret(double u, {bool backwards = false}) {
+    final barrel = Paint()
+      ..color = gunColour
+      ..strokeWidth = stroke
+      ..strokeCap = StrokeCap.round;
+    canvas
+      ..drawLine(Offset(u, mid), Offset(u + (backwards ? -1 : 1) * h * 0.32, mid), barrel)
+      ..drawCircle(Offset(u, mid), h * 0.13, Paint()..color = gunColour);
+  }
+
+  // The bridge a little behind the middle; turrets in front and behind
+  // where there is room.
+  final cabinU = l * 0.42;
+  final cabin = Rect.fromCenter(center: Offset(cabinU, mid), width: h * 0.5, height: h * 0.34);
+  for (var u = l - h * 0.95; u > cabinU + h * 0.6; u -= h * 0.62) {
+    turret(u);
+  }
+  if (cabinU - h * 0.65 >= h * 0.6) turret(h * 0.6, backwards: true);
+  canvas.drawRRect(RRect.fromRectAndRadius(cabin, Radius.circular(h * 0.06)), Paint()..color = cabinColour);
+  canvas.drawRRect(
+    RRect.fromRectAndRadius(cabin, Radius.circular(h * 0.06)),
+    Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = max(0.75, h * 0.025)
+      ..color = outline,
+  );
+  // Bridge windows facing the bow.
+  canvas.drawLine(
+    Offset(cabin.right - h * 0.07, cabin.top + h * 0.07),
+    Offset(cabin.right - h * 0.07, cabin.bottom - h * 0.07),
+    Paint()
+      ..color = sunk ? outline : const Color(0xFF2E5E7E)
+      ..strokeWidth = stroke * 0.8
+      ..strokeCap = StrokeCap.round,
+  );
 }
 
 /// One cell as a widget, for `BoardGrid`.
