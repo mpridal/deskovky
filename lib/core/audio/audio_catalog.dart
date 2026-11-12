@@ -20,6 +20,7 @@ class AudioCatalog {
       'matches': 'music/matches.ogg',
       'checkers': 'music/checkers.ogg',
       'war': 'music/war.ogg',
+      'ships': 'music/ships.ogg',
     },
     sfx: {
       'tap': 'sfx/tap.wav',

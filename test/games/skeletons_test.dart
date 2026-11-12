@@ -9,7 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../helpers/pump_app.dart';
 
 void main() {
-  const coming = ['tictactoe', 'memory', 'minesweeper', 'ludo', 'matches', 'checkers', 'war'];
+  const coming = ['tictactoe', 'memory', 'minesweeper', 'ludo', 'matches', 'checkers', 'war', 'ships'];
 
   // Whether a game is already playable is its own session's call
   // (`available` in its manifest); the registry itself never changes.

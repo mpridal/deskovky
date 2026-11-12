@@ -51,6 +51,8 @@ flutter:
     - assets/games/checkers/
     - assets/games/checkers/sfx/
     - assets/games/war/
+    - assets/games/ships/
+    - assets/games/ships/sfx/
     - assets/games/memory/cards/animals/
     - assets/games/memory/cards/food/
     - assets/games/memory/cards/transport/
