@@ -2,6 +2,15 @@
 
 Každá verze má sekci `## x.y.z` s poznámkami `### cs`, `### en`, `### es` – z nich se při vydání tvoří `latest.json` a karta „Je tu nová verze“. Volitelný řádek `Minimální verze: x.y.z` udělá aktualizaci povinnou pro starší verze.
 
+## 0.8.0
+
+### cs
+Nová hra Válka: každý otočí svou horní kartu a vyšší karta bere všechno ze stolu. Při shodě je válka – jedna karta rubem, jedna lícem. Pro 2–4 hráče, proti robotům, spolu na jednom zařízení i po Wi-Fi, s balíčkem 32 nebo 52 karet a čtyřmi novými odznaky.
+### en
+New game, War: everyone turns their top card and the higher card takes everything on the table. Equal cards mean war – one card face down, one face up. For 2–4 players, against robots, together on one device or over Wi-Fi, with a 32 or 52 card deck and four new badges.
+### es
+Juego nuevo, Guerra: cada uno gira su carta de arriba y la más alta se lleva todo lo de la mesa. Si son iguales, hay guerra: una carta boca abajo y otra boca arriba. Para 2–4 jugadores, contra robots, juntos en un dispositivo o por Wi-Fi, con baraja de 32 o 52 cartas y cuatro insignias nuevas.
+
 ## 0.7.0
 
 ### cs

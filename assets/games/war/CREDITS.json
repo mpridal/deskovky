@@ -1,10 +1,10 @@
 [
   {
     "file": "music/war.ogg",
-    "title": "Zástupná hudba war",
-    "author": "Deskovky (vygenerováno)",
-    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
-    "license": "CC0 1.0",
-    "attribution_text": "„Zástupná hudba war“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+    "title": "Pixel Peeker Polka - faster",
+    "author": "Kevin MacLeod",
+    "source_url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Pixel%20Peeker%20Polka%20-%20faster.mp3",
+    "license": "CC BY 4.0",
+    "attribution_text": "\"Pixel Peeker Polka - faster\" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0, http://creativecommons.org/licenses/by/4.0/"
   }
 ]

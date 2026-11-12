@@ -37,4 +37,4 @@ Hra je čistá náhoda, robot hraje jediný legální tah. Proto má hra jen jed
 
 ## Hudba
 
-`assets/audio/music/war.ogg` je zatím zástupná smyčka z `tool/generate_placeholder_audio.py` (`MUSIC["war"]`). Skutečnou nahrávku vyměň podle CLAUDE.md (Zvuk) a uprav `assets/games/war/CREDITS.json`.
+„Pixel Peeker Polka – faster“ (Kevin MacLeod, CC BY 4.0), `assets/audio/music/war.ogg`, licence v `assets/games/war/CREDITS.json`.

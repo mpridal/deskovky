@@ -33,8 +33,7 @@ GENERATED = "Deskovky (vygenerováno)"
 # exact number of periods, so the loop is seamless. Tremolo speed differs
 # per track so the tracks are told apart.
 MUSIC: dict = {
-    # Every other game has its real music now (Dáma: Gymnopedie No 1, Sirky: Easy Lemon).
-    "war": ([196, 247, 294], 3),
+    # Every game has its real music now (Dáma: Gymnopedie No 1, Sirky: Easy Lemon, Válka: Pixel Peeker Polka).
 }
 
 # Each game's own effects (spec 13.5–13.8), ids `<game>.<name>`. Piškvorky
