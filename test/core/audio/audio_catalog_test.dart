@@ -6,7 +6,7 @@ void main() {
   test('the standard catalog has the menu music and a track for every game (spec 7.2)', () {
     expect(
       AudioCatalog.standard.music.keys,
-      containsAll(['menu', 'sample', 'tictactoe', 'memory', 'minesweeper', 'ludo', 'matches', 'checkers']),
+      containsAll(['menu', 'sample', 'tictactoe', 'memory', 'minesweeper', 'ludo', 'matches', 'checkers', 'war']),
     );
     for (final path in AudioCatalog.standard.music.values) {
       expect(path, startsWith('music/'));

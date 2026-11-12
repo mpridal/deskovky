@@ -120,6 +120,27 @@ void main() {
     expect(find.descendant(of: _slot(0), matching: find.text('Robík')), findsOneWidget);
   });
 
+  testWidgets('a game with one difficulty (Válka) does not ask for it, robots or not', (tester) async {
+    final ids = await _players(tester, db, ['Kuba']);
+    await tester.runAsync(
+      () => GameStore(db).saveLastConfig(
+        GameConfig(
+          gameId: 'war',
+          seats: [HumanSeat(ids.first), const RobotSeat()],
+          difficulty: Difficulty.medium,
+          robotSpeed: RobotSpeed.normal,
+          options: const {},
+        ),
+      ),
+    );
+    await pumpApp(tester, size: const Size(412, 915), db: db, disableAnimations: true, overrides: [startGameProvider.overrideWithValue('war')]);
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+    await tester.pumpAndSettle();
+    await _scrollTo(tester, find.text('Rychlost robotů'));
+    expect(find.text('Rychlost robotů'), findsOneWidget);
+    expect(find.text('Obtížnost robotů'), findsNothing);
+  });
+
   testWidgets('difficulty and speed only show with a robot at the table', (tester) async {
     await _players(tester, db, ['Tereza', 'Kuba']);
     await _openSetup(tester, db);
