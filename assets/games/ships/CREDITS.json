@@ -1,11 +1,11 @@
 [
   {
     "file": "music/ships.ogg",
-    "title": "Zástupná hudba ships",
-    "author": "Deskovky (vygenerováno)",
-    "source_url": "https://github.com/mpridal/deskovky/blob/main/tool/generate_placeholder_audio.py",
-    "license": "CC0 1.0",
-    "attribution_text": "„Zástupná hudba ships“ – zástupný zvuk vygenerovaný skriptem, CC0 1.0"
+    "title": "Captain Scurvy",
+    "author": "Kevin MacLeod",
+    "source_url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Captain%20Scurvy.mp3",
+    "license": "CC BY 4.0",
+    "attribution_text": "\"Captain Scurvy\" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0, http://creativecommons.org/licenses/by/4.0/"
   },
   {
     "file": "games/ships/sfx/splash.ogg",

@@ -48,4 +48,4 @@ Deska kreslí moře očima hráče, který na tomto zařízení naposledy hrál 
 ## Zvuky a hudba
 
 - **Vlastní efekty:** `ships.splash`, `ships.hit`, `ships.sunk`. Syntetizuje je `test/games/ships/sfx_source/make_sfx.py` (CC0).
-- **Hudba:** `assets/audio/music/ships.ogg`, licence v `assets/games/ships/CREDITS.json`.
+- **Hudba:** „Captain Scurvy“ (Kevin MacLeod, CC BY 4.0), `assets/audio/music/ships.ogg` (64 kb/s), licence v `assets/games/ships/CREDITS.json`.
