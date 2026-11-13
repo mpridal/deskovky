@@ -2,6 +2,15 @@
 
 Každá verze má sekci `## x.y.z` s poznámkami `### cs`, `### en`, `### es` – z nich se při vydání tvoří `latest.json` a karta „Je tu nová verze“. Volitelný řádek `Minimální verze: x.y.z` udělá aktualizaci povinnou pro starší verze.
 
+## 0.11.0
+
+### cs
+Snazší hra s rodinou po Wi-Fi: v nastavení hry teď u místa hráče najdeš i ty, kdo mají právě otevřené Deskovky na jiném zařízení (Hraje teď). Vyber je, klepni na Pozvat a hrát a hra se spustí sama, jakmile pozvánku přijmou. V místnosti jsou mezi rodinou nahoře ti, kdo hrají teď, a místo pro pozvaného zůstane držené.
+### en
+Easier family games over Wi-Fi: a player's place in the game setup now also offers everyone who has Deskovky open on another device right now (Playing). Pick them, tap Invite and play, and the game starts by itself once they accept. In the room, family members playing now come first, and the place for an invited person is kept for them.
+### es
+Jugar en familia por Wi-Fi es más fácil: el sitio de un jugador en la configuración ahora también ofrece a quien tiene Deskovky abierto ahora mismo en otro dispositivo (Jugando). Elígelo, toca Invitar y jugar, y la partida empieza sola en cuanto acepte. En la sala, los familiares que juegan ahora aparecen primero y el sitio del invitado queda reservado.
+
 ## 0.10.0
 
 ### cs
