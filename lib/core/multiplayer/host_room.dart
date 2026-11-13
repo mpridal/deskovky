@@ -297,10 +297,11 @@ class HostRoom extends ChangeNotifier {
     _controller = controller;
     for (final conn in _conns) {
       final id = conn.clientId;
-      if (id != null)
+      if (id != null) {
         conn.channel.send(
           Start(config: config, seed: _seed, yourSeats: _seatsOf(id), matchUid: matchUid, seatUids: seatUids),
         );
+      }
     }
     // Whoever is not here any more is played by a robot.
     for (final (seat, owner) in _owners.indexed) {
