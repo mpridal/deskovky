@@ -1,5 +1,7 @@
 import 'dart:async';
+
 import '../core/multiplayer/room_info.dart';
+
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -30,7 +32,12 @@ class FamilyInvite {
   final String gameId;
   final String hostName;
 
-  Map<String, Object?> toJson() => {'profile': profileUid, 'room': room.toUri().toString(), 'game': gameId, 'host': hostName};
+  Map<String, Object?> toJson() => {
+    'profile': profileUid,
+    'room': room.toUri().toString(),
+    'game': gameId,
+    'host': hostName,
+  };
 
   static FamilyInvite? fromJson(Map<String, Object?> json) {
     final profile = json['profile'], room = json['room'], game = json['game'], host = json['host'];
@@ -43,7 +50,13 @@ class FamilyInvite {
 /// A family device as Rodina lists it.
 @immutable
 class FamilyDeviceInfo {
-  const FamilyDeviceInfo({required this.deviceId, required this.name, required this.isMe, required this.removed, this.lastSync});
+  const FamilyDeviceInfo({
+    required this.deviceId,
+    required this.name,
+    required this.isMe,
+    required this.removed,
+    this.lastSync,
+  });
 
   final String deviceId;
   final String name;
@@ -62,12 +75,17 @@ class FamilyController extends ChangeNotifier {
     required this.net,
     required this.stats,
     this.resyncAfter = const Duration(minutes: 1),
+    this.presence = const Duration(seconds: 35),
   });
 
   final AppDatabase db;
   final FamilyNet net;
   final StatsService stats;
   final Duration resyncAfter;
+
+  /// A device not heard for this long is no longer on the Wi-Fi (it says it
+  /// is here every 10 s).
+  final Duration presence;
 
   FamilyStore get store => FamilyStore.of(db);
 
@@ -78,6 +96,8 @@ class FamilyController extends ChangeNotifier {
   FamilyAnnouncement? _announcement;
   StreamSubscription<Object?>? _serverSub, _beaconSub, _changesSub, _activeSub;
   final _peers = <String, FamilyBeacon>{};
+  final _heardAt = <String, DateTime>{};
+  Timer? _presenceTimer;
   final _lastSync = <String, DateTime>{};
   final _busy = <String>{};
 
@@ -126,10 +146,7 @@ class FamilyController extends ChangeNotifier {
     _announcement = await net.announce(await _beacon());
     _beaconSub = net.beacons().listen(_heard);
     // Invitations find the device by the child playing on it (spec 5.4).
-    _activeSub = SettingsRepository(db).watchActivePlayerId().skip(1).listen((_) async {
-      final beacon = await _beacon();
-      if (!_disposed) _announcement?.update(beacon);
-    });
+    _activeSub = SettingsRepository(db).watchActivePlayerId().skip(1).listen((_) => _announceAgain());
     _changesSub = store.changes.listen((_) {
       _changedSince = {..._peers.keys};
       _syncAll();
@@ -137,17 +154,27 @@ class FamilyController extends ChangeNotifier {
     _notify();
   }
 
+  Future<void> _announceAgain() async {
+    if (_announcement == null) return;
+    final beacon = await _beacon();
+    if (!_disposed) _announcement?.update(beacon);
+  }
+
   Future<FamilyBeacon> _beacon() async {
-    final active = await (db.select(db.appSettings)..where((s) => s.key.equals(SettingsRepository.activePlayerKey)))
-        .getSingleOrNull();
+    final active = await (db.select(
+      db.appSettings,
+    )..where((s) => s.key.equals(SettingsRepository.activePlayerKey))).getSingleOrNull();
     final activeId = int.tryParse(active?.value ?? '');
-    final activeRow = activeId == null ? null : await (db.select(db.players)..where((p) => p.id.equals(activeId))).getSingleOrNull();
+    final activeRow = activeId == null
+        ? null
+        : await (db.select(db.players)..where((p) => p.id.equals(activeId))).getSingleOrNull();
     return FamilyBeacon(
       familyTag: FamilyBeacon.tagOf(_family!.familyId),
       deviceId: _me!,
       ip: _ip!,
       port: _server!.port,
       activeUid: activeRow?.uid,
+      busy: _inGame,
     );
   }
 
@@ -155,8 +182,12 @@ class FamilyController extends ChangeNotifier {
   void _heard(FamilyBeacon beacon) {
     final f = _family;
     if (f == null || beacon.deviceId == _me || beacon.familyTag != FamilyBeacon.tagOf(f.familyId)) return;
-    final isNew = !_peers.containsKey(beacon.deviceId);
+    final before = _peers[beacon.deviceId];
+    final isNew = before == null;
     _peers[beacon.deviceId] = beacon;
+    _heardAt[beacon.deviceId] = DateTime.now();
+    if (isNew || before.activeUid != beacon.activeUid || before.busy != beacon.busy) _notify();
+    _presenceTimer ??= Timer.periodic(presence ~/ 2, (_) => _forgetQuiet());
     final last = _lastSync[beacon.deviceId];
     if (isNew || last == null || DateTime.now().difference(last) > resyncAfter) _syncWith(beacon);
   }
@@ -166,6 +197,25 @@ class FamilyController extends ChangeNotifier {
 
   /// Family devices seen on the Wi-Fi now (for invitations, spec 5.4).
   List<FamilyBeacon> get peers => List.unmodifiable(_peers.values);
+
+  /// Who plays now on another family device on the Wi-Fi, by the person's
+  /// family id: "Hraje teď" there, so they can be invited with one tap.
+  Map<String, FamilyBeacon> get playingElsewhere => {for (final p in _peers.values) ?p.activeUid: p};
+
+  /// Devices not heard for [presence] have left the Wi-Fi (or closed the app).
+  void _forgetQuiet() {
+    final now = DateTime.now();
+    final quiet = [
+      for (final MapEntry(:key, :value) in _heardAt.entries)
+        if (now.difference(value) > presence) key,
+    ];
+    if (quiet.isEmpty) return;
+    for (final id in quiet) {
+      _peers.remove(id);
+      _heardAt.remove(id);
+    }
+    _notify();
+  }
 
   void _syncAll() {
     for (final peer in _peers.values) {
@@ -288,6 +338,8 @@ class FamilyController extends ChangeNotifier {
     final now = _games > 0;
     if (_inGame == now) return;
     _inGame = now;
+    // Others see this device is busy, so they do not invite into a game.
+    unawaited(_announceAgain());
     if (!now) _syncAll();
   }
 
@@ -360,7 +412,8 @@ class FamilyController extends ChangeNotifier {
     final declined = await _stringSet(_declinedKey);
     return [
       for (final p in state.profiles.values)
-        if (p.pairCandidate case final other? when state.profiles[other] != null && !declined.contains(_pairKey(other, p.uid)))
+        if (p.pairCandidate case final other?
+            when state.profiles[other] != null && !declined.contains(_pairKey(other, p.uid)))
           (state.profiles[other]!, p),
     ];
   }
@@ -420,7 +473,9 @@ class FamilyController extends ChangeNotifier {
 
   Future<void> _setStringSet(String key, Set<String> values) async {
     final merged = key == _refundsSeenKey ? {...await _stringSet(key), ...values} : values;
-    await db.into(db.appSettings).insertOnConflictUpdate(AppSettingsCompanion.insert(key: key, value: jsonEncode([...merged]..sort())));
+    await db
+        .into(db.appSettings)
+        .insertOnConflictUpdate(AppSettingsCompanion.insert(key: key, value: jsonEncode([...merged]..sort())));
   }
 
   /// Every device the family knows, this one first.
@@ -456,6 +511,9 @@ class FamilyController extends ChangeNotifier {
     await _server?.close();
     _server = null;
     _peers.clear();
+    _heardAt.clear();
+    _presenceTimer?.cancel();
+    _presenceTimer = null;
   }
 
   void _notify() {

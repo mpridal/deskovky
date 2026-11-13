@@ -2655,6 +2655,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Refunded: {item} – not enough points'**
   String pointsRefundNotEnough(String item);
+
+  /// No description provided for @setupElsewhere.
+  ///
+  /// In en, this message translates to:
+  /// **'On another device'**
+  String get setupElsewhere;
+
+  /// No description provided for @setupBusyTag.
+  ///
+  /// In en, this message translates to:
+  /// **'In another game'**
+  String get setupBusyTag;
+
+  /// No description provided for @setupInvitePlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite and play'**
+  String get setupInvitePlay;
+
+  /// No description provided for @slotInvited.
+  ///
+  /// In en, this message translates to:
+  /// **'Invited, waiting'**
+  String get slotInvited;
+
+  /// No description provided for @inviteFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not deliver the invitation to {name}.'**
+  String inviteFailed(String name);
+
+  /// No description provided for @inviteNotHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Not on the Wi-Fi'**
+  String get inviteNotHere;
 }
 
 class _AppLocalizationsDelegate

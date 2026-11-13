@@ -1473,4 +1473,24 @@ class AppLocalizationsEs extends AppLocalizations {
   String pointsRefundNotEnough(String item) {
     return 'Devuelto: $item: no había puntos suficientes';
   }
+
+  @override
+  String get setupElsewhere => 'En otro dispositivo';
+
+  @override
+  String get setupBusyTag => 'En otra partida';
+
+  @override
+  String get setupInvitePlay => 'Invitar y jugar';
+
+  @override
+  String get slotInvited => 'Invitado, esperando';
+
+  @override
+  String inviteFailed(String name) {
+    return 'No se pudo entregar la invitación a $name.';
+  }
+
+  @override
+  String get inviteNotHere => 'No está en la red';
 }

@@ -22,7 +22,14 @@ const familyBeaconInterval = Duration(seconds: 10);
 /// plays on it now (for invitations, spec 5.4).
 @immutable
 class FamilyBeacon {
-  const FamilyBeacon({required this.familyTag, required this.deviceId, required this.ip, required this.port, this.activeUid});
+  const FamilyBeacon({
+    required this.familyTag,
+    required this.deviceId,
+    required this.ip,
+    required this.port,
+    this.activeUid,
+    this.busy = false,
+  });
 
   final String familyTag;
   final String deviceId;
@@ -30,15 +37,20 @@ class FamilyBeacon {
   final int port;
   final String? activeUid;
 
-  /// The tag of [familyId] sent instead of the id itself.
-  static String tagOf(String familyId) => sha256.convert(utf8.encode('deskovky-family:$familyId')).toString().substring(0, 16);
+  /// A game is being played on it now (an invitation would not show).
+  final bool busy;
 
-  FamilyBeacon copyWith({String? ip, String? activeUid}) => FamilyBeacon(
+  /// The tag of [familyId] sent instead of the id itself.
+  static String tagOf(String familyId) =>
+      sha256.convert(utf8.encode('deskovky-family:$familyId')).toString().substring(0, 16);
+
+  FamilyBeacon copyWith({String? ip, String? activeUid, bool? busy}) => FamilyBeacon(
     familyTag: familyTag,
     deviceId: deviceId,
     ip: ip ?? this.ip,
     port: port,
     activeUid: activeUid ?? this.activeUid,
+    busy: busy ?? this.busy,
   );
 
   Map<String, Object?> toJson() => {
@@ -49,13 +61,21 @@ class FamilyBeacon {
     'ip': ip,
     'port': port,
     'active': activeUid,
+    if (busy) 'busy': true,
   };
 
   static FamilyBeacon? fromJson(Object? json) {
     if (json is! Map<String, Object?> || json['app'] != 'deskovky-family') return null;
     final tag = json['tag'], device = json['device'], ip = json['ip'], port = json['port'], active = json['active'];
     if (tag is! String || device is! String || ip is! String || port is! int) return null;
-    return FamilyBeacon(familyTag: tag, deviceId: device, ip: ip, port: port, activeUid: active is String ? active : null);
+    return FamilyBeacon(
+      familyTag: tag,
+      deviceId: device,
+      ip: ip,
+      port: port,
+      activeUid: active is String ? active : null,
+      busy: json['busy'] == true,
+    );
   }
 }
 

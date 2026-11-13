@@ -939,5 +939,12 @@
   "pointsRefundDuplicate": "Refunded: {item} – bought twice",
   "pointsRefundNotEnough": "Refunded: {item} – not enough points",
   "@pointsRefundDuplicate": {"placeholders": {"item": {"type": "String"}}},
-  "@pointsRefundNotEnough": {"placeholders": {"item": {"type": "String"}}}
+  "@pointsRefundNotEnough": {"placeholders": {"item": {"type": "String"}}},
+  "setupElsewhere": "On another device",
+  "setupBusyTag": "In another game",
+  "setupInvitePlay": "Invite and play",
+  "slotInvited": "Invited, waiting",
+  "inviteFailed": "Could not deliver the invitation to {name}.",
+  "inviteNotHere": "Not on the Wi-Fi",
+  "@inviteFailed": {"placeholders": {"name": {"type": "String"}}}
 }

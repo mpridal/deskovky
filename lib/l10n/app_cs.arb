@@ -425,5 +425,11 @@
   "inviteLater": "Teď ne",
   "inviteTitle": "{host} tě zve do hry {game} – hrát?",
   "pointsRefundDuplicate": "Vráceno: {item} – koupeno dvakrát",
-  "pointsRefundNotEnough": "Vráceno: {item} – nebylo dost bodů"
+  "pointsRefundNotEnough": "Vráceno: {item} – nebylo dost bodů",
+  "setupElsewhere": "Na jiném zařízení",
+  "setupBusyTag": "Hraje jinou hru",
+  "setupInvitePlay": "Pozvat a hrát",
+  "slotInvited": "Pozván, čeká se",
+  "inviteFailed": "Pozvánku pro {name} se nepodařilo doručit.",
+  "inviteNotHere": "Není v síti"
 }

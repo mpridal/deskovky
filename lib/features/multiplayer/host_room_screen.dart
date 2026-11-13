@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+
 import '../../ui_kit/components/app_toast.dart';
 import '../../app/family_providers.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -44,6 +46,15 @@ class HostRoomScreen extends ConsumerWidget {
       listenable: room,
       builder: (context, _) {
         final lobby = room.lobbyState;
+        if (room.startWhenInvitedJoin && room.canStart && !room.waitingForInvited) {
+          // Everyone invited from the setup is here and ready: off we go.
+          room.startWhenInvitedJoin = false;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (!context.mounted || !room.canStart) return;
+            room.start();
+            context.pushReplacement('/play/${room.module.id}/net');
+          });
+        }
         return RoomPage(
           title: '${l10n.roomTitle} · ${gameText(l10n, room.module.titleKey)}',
           onBack: () => _leave(context, ref),
@@ -126,7 +137,13 @@ class HostRoomScreen extends ConsumerWidget {
 
   /// A free or robot place gets a robot, a person of this device or stays
   /// free; a remote person can be removed.
-  Future<void> _editSlot(BuildContext context, WidgetRef ref, HostRoom room, int index, List<PlayerProfile> profiles) async {
+  Future<void> _editSlot(
+    BuildContext context,
+    WidgetRef ref,
+    HostRoom room,
+    int index,
+    List<PlayerProfile> profiles,
+  ) async {
     final l10n = AppLocalizations.of(context);
     final slot = room.slots[index];
     final seated = {
@@ -139,11 +156,14 @@ class HostRoomScreen extends ConsumerWidget {
       for (final s in room.slots)
         if (s case LocalSlot(card: ProfileCard(:final uid?)) || RemoteSlot(card: ProfileCard(:final uid?))) uid,
     };
+    // Who plays now on another device first, the others after (their
+    // invitation goes to every family device on the Wi-Fi).
+    final elsewhere = family.inFamily ? family.playingElsewhere : const <String, Object>{};
     final invitable = [
       if (family.inFamily && slot is OpenSlot)
         for (final p in profiles)
-          if (p.uid != null && !seatedUids.contains(p.uid)) p,
-    ];
+          if (p.uid != null && !seatedUids.contains(p.uid) && slot.invited?.uid != p.uid) p,
+    ]..sort((a, b) => (elsewhere.containsKey(a.uid) ? 0 : 1).compareTo(elsewhere.containsKey(b.uid) ? 0 : 1));
     final choice = await showModalBottomSheet<Object>(
       context: context,
       backgroundColor: AppColors.paper,
@@ -188,10 +208,17 @@ class HostRoomScreen extends ConsumerWidget {
                       key: ValueKey('invite_${p.id}'),
                       leading: AvatarView(spec: p.avatar, size: 36),
                       title: Text(p.name, style: AppTypography.body(color: AppColors.ink)),
+                      subtitle: Text(
+                        elsewhere.containsKey(p.uid) ? l10n.playerActiveTag : l10n.inviteNotHere,
+                        style: AppTypography.caption(
+                          color: elsewhere.containsKey(p.uid) ? AppColors.felt : AppColors.woodLight,
+                        ),
+                      ),
                       trailing: const Icon(Icons.send_to_mobile, color: AppColors.wood),
                       onTap: () => Navigator.of(context).pop(('invite', p)),
                     ),
-                  if (slot is! OpenSlot) tile(const Icon(Icons.person_add_alt, color: AppColors.ink), l10n.slotLeaveOpen, 'open'),
+                  if (slot is! OpenSlot)
+                    tile(const Icon(Icons.person_add_alt, color: AppColors.ink), l10n.slotLeaveOpen, 'open'),
                 ],
                 const SizedBox(height: 8),
               ],
@@ -208,12 +235,33 @@ class HostRoomScreen extends ConsumerWidget {
       case 'open':
         room.setSlot(index, const OpenSlot());
       case PlayerProfile p:
-        room.setSlot(index, LocalSlot(profileId: p.id, card: ProfileCard(name: p.name, avatar: p.avatar.toJson(), uid: p.uid)));
+        room.setSlot(
+          index,
+          LocalSlot(
+            profileId: p.id,
+            card: ProfileCard(name: p.name, avatar: p.avatar.toJson(), uid: p.uid),
+          ),
+        );
       case ('invite', PlayerProfile p):
         final ticket = ref.read(networkRoomsProvider).ticket;
-        final hostName = [for (final s in room.slots) if (s is LocalSlot) s.card.name].firstOrNull ?? '';
-        final sent = ticket != null &&
+        final hostName =
+            [
+              for (final s in room.slots)
+                if (s is LocalSlot) s.card.name,
+            ].firstOrNull ??
+            '';
+        final sent =
+            ticket != null &&
             await family.invite(profileUid: p.uid!, room: ticket, gameId: room.module.id, hostName: hostName);
+        // Their place waits for them (a stranger takes it only when nothing else is free).
+        if (sent && room.slots[index] is OpenSlot) {
+          room.setSlot(
+            index,
+            OpenSlot(
+              invited: ProfileCard(name: p.name, avatar: p.avatar.toJson(), uid: p.uid),
+            ),
+          );
+        }
         if (context.mounted) showAppToast(context, sent ? l10n.inviteSent : l10n.inviteNoDevice);
     }
   }

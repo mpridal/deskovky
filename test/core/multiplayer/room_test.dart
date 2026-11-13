@@ -31,12 +31,24 @@ HostRoom _host({int remotes = 1, int robots = 0}) => HostRoom(
   seed: 77,
 );
 
-Future<ClientRoom> _join(HostRoom host, String name, {Duration latency = Duration.zero, int version = protocolVersion}) async {
+Future<ClientRoom> _join(
+  HostRoom host,
+  String name, {
+  Duration latency = Duration.zero,
+  int version = protocolVersion,
+  String? uid,
+}) async {
   final (hostSide, clientSide) = LoopbackChannel.pair(latency: latency);
   host.accept(hostSide);
   final client = ClientRoom(
     channel: clientSide,
-    hello: Hello(protocolVersion: version, appVersion: '0.4.0', roomCode: '4321', token: null, profiles: [_card(name)]),
+    hello: Hello(
+      protocolVersion: version,
+      appVersion: '0.4.0',
+      roomCode: '4321',
+      token: null,
+      profiles: [uid == null ? _card(name) : ProfileCard(name: name, avatar: _avatar, uid: uid)],
+    ),
     localProfileIds: const [10],
   );
   await _settle(latency);
@@ -76,7 +88,9 @@ void main() {
   test('a whole game of Pexeso on 2, 3 and 4 devices with a robot ends the same everywhere', () async {
     for (final devices in [2, 3, 4]) {
       final host = _host(remotes: devices - 1, robots: devices < 4 ? 1 : 0);
-      final clients = [for (var i = 0; i < devices - 1; i++) await _join(host, 'Hráč $i', latency: const Duration(milliseconds: 15))];
+      final clients = [
+        for (var i = 0; i < devices - 1; i++) await _join(host, 'Hráč $i', latency: const Duration(milliseconds: 15)),
+      ];
       for (final c in clients) {
         c.setReady(true);
       }
@@ -88,7 +102,10 @@ void main() {
       expect(host.isOver, isTrue, reason: '$devices devices');
       for (final c in clients) {
         expect(c.session!.hash, host.session!.hash, reason: '$devices devices');
-        expect(c.session!.rules.result(c.session!.state).places, host.session!.rules.result(host.session!.state).places);
+        expect(
+          c.session!.rules.result(c.session!.state).places,
+          host.session!.rules.result(host.session!.state).places,
+        );
       }
       host.dispose();
       for (final c in clients) {
@@ -166,7 +183,13 @@ void main() {
     host.accept(hostSide);
     final wrong = ClientRoom(
       channel: clientSide,
-      hello: Hello(protocolVersion: protocolVersion, appVersion: '0.4.0', roomCode: '0000', token: null, profiles: [_card('X')]),
+      hello: Hello(
+        protocolVersion: protocolVersion,
+        appVersion: '0.4.0',
+        roomCode: '0000',
+        token: null,
+        profiles: [_card('X')],
+      ),
       localProfileIds: const [10],
     );
     await _settle();
@@ -187,7 +210,15 @@ void main() {
     final got = <NetMessage>[];
     raw.incoming.listen(got.add);
     host.accept(hostSide);
-    raw.send(Hello(protocolVersion: protocolVersion, appVersion: '0.4.0', roomCode: '4321', token: null, profiles: [_card('Kuba')]));
+    raw.send(
+      Hello(
+        protocolVersion: protocolVersion,
+        appVersion: '0.4.0',
+        roomCode: '4321',
+        token: null,
+        profiles: [_card('Kuba')],
+      ),
+    );
     await _settle();
     raw.send(const Ready(true));
     await _settle();
@@ -198,7 +229,12 @@ void main() {
     // Seat 0 keeps playing or seat 1 is on; either way basedOn 0 is old now.
     final seat = host.session!.rules.currentSeat(host.session!.state)!;
     final move = host.session!.rules.legalMoves(host.session!.state, seat).first;
-    raw.send(MoveRequest(move: Move(seat: 1, type: move.type, data: move.data), basedOn: 0));
+    raw.send(
+      MoveRequest(
+        move: Move(seat: 1, type: move.type, data: move.data),
+        basedOn: 0,
+      ),
+    );
     await _settle();
     expect(got.whereType<MoveRejected>().single.reason, 'stale');
     expect(host.seq, 1);
@@ -255,5 +291,62 @@ void main() {
     expect(kuba.closedReason, 'kicked');
     host.dispose();
     kuba.dispose();
+  });
+
+  test('a place kept for an invited family member is theirs; other devices take the free ones', () async {
+    final host = HostRoom(
+      module: memoryModule,
+      roomCode: '4321',
+      slots: [
+        LocalSlot(profileId: 1, card: _card('Táta')),
+        OpenSlot(
+          invited: ProfileCard(name: 'Kuba', avatar: _avatar, uid: 'kuba'),
+        ),
+        const OpenSlot(),
+      ],
+      difficulty: Difficulty.easy,
+      robotSpeed: RobotSpeed.fast,
+      options: const {'cards': 12, 'set': 'animals'},
+      runner: const InlineAiRunner(),
+      robotDelay: Duration.zero,
+      seed: 77,
+    );
+    expect(host.waitingForInvited, isTrue);
+    final viky = await _join(host, 'Viky', uid: 'viky');
+    expect((host.slots[2] as RemoteSlot).card.name, 'Viky', reason: 'the place kept for Kuba stays free');
+    expect(host.slots[1], isA<OpenSlot>());
+    expect(host.waitingForInvited, isTrue);
+    await _settle();
+    expect(viky.lobby!.slots[1].name, 'Kuba', reason: 'everyone sees whom the place waits for');
+    final kuba = await _join(host, 'Kuba', uid: 'kuba');
+    expect((host.slots[1] as RemoteSlot).card.name, 'Kuba');
+    expect(host.waitingForInvited, isFalse);
+    host.dispose();
+    viky.dispose();
+    kuba.dispose();
+  });
+
+  test('when only kept places are left, a stranger may still take one', () async {
+    final host = HostRoom(
+      module: memoryModule,
+      roomCode: '4321',
+      slots: [
+        LocalSlot(profileId: 1, card: _card('Táta')),
+        OpenSlot(
+          invited: ProfileCard(name: 'Kuba', avatar: _avatar, uid: 'kuba'),
+        ),
+      ],
+      difficulty: Difficulty.easy,
+      robotSpeed: RobotSpeed.fast,
+      options: const {'cards': 12, 'set': 'animals'},
+      runner: const InlineAiRunner(),
+      robotDelay: Duration.zero,
+      seed: 77,
+    );
+    final mama = await _join(host, 'Máma');
+    expect((host.slots[1] as RemoteSlot).card.name, 'Máma');
+    expect(host.waitingForInvited, isFalse);
+    host.dispose();
+    mama.dispose();
   });
 }

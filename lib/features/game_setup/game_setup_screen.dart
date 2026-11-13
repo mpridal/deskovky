@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../app/family_providers.dart';
 import '../../app/multiplayer_providers.dart';
 import '../../app/providers.dart';
 import '../../core/game/difficulty.dart';
@@ -53,6 +54,16 @@ class _GameSetupScreenState extends ConsumerState<GameSetupScreen> {
   /// "Každý na svém (Wi-Fi)" (spec 14.2 step 1).
   bool _wifi = false;
   bool _opening = false;
+
+  /// Profiles at the table who play on their own family device: the game
+  /// becomes a network one and they get an invitation.
+  final _away = <int>{};
+
+  /// People of the table playing on another device now.
+  Set<int> get _awaySeated => {
+    for (final s in _config?.seats ?? const <SeatConfig>[])
+      if (s is HumanSeat && _away.contains(s.profileId)) s.profileId,
+  };
 
   @override
   void initState() {
@@ -106,16 +117,42 @@ class _GameSetupScreenState extends ConsumerState<GameSetupScreen> {
       showAppToast(context, l10n.setupNoFreeProfile);
       return;
     }
-    if (seat is HumanSeat && free.isEmpty && !canBeRobot) return;
+    // Family people playing now on another device; somebody must stay here.
+    final family = ref.read(familyControllerProvider);
+    final elsewhere = family.inFamily ? family.playingElsewhere : const <String, Object>{};
+    final localHumans = [
+      for (final s in config.seats)
+        if (s is HumanSeat && !_away.contains(s.profileId)) s.profileId,
+    ];
+    final leavesNobody = seat is HumanSeat && !_away.contains(seat.profileId) && localHumans.length == 1;
+    final away = [
+      if (!leavesNobody)
+        for (final p in profiles)
+          if (p.uid != null &&
+              elsewhere.containsKey(p.uid) &&
+              (!seated.contains(p.id) || (seat is HumanSeat && seat.profileId == p.id && !_away.contains(p.id))))
+            (p, family.playingElsewhere[p.uid]!.busy),
+    ];
+    if (seat is HumanSeat && free.isEmpty && !canBeRobot && away.isEmpty) return;
     final picked = await showProfilePicker(
       context,
       free: free,
       offerRobot: canBeRobot,
       robotColor: AppColors.players[index],
+      away: away,
     );
     if (picked == null || !mounted) return;
     final seats = [...config.seats];
-    seats[index] = picked == robotChoice ? const RobotSeat() : HumanSeat(picked);
+    switch (picked) {
+      case AwayPick(:final profileId):
+        seats[index] = HumanSeat(profileId);
+        _away.add(profileId);
+      case robotChoice:
+        seats[index] = const RobotSeat();
+      case final int id:
+        seats[index] = HumanSeat(id);
+        _away.remove(id);
+    }
     _update(config.copyWith(seats: seats));
   }
 
@@ -129,27 +166,36 @@ class _GameSetupScreenState extends ConsumerState<GameSetupScreen> {
 
   /// Opens a network room with this setup: its people stay on this device,
   /// its robots stay robots, the other places are free for other devices.
+  /// People playing on their own family device ([_away]) get their place
+  /// kept and an invitation, and the game starts once they are all in.
   Future<void> _openRoom(GameModule<Object?> module, List<PlayerProfile> profiles) async {
     final config = _config!;
     final l10n = AppLocalizations.of(context);
     final byId = {for (final p in profiles) p.id: p};
+    final away = _awaySeated;
     ProfileCard card(PlayerProfile p) => ProfileCard(name: p.name, avatar: p.avatar.toJson(), uid: p.uid);
     final slots = <RoomSlot>[
       for (final seat in config.seats)
-        if (seat is HumanSeat && byId[seat.profileId] != null)
+        if (seat is HumanSeat && away.contains(seat.profileId) && byId[seat.profileId] != null)
+          OpenSlot(invited: card(byId[seat.profileId]!))
+        else if (seat is HumanSeat && byId[seat.profileId] != null)
           LocalSlot(profileId: seat.profileId, card: card(byId[seat.profileId]!))
         else if (seat is RobotSeat)
           const RobotSlot(),
     ];
-    // At least one free place: a robot gives way when the table is full.
-    if (slots.length >= module.maxPlayers) {
-      final robot = slots.lastIndexWhere((s) => s is RobotSlot);
-      if (robot >= 0) slots.removeAt(robot);
+    if (away.isEmpty) {
+      // At least one free place: a robot gives way when the table is full.
+      if (slots.length >= module.maxPlayers) {
+        final robot = slots.lastIndexWhere((s) => s is RobotSlot);
+        if (robot >= 0) slots.removeAt(robot);
+      }
+      while (slots.length < module.maxPlayers) {
+        slots.add(const OpenSlot());
+      }
     }
-    while (slots.length < module.maxPlayers) {
-      slots.add(const OpenSlot());
-    }
-    final host = byId[config.seats.whereType<HumanSeat>().firstOrNull?.profileId] ?? profiles.firstOrNull;
+    final host =
+        byId[config.seats.whereType<HumanSeat>().where((s) => !away.contains(s.profileId)).firstOrNull?.profileId] ??
+        profiles.firstOrNull;
     if (host == null) return;
     setState(() => _opening = true);
     await ref.read(gameStoreProvider).saveLastConfig(config);
@@ -170,6 +216,23 @@ class _GameSetupScreenState extends ConsumerState<GameSetupScreen> {
     if (room == null) {
       showAppToast(context, l10n.roomNoServer);
       return;
+    }
+    if (away.isNotEmpty) {
+      room.startWhenInvitedJoin = true;
+      final family = ref.read(familyControllerProvider);
+      final ticket = ref.read(networkRoomsProvider).ticket;
+      final failed = <String>[];
+      for (final id in away) {
+        final p = byId[id]!;
+        final sent =
+            ticket != null &&
+            await family.invite(profileUid: p.uid!, room: ticket, gameId: module.id, hostName: host.name);
+        if (!sent) failed.add(p.name);
+      }
+      if (!mounted) return;
+      for (final name in failed) {
+        showAppToast(context, l10n.inviteFailed(name));
+      }
     }
     await context.push('/room');
   }
@@ -193,7 +256,9 @@ class _GameSetupScreenState extends ConsumerState<GameSetupScreen> {
               children: [
                 Icon(wifi ? Icons.wifi : Icons.tablet_android, color: AppColors.ink),
                 const SizedBox(width: 10),
-                Expanded(child: Text(label, style: AppTypography.body(color: AppColors.ink))),
+                Expanded(
+                  child: Text(label, style: AppTypography.body(color: AppColors.ink)),
+                ),
                 if (tag != null) ...[
                   const SizedBox(width: 6),
                   Text(tag, style: AppTypography.caption(color: AppColors.wood)),
@@ -313,7 +378,11 @@ class _GameSetupScreenState extends ConsumerState<GameSetupScreen> {
                         seat: id.seat,
                         avatar: id.avatar(40),
                         name: id.name,
-                        tag: id.isRobot ? l10n.seatRobot : l10n.seatHuman,
+                        tag: id.isRobot
+                            ? l10n.seatRobot
+                            : (_awaySeated.contains((config.seats[id.seat] as HumanSeat).profileId)
+                                  ? l10n.slotOwnDevice
+                                  : l10n.seatHuman),
                         detail: id.isRobot ? DifficultyDots(difficulty: config.difficulty) : null,
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -368,7 +437,7 @@ class _GameSetupScreenState extends ConsumerState<GameSetupScreen> {
               ],
               for (final option in module.options) ..._optionEditor(l10n, option, config),
               if (module.playableOnNetwork) _whereChoice(l10n),
-              if (_wifi && module.playableOnNetwork && _noWifi)
+              if ((_wifi && module.playableOnNetwork || _awaySeated.isNotEmpty) && _noWifi)
                 Padding(
                   padding: const EdgeInsets.only(top: 6),
                   child: Text(l10n.noWifi, style: AppTypography.body(color: AppColors.paper)),
@@ -398,7 +467,16 @@ class _GameSetupScreenState extends ConsumerState<GameSetupScreen> {
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: _wifi && module.playableOnNetwork
+                child: _awaySeated.isNotEmpty
+                    ? PrimaryButton(
+                        key: const ValueKey('setupInvitePlay'),
+                        label: l10n.setupInvitePlay,
+                        icon: Icons.send_to_mobile,
+                        onPressed: _noWifi || _opening || !SeatEditor.isValid(config.seats)
+                            ? null
+                            : () => _openRoom(module, profiles),
+                      )
+                    : _wifi && module.playableOnNetwork
                     ? PrimaryButton(
                         key: ValueKey(_noWifi ? 'setupOpenRoomOff' : 'setupOpenRoom'),
                         label: l10n.setupOpenRoom,
