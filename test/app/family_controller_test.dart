@@ -23,6 +23,7 @@ class _Device {
       net: net,
       stats: StatsService(StatsRepository(db), points: PointsRepository(db)),
       resyncAfter: const Duration(milliseconds: 50),
+      presence: const Duration(milliseconds: 400),
     );
   }
 
@@ -196,6 +197,36 @@ void main() {
     expect(await FamilyIdentity.load(offline.db), isNotNull);
     expect(offline.controller.ticket, isNull);
     expect(offline.controller.problem, FamilyProblem.noWifi);
+  });
+
+  test('who plays now on another family device is known while it is heard; one in a game is busy', () async {
+    final tablet = device('Tablet'), phone = device('Telefon');
+    await tablet.controller.createFamily(deviceName: 'Tablet');
+    await phone.controller.joinFamily(tablet.controller.ticket!, deviceName: 'Telefon');
+    final viky = await phone.players.create(name: 'Viky', avatar: AvatarSpec.defaults);
+    await SettingsRepository(phone.db).setActivePlayerId(viky.id);
+    var notified = 0;
+    tablet.controller.addListener(() => notified++);
+    await _settle();
+    final vikyUid = (await phone.players.all()).single.uid!;
+    expect(tablet.controller.playingElsewhere.keys, [vikyUid]);
+    expect(tablet.controller.playingElsewhere[vikyUid]!.busy, isFalse);
+    expect(notified, greaterThan(0), reason: 'the screens hear about it');
+    expect(phone.controller.playingElsewhere, isEmpty, reason: 'nobody plays on the tablet');
+
+    phone.controller.setInGame(true);
+    await _settle();
+    expect(tablet.controller.playingElsewhere[vikyUid]!.busy, isTrue);
+    phone.controller.setInGame(false);
+    await _settle();
+    expect(tablet.controller.playingElsewhere[vikyUid]!.busy, isFalse);
+
+    // The phone goes quiet (app closed, left the Wi-Fi): after a while it is gone.
+    phone.controller.dispose();
+    devices.remove(phone);
+    await phone.db.close();
+    await _settle(700);
+    expect(tablet.controller.playingElsewhere, isEmpty);
   });
 }
 

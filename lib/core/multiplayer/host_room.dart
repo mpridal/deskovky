@@ -28,9 +28,12 @@ class LocalSlot extends RoomSlot {
   final ProfileCard card;
 }
 
-/// A free place for a person on another device.
+/// A free place for a person on another device; with [invited], kept for
+/// that family member (they were invited, spec "Rodinná synchronizace" 5.4).
 class OpenSlot extends RoomSlot {
-  const OpenSlot();
+  const OpenSlot({this.invited});
+
+  final ProfileCard? invited;
 }
 
 class RobotSlot extends RoomSlot {
@@ -183,6 +186,13 @@ class HostRoom extends ChangeNotifier {
 
   int get freePlaces => _slots.whereType<OpenSlot>().length;
 
+  /// Started from the setup with invitations: the room starts the game by
+  /// itself once every invited person is in and ready.
+  bool startWhenInvitedJoin = false;
+
+  /// A place still waits for an invited family member.
+  bool get waitingForInvited => _slots.any((s) => s is OpenSlot && s.invited != null);
+
   /// Before the game: puts [slot] (open, robot or a person of this device)
   /// at [index]. A remote person's place only frees up through [kick].
   void setSlot(int index, RoomSlot slot) {
@@ -274,21 +284,23 @@ class HostRoom extends ChangeNotifier {
       return (
         session as GameSession<Object?>,
         TurnController<T>(
-              session: session,
-              transport: transport,
-              ai: m.ai,
-              runner: runner,
-              robotDelay: robotDelay,
-              localSeats: localSeats,
-            )
-            as TurnController<Object?>,
+          session: session,
+          transport: transport,
+          ai: m.ai,
+          runner: runner,
+          robotDelay: robotDelay,
+          localSeats: localSeats,
+        ) as TurnController<Object?>,
       );
     });
     _session = session;
     _controller = controller;
     for (final conn in _conns) {
       final id = conn.clientId;
-      if (id != null) conn.channel.send(Start(config: config, seed: _seed, yourSeats: _seatsOf(id), matchUid: matchUid, seatUids: seatUids));
+      if (id != null)
+        conn.channel.send(
+          Start(config: config, seed: _seed, yourSeats: _seatsOf(id), matchUid: matchUid, seatUids: seatUids),
+        );
     }
     // Whoever is not here any more is played by a robot.
     for (final (seat, owner) in _owners.indexed) {
@@ -450,7 +462,15 @@ class HostRoom extends ChangeNotifier {
       conn.channel.send(Welcome(clientId: known, token: hello.token!));
       _setClient(known, (s) => s.copyWith(connected: true));
       if (_session case final session?) {
-        conn.channel.send(Start(config: session.config, seed: _seed, yourSeats: _seatsOf(known), matchUid: matchUid, seatUids: seatUids));
+        conn.channel.send(
+          Start(
+            config: session.config,
+            seed: _seed,
+            yourSeats: _seatsOf(known),
+            matchUid: matchUid,
+            seatUids: seatUids,
+          ),
+        );
         conn.channel.send(StateSnapshot(seq: _seq, saved: session.toSave()));
         // Their places are theirs again, from a robot or from the wait.
         for (final seat in _seatsOf(known).keys) {
@@ -470,14 +490,27 @@ class HostRoom extends ChangeNotifier {
       return;
     }
     if (started) return _refuse(conn, 'started');
-    final open = [for (final (i, s) in _slots.indexed) if (s is OpenSlot) i];
+    final open = [
+      for (final (i, s) in _slots.indexed)
+        if (s is OpenSlot) i,
+    ];
     if (hello.profiles.isEmpty || hello.profiles.length > open.length) return _refuse(conn, 'full');
     final clientId = 'c${++_nextClient}';
     final token = _newToken();
     _tokens[token] = clientId;
     conn.clientId = clientId;
+    // An invited person takes the place kept for them; others the free
+    // places first, a kept one only when nothing else is left.
+    int place(ProfileCard card) {
+      final mine = open.where((i) => card.uid != null && (_slots[i] as OpenSlot).invited?.uid == card.uid);
+      final free = open.where((i) => (_slots[i] as OpenSlot).invited == null);
+      final i = mine.firstOrNull ?? free.firstOrNull ?? open.first;
+      open.remove(i);
+      return i;
+    }
+
     for (final (k, card) in hello.profiles.indexed) {
-      _slots[open[k]] = RemoteSlot(clientId: clientId, profileIndex: k, card: card);
+      _slots[place(card)] = RemoteSlot(clientId: clientId, profileIndex: k, card: card);
     }
     conn.channel.send(Welcome(clientId: clientId, token: token));
     _lobbyChanged();
@@ -560,7 +593,12 @@ class HostRoom extends ChangeNotifier {
             ready: ready,
           ),
           RobotSlot() => const LobbySlot(kind: SlotKind.robot, name: '', avatar: {}, ready: true),
-          OpenSlot() => const LobbySlot(kind: SlotKind.open, name: '', avatar: {}, ready: false),
+          OpenSlot(:final invited) => LobbySlot(
+            kind: SlotKind.open,
+            name: invited?.name ?? '',
+            avatar: invited?.avatar ?? const {},
+            ready: false,
+          ),
         },
     ],
     options: options,

@@ -1479,4 +1479,24 @@ class AppLocalizationsCs extends AppLocalizations {
   String pointsRefundNotEnough(String item) {
     return 'Vráceno: $item – nebylo dost bodů';
   }
+
+  @override
+  String get setupElsewhere => 'Na jiném zařízení';
+
+  @override
+  String get setupBusyTag => 'Hraje jinou hru';
+
+  @override
+  String get setupInvitePlay => 'Pozvat a hrát';
+
+  @override
+  String get slotInvited => 'Pozván, čeká se';
+
+  @override
+  String inviteFailed(String name) {
+    return 'Pozvánku pro $name se nepodařilo doručit.';
+  }
+
+  @override
+  String get inviteNotHere => 'Není v síti';
 }

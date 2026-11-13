@@ -425,5 +425,11 @@
   "inviteLater": "Ahora no",
   "inviteTitle": "{host} te invita a {game}, ¿jugar?",
   "pointsRefundDuplicate": "Devuelto: {item}: comprado dos veces",
-  "pointsRefundNotEnough": "Devuelto: {item}: no había puntos suficientes"
+  "pointsRefundNotEnough": "Devuelto: {item}: no había puntos suficientes",
+  "setupElsewhere": "En otro dispositivo",
+  "setupBusyTag": "En otra partida",
+  "setupInvitePlay": "Invitar y jugar",
+  "slotInvited": "Invitado, esperando",
+  "inviteFailed": "No se pudo entregar la invitación a {name}.",
+  "inviteNotHere": "No está en la red"
 }

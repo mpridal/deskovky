@@ -43,7 +43,12 @@ class RoomPage extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
                   child: Row(
                     children: [
-                      RoundIconButton(icon: Icons.arrow_back, tooltip: l10n.back, sound: UiSound.back, onPressed: onBack),
+                      RoundIconButton(
+                        icon: Icons.arrow_back,
+                        tooltip: l10n.back,
+                        sound: UiSound.back,
+                        onPressed: onBack,
+                      ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
@@ -57,7 +62,8 @@ class RoomPage extends StatelessWidget {
                   ),
                 ),
                 Expanded(child: body),
-                if (bottom case final bottom?) Padding(padding: const EdgeInsets.fromLTRB(16, 8, 16, 16), child: bottom),
+                if (bottom case final bottom?)
+                  Padding(padding: const EdgeInsets.fromLTRB(16, 8, 16, 16), child: bottom),
               ],
             ),
           ),
@@ -88,8 +94,21 @@ class RoomSlotTile extends StatelessWidget {
     final color = AppColors.players[seat % AppColors.players.length];
     final (Widget avatar, String name, String tag) = switch (slot.kind) {
       SlotKind.robot => (RobotAvatar(color: color, size: 40), robotName(l10n, seat), l10n.seatRobot),
+      // Kept for an invited family member: their face, faded.
+      SlotKind.open when slot.name.isNotEmpty => (
+        Opacity(
+          opacity: 0.55,
+          child: AvatarView(spec: AvatarSpec.fromJson(slot.avatar), size: 40, semanticLabel: slot.name),
+        ),
+        slot.name,
+        l10n.slotInvited,
+      ),
       SlotKind.open => (
-        CircleAvatar(radius: 20, backgroundColor: AppColors.paper2, child: Icon(Icons.add, color: color)),
+        CircleAvatar(
+          radius: 20,
+          backgroundColor: AppColors.paper2,
+          child: Icon(Icons.add, color: color),
+        ),
         l10n.slotOpen,
         l10n.slotWaiting,
       ),
@@ -168,9 +187,10 @@ class RoomSettingsSummary extends StatelessWidget {
           (
             gameText(l10n, option.labelKey),
             [
-              for (final (value, label) in choices)
-                if (value == (options[option.id] ?? option.defaultValue)) gameText(l10n, label),
-            ].firstOrNull ?? '',
+                  for (final (value, label) in choices)
+                    if (value == (options[option.id] ?? option.defaultValue)) gameText(l10n, label),
+                ].firstOrNull ??
+                '',
           ),
     ];
     return Column(
