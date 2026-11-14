@@ -969,5 +969,10 @@
   "donationsWhy": "A contribution helps pay for the time to make new games and for the Google Play fees.",
   "donationsSoon": "Giving will be possible once the game is on Google Play. Thank you!",
   "donationsThanks": "Heartfelt thanks to our donors:",
-  "donationsNobody": "Nobody here yet. Will you be the first?"
+  "donationsNobody": "Nobody here yet. Will you be the first?",
+  "familyRename": "Rename device",
+  "familyOnline": "Deskovky is running",
+  "familyOffline": "Not available",
+  "familyPlaysNow": "{name} is playing now",
+  "@familyPlaysNow": {"placeholders": {"name": {"type": "String"}}}
 }

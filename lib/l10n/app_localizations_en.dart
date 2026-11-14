@@ -1568,4 +1568,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get donationsNobody => 'Nobody here yet. Will you be the first?';
+
+  @override
+  String get familyRename => 'Rename device';
+
+  @override
+  String get familyOnline => 'Deskovky is running';
+
+  @override
+  String get familyOffline => 'Not available';
+
+  @override
+  String familyPlaysNow(String name) {
+    return '$name is playing now';
+  }
 }

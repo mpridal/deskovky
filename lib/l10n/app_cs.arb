@@ -454,5 +454,9 @@
   "donationsWhy": "Příspěvek pomůže zaplatit čas na vývoj nových her a poplatky za Google Play.",
   "donationsSoon": "Přispívat půjde, až bude hra na Google Play. Děkujeme!",
   "donationsThanks": "Srdečně děkujeme dárcům:",
-  "donationsNobody": "Zatím tu nikdo není. Budete první?"
+  "donationsNobody": "Zatím tu nikdo není. Budete první?",
+  "familyRename": "Přejmenovat zařízení",
+  "familyOnline": "Deskovky běží",
+  "familyOffline": "Není k dispozici",
+  "familyPlaysNow": "Teď hraje {name}"
 }

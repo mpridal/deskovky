@@ -454,5 +454,9 @@
   "donationsWhy": "Una aportación ayuda a pagar el tiempo para crear juegos nuevos y las tarifas de Google Play.",
   "donationsSoon": "Se podrá donar cuando el juego esté en Google Play. ¡Gracias!",
   "donationsThanks": "Muchas gracias a quienes han donado:",
-  "donationsNobody": "Aún no hay nadie. ¿Serás el primero?"
+  "donationsNobody": "Aún no hay nadie. ¿Serás el primero?",
+  "familyRename": "Cambiar el nombre del dispositivo",
+  "familyOnline": "Deskovky abierto",
+  "familyOffline": "No disponible",
+  "familyPlaysNow": "Ahora juega {name}"
 }

@@ -56,12 +56,20 @@ class FamilyDeviceInfo {
     required this.isMe,
     required this.removed,
     this.lastSync,
+    this.online = false,
+    this.activeUid,
   });
 
   final String deviceId;
   final String name;
   final bool isMe;
   final bool removed;
+
+  /// Deskovky are running on it and it is on the Wi-Fi now (this device: always).
+  final bool online;
+
+  /// Family id of the person playing on it now ("Hraje teď"), when known.
+  final String? activeUid;
   final DateTime? lastSync;
 }
 
@@ -76,7 +84,15 @@ class FamilyController extends ChangeNotifier {
     required this.stats,
     this.resyncAfter = const Duration(minutes: 1),
     this.presence = const Duration(seconds: 35),
+    this.systemDeviceName,
   });
+
+  /// The device's own name from the system ("Galaxy Tab A7 Lite"), if any.
+  final Future<String?> Function()? systemDeviceName;
+
+  /// Names a device gets when nothing better is known; replaced by
+  /// [systemDeviceName] when it says more.
+  static const genericNames = {'Telefon', 'Tablet', 'Phone', 'Teléfono', 'Tableta'};
 
   final AppDatabase db;
   final FamilyNet net;
@@ -127,6 +143,7 @@ class FamilyController extends ChangeNotifier {
     _family ??= await FamilyIdentity.load(db);
     if (_family == null || _server != null || _disposed) return;
     _me = await store.deviceId();
+    await _betterName();
     _ip = await net.wifiAddress();
     if (_ip == null) {
       _problem = FamilyProblem.noWifi;
@@ -161,19 +178,13 @@ class FamilyController extends ChangeNotifier {
   }
 
   Future<FamilyBeacon> _beacon() async {
-    final active = await (db.select(
-      db.appSettings,
-    )..where((s) => s.key.equals(SettingsRepository.activePlayerKey))).getSingleOrNull();
-    final activeId = int.tryParse(active?.value ?? '');
-    final activeRow = activeId == null
-        ? null
-        : await (db.select(db.players)..where((p) => p.id.equals(activeId))).getSingleOrNull();
+    final activeUid = await _activeUid();
     return FamilyBeacon(
       familyTag: FamilyBeacon.tagOf(_family!.familyId),
       deviceId: _me!,
       ip: _ip!,
       port: _server!.port,
-      activeUid: activeRow?.uid,
+      activeUid: activeUid,
       busy: _inGame,
     );
   }
@@ -479,8 +490,35 @@ class FamilyController extends ChangeNotifier {
   }
 
   /// Every device the family knows, this one first.
+  /// Renames this device for the whole family (Rodina → pencil).
+  Future<void> renameDevice(String name) async {
+    final clean = name.trim();
+    if (clean.isEmpty || _family == null) return;
+    await store.append(DeviceJoined(deviceId: await store.deviceId(), name: clean));
+    _notify();
+  }
+
+  /// A device still called just "Tablet" takes the system's name for it.
+  Future<void> _betterName() async {
+    final system = (await systemDeviceName?.call())?.trim();
+    if (system == null || system.isEmpty) return;
+    final me = await store.deviceId();
+    final current = foldFamily(await store.all()).devices[me];
+    if (current == null || current.removed || !genericNames.contains(current.name) || current.name == system) return;
+    await store.append(DeviceJoined(deviceId: me, name: system));
+  }
+
+  Future<String?> _activeUid() async {
+    final active = await (db.select(db.appSettings)..where((s) => s.key.equals(SettingsRepository.activePlayerKey)))
+        .getSingleOrNull();
+    final activeId = int.tryParse(active?.value ?? '');
+    if (activeId == null) return null;
+    return (await (db.select(db.players)..where((p) => p.id.equals(activeId))).getSingleOrNull())?.uid;
+  }
+
   Future<List<FamilyDeviceInfo>> familyDevices() async {
     final me = await store.deviceId();
+    final myActive = await _activeUid();
     final state = foldFamily(await store.all());
     final synced = {for (final d in await db.select(db.familyDevices).get()) d.deviceId: d.lastSyncMs};
     final list = [
@@ -491,6 +529,8 @@ class FamilyController extends ChangeNotifier {
           isMe: d.deviceId == me,
           removed: d.removed,
           lastSync: synced[d.deviceId] == null ? null : DateTime.fromMillisecondsSinceEpoch(synced[d.deviceId]!),
+          online: d.deviceId == me || _peers.containsKey(d.deviceId),
+          activeUid: d.deviceId == me ? myActive : _peers[d.deviceId]?.activeUid,
         ),
     ]..sort((a, b) => a.isMe == b.isMe ? a.name.compareTo(b.name) : (a.isMe ? -1 : 1));
     return list;

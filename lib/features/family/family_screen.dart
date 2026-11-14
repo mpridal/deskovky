@@ -15,6 +15,9 @@ import '../../ui_kit/components/primary_button.dart';
 import '../../ui_kit/tokens/app_colors.dart';
 import '../../ui_kit/tokens/app_typography.dart';
 import '../multiplayer/qr_scanner.dart';
+import '../../app/providers.dart';
+import '../../core/players/player_profile.dart';
+import '../../ui_kit/avatar/avatar_view.dart';
 import '../multiplayer/room_widgets.dart';
 
 /// Rodičovská zóna → Rodina (spec "Rodinná synchronizace" 5.1): found a
@@ -110,6 +113,20 @@ class _FamilyScreenState extends ConsumerState<FamilyScreen> {
       case QrScanCancelled():
         break;
     }
+  }
+
+  PlayerProfile? _profileOf(String? uid) =>
+      uid == null ? null : (ref.watch(playersProvider).value ?? const <PlayerProfile>[]).where((p) => p.uid == uid).firstOrNull;
+
+  Future<void> _rename(FamilyDeviceInfo device) async {
+    final l10n = AppLocalizations.of(context);
+    final name = await showDialog<String>(
+      context: context,
+      builder: (context) => _RenameDialog(title: l10n.familyRename, name: device.name, cancel: l10n.cancel, save: l10n.avatarSave),
+    );
+    if (name == null || name.trim().isEmpty) return;
+    await _controller.renameDevice(name);
+    _refresh();
   }
 
   Future<void> _remove(FamilyDeviceInfo device) async {
@@ -208,11 +225,38 @@ class _FamilyScreenState extends ConsumerState<FamilyScreen> {
                 children: [
                   for (final d in snapshot.data ?? const <FamilyDeviceInfo>[])
                     Padding(
+                      key: ValueKey('familyDevice_${d.name}'),
                       padding: const EdgeInsets.only(bottom: 8),
                       child: PaperCard(
                         child: Row(
                           children: [
-                            Icon(d.isMe ? Icons.phone_android : Icons.devices, color: AppColors.wood),
+                            // The device, with a dot: green while Deskovky run on it.
+                            Semantics(
+                              label: d.online && !d.removed ? l10n.familyOnline : l10n.familyOffline,
+                              child: SizedBox(
+                                width: 32,
+                                height: 32,
+                                child: Stack(
+                                  children: [
+                                    Icon(d.isMe ? Icons.phone_android : Icons.devices, color: AppColors.wood, size: 28),
+                                    Positioned(
+                                      right: 0,
+                                      bottom: 0,
+                                      child: Container(
+                                        key: ValueKey(d.online && !d.removed ? 'deviceOnline' : 'deviceOffline'),
+                                        width: 12,
+                                        height: 12,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: d.online && !d.removed ? AppColors.players[3] : AppColors.players[0],
+                                          border: Border.all(color: AppColors.paper, width: 2),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                             const SizedBox(width: 10),
                             Expanded(
                               child: Column(
@@ -232,6 +276,19 @@ class _FamilyScreenState extends ConsumerState<FamilyScreen> {
                                 ],
                               ),
                             ),
+                            // Who plays on it now ("Hraje teď").
+                            if (_profileOf(d.activeUid) case final p? when d.online && !d.removed)
+                              Tooltip(
+                                message: l10n.familyPlaysNow(p.name),
+                                child: AvatarView(spec: p.avatar, size: 36, semanticLabel: p.name),
+                              ),
+                            if (d.isMe)
+                              IconButton(
+                                key: const ValueKey('familyRename'),
+                                tooltip: l10n.familyRename,
+                                icon: const Icon(Icons.edit, color: AppColors.ink),
+                                onPressed: () => _rename(d),
+                              ),
                             if (!d.isMe && !d.removed)
                               IconButton(
                                 key: const ValueKey('familyRemove'),
@@ -259,4 +316,49 @@ class _FamilyScreenState extends ConsumerState<FamilyScreen> {
       ),
     );
   }
+}
+
+/// "Přejmenovat zařízení": a text field that owns its controller, so it
+/// lives as long as the dialog (closing animation included).
+class _RenameDialog extends StatefulWidget {
+  const _RenameDialog({required this.title, required this.name, required this.cancel, required this.save});
+
+  final String title;
+  final String name;
+  final String cancel;
+  final String save;
+
+  @override
+  State<_RenameDialog> createState() => _RenameDialogState();
+}
+
+class _RenameDialogState extends State<_RenameDialog> {
+  late final _field = TextEditingController(text: widget.name);
+
+  @override
+  void dispose() {
+    _field.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => AlertDialog(
+    backgroundColor: AppColors.paper,
+    title: Text(widget.title, style: AppTypography.h2(color: AppColors.ink)),
+    content: TextField(
+      key: const ValueKey('familyRenameField'),
+      controller: _field,
+      autofocus: true,
+      maxLength: 40,
+      onSubmitted: (v) => Navigator.of(context).pop(v),
+    ),
+    actions: [
+      TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(widget.cancel)),
+      TextButton(
+        key: const ValueKey('familyRenameSave'),
+        onPressed: () => Navigator.of(context).pop(_field.text),
+        child: Text(widget.save),
+      ),
+    ],
+  );
 }

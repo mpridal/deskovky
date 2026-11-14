@@ -1578,4 +1578,18 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get donationsNobody => 'Zatím tu nikdo není. Budete první?';
+
+  @override
+  String get familyRename => 'Přejmenovat zařízení';
+
+  @override
+  String get familyOnline => 'Deskovky běží';
+
+  @override
+  String get familyOffline => 'Není k dispozici';
+
+  @override
+  String familyPlaysNow(String name) {
+    return 'Teď hraje $name';
+  }
 }

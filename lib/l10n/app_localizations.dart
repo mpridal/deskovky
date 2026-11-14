@@ -2829,6 +2829,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nobody here yet. Will you be the first?'**
   String get donationsNobody;
+
+  /// No description provided for @familyRename.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename device'**
+  String get familyRename;
+
+  /// No description provided for @familyOnline.
+  ///
+  /// In en, this message translates to:
+  /// **'Deskovky is running'**
+  String get familyOnline;
+
+  /// No description provided for @familyOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Not available'**
+  String get familyOffline;
+
+  /// No description provided for @familyPlaysNow.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is playing now'**
+  String familyPlaysNow(String name);
 }
 
 class _AppLocalizationsDelegate
