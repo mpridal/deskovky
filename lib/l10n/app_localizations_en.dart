@@ -1582,4 +1582,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String familyPlaysNow(String name) {
     return '$name is playing now';
   }
+
+  @override
+  String get settingsShareApp => 'Download to another device';
+
+  @override
+  String get shareAppTitle => 'Deskovky on another device';
+
+  @override
+  String get shareAppHint =>
+      'Scan the code with the camera of the other phone or tablet. The page with the newest version opens: download the file deskovky-….apk and open it.';
 }

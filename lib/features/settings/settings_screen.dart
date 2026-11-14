@@ -13,6 +13,7 @@ import '../../ui_kit/components/ui_feedback.dart';
 import '../../ui_kit/tokens/app_colors.dart';
 import '../../ui_kit/tokens/app_typography.dart';
 import 'parents_screen.dart';
+import 'share_app.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -253,6 +254,17 @@ class _AppSectionState extends ConsumerState<_AppSection> {
           const SizedBox(height: 4),
           Text(message, style: AppTypography.body(color: AppColors.gold)),
         ],
+        const SizedBox(height: 8),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: PrimaryButton(
+            key: const ValueKey('settingsShareApp'),
+            label: l10n.settingsShareApp,
+            icon: Icons.qr_code_2,
+            secondary: true,
+            onPressed: () => showShareApp(context),
+          ),
+        ),
         _SwitchRow(
           keyName: 'autoUpdate',
           label: l10n.settingsAutoUpdate,

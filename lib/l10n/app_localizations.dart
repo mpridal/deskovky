@@ -2853,6 +2853,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name} is playing now'**
   String familyPlaysNow(String name);
+
+  /// No description provided for @settingsShareApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Download to another device'**
+  String get settingsShareApp;
+
+  /// No description provided for @shareAppTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Deskovky on another device'**
+  String get shareAppTitle;
+
+  /// No description provided for @shareAppHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan the code with the camera of the other phone or tablet. The page with the newest version opens: download the file deskovky-….apk and open it.'**
+  String get shareAppHint;
 }
 
 class _AppLocalizationsDelegate

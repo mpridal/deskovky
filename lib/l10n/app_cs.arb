@@ -458,5 +458,8 @@
   "familyRename": "Přejmenovat zařízení",
   "familyOnline": "Deskovky běží",
   "familyOffline": "Není k dispozici",
-  "familyPlaysNow": "Teď hraje {name}"
+  "familyPlaysNow": "Teď hraje {name}",
+  "settingsShareApp": "Stáhnout do jiného zařízení",
+  "shareAppTitle": "Deskovky do dalšího zařízení",
+  "shareAppHint": "Naskenuj kód fotoaparátem druhého telefonu nebo tabletu. Otevře se stránka s nejnovější verzí: stáhni soubor deskovky-….apk a otevři ho."
 }

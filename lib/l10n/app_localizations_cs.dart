@@ -1592,4 +1592,14 @@ class AppLocalizationsCs extends AppLocalizations {
   String familyPlaysNow(String name) {
     return 'Teď hraje $name';
   }
+
+  @override
+  String get settingsShareApp => 'Stáhnout do jiného zařízení';
+
+  @override
+  String get shareAppTitle => 'Deskovky do dalšího zařízení';
+
+  @override
+  String get shareAppHint =>
+      'Naskenuj kód fotoaparátem druhého telefonu nebo tabletu. Otevře se stránka s nejnovější verzí: stáhni soubor deskovky-….apk a otevři ho.';
 }
