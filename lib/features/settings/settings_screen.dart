@@ -5,8 +5,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../app/providers.dart';
 import '../../app/update_controller.dart';
+import '../../core/l10n/locale_resolution.dart';
 import '../../l10n/app_localizations.dart';
-import '../../ui_kit/components/choice_pills.dart';
+import '../../ui_kit/components/paper_card.dart';
 import '../../ui_kit/components/primary_button.dart';
 import '../../ui_kit/components/ui_feedback.dart';
 import '../../ui_kit/tokens/app_colors.dart';
@@ -28,16 +29,25 @@ class SettingsScreen extends ConsumerWidget {
           const SizedBox(height: 24),
           Text(l10n.settingsLanguage, style: AppTypography.h2(color: AppColors.paper)),
           const SizedBox(height: 8),
-          ChoicePills<String?>(
-            // Language names stay in their own language, so they are not in the ARB files.
-            choices: [
-              (null, l10n.settingsLanguageSystem),
-              ('cs', 'Čeština'),
-              ('en', 'English'),
-              ('es', 'Español'),
-            ],
-            selected: chosen,
-            onChanged: (code) => ref.read(settingsRepositoryProvider).setLocale(code == null ? null : Locale(code)),
+          // One row and a list behind it: any number of languages fits.
+          PaperCard(
+            key: const ValueKey('settingsLanguageRow'),
+            onTap: () => _pickLanguage(context, ref, chosen),
+            child: Row(
+              children: [
+                const Icon(Icons.language, color: AppColors.felt),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    chosen == null
+                        ? '${l10n.settingsLanguageSystem} (${appLanguageName(Localizations.localeOf(context).languageCode)})'
+                        : appLanguageName(chosen),
+                    style: AppTypography.body(color: AppColors.ink),
+                  ),
+                ),
+                const Icon(Icons.chevron_right, color: AppColors.wood),
+              ],
+            ),
           ),
           const SizedBox(height: 24),
           const _SoundSection(),
@@ -252,4 +262,41 @@ class _AppSectionState extends ConsumerState<_AppSection> {
       ],
     );
   }
+}
+
+/// The languages in a scrolling list: the phone's own first, then every app
+/// language by its own name. The choice is kept (null follows the phone).
+Future<void> _pickLanguage(BuildContext context, WidgetRef ref, String? chosen) async {
+  final l10n = AppLocalizations.of(context);
+  final picked = await showModalBottomSheet<String>(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: AppColors.paper,
+    showDragHandle: true,
+    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(18))),
+    builder: (context) {
+      Widget tile(String key, String label, bool selected) => ListTile(
+        key: ValueKey('language_$key'),
+        leading: Icon(selected ? Icons.radio_button_checked : Icons.radio_button_off, color: AppColors.felt),
+        title: Text(label, style: AppTypography.body(color: AppColors.ink)),
+        onTap: () => Navigator.of(context).pop(key),
+      );
+      return SafeArea(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * 0.7),
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              tile('system', l10n.settingsLanguageSystem, chosen == null),
+              const Divider(height: 1),
+              for (final l in supportedAppLocales)
+                tile(l.languageCode, appLanguageName(l.languageCode), chosen == l.languageCode),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+  if (picked == null) return;
+  await ref.read(settingsRepositoryProvider).setLocale(picked == 'system' ? null : Locale(picked));
 }
