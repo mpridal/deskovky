@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../core/game/game_config.dart';
 import '../core/multiplayer/room_info.dart';
+import '../features/donations/donations_screen.dart';
 import '../features/game_play/game_outcome.dart';
 import '../features/game_play/game_screen.dart';
 import '../features/game_setup/game_setup_screen.dart';
@@ -109,6 +110,9 @@ GoRouter buildRouter({String? startGame}) {
           ),
           StatefulShellBranch(
             routes: [GoRoute(path: '/leaderboards', builder: (_, _) => const LeaderboardsScreen())],
+          ),
+          StatefulShellBranch(
+            routes: [GoRoute(path: '/donations', builder: (_, _) => const DonationsScreen())],
           ),
           StatefulShellBranch(
             routes: [

@@ -68,6 +68,7 @@ class _TableState extends State<_Table> {
         lastMove: null,
         mySeat: mine,
         canAct: mine != null,
+        localSeats: widget.humans,
         firstGame: widget.firstGame,
         submit: (move) async {
           widget.sent.add(move);
@@ -210,12 +211,23 @@ void main() {
     expect(host.sfx.where((s) => s == 'piece_place' || s == 'error'), isNotEmpty);
   });
 
-  testWidgets('a robot placing first: the board waits, then you place', (tester) async {
-    await pumpBoard(tester, fresh(), humans: {1});
+  testWidgets('alone on this device you place at once, even before the other side; then you wait', (tester) async {
+    final (_, sent) = await pumpBoard(tester, fresh(), humans: {1});
+    expect(editor, findsOneWidget, reason: 'seat 0 (robot or another device) is still placing');
+    await tester.tap(find.byKey(const ValueKey('shipsDone')));
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(sent.single.type, 'place');
+    expect(sent.single.seat, 1);
     expect(find.byKey(const ValueKey('shipsWaiting')), findsOneWidget);
     _table(tester).play(ShipsRules.place(0, fleetA));
     await tester.pump(const Duration(milliseconds: 300));
-    expect(editor, findsOneWidget);
+    expect(target, findsOneWidget);
+  });
+
+  testWidgets('against a robot a resumed battle is not covered: nobody else is here', (tester) async {
+    await pumpBoard(tester, placed(), humans: {0});
+    expect(ready, findsNothing);
+    expect(target, findsOneWidget);
   });
 
   testWidgets('shooting: a miss splashes, a hit booms, a sunk ship sinks with its water shown', (tester) async {

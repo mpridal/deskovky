@@ -1488,4 +1488,98 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get inviteNotHere => 'Not on the Wi-Fi';
+
+  @override
+  String get navDonations => 'Donate';
+
+  @override
+  String get donationsTitle => 'Support Deskovky';
+
+  @override
+  String get donationsIntro =>
+      'Deskovky is made at home, for families with children. It is free and will stay free. If it brings you joy, you can give a voluntary contribution to its development.';
+
+  @override
+  String get donationsFreeTitle => 'The whole game is free';
+
+  @override
+  String get donationsFreeText =>
+      'No paid levels, nothing is unlocked for money.';
+
+  @override
+  String get donationsNoAdsTitle => 'No ads';
+
+  @override
+  String get donationsNoAdsText =>
+      'Nothing distracts children and nothing tempts them to buy.';
+
+  @override
+  String get donationsNoDataTitle => 'No data collection';
+
+  @override
+  String get donationsNoDataText =>
+      'No accounts, no sign-in. Profiles and results stay on your devices.';
+
+  @override
+  String get donationsOfflineTitle => 'Safe without the internet';
+
+  @override
+  String get donationsOfflineText =>
+      'It plays offline and sends nothing about you anywhere. It only uses the internet to download a new version and the list of donors.';
+
+  @override
+  String get donationsFamilyTitle => 'The whole family plays';
+
+  @override
+  String get donationsFamilyText =>
+      'Around one table, or each on their own over home Wi-Fi. Family devices share data only with each other.';
+
+  @override
+  String get donationsKidsTitle => 'For the youngest too';
+
+  @override
+  String get donationsKidsText =>
+      'Robots on three levels, rules with pictures, big buttons and a parents’ corner.';
+
+  @override
+  String get donationsEveryoneTitle => 'For everyone';
+
+  @override
+  String get donationsEveryoneText =>
+      'Works with a screen reader, has marks for colour-blind players and speaks Czech, English and Spanish.';
+
+  @override
+  String get donationsGrowingTitle => 'New games keep coming';
+
+  @override
+  String get donationsGrowingText =>
+      'Nine games and more on the way – some wished for by children.';
+
+  @override
+  String get donationsWhy =>
+      'A contribution helps pay for the time to make new games and for the Google Play fees.';
+
+  @override
+  String get donationsSoon =>
+      'Giving will be possible once the game is on Google Play. Thank you!';
+
+  @override
+  String get donationsThanks => 'Heartfelt thanks to our donors:';
+
+  @override
+  String get donationsNobody => 'Nobody here yet. Will you be the first?';
+
+  @override
+  String get familyRename => 'Rename device';
+
+  @override
+  String get familyOnline => 'Deskovky is running';
+
+  @override
+  String get familyOffline => 'Not available';
+
+  @override
+  String familyPlaysNow(String name) {
+    return '$name is playing now';
+  }
 }

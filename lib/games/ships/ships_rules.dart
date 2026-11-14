@@ -153,7 +153,8 @@ class ShipsState {
 }
 
 /// Rules of Lodě (design `docs/superpowers/specs/2026-11-12-lode-design.md`).
-class ShipsRules implements GameRules<ShipsState> {
+/// Both seats may place their fleet at the same time ([OutOfTurnMoves]).
+class ShipsRules implements GameRules<ShipsState>, OutOfTurnMoves<ShipsState> {
   const ShipsRules();
 
   /// Places [seat]'s fleet; the ships travel as text `x,y,h;…` in fleet order.
@@ -262,14 +263,20 @@ class ShipsRules implements GameRules<ShipsState> {
     return [for (final c in openCells(state, seat)) shoot(seat, c)];
   }
 
+  /// A fleet is placed whenever its seat is ready, not in turn.
+  @override
+  bool outOfTurn(ShipsState state, Move move) =>
+      move.type == 'place' && move.seat >= 0 && move.seat < 2 && state.ships[move.seat] == null;
+
   @override
   bool isLegal(ShipsState state, Move move) {
-    if (currentSeat(state) != move.seat) return false;
+    if (move.seat < 0 || move.seat > 1) return false;
     if (state.ships[move.seat] == null) {
       if (move.type != 'place') return false;
       final ships = parseFleet(move.data['ships'], state.fleet);
       return ships != null && validFleet(state.size, state.fleet, ships);
     }
+    if (currentSeat(state) != move.seat) return false;
     final cell = move.data['cell'];
     return move.type == 'shoot' && cell is int && openCells(state, move.seat).contains(cell);
   }

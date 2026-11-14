@@ -16,7 +16,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'fake_family_net.dart';
 
 class _Device {
-  _Device(FakeLan lan, this.name, {bool wifi = true}) : db = AppDatabase(NativeDatabase.memory()) {
+  _Device(FakeLan lan, this.name, {bool wifi = true, this.systemName}) : db = AppDatabase(NativeDatabase.memory()) {
     net = lan.device(wifi: wifi);
     controller = FamilyController(
       db: db,
@@ -24,10 +24,12 @@ class _Device {
       stats: StatsService(StatsRepository(db), points: PointsRepository(db)),
       resyncAfter: const Duration(milliseconds: 50),
       presence: const Duration(milliseconds: 400),
+      systemDeviceName: () async => systemName,
     );
   }
 
   final String name;
+  final String? systemName;
   final AppDatabase db;
   late final FakeFamilyNet net;
   late final FamilyController controller;
@@ -42,7 +44,8 @@ Future<void> _settle([int ms = 300]) => Future<void>.delayed(Duration(millisecon
 void main() {
   late FakeLan lan;
   final devices = <_Device>[];
-  _Device device(String name, {bool wifi = true}) => _Device(lan, name, wifi: wifi)..let(devices.add);
+  _Device device(String name, {bool wifi = true, String? systemName}) =>
+      _Device(lan, name, wifi: wifi, systemName: systemName)..let(devices.add);
   setUp(() => lan = FakeLan());
   tearDown(() async {
     for (final d in devices) {
@@ -228,7 +231,57 @@ void main() {
     await _settle(700);
     expect(tablet.controller.playingElsewhere, isEmpty);
   });
+
+  test('the device list says which devices are on the Wi-Fi now and who plays on each', () async {
+    final tablet = device('Tablet'), phone = device('Telefon');
+    await tablet.controller.createFamily(deviceName: 'Tablet');
+    await phone.controller.joinFamily(tablet.controller.ticket!, deviceName: 'Telefon');
+    final viky = await phone.players.create(name: 'Viky', avatar: AvatarSpec.defaults);
+    await SettingsRepository(phone.db).setActivePlayerId(viky.id);
+    await _settle();
+    final vikyUid = (await phone.players.all()).single.uid;
+    var list = await tablet.controller.familyDevices();
+    final me = list.singleWhere((d) => d.isMe), other = list.singleWhere((d) => !d.isMe);
+    expect(me.online, isTrue, reason: 'this device is always here');
+    expect(me.activeUid, isNull, reason: 'nobody chosen on the tablet');
+    expect(other.name, 'Telefon');
+    expect(other.online, isTrue);
+    expect(other.activeUid, vikyUid);
+    expect((await phone.controller.familyDevices()).singleWhere((d) => d.isMe).activeUid, vikyUid);
+
+    phone.controller.dispose();
+    devices.remove(phone);
+    await phone.db.close();
+    await _settle(700);
+    list = await tablet.controller.familyDevices();
+    expect(list.singleWhere((d) => !d.isMe).online, isFalse);
+    expect(list.singleWhere((d) => !d.isMe).activeUid, isNull);
+  });
+
+  test('a device renamed is renamed on every device', () async {
+    final tablet = device('Tablet'), phone = device('Telefon');
+    await tablet.controller.createFamily(deviceName: 'Tablet');
+    await phone.controller.joinFamily(tablet.controller.ticket!, deviceName: 'Telefon');
+    await _settle();
+    await phone.controller.renameDevice('Kubův telefon');
+    await _settle(600);
+    expect((await tablet.controller.familyDevices()).map((d) => d.name), contains('Kubův telefon'));
+    expect((await phone.controller.familyDevices()).singleWhere((d) => d.isMe).name, 'Kubův telefon');
+  });
+
+  test('a device still called just "Tablet" takes the name the system gives it', () async {
+    final tablet = device('Tablet', systemName: 'Galaxy Tab A7 Lite');
+    await tablet.controller.createFamily(deviceName: 'Tablet');
+    await _settle();
+    expect((await tablet.controller.familyDevices()).single.name, 'Galaxy Tab A7 Lite');
+    // A name chosen by hand stays.
+    await tablet.controller.renameDevice('Obývák');
+    tablet.controller.syncSoon();
+    await _settle();
+    expect((await tablet.controller.familyDevices()).single.name, 'Obývák');
+  });
 }
+
 
 extension<T> on T {
   void let(void Function(T) f) => f(this);

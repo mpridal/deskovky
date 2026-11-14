@@ -139,6 +139,25 @@ void main() {
     await _leave(tester);
   });
 
+  testWidgets('the room starts without robots: every other place is free for people (a robot can still be added)', (tester) async {
+    final env = FakeNetworkEnv();
+    await _players(tester, db, ['Táta']);
+    await _openMemorySetup(tester, db, env);
+    // The setup has Táta and a robot.
+    expect(find.text('Hráči · 1 člověk + 1 robot'), findsOneWidget);
+    await _openRoom(tester);
+    final room = ProviderScope.containerOf(tester.element(find.byType(HostRoomScreen))).read(networkRoomsProvider).host!;
+    expect(room.slots.whereType<RobotSlot>(), isEmpty);
+    expect(room.slots.whereType<OpenSlot>(), hasLength(3), reason: 'Pexeso is for up to 4');
+    // A robot fills a place when people are missing.
+    await tester.tap(find.byKey(const ValueKey('roomSlot1')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Přidat robota'));
+    await _settle(tester);
+    expect(room.slots[1], isA<RobotSlot>());
+    await _leave(tester);
+  });
+
   testWidgets('the host can remove a joined player', (tester) async {
     final env = FakeNetworkEnv();
     await _players(tester, db, ['Táta']);

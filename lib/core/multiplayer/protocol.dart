@@ -139,6 +139,7 @@ sealed class NetMessage {
         'ping' => Ping(json['t']! as int),
         'pong' => Pong(json['t']! as int),
         'kick' => const Kick(),
+        'signal' => Signal(seat: json['seat']! as int, data: {...json['data']! as Map<String, Object?>}),
         'family' => FamilyMessage({...json}..remove('type')),
         _ => null,
       };
@@ -490,4 +491,19 @@ class FamilyMessage extends NetMessage {
 
   @override
   String get type => 'family';
+}
+
+/// Either way: a passing gesture of a seat's person that changes nothing in
+/// the game, e.g. a hint in Pexeso. The host passes it on to the others.
+class Signal extends NetMessage {
+  const Signal({required this.seat, required this.data});
+
+  final int seat;
+  final Map<String, Object?> data;
+
+  @override
+  String get type => 'signal';
+
+  @override
+  Map<String, Object?> get body => {'seat': seat, 'data': data};
 }

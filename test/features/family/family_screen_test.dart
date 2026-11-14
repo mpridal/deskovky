@@ -7,6 +7,8 @@ import 'package:deskovky/core/db/app_database.dart';
 import 'package:deskovky/core/family/family_identity.dart';
 import 'package:deskovky/core/players/player_repository.dart';
 import 'package:deskovky/core/points/points_repository.dart';
+import 'package:deskovky/core/settings/settings_repository.dart';
+import 'package:deskovky/ui_kit/avatar/avatar_view.dart';
 import 'package:deskovky/core/stats/stats_repository.dart';
 import 'package:deskovky/features/family/family_screen.dart';
 import 'package:deskovky/features/multiplayer/qr_scanner.dart';
@@ -172,6 +174,52 @@ void main() {
     expect(find.byKey(const ValueKey('syncBlip')), findsOneWidget);
     await tester.pump(const Duration(seconds: 3));
     expect(find.byKey(const ValueKey('syncBlip')), findsNothing);
+  });
+
+  familyTest('each device shows its name, a green dot when Deskovky run there and who plays there now', (tester) async {
+    final (tablet, tabletDb) = await otherTablet(tester);
+    await tester.runAsync(() async {
+      final viky = (await PlayerRepository(tabletDb).all()).single;
+      await SettingsRepository(tabletDb).setActivePlayerId(viky.id);
+    });
+    scanner.text = tablet.ticket!.toUri().toString();
+    await openFamily(tester);
+    await tester.tap(find.byKey(const ValueKey('familyJoin')));
+    await _settle(tester, 20);
+    final tabletRow = find.byKey(const ValueKey('familyDevice_Tablet'));
+    await tester.scrollUntilVisible(
+      tabletRow,
+      200,
+      scrollable: find.byWidgetPredicate((w) => w is Scrollable && w.axisDirection == AxisDirection.down).first,
+    );
+    await tester.pumpAndSettle();
+    expect(find.descendant(of: tabletRow, matching: find.text('Tablet')), findsOneWidget);
+    expect(find.descendant(of: tabletRow, matching: find.byKey(const ValueKey('deviceOnline'))), findsOneWidget);
+    expect(
+      find.descendant(of: tabletRow, matching: find.byWidgetPredicate((w) => w is AvatarView && w.semanticLabel == 'Viky')),
+      findsOneWidget,
+    );
+    final myRow = find.byKey(const ValueKey('familyDevice_Telefon'));
+    expect(find.descendant(of: myRow, matching: find.byKey(const ValueKey('deviceOnline'))), findsOneWidget);
+  });
+
+  familyTest('this device can be renamed for the whole family', (tester) async {
+    await openFamily(tester);
+    await tester.tap(find.byKey(const ValueKey('familyCreate')));
+    await _settle(tester);
+    final rename = find.byKey(const ValueKey('familyRename'));
+    await tester.scrollUntilVisible(
+      rename,
+      200,
+      scrollable: find.byWidgetPredicate((w) => w is Scrollable && w.axisDirection == AxisDirection.down).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(rename);
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const ValueKey('familyRenameField')), 'Kubův telefon');
+    await tester.tap(find.byKey(const ValueKey('familyRenameSave')));
+    await _settle(tester);
+    expect(find.text('Kubův telefon'), findsOneWidget);
   });
 
   for (final locale in ['cs', 'en', 'es']) {

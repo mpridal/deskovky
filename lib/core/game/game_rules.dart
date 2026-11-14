@@ -31,3 +31,11 @@ abstract class GameRules<S> {
 
   S stateFromJson(Map<String, Object?> json);
 }
+
+/// Rules where some moves may be made by a seat that is not on turn, e.g.
+/// both players placing their fleet at the same time in Lodě. The framework
+/// lets such a move through from any person of the device (and the host from
+/// any device); [GameRules.isLegal] still decides whether it is legal.
+abstract interface class OutOfTurnMoves<S> {
+  bool outOfTurn(S state, Move move);
+}

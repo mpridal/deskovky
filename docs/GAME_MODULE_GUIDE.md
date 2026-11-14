@@ -82,6 +82,10 @@ final move = search.best(state, seat, maxDepth: 6, timeLimit: const Duration(mil
 - `host` (efekty, haptika, události);
 - `elapsed()`;
 - `firstGame` (první partie hráče na tahu – ukaž nenásilnou nápovědu k ovládání).
+- `localSeats` (sedadla, za která na tomto zařízení hraje člověk, ať je na tahu kdokoli – na jednom zařízení všichni lidé, v síťové hře jen vlastní);
+- `signal(data)` a `signals` (jen v síťové hře): letmé gesto pro ostatní zařízení, které nemění stav hry – např. nápověda v Pexesu. Hostitel ho jen přepošle; `BoardSignal` nese sedadlo, jméno a data hry.
+
+Pravidla, kde smí sedadlo udělat tah, i když není na tahu (Lodě: obě strany rozmisťují současně), implementují vedle `GameRules` i `OutOfTurnMoves` (`outOfTurn(state, move)`). Framework takový tah pustí od kteréhokoli člověka zařízení a hostitel u něj kontroluje jen legalitu.
 
 HUD (hráči, skóre, pauza, bublina s `turnHint`) i výsledky kreslí framework.
 

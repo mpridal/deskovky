@@ -6,7 +6,7 @@ Karetní hra pro 2–4 hráče, lidi i roboty, na jednom zařízení i po Wi-Fi.
 
 - **Rozdání:** balíček 32 karet (7–A) nebo 52 karet (2–A) se zamíchá ze seedu a rozdá rovným dílem. Co zbude, zůstane v krabici.
 - **Bitva:** každý hráč, který je ještě ve hře, otočí svou horní kartu (v pořadí míst). Nejvyšší karta vyhrává; eso je nejvyšší.
-- **Válka:** když mají dva nebo víc hráčů stejnou nejvyšší kartu, válčí jen oni. Každý položí jednu kartu rubem a jednu lícem a porovnává se znovu.
+- **Válka:** když mají dva nebo víc hráčů stejnou nejvyšší kartu, válčí jen oni. Každý položí dvě karty rubem a jednu lícem a porovnává se znovu (kdo má méně karet, položí rubem, kolik může, a poslední kartu lícem).
   - Hráč s poslední kartou ji položí lícem.
   - Hráč bez karet válku prohrává.
   - Když nemá kartu nikdo z nich, stůl bere první z nich.

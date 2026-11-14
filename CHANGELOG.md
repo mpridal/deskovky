@@ -2,6 +2,15 @@
 
 Každá verze má sekci `## x.y.z` s poznámkami `### cs`, `### en`, `### es` – z nich se při vydání tvoří `latest.json` a karta „Je tu nová verze“. Volitelný řádek `Minimální verze: x.y.z` udělá aktualizaci povinnou pro starší verze.
 
+## 0.12.0
+
+### cs
+Nová záložka Dary s poděkováním dárcům. Válka: při válce se kladou dvě karty rubem a jedna lícem. Lodě po Wi-Fi: oba hráči rozmisťují lodě současně. Pexeso po Wi-Fi: kdo není na tahu, může napovědět ťuknutím na kartu. Rodina ukazuje jméno zařízení, zda na něm běží Deskovky a kdo na něm hraje. Síťová hra začíná bez robotů, místa jsou volná pro lidi. Nový výběr jazyka a rámeček avatara už nezakrývá kroužek.
+### en
+A new Donate tab with thanks to our donors. War: a war lays two cards face down and one face up. Sea Battle over Wi-Fi: both players place their ships at the same time. Memory over Wi-Fi: players not on turn can give a hint by tapping a card. Family shows each device's name, whether Deskovky runs there and who plays on it. A network game starts without robots, the places are free for people. A new language picker, and an avatar's frame is no longer hidden under a ring.
+### es
+Nueva pestaña Donar con agradecimiento a quienes donan. Guerra: en una guerra se ponen dos cartas boca abajo y una boca arriba. Batalla naval por Wi-Fi: los dos jugadores colocan sus barcos a la vez. Memoria por Wi-Fi: quien no tiene el turno puede dar una pista tocando una carta. Familia muestra el nombre de cada dispositivo, si Deskovky está abierto en él y quién juega. Una partida en red empieza sin robots, los sitios quedan libres para personas. Nuevo selector de idioma, y el marco del avatar ya no queda tapado por un anillo.
+
 ## 0.11.1
 
 ### cs

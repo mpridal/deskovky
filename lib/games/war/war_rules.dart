@@ -42,7 +42,7 @@ abstract final class WarCard {
 /// it has put on the table in this battle ([table], each with whether it
 /// lies face up). In a battle every seat in [contenders] turns its top card,
 /// in seat order, and the highest card wins. A tie of the highest cards is a
-/// war: the tied seats each put one card face down and one face up, and so
+/// war: the tied seats each put two cards face down and one face up, and so
 /// on. Once the battle has a [battleWinner], that seat collects every card
 /// on the table under its pile.
 @immutable
@@ -212,9 +212,11 @@ class WarRules implements GameRules<WarState> {
 
   WarState _flip(WarState s, int seat) {
     final deck = List.of(s.decks[seat]);
+    // In a war two cards face down first – as many as there are, keeping
+    // the last card to show face up.
+    final down = s.warDepth > 0 ? (deck.length - 1).clamp(0, 2) : 0;
     final put = <(int, bool)>[
-      // In a war one card face down first – unless it is the last one.
-      if (s.warDepth > 0 && deck.length >= 2) (deck.removeAt(0), false),
+      for (var i = 0; i < down; i++) (deck.removeAt(0), false),
       (deck.removeAt(0), true),
     ];
     final next = s.copyWith(

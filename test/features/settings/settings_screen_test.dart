@@ -1,5 +1,3 @@
-import 'dart:ui' show Tristate;
-
 import 'package:deskovky/core/db/app_database.dart';
 import 'package:deskovky/core/settings/settings_repository.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +12,17 @@ Future<void> _openSettings(WidgetTester tester, AppDatabase db, {double textScal
   await pumpApp(tester, size: const Size(360, 740), locale: const Locale('cs'), textScale: textScale, db: db);
   await tester.tap(find.byIcon(Icons.settings_outlined));
   await tester.pumpAndSettle();
+}
+
+/// Picks [code] ('system' for the phone's language) from the language list.
+Future<void> _pick(WidgetTester tester, String code) async {
+  await tester.tap(find.byKey(const ValueKey('settingsLanguageRow')));
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(ValueKey('language_$code')));
+  for (var i = 0; i < 3; i++) {
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 20)));
+    await tester.pumpAndSettle();
+  }
 }
 
 void main() {
@@ -31,8 +40,7 @@ void main() {
 
   testWidgets('choosing Español switches the app and survives a restart', (tester) async {
     await _openSettings(tester, db);
-    await tester.tap(find.text('Español'));
-    await tester.pumpAndSettle();
+    await _pick(tester, 'es');
     expect(find.text('Ajustes'), findsWidgets);
 
     await tester.pumpWidget(const SizedBox());
@@ -42,19 +50,24 @@ void main() {
 
   testWidgets('"phone setting" returns to the system language', (tester) async {
     await _openSettings(tester, db);
-    await tester.tap(find.text('English'));
-    await tester.pumpAndSettle();
+    await _pick(tester, 'en');
     expect(find.text('Settings'), findsWidgets);
-    await tester.tap(find.text('Phone setting'));
-    await tester.pumpAndSettle();
+    await _pick(tester, 'system');
     expect(find.text('Nastavení'), findsWidgets);
   });
 
-  testWidgets('the current choice is marked selected', (tester) async {
-    final handle = tester.ensureSemantics();
+  testWidgets('the current choice is marked in the list', (tester) async {
     await _openSettings(tester, db);
-    expect(tester.getSemantics(find.bySemanticsLabel('Podle telefonu')).flagsCollection.isSelected, Tristate.isTrue);
-    handle.dispose();
+    await tester.tap(find.byKey(const ValueKey('settingsLanguageRow')));
+    await tester.pumpAndSettle();
+    expect(
+      find.descendant(of: find.byKey(const ValueKey('language_system')), matching: find.byIcon(Icons.radio_button_checked)),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: find.byKey(const ValueKey('language_es')), matching: find.byIcon(Icons.radio_button_off)),
+      findsOneWidget,
+    );
   });
 
   group('sound', () {
@@ -116,6 +129,8 @@ void main() {
 
     testWidgets('language choices do not wrap on a 360 dp phone at 130 %', (tester) async {
       await _openSettings(tester, db, textScale: 1.3);
+      await tester.tap(find.byKey(const ValueKey('settingsLanguageRow')));
+      await tester.pumpAndSettle();
       for (final label in ['Podle telefonu', 'Čeština', 'English', 'Español']) {
         final paragraph = tester.renderObject<RenderParagraph>(find.text(label));
         expect(paragraph.getMaxIntrinsicWidth(double.infinity) <= paragraph.size.width + 0.5, isTrue, reason: label);

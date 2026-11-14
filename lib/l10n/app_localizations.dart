@@ -2691,6 +2691,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not on the Wi-Fi'**
   String get inviteNotHere;
+
+  /// No description provided for @navDonations.
+  ///
+  /// In en, this message translates to:
+  /// **'Donate'**
+  String get navDonations;
+
+  /// No description provided for @donationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Support Deskovky'**
+  String get donationsTitle;
+
+  /// No description provided for @donationsIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Deskovky is made at home, for families with children. It is free and will stay free. If it brings you joy, you can give a voluntary contribution to its development.'**
+  String get donationsIntro;
+
+  /// No description provided for @donationsFreeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The whole game is free'**
+  String get donationsFreeTitle;
+
+  /// No description provided for @donationsFreeText.
+  ///
+  /// In en, this message translates to:
+  /// **'No paid levels, nothing is unlocked for money.'**
+  String get donationsFreeText;
+
+  /// No description provided for @donationsNoAdsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No ads'**
+  String get donationsNoAdsTitle;
+
+  /// No description provided for @donationsNoAdsText.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing distracts children and nothing tempts them to buy.'**
+  String get donationsNoAdsText;
+
+  /// No description provided for @donationsNoDataTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No data collection'**
+  String get donationsNoDataTitle;
+
+  /// No description provided for @donationsNoDataText.
+  ///
+  /// In en, this message translates to:
+  /// **'No accounts, no sign-in. Profiles and results stay on your devices.'**
+  String get donationsNoDataText;
+
+  /// No description provided for @donationsOfflineTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Safe without the internet'**
+  String get donationsOfflineTitle;
+
+  /// No description provided for @donationsOfflineText.
+  ///
+  /// In en, this message translates to:
+  /// **'It plays offline and sends nothing about you anywhere. It only uses the internet to download a new version and the list of donors.'**
+  String get donationsOfflineText;
+
+  /// No description provided for @donationsFamilyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The whole family plays'**
+  String get donationsFamilyTitle;
+
+  /// No description provided for @donationsFamilyText.
+  ///
+  /// In en, this message translates to:
+  /// **'Around one table, or each on their own over home Wi-Fi. Family devices share data only with each other.'**
+  String get donationsFamilyText;
+
+  /// No description provided for @donationsKidsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'For the youngest too'**
+  String get donationsKidsTitle;
+
+  /// No description provided for @donationsKidsText.
+  ///
+  /// In en, this message translates to:
+  /// **'Robots on three levels, rules with pictures, big buttons and a parents’ corner.'**
+  String get donationsKidsText;
+
+  /// No description provided for @donationsEveryoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'For everyone'**
+  String get donationsEveryoneTitle;
+
+  /// No description provided for @donationsEveryoneText.
+  ///
+  /// In en, this message translates to:
+  /// **'Works with a screen reader, has marks for colour-blind players and speaks Czech, English and Spanish.'**
+  String get donationsEveryoneText;
+
+  /// No description provided for @donationsGrowingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New games keep coming'**
+  String get donationsGrowingTitle;
+
+  /// No description provided for @donationsGrowingText.
+  ///
+  /// In en, this message translates to:
+  /// **'Nine games and more on the way – some wished for by children.'**
+  String get donationsGrowingText;
+
+  /// No description provided for @donationsWhy.
+  ///
+  /// In en, this message translates to:
+  /// **'A contribution helps pay for the time to make new games and for the Google Play fees.'**
+  String get donationsWhy;
+
+  /// No description provided for @donationsSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Giving will be possible once the game is on Google Play. Thank you!'**
+  String get donationsSoon;
+
+  /// No description provided for @donationsThanks.
+  ///
+  /// In en, this message translates to:
+  /// **'Heartfelt thanks to our donors:'**
+  String get donationsThanks;
+
+  /// No description provided for @donationsNobody.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody here yet. Will you be the first?'**
+  String get donationsNobody;
+
+  /// No description provided for @familyRename.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename device'**
+  String get familyRename;
+
+  /// No description provided for @familyOnline.
+  ///
+  /// In en, this message translates to:
+  /// **'Deskovky is running'**
+  String get familyOnline;
+
+  /// No description provided for @familyOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Not available'**
+  String get familyOffline;
+
+  /// No description provided for @familyPlaysNow.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is playing now'**
+  String familyPlaysNow(String name);
 }
 
 class _AppLocalizationsDelegate

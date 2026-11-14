@@ -1,5 +1,6 @@
 package cz.mpridal.deskovky
 
+import android.os.Build
 import android.content.Context
 import android.content.Intent
 import android.net.wifi.WifiManager
@@ -33,6 +34,18 @@ class MainActivity : FlutterActivity() {
                     }
                     else -> result.notImplemented()
                 }
+            }
+        }
+        // Rodina names the device as its owner did in the settings, else by model.
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "deskovky/device").setMethodCallHandler { call, result ->
+            when (call.method) {
+                "name" -> {
+                    val given = Settings.Global.getString(contentResolver, "device_name")
+                    val model = if (Build.MODEL.startsWith(Build.MANUFACTURER, ignoreCase = true)) Build.MODEL
+                        else "${Build.MANUFACTURER.replaceFirstChar { it.uppercase() }} ${Build.MODEL}"
+                    result.success(if (given.isNullOrBlank()) model else given)
+                }
+                else -> result.notImplemented()
             }
         }
         // Network play (spec 14): Android drops Wi-Fi broadcasts unless the app
