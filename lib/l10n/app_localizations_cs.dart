@@ -1499,4 +1499,83 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get inviteNotHere => 'Není v síti';
+
+  @override
+  String get navDonations => 'Dary';
+
+  @override
+  String get donationsTitle => 'Podpořte Deskovky';
+
+  @override
+  String get donationsIntro =>
+      'Deskovky vznikají doma, pro rodiny s dětmi. Jsou a zůstanou zdarma. Když vám dělají radost, můžete dobrovolně přispět na další vývoj.';
+
+  @override
+  String get donationsFreeTitle => 'Celá hra zdarma';
+
+  @override
+  String get donationsFreeText =>
+      'Žádné placené úrovně, nic se neodemyká za peníze.';
+
+  @override
+  String get donationsNoAdsTitle => 'Žádné reklamy';
+
+  @override
+  String get donationsNoAdsText => 'Nic děti neruší a nic je neláká k nákupům.';
+
+  @override
+  String get donationsNoDataTitle => 'Žádný sběr dat';
+
+  @override
+  String get donationsNoDataText =>
+      'Žádné účty ani přihlašování. Profily a výsledky zůstávají ve vašich zařízeních.';
+
+  @override
+  String get donationsOfflineTitle => 'Bezpečně bez internetu';
+
+  @override
+  String get donationsOfflineText =>
+      'Hraje se offline a hra o vás nic neposílá ven. Internet použije jen ke stažení nové verze a seznamu dárců.';
+
+  @override
+  String get donationsFamilyTitle => 'Hraje celá rodina';
+
+  @override
+  String get donationsFamilyText =>
+      'U jednoho stolu, nebo každý na svém přes domácí Wi-Fi. Zařízení v rodině si data sdílejí jen mezi sebou.';
+
+  @override
+  String get donationsKidsTitle => 'Pro děti od malička';
+
+  @override
+  String get donationsKidsText =>
+      'Roboti na tři obtížnosti, pravidla s obrázky, velká tlačítka a rodičovská zóna.';
+
+  @override
+  String get donationsEveryoneTitle => 'Pro každého';
+
+  @override
+  String get donationsEveryoneText =>
+      'Funguje se čtečkou obrazovky, má značky pro barvoslepé a mluví česky, anglicky i španělsky.';
+
+  @override
+  String get donationsGrowingTitle => 'Pořád nové hry';
+
+  @override
+  String get donationsGrowingText =>
+      'Devět her a další přibývají – i podle přání dětí.';
+
+  @override
+  String get donationsWhy =>
+      'Příspěvek pomůže zaplatit čas na vývoj nových her a poplatky za Google Play.';
+
+  @override
+  String get donationsSoon =>
+      'Přispívat půjde, až bude hra na Google Play. Děkujeme!';
+
+  @override
+  String get donationsThanks => 'Srdečně děkujeme dárcům:';
+
+  @override
+  String get donationsNobody => 'Zatím tu nikdo není. Budete první?';
 }

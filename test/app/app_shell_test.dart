@@ -56,7 +56,7 @@ void main() {
     await tester.tap(find.text('Nastavení'));
     await tester.pumpAndSettle();
     expect(router().state.uri.path, '/settings');
-    expect(tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex, 3);
+    expect(tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex, 4);
 
     await tester.tap(find.text('Hry'));
     await tester.pumpAndSettle();
@@ -66,7 +66,7 @@ void main() {
   testWidgets('navigation items have screen-reader labels', (tester) async {
     final handle = tester.ensureSemantics();
     await pumpApp(tester, size: const Size(360, 740));
-    for (final label in ['Hry', 'Hráči', 'Žebříčky', 'Nastavení']) {
+    for (final label in ['Hry', 'Hráči', 'Žebříčky', 'Dary', 'Nastavení']) {
       expect(find.bySemanticsLabel(RegExp('^$label')), findsWidgets, reason: label);
     }
     handle.dispose();

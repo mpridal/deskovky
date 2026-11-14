@@ -14,8 +14,11 @@ import '../ui_kit/tokens/app_colors.dart';
 import '../ui_kit/tokens/app_typography.dart';
 import 'providers.dart';
 
-/// Frame around the four main tabs: bottom bar on phones, rail on tablets,
+/// Frame around the five main tabs: bottom bar on phones, rail on tablets,
 /// plus the right-hand panel on expanded widths (spec 3, 5.1).
+/// How far the navigation labels grow with the system font size.
+const _maxNavTextScale = 1.15;
+
 class AppShell extends StatelessWidget {
   const AppShell({super.key, required this.shell});
 
@@ -31,19 +34,27 @@ class AppShell extends StatelessWidget {
       (Icons.casino_outlined, Icons.casino, l10n.navGames),
       (Icons.people_outline, Icons.people, l10n.navPlayers),
       (Icons.emoji_events_outlined, Icons.emoji_events, l10n.navLeaderboards),
+      (Icons.volunteer_activism_outlined, Icons.volunteer_activism, l10n.navDonations),
       (Icons.settings_outlined, Icons.settings, l10n.navSettings),
     ];
 
     if (sizeClass == WindowSizeClass.compact) {
       return Scaffold(
         body: FeltBackground(child: shell),
-        bottomNavigationBar: NavigationBar(
-          selectedIndex: shell.currentIndex,
-          onDestinationSelected: _select,
-          destinations: [
-            for (final (icon, selectedIcon, label) in items)
-              NavigationDestination(icon: Icon(icon), selectedIcon: Icon(selectedIcon), label: label),
-          ],
+        // Five labels share a phone's width: they grow with the font size,
+        // but only so far that "Nastavení" still fits.
+        bottomNavigationBar: MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            textScaler: MediaQuery.textScalerOf(context).clamp(maxScaleFactor: _maxNavTextScale),
+          ),
+          child: NavigationBar(
+            selectedIndex: shell.currentIndex,
+            onDestinationSelected: _select,
+            destinations: [
+              for (final (icon, selectedIcon, label) in items)
+                NavigationDestination(icon: Icon(icon), selectedIcon: Icon(selectedIcon), label: label),
+            ],
+          ),
         ),
       );
     }
@@ -53,14 +64,33 @@ class AppShell extends StatelessWidget {
         children: [
           SafeArea(
             right: false,
-            child: NavigationRail(
-              selectedIndex: shell.currentIndex,
-              onDestinationSelected: _select,
-              labelType: NavigationRailLabelType.all,
-              destinations: [
-                for (final (icon, selectedIcon, label) in items)
-                  NavigationRailDestination(icon: Icon(icon), selectedIcon: Icon(selectedIcon), label: Text(label)),
-              ],
+            // A phone on its side is too low for five places: the rail scrolls.
+            child: LayoutBuilder(
+              builder: (context, box) => SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: box.maxHeight),
+                  child: IntrinsicHeight(
+                    child: MediaQuery(
+                      data: MediaQuery.of(context).copyWith(
+                        textScaler: MediaQuery.textScalerOf(context).clamp(maxScaleFactor: _maxNavTextScale),
+                      ),
+                      child: NavigationRail(
+                        selectedIndex: shell.currentIndex,
+                        onDestinationSelected: _select,
+                        labelType: NavigationRailLabelType.all,
+                        destinations: [
+                          for (final (icon, selectedIcon, label) in items)
+                            NavigationRailDestination(
+                              icon: Icon(icon),
+                              selectedIcon: Icon(selectedIcon),
+                              label: Text(label),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
           Expanded(child: FeltBackground(child: shell)),

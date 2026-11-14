@@ -45,7 +45,7 @@ void main() {
 
         testWidgets('navigation labels fit on one line: $name', (tester) async {
           await pumpApp(tester, size: size, locale: locale, textScale: scale);
-          for (final label in [l10n.navGames, l10n.navPlayers, l10n.navLeaderboards, l10n.navSettings]) {
+          for (final label in [l10n.navGames, l10n.navPlayers, l10n.navLeaderboards, l10n.navDonations, l10n.navSettings]) {
             final text = find.text(label).last;
             expect(_fitsOnOneLine(tester, text), isTrue, reason: '"$label" wraps or is clipped');
           }

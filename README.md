@@ -62,6 +62,16 @@ Pravidla a technické podrobnosti každé hry jsou v `lib/games/<id>/README.md`.
   - značky pro barvoslepé.
 - **Vzhled:** plsť, dřevo a papír. Rozložení pro telefon na výšku i pro tablet na výšku i na šířku.
 
+## Dary
+
+Záložka **Dary** vysvětluje, proč hru podpořit, nabízí příspěvek 2, 5, 10 nebo 25 € (zatím nefunkční, přijde s Google Play Billing za rodičovskou kontrolou) a děkuje dárcům. Seznam dárců je soubor [`donors.json`](donors.json) v tomto repozitáři; aplikace si ho stáhne při otevření záložky a pamatuje si ho pro offline. Google Play jména dárců neprozrazuje, proto se seznam doplňuje ručně a jen se souhlasem dárce:
+
+```json
+[
+  {"name": "Babička Jana", "amount": 25, "currency": "EUR", "date": "2026-11-02"}
+]
+```
+
 ## Hudba
 
 Hudba her je od Kevina MacLeoda (incompetech.com) pod licencí CC BY 4.0. Seznam skladeb a licencí je v aplikaci v Nastavení → Autoři a licence, a také v `assets/audio/CREDITS.json` a `assets/games/<id>/CREDITS.json`.

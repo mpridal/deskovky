@@ -1493,4 +1493,84 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get inviteNotHere => 'No está en la red';
+
+  @override
+  String get navDonations => 'Donar';
+
+  @override
+  String get donationsTitle => 'Apoya a Deskovky';
+
+  @override
+  String get donationsIntro =>
+      'Deskovky se hace en casa, para familias con niños. Es gratis y lo seguirá siendo. Si te alegra, puedes hacer una aportación voluntaria para su desarrollo.';
+
+  @override
+  String get donationsFreeTitle => 'Todo el juego es gratis';
+
+  @override
+  String get donationsFreeText =>
+      'Sin niveles de pago, nada se desbloquea con dinero.';
+
+  @override
+  String get donationsNoAdsTitle => 'Sin anuncios';
+
+  @override
+  String get donationsNoAdsText =>
+      'Nada distrae a los niños ni los tienta a comprar.';
+
+  @override
+  String get donationsNoDataTitle => 'Sin recogida de datos';
+
+  @override
+  String get donationsNoDataText =>
+      'Sin cuentas ni inicio de sesión. Los perfiles y resultados se quedan en tus dispositivos.';
+
+  @override
+  String get donationsOfflineTitle => 'Seguro sin internet';
+
+  @override
+  String get donationsOfflineText =>
+      'Se juega sin conexión y no envía nada sobre ti. Internet solo se usa para descargar una versión nueva y la lista de donantes.';
+
+  @override
+  String get donationsFamilyTitle => 'Juega toda la familia';
+
+  @override
+  String get donationsFamilyText =>
+      'En una misma mesa o cada uno en el suyo por el Wi-Fi de casa. Los dispositivos de la familia comparten datos solo entre ellos.';
+
+  @override
+  String get donationsKidsTitle => 'También para los más pequeños';
+
+  @override
+  String get donationsKidsText =>
+      'Robots en tres niveles, reglas con dibujos, botones grandes y una zona de padres.';
+
+  @override
+  String get donationsEveryoneTitle => 'Para todos';
+
+  @override
+  String get donationsEveryoneText =>
+      'Funciona con lector de pantalla, tiene marcas para daltónicos y habla checo, inglés y español.';
+
+  @override
+  String get donationsGrowingTitle => 'Siempre juegos nuevos';
+
+  @override
+  String get donationsGrowingText =>
+      'Nueve juegos y vienen más, algunos a petición de los niños.';
+
+  @override
+  String get donationsWhy =>
+      'Una aportación ayuda a pagar el tiempo para crear juegos nuevos y las tarifas de Google Play.';
+
+  @override
+  String get donationsSoon =>
+      'Se podrá donar cuando el juego esté en Google Play. ¡Gracias!';
+
+  @override
+  String get donationsThanks => 'Muchas gracias a quienes han donado:';
+
+  @override
+  String get donationsNobody => 'Aún no hay nadie. ¿Serás el primero?';
 }
