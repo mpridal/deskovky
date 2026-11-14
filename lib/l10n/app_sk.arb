@@ -461,5 +461,6 @@
   "familyPlaysNow": "Teraz hrá {name}",
   "settingsShareApp": "Stiahnuť do iného zariadenia",
   "shareAppTitle": "Deskovky do ďalšieho zariadenia",
-  "shareAppHint": "Naskenuj kód fotoaparátom druhého telefónu alebo tabletu. Otvorí sa stránka s najnovšou verziou: stiahni súbor deskovky-….apk a otvor ho."
+  "shareAppHint": "Naskenuj kód fotoaparátom druhého telefónu alebo tabletu. Otvorí sa stránka s najnovšou verziou: stiahni súbor deskovky-….apk a otvor ho.",
+  "inviteToAllDevices": "Pozvánka príde na všetky zariadenia v sieti"
 }

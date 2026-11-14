@@ -1604,4 +1604,7 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get shareAppHint =>
       'Скануй код камерою іншого телефона чи планшета. Відкриється сторінка з найновішою версією: завантаж файл deskovky-….apk і відкрий його.';
+
+  @override
+  String get inviteToAllDevices => 'Запрошення прийде на всі пристрої в мережі';
 }

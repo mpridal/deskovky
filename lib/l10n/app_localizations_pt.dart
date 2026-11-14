@@ -1599,4 +1599,8 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get shareAppHint =>
       'Leia o código com a câmera do outro celular ou tablet. Vai abrir a página com a versão mais nova: baixe o arquivo deskovky-….apk e abra.';
+
+  @override
+  String get inviteToAllDevices =>
+      'O convite vai para todos os aparelhos da rede';
 }

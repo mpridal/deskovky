@@ -45,6 +45,12 @@ class _Family extends FamilyController {
   @override
   Map<String, FamilyBeacon> get playingElsewhere => elsewhere;
 
+  /// Family devices on the Wi-Fi; by default those where someone plays.
+  List<FamilyBeacon>? devices;
+
+  @override
+  List<FamilyBeacon> get peers => devices ?? elsewhere.values.toList();
+
   @override
   Future<void> start() async {}
 
@@ -233,6 +239,49 @@ void main() {
     await _settle(tester);
     expect(family.invited.single.$1, viky.uid);
     expect((room.slots[open] as OpenSlot).invited?.uid, viky.uid, reason: 'the place is kept for her');
+    await _leave(tester);
+  });
+
+  testWidgets('a free place offers: robot first, then family to invite, then people of this device; labels say who is where',
+      (tester) async {
+    final [_, kuba, viky, mama] = await _players(tester, db, ['Táta', 'Kuba', 'Viky', 'Máma']);
+    final (family, _) = await _setup(tester, db);
+    // A tablet is on the Wi-Fi with Viky playing; Kuba plays nowhere.
+    family.elsewhere = {viky.uid!: _on(viky.uid!)};
+    await tester.scrollUntilVisible(find.byKey(const ValueKey('whereWifi')), 120, scrollable: find.byType(Scrollable).first);
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.byKey(const ValueKey('whereWifi')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('whereWifi')));
+    await _settle(tester);
+    await tester.tap(find.byKey(const ValueKey('setupOpenRoom')));
+    await _settle(tester);
+    final room = ProviderScope.containerOf(tester.element(find.byType(HostRoomScreen))).read(networkRoomsProvider).host!;
+    final open = room.slots.lastIndexWhere((s) => s is OpenSlot);
+    await tester.tap(find.byKey(ValueKey('roomSlot$open')));
+    await tester.pumpAndSettle();
+    double y(Finder f) => tester.getTopLeft(f).dy;
+    final robot = find.text('Přidat robota');
+    final familyHeader = find.text('Pozvat z rodiny');
+    final localHeader = find.text('Přidat hráče z tohoto zařízení');
+    expect(y(robot), lessThan(y(familyHeader)));
+    expect(y(familyHeader), lessThan(y(localHeader)));
+    expect(find.descendant(of: find.byKey(ValueKey('invite_${viky.id}')), matching: find.text('Hraje teď')), findsOneWidget);
+    expect(
+      find.descendant(of: find.byKey(ValueKey('invite_${kuba.id}')), matching: find.text('Pozvánka přijde na všechna zařízení v síti')),
+      findsOneWidget,
+      reason: 'a family device is on the Wi-Fi, Kuba just does not play there',
+    );
+    expect(mama.name, 'Máma');
+    await tester.tapAt(const Offset(200, 50));
+    await tester.pumpAndSettle();
+
+    // No family device on the Wi-Fi at all: then "Není v síti".
+    family.elsewhere = {};
+    family.devices = const [];
+    await tester.tap(find.byKey(ValueKey('roomSlot$open')));
+    await tester.pumpAndSettle();
+    expect(find.descendant(of: find.byKey(ValueKey('invite_${kuba.id}')), matching: find.text('Není v síti')), findsOneWidget);
     await _leave(tester);
   });
 }

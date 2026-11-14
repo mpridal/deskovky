@@ -1602,4 +1602,7 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get shareAppHint =>
       'Naskenuj kód fotoaparátem druhého telefonu nebo tabletu. Otevře se stránka s nejnovější verzí: stáhni soubor deskovky-….apk a otevři ho.';
+
+  @override
+  String get inviteToAllDevices => 'Pozvánka přijde na všechna zařízení v síti';
 }

@@ -1592,4 +1592,8 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get shareAppHint =>
       'Scan the code with the camera of the other phone or tablet. The page with the newest version opens: download the file deskovky-….apk and open it.';
+
+  @override
+  String get inviteToAllDevices =>
+      'The invitation goes to every device on the Wi-Fi';
 }

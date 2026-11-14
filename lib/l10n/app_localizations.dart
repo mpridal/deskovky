@@ -2885,6 +2885,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Scan the code with the camera of the other phone or tablet. The page with the newest version opens: download the file deskovky-….apk and open it.'**
   String get shareAppHint;
+
+  /// No description provided for @inviteToAllDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'The invitation goes to every device on the Wi-Fi'**
+  String get inviteToAllDevices;
 }
 
 class _AppLocalizationsDelegate

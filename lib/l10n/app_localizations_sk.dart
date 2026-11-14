@@ -1608,4 +1608,8 @@ class AppLocalizationsSk extends AppLocalizations {
   @override
   String get shareAppHint =>
       'Naskenuj kód fotoaparátom druhého telefónu alebo tabletu. Otvorí sa stránka s najnovšou verziou: stiahni súbor deskovky-….apk a otvor ho.';
+
+  @override
+  String get inviteToAllDevices =>
+      'Pozvánka príde na všetky zariadenia v sieti';
 }

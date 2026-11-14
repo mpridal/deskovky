@@ -461,5 +461,6 @@
   "familyPlaysNow": "Ora gioca {name}",
   "settingsShareApp": "Scarica su un altro dispositivo",
   "shareAppTitle": "Deskovky su un altro dispositivo",
-  "shareAppHint": "Inquadra il codice con la fotocamera dell'altro telefono o tablet. Si apre la pagina con la versione più nuova: scarica il file deskovky-….apk e aprilo."
+  "shareAppHint": "Inquadra il codice con la fotocamera dell'altro telefono o tablet. Si apre la pagina con la versione più nuova: scarica il file deskovky-….apk e aprilo.",
+  "inviteToAllDevices": "L’invito arriva a tutti i dispositivi della rete"
 }

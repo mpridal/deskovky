@@ -1607,4 +1607,8 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get shareAppHint =>
       'Zeskanuj kod aparatem drugiego telefonu lub tabletu. Otworzy się strona z najnowszą wersją: pobierz plik deskovky-….apk i otwórz go.';
+
+  @override
+  String get inviteToAllDevices =>
+      'Zaproszenie trafi na wszystkie urządzenia w sieci';
 }

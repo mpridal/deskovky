@@ -461,5 +461,6 @@
   "familyPlaysNow": "{name} spielt gerade",
   "settingsShareApp": "Auf anderes Gerät laden",
   "shareAppTitle": "Deskovky auf einem anderen Gerät",
-  "shareAppHint": "Scanne den Code mit der Kamera des anderen Handys oder Tablets. Die Seite mit der neuesten Version öffnet sich: Lade die Datei deskovky-….apk herunter und öffne sie."
+  "shareAppHint": "Scanne den Code mit der Kamera des anderen Handys oder Tablets. Die Seite mit der neuesten Version öffnet sich: Lade die Datei deskovky-….apk herunter und öffne sie.",
+  "inviteToAllDevices": "Die Einladung geht an alle Geräte im WLAN"
 }
