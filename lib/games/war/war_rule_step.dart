@@ -34,6 +34,7 @@ class WarRuleStep extends StatelessWidget {
       WarRuleStepKind.war => [
         _card(WarCardFace(card: WarCard.of(10, 3))),
         _card(const WarCardBack()),
+        _card(const WarCardBack()),
         _card(WarCardFace(card: WarCard.of(13, 1), glow: AppColors.players[0])),
       ],
     };

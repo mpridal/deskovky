@@ -128,24 +128,34 @@ void main() {
   });
 
   group('war', () {
-    test('a tie: one card face down and one face up; the higher takes all', () {
+    test('a tie: two cards face down and one face up; the higher takes all', () {
       var s = flipAll(deal([
-        [c(10), c(7), c(9), c(8)],
-        [c(10, 1), c(8, 1), c(14), c(7, 1)],
+        [c(10), c(7), c(8), c(9), c(11)],
+        [c(10, 1), c(8, 1), c(7, 1), c(14), c(12)],
       ]));
       expect(s.warDepth, 1);
       expect(s.wars, 1);
-      expect(s.table[0], [(c(10), true), (c(7), false), (c(9), true)]);
+      expect(s.table[0], [(c(10), true), (c(7), false), (c(8), false), (c(9), true)]);
       expect(s.battleWinner, 1);
       s = rules.apply(s, WarRules.collect(1));
-      expect(s.decks[1], hasLength(7));
-      expect(s.decks[0], [c(8)]);
+      expect(s.decks[1], hasLength(9));
+      expect(s.decks[0], [c(11)]);
+    });
+
+    test('with two cards left a seat puts one face down and one face up', () {
+      final s = flipAll(deal([
+        [c(10), c(7), c(13)],
+        [c(10, 1), c(7, 1), c(8, 1), c(9, 1)],
+      ]));
+      expect(s.table[0], [(c(10), true), (c(7), false), (c(13), true)]);
+      expect(s.table[1], [(c(10, 1), true), (c(7, 1), false), (c(8, 1), false), (c(9, 1), true)]);
+      expect(s.battleWinner, 0);
     });
 
     test('a seat with a single card left plays it face up', () {
       final s = flipAll(deal([
         [c(10), c(13)],
-        [c(10, 1), c(7), c(8)],
+        [c(10, 1), c(7), c(8), c(9)],
       ]));
       expect(s.table[0], [(c(10), true), (c(13), true)]);
       expect(s.battleWinner, 0);
@@ -162,8 +172,8 @@ void main() {
 
     test('a war after a war earns the doubleWar event for its winner', () {
       var s = flipAll(deal([
-        [c(10), c(7), c(9), c(7, 2), c(13), c(8)],
-        [c(10, 1), c(8, 1), c(9, 1), c(8, 2), c(12), c(7, 1)],
+        [c(10), c(7), c(7, 2), c(9), c(7, 3), c(8), c(13), c(8, 3)],
+        [c(10, 1), c(8, 1), c(8, 2), c(9, 1), c(11), c(11, 1), c(12), c(7, 1)],
       ]));
       expect(s.warDepth, 2);
       expect(s.battleWinner, 0);
@@ -255,15 +265,15 @@ void main() {
 
   test('JSON round trip keeps everything, a war on the table too', () {
     var s = deal([
-      [c(10), c(7), c(9), c(8)],
-      [c(10, 1), c(8, 1), c(9, 1), c(7, 1)],
+      [c(10), c(7), c(9), c(8), c(11)],
+      [c(10, 1), c(8, 1), c(9, 1), c(7, 1), c(12)],
     ]);
     // A tie, then seat 0 lays its war cards; seat 1 has yet to.
     for (final seat in [0, 1, 0]) {
       s = rules.apply(s, WarRules.flip(seat));
     }
     expect(s.warDepth, 1);
-    expect(s.table[0], hasLength(3));
+    expect(s.table[0], hasLength(4));
     final again = rules.stateFromJson(rules.stateToJson(s));
     expect(rules.stateToJson(again), rules.stateToJson(s));
   });
