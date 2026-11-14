@@ -184,11 +184,9 @@ class _GameSetupScreenState extends ConsumerState<GameSetupScreen> {
           const RobotSlot(),
     ];
     if (away.isEmpty) {
-      // At least one free place: a robot gives way when the table is full.
-      if (slots.length >= module.maxPlayers) {
-        final robot = slots.lastIndexWhere((s) => s is RobotSlot);
-        if (robot >= 0) slots.removeAt(robot);
-      }
+      // People are expected to join: no robots at first, every other place
+      // is free (the host can still put a robot in one, spec 14.2).
+      slots.removeWhere((s) => s is RobotSlot);
       while (slots.length < module.maxPlayers) {
         slots.add(const OpenSlot());
       }
