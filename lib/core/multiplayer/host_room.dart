@@ -192,6 +192,22 @@ class HostRoom extends ChangeNotifier {
   bool startWhenInvitedJoin = false;
 
   /// A place still waits for an invited family member.
+  final _signals = StreamController<BoardSignal>.broadcast();
+
+  /// Gestures of the other devices' people, for the host's board.
+  Stream<BoardSignal> get signals => _signals.stream;
+
+  /// A gesture of the host's own person at [seat]: to every device.
+  void sendSignal(int seat, Map<String, Object?> data) {
+    if (_session == null || _disposed) return;
+    _broadcast(Signal(seat: seat, data: data));
+  }
+
+  String _seatName(int seat) => switch (_session?.config.seats.elementAtOrNull(seat)) {
+    RemoteSeat(:final name) => name,
+    _ => '',
+  };
+
   bool get waitingForInvited => _slots.any((s) => s is OpenSlot && s.invited != null);
 
   /// Before the game: puts [slot] (open, robot or a person of this device)
@@ -436,6 +452,12 @@ class HostRoom extends ChangeNotifier {
         if (_session case final session?) conn.channel.send(StateSnapshot(seq: _seq, saved: session.toSave()));
       case Ping(:final t):
         conn.channel.send(Pong(t));
+      case Signal(:final seat, :final data) when ownerOf(seat) == clientId:
+        // To the host's board and every other device.
+        if (!_signals.isClosed) _signals.add(BoardSignal(seat: seat, name: _seatName(seat), data: data));
+        for (final other in _conns) {
+          if (other != conn && other.clientId != null && other.clientId != clientId) other.channel.send(message);
+        }
       case Pause():
         pause(bySeat: _seatsOf(clientId).keys.firstOrNull);
       case Resume():
@@ -644,6 +666,7 @@ class HostRoom extends ChangeNotifier {
       _drop(conn);
     }
     _controller?.dispose();
+    _signals.close();
     super.dispose();
   }
 }

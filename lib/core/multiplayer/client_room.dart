@@ -59,6 +59,14 @@ class ClientRoom extends ChangeNotifier {
   String? get closedReason => _closedReason;
   LobbyState? get lobby => _lobby;
   GameSession<Object?>? get session => _session;
+
+  final _signals = StreamController<BoardSignal>.broadcast();
+
+  /// Gestures of the other devices' people, for this device's board.
+  Stream<BoardSignal> get signals => _signals.stream;
+
+  /// A gesture of this device's person at [seat], through the host.
+  void sendSignal(int seat, Map<String, Object?> data) => _send(Signal(seat: seat, data: data));
   ClientTransport? get transport => _transport;
   GameConfig? get deviceConfig => _deviceConfig;
   Set<int> get mySeats => _mySeats;
@@ -119,6 +127,12 @@ class ClientRoom extends ChangeNotifier {
         _paused = false;
       case PeerStatus():
         _peers = message;
+      case Signal(:final seat, :final data):
+        final name = switch (_session?.config.seats.elementAtOrNull(seat)) {
+          RemoteSeat(:final name) => name,
+          _ => '',
+        };
+        if (!_signals.isClosed) _signals.add(BoardSignal(seat: seat, name: name, data: data));
       case Bye(:final reason):
         _closedReason = reason;
         channel.close();
@@ -207,6 +221,7 @@ class ClientRoom extends ChangeNotifier {
     _disposed = true;
     _sub.cancel();
     _transport?.dispose();
+    _signals.close();
     channel.close();
     super.dispose();
   }

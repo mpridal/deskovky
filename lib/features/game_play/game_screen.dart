@@ -795,6 +795,15 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
     );
 
     final mySeat = _turns.humanSeatToAct;
+    final localSeat = _turns.localHumanSeats.firstOrNull;
+    final host = _hostRoom, client = _clientRoom;
+    final void Function(Map<String, Object?>)? signalSender = localSeat == null
+        ? null
+        : host != null
+        ? (data) => host.sendSignal(localSeat, data)
+        : client != null
+        ? (data) => client.sendSignal(localSeat, data)
+        : null;
     final view = GameBoardView<S>(
       state: _session.state,
       lastMove: _session.lastMove,
@@ -806,6 +815,8 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
       // In a network game only the host ends it for everyone (spec 14.4).
       canEndForAll: !_isNet || _hostRoom != null,
       localSeats: _turns.localHumanSeats,
+      signal: signalSender,
+      signals: _hostRoom?.signals ?? _clientRoom?.signals ?? const Stream.empty(),
       firstGame: switch (mySeat == null ? null : _config.seats[mySeat]) {
         HumanSeat(:final profileId) => !widget.played.contains(profileId),
         _ => false,

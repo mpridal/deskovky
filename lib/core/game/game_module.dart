@@ -21,6 +21,17 @@ abstract class GameHost {
   void reportEvent(String id, [Map<String, Object?> data = const {}]);
 }
 
+/// A passing gesture from another device's person (a hint in Pexeso):
+/// [seat] and [name] say who, [data] is the game's own.
+@immutable
+class BoardSignal {
+  const BoardSignal({required this.seat, required this.name, required this.data});
+
+  final int seat;
+  final String name;
+  final Map<String, Object?> data;
+}
+
 /// What a game's board widget gets from the framework.
 @immutable
 class GameBoardView<S> {
@@ -35,6 +46,8 @@ class GameBoardView<S> {
     this.firstGame = false,
     this.canEndForAll = true,
     this.localSeats = const {},
+    this.signal,
+    this.signals = const Stream.empty(),
   });
 
   final S state;
@@ -62,6 +75,13 @@ class GameBoardView<S> {
   /// The seats people play on this device, whoever is on turn: every human
   /// seat on one device, only this device's own in a network game.
   final Set<int> localSeats;
+
+  /// Sends a passing gesture of this device's person to the other devices
+  /// (a network game only; null otherwise). Not a move: it changes nothing.
+  final void Function(Map<String, Object?> data)? signal;
+
+  /// Gestures of the other devices' people.
+  final Stream<BoardSignal> signals;
 }
 
 Duration _noTime() => Duration.zero;

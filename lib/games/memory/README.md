@@ -13,6 +13,7 @@ Hra pro 1–4 hráče (lidé i roboti v libovolných místech) podle zadání, k
   - Střední: bez náhledu.
   - Těžká: po každé 4. neshodě se dvě jiné zakryté karty s různými obrázky viditelně prohodí.
 - **Volby:** počet karet 12 / 16 / 24 / 36 / 48 a sada obrázků (Zvířátka, Ovoce a zelenina, Doprava, Vesmír, Vlajky států).
+- **Nápověda po Wi-Fi:** kdo není na tahu, může na svém zařízení ťuknout na zakrytou kartu. Hráči na tahu se ta karta jemně zatřese, orámuje barvou napovídajícího a nahoře se ukáže „Nápověda od Kuby“ (3 s). Nápověda není tah: jde přes `GameBoardView.signal`/`signals` (zpráva `Signal`, hostitel ji jen přepošle) a stav hry nemění. Na jednom zařízení se nenapovídá.
 - **Vlajky států:** 195 států (193 členů OSN, Vatikán a Palestina). Na kartě je vlajka a pod ní název státu v jazyce aplikace. Každá hra vybere ze seedu jiné státy, takže se vlajky střídají. Podobné vlajky (rodina `MemoryFlag.family`, např. Čad a Rumunsko, Indonésie a Monako) nikdy nejsou ve stejné hře.
 - **Hodnocení:**
   - sólo: tahy ≤ 1,5 × páry ★★★, ≤ 2 × páry ★★, jinak ★;
