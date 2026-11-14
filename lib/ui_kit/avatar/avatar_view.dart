@@ -28,7 +28,8 @@ class AvatarView extends StatelessWidget {
     Widget avatar = animate
         ? _AnimatedAccessories(spec: spec, size: size)
         : CustomPaint(size: Size.square(size), painter: AvatarPainter(spec, logicalSize: size));
-    if (ringColor != null) {
+    // A frame from the wardrobe is the avatar's ring: no ring drawn over it.
+    if (ringColor != null && !spec.equipped.containsKey(AccessorySlot.frame)) {
       avatar = DecoratedBox(
         position: DecorationPosition.foreground,
         decoration: BoxDecoration(

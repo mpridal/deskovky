@@ -44,4 +44,24 @@ void main() {
     await _settle(tester);
     expect(_homeAvatar(tester), again);
   });
+
+  testWidgets('a bought frame is not hidden under the ring of the home bar', (tester) async {
+    final db = testDatabase();
+    addTearDown(db.close);
+    final framed = AvatarSpec.defaults.copyWith(equipped: {AccessorySlot.frame: const EquippedItem('gold_frame')});
+    final milos = (await tester.runAsync(() => PlayerRepository(db).create(name: 'Miloš', avatar: framed)))!;
+    await tester.runAsync(() => SettingsRepository(db).setActivePlayerId(milos.id));
+    await pumpApp(tester, size: const Size(412, 915), db: db);
+    await _settle(tester);
+    expect(_homeAvatar(tester), framed);
+    Finder ring() => find.descendant(
+      of: find.byType(ActivePlayerBar),
+      matching: find.byWidgetPredicate((w) => w is DecoratedBox && w.position == DecorationPosition.foreground),
+    );
+    expect(ring(), findsNothing, reason: 'the frame is the ring');
+
+    await tester.runAsync(() => PlayerRepository(db).update(milos.id, avatar: AvatarSpec.defaults));
+    await _settle(tester);
+    expect(ring(), findsOneWidget, reason: 'without a frame the bar draws its own ring');
+  });
 }
