@@ -2,6 +2,15 @@
 
 Každá verze má sekci `## x.y.z` s poznámkami `### cs`, `### en`, `### es` – z nich se při vydání tvoří `latest.json` a karta „Je tu nová verze“. Volitelný řádek `Minimální verze: x.y.z` udělá aktualizaci povinnou pro starší verze.
 
+## 0.11.1
+
+### cs
+Lodě: rána do vody je teď vidět jako vlnky místo modrého kroužku.
+### en
+Sea Battle: a shot into the water now shows little waves instead of a blue ring.
+### es
+Batalla naval: un disparo al agua ahora muestra olitas en lugar de un círculo azul.
+
 ## 0.11.0
 
 ### cs
