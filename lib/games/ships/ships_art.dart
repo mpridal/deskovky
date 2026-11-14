@@ -67,18 +67,32 @@ void paintShipsCell(Canvas canvas, Rect r, ShipsLook look, ShipPiece? piece, {bo
     case ShipsLook.water:
       canvas.drawCircle(r.center, side * 0.06, Paint()..color = ShipsColors.seaLine);
     case ShipsLook.miss:
-      canvas.drawCircle(
-        r.center,
-        side * 0.2,
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = side * 0.08
-          ..color = ShipsColors.seaDeep,
-      );
+      _waves(canvas, r);
     case ShipsLook.hit:
       _cross(canvas, r, ShipsColors.fire);
   }
   if (shot && look == ShipsLook.sea && piece != null) _cross(canvas, r, ShipsColors.fire);
+}
+
+/// A shot into the water: two little waves, the lower one shifted.
+void _waves(Canvas canvas, Rect r) {
+  final side = r.shortestSide;
+  final paint = Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = side * 0.08
+    ..strokeCap = StrokeCap.round
+    ..color = ShipsColors.seaDeep;
+  final width = side * 0.56, crest = side * 0.07;
+  for (final (dy, dx) in [(-0.12, -0.04), (0.12, 0.04)]) {
+    final start = r.center.translate(-width / 2 + side * dx, side * dy);
+    final path = Path()..moveTo(start.dx, start.dy);
+    // Two humps: up, down, up, down.
+    for (var i = 0; i < 4; i++) {
+      final x = start.dx + width * (i + 1) / 4;
+      path.quadraticBezierTo(x - width / 8, start.dy + (i.isEven ? -crest : crest), x, start.dy);
+    }
+    canvas.drawPath(path, paint);
+  }
 }
 
 void _cross(Canvas canvas, Rect r, Color colour) {
