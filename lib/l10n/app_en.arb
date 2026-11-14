@@ -978,5 +978,8 @@
   "settingsShareApp": "Download to another device",
   "shareAppTitle": "Deskovky on another device",
   "shareAppHint": "Scan the code with the camera of the other phone or tablet. The page with the newest version opens: download the file deskovky-….apk and open it.",
-  "inviteToAllDevices": "The invitation goes to every device on the Wi-Fi"
+  "inviteToAllDevices": "The invitation goes to every device on the Wi-Fi",
+  "parentsReportBug": "Report a bug",
+  "parentsReportBugHint": "Opens a form on GitHub where you describe the bug. Reports are public: do not write children’s names or other personal details.",
+  "bugReportNoBrowser": "The browser could not be opened. You can report the bug at:"
 }

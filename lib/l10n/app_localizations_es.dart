@@ -1601,4 +1601,15 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get inviteToAllDevices =>
       'La invitación llega a todos los dispositivos de la red';
+
+  @override
+  String get parentsReportBug => 'Informar de un error';
+
+  @override
+  String get parentsReportBugHint =>
+      'Abre un formulario en GitHub donde describes el error. Los informes son públicos: no escribas nombres de niños ni otros datos personales.';
+
+  @override
+  String get bugReportNoBrowser =>
+      'No se pudo abrir el navegador. Puedes informar del error en:';
 }

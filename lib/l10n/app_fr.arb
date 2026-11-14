@@ -462,5 +462,8 @@
   "settingsShareApp": "Installer sur un autre appareil",
   "shareAppTitle": "Deskovky sur un autre appareil",
   "shareAppHint": "Scanne le code avec l’appareil photo de l’autre téléphone ou tablette. La page avec la version la plus récente s’ouvre : télécharge le fichier deskovky-….apk et ouvre-le.",
-  "inviteToAllDevices": "L’invitation arrive sur tous les appareils du Wi-Fi"
+  "inviteToAllDevices": "L’invitation arrive sur tous les appareils du Wi-Fi",
+  "parentsReportBug": "Signaler un bug",
+  "parentsReportBugHint": "Ouvre un formulaire sur GitHub pour décrire le bug. Les signalements sont publics : n’écris pas de prénoms d’enfants ni d’autres données personnelles.",
+  "bugReportNoBrowser": "Le navigateur n’a pas pu s’ouvrir. Tu peux signaler le bug ici :"
 }

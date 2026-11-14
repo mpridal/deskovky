@@ -1603,4 +1603,15 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get inviteToAllDevices =>
       'O convite vai para todos os aparelhos da rede';
+
+  @override
+  String get parentsReportBug => 'Relatar um erro';
+
+  @override
+  String get parentsReportBugHint =>
+      'Abre um formulário no GitHub onde você descreve o erro. Os relatos são públicos: não escreva nomes de crianças nem outros dados pessoais.';
+
+  @override
+  String get bugReportNoBrowser =>
+      'Não foi possível abrir o navegador. Você pode relatar o erro em:';
 }

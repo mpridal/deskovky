@@ -1601,4 +1601,15 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get inviteToAllDevices => 'Die Einladung geht an alle Geräte im WLAN';
+
+  @override
+  String get parentsReportBug => 'Fehler melden';
+
+  @override
+  String get parentsReportBugHint =>
+      'Öffnet ein Formular auf GitHub, in dem du den Fehler beschreibst. Meldungen sind öffentlich: Schreib keine Namen von Kindern oder andere persönliche Daten hinein.';
+
+  @override
+  String get bugReportNoBrowser =>
+      'Der Browser konnte nicht geöffnet werden. Du kannst den Fehler hier melden:';
 }

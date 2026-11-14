@@ -462,5 +462,8 @@
   "settingsShareApp": "Auf anderes Gerät laden",
   "shareAppTitle": "Deskovky auf einem anderen Gerät",
   "shareAppHint": "Scanne den Code mit der Kamera des anderen Handys oder Tablets. Die Seite mit der neuesten Version öffnet sich: Lade die Datei deskovky-….apk herunter und öffne sie.",
-  "inviteToAllDevices": "Die Einladung geht an alle Geräte im WLAN"
+  "inviteToAllDevices": "Die Einladung geht an alle Geräte im WLAN",
+  "parentsReportBug": "Fehler melden",
+  "parentsReportBugHint": "Öffnet ein Formular auf GitHub, in dem du den Fehler beschreibst. Meldungen sind öffentlich: Schreib keine Namen von Kindern oder andere persönliche Daten hinein.",
+  "bugReportNoBrowser": "Der Browser konnte nicht geöffnet werden. Du kannst den Fehler hier melden:"
 }

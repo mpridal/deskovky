@@ -1607,4 +1607,15 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get inviteToAllDevices => 'Запрошення прийде на всі пристрої в мережі';
+
+  @override
+  String get parentsReportBug => 'Повідомити про помилку';
+
+  @override
+  String get parentsReportBugHint =>
+      'Відкриває форму на GitHub, де ти опишеш помилку. Повідомлення публічні: не пиши імена дітей чи інші особисті дані.';
+
+  @override
+  String get bugReportNoBrowser =>
+      'Не вдалося відкрити браузер. Повідомити про помилку можна тут:';
 }

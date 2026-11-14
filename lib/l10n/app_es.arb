@@ -462,5 +462,8 @@
   "settingsShareApp": "Descargar en otro dispositivo",
   "shareAppTitle": "Deskovky en otro dispositivo",
   "shareAppHint": "Escanea el código con la cámara del otro teléfono o tableta. Se abre la página con la versión más reciente: descarga el archivo deskovky-….apk y ábrelo.",
-  "inviteToAllDevices": "La invitación llega a todos los dispositivos de la red"
+  "inviteToAllDevices": "La invitación llega a todos los dispositivos de la red",
+  "parentsReportBug": "Informar de un error",
+  "parentsReportBugHint": "Abre un formulario en GitHub donde describes el error. Los informes son públicos: no escribas nombres de niños ni otros datos personales.",
+  "bugReportNoBrowser": "No se pudo abrir el navegador. Puedes informar del error en:"
 }

@@ -1611,4 +1611,15 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get inviteToAllDevices =>
       'Zaproszenie trafi na wszystkie urządzenia w sieci';
+
+  @override
+  String get parentsReportBug => 'Zgłoś błąd';
+
+  @override
+  String get parentsReportBugHint =>
+      'Otwiera formularz na GitHubie, w którym opiszesz błąd. Zgłoszenia są publiczne: nie wpisuj imion dzieci ani innych danych osobowych.';
+
+  @override
+  String get bugReportNoBrowser =>
+      'Nie udało się otworzyć przeglądarki. Błąd możesz zgłosić pod adresem:';
 }

@@ -2891,6 +2891,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The invitation goes to every device on the Wi-Fi'**
   String get inviteToAllDevices;
+
+  /// No description provided for @parentsReportBug.
+  ///
+  /// In en, this message translates to:
+  /// **'Report a bug'**
+  String get parentsReportBug;
+
+  /// No description provided for @parentsReportBugHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens a form on GitHub where you describe the bug. Reports are public: do not write children’s names or other personal details.'**
+  String get parentsReportBugHint;
+
+  /// No description provided for @bugReportNoBrowser.
+  ///
+  /// In en, this message translates to:
+  /// **'The browser could not be opened. You can report the bug at:'**
+  String get bugReportNoBrowser;
 }
 
 class _AppLocalizationsDelegate
