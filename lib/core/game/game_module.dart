@@ -34,6 +34,7 @@ class GameBoardView<S> {
     this.elapsed = _noTime,
     this.firstGame = false,
     this.canEndForAll = true,
+    this.localSeats = const {},
   });
 
   final S state;
@@ -57,6 +58,10 @@ class GameBoardView<S> {
   /// "Ukončit a seřadit"): always on one device, only the host in a network
   /// game (spec 14.4).
   final bool canEndForAll;
+
+  /// The seats people play on this device, whoever is on turn: every human
+  /// seat on one device, only this device's own in a network game.
+  final Set<int> localSeats;
 }
 
 Duration _noTime() => Duration.zero;

@@ -5,7 +5,7 @@ Námořní bitva pro dva hráče, lidi i roboty, na jednom zařízení i po Wi-F
 ## Pravidla
 
 - **Moře:** 8 × 8 s flotilou 4, 3, 3, 2 (výchozí), nebo 10 × 10 s flotilou 5, 4, 3, 3, 2 (volba `size`).
-- **Rozmístění:** nejdřív hráč 1, pak hráč 2 (tah `place`). Lodě jsou rovné a nesmí se dotýkat ani rohem.
+- **Rozmístění:** tah `place`. Lodě jsou rovné a nesmí se dotýkat ani rohem. Rozmístění je tah mimo pořadí (`OutOfTurnMoves`): po Wi-Fi rozmisťují oba hráči současně; dva lidé na jednom zařízení postupně se zakrytím obrazovky.
 - **Střelba:** tah `shoot` na pole, kam hráč ještě nestřílel a které není známá voda. Pole kolem potopené lodi jsou známá voda.
 - **Po zásahu** střílí hráč znovu (volba `bonus`: `again`). Při `alternate` se střídá po každé ráně.
 - **Konec:** kdo první zasáhne všechna pole soupeřovy flotily, vyhrává.
@@ -27,7 +27,7 @@ Námořní bitva pro dva hráče, lidi i roboty, na jednom zařízení i po Wi-F
 
 ## Kdo se dívá (perspektiva)
 
-Deska kreslí moře očima hráče, který na tomto zařízení naposledy hrál (`view.mySeat`). Dokud žádný nehrál, je to hráč, který není na tahu. Při rozmisťování soupeře deska jen čeká. Viz `FRAMEWORK_REQUESTS.md`.
+Když na zařízení hraje jediný člověk (`view.localSeats`), deska kreslí moře vždy jeho očima. Dva lidé na jednom zařízení: očima toho, kdo naposledy hrál (`view.mySeat`), a při předání se deska zakryje.
 
 ## AI
 

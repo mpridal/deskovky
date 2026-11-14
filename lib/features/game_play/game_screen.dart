@@ -805,6 +805,7 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
       elapsed: () => _elapsed,
       // In a network game only the host ends it for everyone (spec 14.4).
       canEndForAll: !_isNet || _hostRoom != null,
+      localSeats: _turns.localHumanSeats,
       firstGame: switch (mySeat == null ? null : _config.seats[mySeat]) {
         HumanSeat(:final profileId) => !widget.played.contains(profileId),
         _ => false,

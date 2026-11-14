@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
+import '../../core/game/game_rules.dart';
 import '../../core/game/ai_player.dart';
 import '../../core/game/game_config.dart';
 import '../../core/game/game_session.dart';
@@ -77,9 +78,18 @@ class TurnController<S> extends ChangeNotifier {
   void start() => _scheduleRobot();
 
   Future<bool> submitHuman(Move move) async {
-    if (_disposed || _paused || move.seat != humanSeatToAct) return false;
+    if (_disposed || _paused) return false;
+    final rules = session.rules;
+    final outOfTurn = rules is OutOfTurnMoves<S> && (rules as OutOfTurnMoves<S>).outOfTurn(session.state, move);
+    if (outOfTurn ? !localHumanSeats.contains(move.seat) : move.seat != humanSeatToAct) return false;
     return _send(move);
   }
+
+  /// The seats people play on this device (robots and stand-ins left out).
+  Set<int> get localHumanSeats => {
+    for (var seat = 0; seat < session.config.seats.length; seat++)
+      if (!isRobotSeat(seat) && (localSeats == null || localSeats!.contains(seat))) seat,
+  };
 
   void pause() {
     _paused = true;

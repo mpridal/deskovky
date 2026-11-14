@@ -59,23 +59,27 @@ class _ShipsBoardState extends State<ShipsBoard> {
 
   ShipsState get _s => widget.view.state;
 
+  /// The only person of this device (a network game, or against a robot):
+  /// the board is theirs whoever is on turn, and nothing needs covering.
+  int? get _alone => widget.view.localSeats.length == 1 ? widget.view.localSeats.single : null;
+
   @override
   void initState() {
     super.initState();
-    _seen = widget.view.mySeat;
+    _seen = widget.view.mySeat ?? _alone;
     // A battle resumed here may be two people's: show nothing until the one
     // on turn says so.
-    _covered = _seen != null && !_s.placing && !_s.over;
+    _covered = _alone == null && _seen != null && !_s.placing && !_s.over;
     _report(_s);
   }
 
   @override
   void didUpdateWidget(ShipsBoard old) {
     super.didUpdateWidget(old);
-    final my = widget.view.mySeat;
+    final my = widget.view.mySeat ?? _alone;
     if (my != null && my != _seen) {
       // Another person on this device: hide everything until they are ready.
-      if (_seen != null) _covered = true;
+      if (_seen != null && _alone == null) _covered = true;
       _seen = my;
       _draft = null;
       _selected = null;
@@ -142,6 +146,9 @@ class _ShipsBoardState extends State<ShipsBoard> {
     final my = view.mySeat;
     if (s.placing) {
       if (my != null && view.canAct && s.ships[my] == null) return _editor(context, my);
+      // Alone here: place now, whoever else is still placing.
+      final alone = _alone;
+      if (alone != null && s.ships[alone] == null) return _editor(context, alone);
       return _waiting(context);
     }
     final viewer = _viewer;

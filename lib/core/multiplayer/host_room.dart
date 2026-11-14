@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 
 import '../../features/game_play/turn_controller.dart';
+import '../game/game_rules.dart';
 import '../game/ai_player.dart';
 import '../game/difficulty.dart';
 import '../game/game_config.dart';
@@ -517,6 +518,9 @@ class HostRoom extends ChangeNotifier {
     _lobbyChanged();
   }
 
+  static bool _outOfTurn(Object rules, Object? state, Move move) =>
+      rules is OutOfTurnMoves && rules.outOfTurn(state, move);
+
   void _onMoveRequest(_Conn conn, String clientId, MoveRequest request) {
     final session = _session;
     final move = request.move;
@@ -525,6 +529,9 @@ class HostRoom extends ChangeNotifier {
       reason = 'notStarted';
     } else if (ownerOf(move.seat) != clientId) {
       reason = 'seat';
+    } else if (_outOfTurn(session.rules, session.state, move)) {
+      // Made at the same time as others (Lodě: placing): only legality counts.
+      reason = (_controller?.paused ?? false) ? 'paused' : null;
     } else if (request.basedOn != _seq) {
       reason = 'stale';
     } else if (_controller?.paused ?? false) {
