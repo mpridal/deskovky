@@ -1546,7 +1546,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get donationsEveryoneText =>
-      'Works with a screen reader, has marks for colour-blind players and speaks Czech, English and Spanish.';
+      'Works with a screen reader, has marks for colour-blind players and speaks ten languages.';
 
   @override
   String get donationsGrowingTitle => 'New games keep coming';

@@ -1,0 +1,28 @@
+/// Українська texts of the game `matches` (keys `matches.*`).
+const matchesTextsUk = <String, String>{
+  'matches.badge.collector.description': 'Виграй у Сірники 25 разів.',
+  'matches.badge.collector.title': 'Сірниковий майстер',
+  'matches.badge.first.description': 'Уперше виграй у Сірники.',
+  'matches.badge.first.title': 'Перша іскра',
+  'matches.badge.flawless.description':
+      'Виграй так, щоб після кожного твого ходу суперник був у програшному становищі.',
+  'matches.badge.flawless.title': 'Без помилки',
+  'matches.badge.master.description': 'Переможи важкого робота.',
+  'matches.badge.master.title': 'Майстер сірників',
+  'matches.description': 'Хто візьме останній сірник?',
+  'matches.firstHint': 'Натисни сірники в одному ряду, а потім «Взяти»',
+  'matches.match': 'Сірник, ряд {row}',
+  'matches.match.selected': 'Вибраний сірник, ряд {row}',
+  'matches.option.start': 'Хто починає',
+  'matches.option.start.first': 'завжди гравець 1',
+  'matches.option.start.random': 'навмання',
+  'matches.pile': 'Гравець {seat} узяв {count}',
+  'matches.rules': 'На столі лежать три ряди сірників: 3, 5 і 7. Гравці ходять по черзі. За свій хід візьми скільки завгодно сірників (щонайменше один), але лише з одного ряду. Хто візьме останній сірник, той програв.',
+  'matches.step1': 'Є ряди з 3, 5 і 7 сірників.',
+  'matches.step2': 'Бери скільки хочеш, з одного ряду.',
+  'matches.step3': 'Хто візьме останній сірник, програє.',
+  'matches.take': 'Взяти ({count})',
+  'matches.title': 'Сірники',
+  'matches.turnHint': '{name}, візьми сірники з одного ряду',
+  'matches.turnHint.last': '{name}, залишився останній сірник…',
+};

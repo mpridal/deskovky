@@ -24,7 +24,7 @@ Rodinná kolekce klasických deskových a karetních her pro Android, pro telefo
 - uložení rozehrané partie a „Pokračovat“;
 - vlastní hudbu a zvuky;
 - odznaky;
-- texty v češtině, angličtině a španělštině.
+- texty v deseti jazycích: čeština, angličtina, španělština, slovenština, němčina, polština, portugalština (Brazílie), francouzština, italština a ukrajinština.
 
 Pravidla a technické podrobnosti každé hry jsou v `lib/games/<id>/README.md`.
 
@@ -50,7 +50,7 @@ Pravidla a technické podrobnosti každé hry jsou v `lib/games/<id>/README.md`.
   - nové zařízení se připojí QR kódem a stejná jména z různých zařízení jde spárovat do jednoho profilu.
 - **Rodičovská zóna** (otevře ji jen ten, kdo vypočítá příklad): darování bodů, vynulování bodů a vylepšení, správa rodiny.
 - **Nastavení:**
-  - jazyk (podle telefonu, čeština, angličtina, španělština);
+  - jazyk (podle telefonu, nebo jeden z deseti jazyků);
   - hudba a efekty s hlasitostí, vibrace;
   - kontrola aktualizací;
   - Autoři a licence.

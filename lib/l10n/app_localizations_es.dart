@@ -1551,7 +1551,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get donationsEveryoneText =>
-      'Funciona con lector de pantalla, tiene marcas para daltónicos y habla checo, inglés y español.';
+      'Funciona con lector de pantalla, tiene marcas para daltónicos y habla diez idiomas.';
 
   @override
   String get donationsGrowingTitle => 'Siempre juegos nuevos';

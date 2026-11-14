@@ -1,4 +1,11 @@
 import '../../core/game/game_texts.dart';
+import 'l10n/memory_sk.dart';
+import 'l10n/memory_de.dart';
+import 'l10n/memory_pl.dart';
+import 'l10n/memory_pt.dart';
+import 'l10n/memory_fr.dart';
+import 'l10n/memory_it.dart';
+import 'l10n/memory_uk.dart';
 
 /// Texts of Pexeso in Czech, English and Spanish (keys `memory.*`).
 const memoryTexts = GameTexts(
@@ -97,5 +104,14 @@ const memoryTexts = GameTexts(
     'memory.badge.streak.description': 'Encuentra 5 parejas seguidas en un turno.',
     'memory.badge.collector.title': 'Coleccionista de parejas',
     'memory.badge.collector.description': 'Encuentra 200 parejas en total.',
+  },
+  more: {
+    'sk': memoryTextsSk,
+    'de': memoryTextsDe,
+    'pl': memoryTextsPl,
+    'pt': memoryTextsPt,
+    'fr': memoryTextsFr,
+    'it': memoryTextsIt,
+    'uk': memoryTextsUk,
   },
 );

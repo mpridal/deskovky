@@ -1,12 +1,18 @@
 import '../../core/game/game_texts.dart';
+import 'l10n/ludo_sk.dart';
+import 'l10n/ludo_de.dart';
+import 'l10n/ludo_pl.dart';
+import 'l10n/ludo_pt.dart';
+import 'l10n/ludo_fr.dart';
+import 'l10n/ludo_it.dart';
+import 'l10n/ludo_uk.dart';
 
 /// Texts of Člověče, nezlob se in Czech, English and Spanish (keys `ludo.*`).
 const ludoTexts = GameTexts(
   cs: {
     'ludo.title': 'Člověče, nezlob se',
     'ludo.description': 'Dostaň figurky domů dřív než ostatní.',
-    'ludo.rules':
-        'Hoď kostkou a posuň figurku o tolik polí, kolik padlo. Na desku nasadíš figurku jen šestkou, po šestce házíš znovu. Když nemáš na desce žádnou figurku, máš na šestku tři pokusy. Když skočíš na soupeřovu figurku, vyhodíš ji zpátky na start. Na vlastní figurku stoupnout nesmíš. Do domečku se musíš trefit přesně a figurky v něm se nepřeskakují. Když můžeš táhnout, táhnout musíš. Vyhrává, kdo má první všechny figurky doma.',
+    'ludo.rules': 'Hoď kostkou a posuň figurku o tolik polí, kolik padlo. Na desku nasadíš figurku jen šestkou, po šestce házíš znovu. Když nemáš na desce žádnou figurku, máš na šestku tři pokusy. Když skočíš na soupeřovu figurku, vyhodíš ji zpátky na start. Na vlastní figurku stoupnout nesmíš. Do domečku se musíš trefit přesně a figurky v něm se nepřeskakují. Když můžeš táhnout, táhnout musíš. Vyhrává, kdo má první všechny figurky doma.',
     'ludo.option.length': 'Délka',
     'ludo.option.length.full': 'plná (4 figurky)',
     'ludo.option.length.short': 'krátká (2 figurky)',
@@ -41,8 +47,7 @@ const ludoTexts = GameTexts(
   en: {
     'ludo.title': 'Ludo',
     'ludo.description': 'Get your pieces home before the others.',
-    'ludo.rules':
-        'Roll the die and move a piece that many fields. A piece enters the board only on a six, and a six rolls again. With no piece on the board you get three tries to roll a six. Land on another player\'s piece to send it back to start. You cannot land on your own piece. You must reach home with an exact roll, and pieces in the home are never jumped. If you can move, you must. The first with all pieces home wins.',
+    'ludo.rules': 'Roll the die and move a piece that many fields. A piece enters the board only on a six, and a six rolls again. With no piece on the board you get three tries to roll a six. Land on another player\'s piece to send it back to start. You cannot land on your own piece. You must reach home with an exact roll, and pieces in the home are never jumped. If you can move, you must. The first with all pieces home wins.',
     'ludo.option.length': 'Length',
     'ludo.option.length.full': 'full (4 pieces)',
     'ludo.option.length.short': 'short (2 pieces)',
@@ -77,8 +82,7 @@ const ludoTexts = GameTexts(
   es: {
     'ludo.title': 'Parchís',
     'ludo.description': 'Lleva tus fichas a casa antes que nadie.',
-    'ludo.rules':
-        'Tira el dado y mueve una ficha tantas casillas como salgan. Una ficha solo sale con un seis, y con un seis vuelves a tirar. Si no tienes fichas en el tablero, tienes tres intentos para sacar un seis. Si caes sobre una ficha rival, vuelve a la salida. No puedes caer sobre una ficha tuya. Hay que llegar a casa con la tirada exacta y en casa no se salta ninguna ficha. Si puedes mover, debes mover. Gana quien primero tenga todas las fichas en casa.',
+    'ludo.rules': 'Tira el dado y mueve una ficha tantas casillas como salgan. Una ficha solo sale con un seis, y con un seis vuelves a tirar. Si no tienes fichas en el tablero, tienes tres intentos para sacar un seis. Si caes sobre una ficha rival, vuelve a la salida. No puedes caer sobre una ficha tuya. Hay que llegar a casa con la tirada exacta y en casa no se salta ninguna ficha. Si puedes mover, debes mover. Gana quien primero tenga todas las fichas en casa.',
     'ludo.option.length': 'Duración',
     'ludo.option.length.full': 'larga (4 fichas)',
     'ludo.option.length.short': 'corta (2 fichas)',
@@ -109,5 +113,14 @@ const ludoTexts = GameTexts(
     'ludo.step.enter': 'Con un seis sale una ficha.',
     'ludo.step.capture': 'Cae sobre un rival y vuelve a salir.',
     'ludo.step.home': 'A casa solo con la tirada exacta.',
+  },
+  more: {
+    'sk': ludoTextsSk,
+    'de': ludoTextsDe,
+    'pl': ludoTextsPl,
+    'pt': ludoTextsPt,
+    'fr': ludoTextsFr,
+    'it': ludoTextsIt,
+    'uk': ludoTextsUk,
   },
 );

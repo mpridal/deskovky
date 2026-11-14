@@ -1,4 +1,11 @@
 import '../../core/game/game_texts.dart';
+import 'l10n/minesweeper_sk.dart';
+import 'l10n/minesweeper_de.dart';
+import 'l10n/minesweeper_pl.dart';
+import 'l10n/minesweeper_pt.dart';
+import 'l10n/minesweeper_fr.dart';
+import 'l10n/minesweeper_it.dart';
+import 'l10n/minesweeper_uk.dart';
 
 /// Texts of Miny in Czech, English and Spanish (keys `minesweeper.*`).
 const minesweeperTexts = GameTexts(
@@ -109,5 +116,14 @@ const minesweeperTexts = GameTexts(
     'minesweeper.badge.blitz.description': 'Despeja un tablero Fácil en menos de 20 segundos.',
     'minesweeper.badge.sapper.title': 'Zapador',
     'minesweeper.badge.sapper.description': 'Gana 25 veces al Buscaminas.',
+  },
+  more: {
+    'sk': minesweeperTextsSk,
+    'de': minesweeperTextsDe,
+    'pl': minesweeperTextsPl,
+    'pt': minesweeperTextsPt,
+    'fr': minesweeperTextsFr,
+    'it': minesweeperTextsIt,
+    'uk': minesweeperTextsUk,
   },
 );

@@ -58,7 +58,7 @@ void main() {
   });
 
   test('unknown stored language is ignored', () async {
-    await db.into(db.appSettings).insertOnConflictUpdate(AppSettingsCompanion.insert(key: 'locale', value: 'de'));
+    await db.into(db.appSettings).insertOnConflictUpdate(AppSettingsCompanion.insert(key: 'locale', value: 'ja'));
     expect(await settings.watchLocale().first, isNull);
   });
 

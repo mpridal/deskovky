@@ -1556,7 +1556,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get donationsEveryoneText =>
-      'Funguje se čtečkou obrazovky, má značky pro barvoslepé a mluví česky, anglicky i španělsky.';
+      'Funguje se čtečkou obrazovky, má značky pro barvoslepé a mluví deseti jazyky.';
 
   @override
   String get donationsGrowingTitle => 'Pořád nové hry';

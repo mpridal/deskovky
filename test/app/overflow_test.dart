@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../helpers/pump_app.dart';
 
 const _sizes = [Size(360, 740), Size(412, 915), Size(800, 1280), Size(1280, 800)];
-const _locales = [Locale('cs'), Locale('en'), Locale('es')];
+const _locales = [Locale('cs'), Locale('en'), Locale('es'), Locale('de'), Locale('uk')];
 const _scales = [1.0, 1.3];
 const _tabIcons = [Icons.people_outline, Icons.emoji_events_outlined, Icons.settings_outlined, Icons.casino_outlined];
 
