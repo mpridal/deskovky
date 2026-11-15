@@ -43,10 +43,10 @@ class AppShell extends StatelessWidget {
         body: FeltBackground(child: shell),
         // Five labels share a phone's width: they grow with the font size,
         // but only so far that "Nastavení" still fits.
-        bottomNavigationBar: MediaQuery(
-          data: MediaQuery.of(context).copyWith(
-            textScaler: MediaQuery.textScalerOf(context).clamp(maxScaleFactor: _maxNavTextScale),
-          ),
+        // withClampedTextScaling reads the MediaQuery Scaffold gives the bar
+        // (no status bar on top), so the bar keeps its own height.
+        bottomNavigationBar: MediaQuery.withClampedTextScaling(
+          maxScaleFactor: _maxNavTextScale,
           child: NavigationBar(
             selectedIndex: shell.currentIndex,
             onDestinationSelected: _select,
@@ -70,10 +70,8 @@ class AppShell extends StatelessWidget {
                 child: ConstrainedBox(
                   constraints: BoxConstraints(minHeight: box.maxHeight),
                   child: IntrinsicHeight(
-                    child: MediaQuery(
-                      data: MediaQuery.of(context).copyWith(
-                        textScaler: MediaQuery.textScalerOf(context).clamp(maxScaleFactor: _maxNavTextScale),
-                      ),
+                    child: MediaQuery.withClampedTextScaling(
+                      maxScaleFactor: _maxNavTextScale,
                       child: NavigationRail(
                         selectedIndex: shell.currentIndex,
                         onDestinationSelected: _select,

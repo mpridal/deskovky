@@ -15,6 +15,18 @@ void main() {
     expect(find.byKey(_rightPanel), findsNothing);
   });
 
+  testWidgets('a phone with a status bar: the bottom bar is no taller than it should be', (tester) async {
+    tester.view.padding = const FakeViewPadding(top: 63, bottom: 126); // 24 dp status bar, 48 dp gesture bar at 2.625
+    tester.view.devicePixelRatio = 2.625;
+    addTearDown(tester.view.resetPadding);
+    await pumpApp(tester, size: const Size(1080, 2400));
+    tester.view.devicePixelRatio = 2.625;
+    await tester.pumpAndSettle();
+    final bar = tester.getSize(find.byType(NavigationBar));
+    // 80 dp of bar plus the 48 dp gesture area under it; not the status bar on top.
+    expect(bar.height, lessThanOrEqualTo(80 + 48 + 0.5));
+  });
+
   testWidgets('phone landscape 740x360: rail, no overflow', (tester) async {
     await pumpApp(tester, size: const Size(740, 360));
     expect(find.byType(NavigationRail), findsOneWidget);
