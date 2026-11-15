@@ -2,6 +2,15 @@
 
 Každá verze má sekci `## x.y.z` s poznámkami `### cs`, `### en`, `### es` – z nich se při vydání tvoří `latest.json` a karta „Je tu nová verze“. Volitelný řádek `Minimální verze: x.y.z` udělá aktualizaci povinnou pro starší verze.
 
+## 0.13.0
+
+### cs
+Deskovky mluví deseti jazyky: přibyla slovenština, němčina, polština, portugalština, francouzština, italština a ukrajinština. V Nastavení je QR kód ke stažení hry do dalšího zařízení, v Rodičovské zóně tlačítko Nahlásit chybu. V místnosti pro hru po Wi-Fi je u volného místa nejdřív robot, pak rodina a nakonec hráči z tohoto zařízení, a pozvánka správně ukazuje, kam přijde.
+### en
+Deskovky now speaks ten languages: Slovak, German, Polish, Portuguese, French, Italian and Ukrainian are new. Settings have a QR code to download the game to another device, and the parents' corner has a Report a bug button. In a Wi-Fi room a free place offers a robot first, then family, then players of this device, and invitations say correctly where they go.
+### es
+Deskovky habla diez idiomas: se añaden eslovaco, alemán, polaco, portugués, francés, italiano y ucraniano. En Ajustes hay un código QR para descargar el juego en otro dispositivo, y en la zona de padres un botón Informar de un error. En una sala por Wi-Fi, un sitio libre ofrece primero un robot, luego la familia y al final los jugadores de este dispositivo, y las invitaciones indican bien adónde llegan.
+
 ## 0.12.0
 
 ### cs
