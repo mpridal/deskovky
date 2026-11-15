@@ -8,12 +8,14 @@ import '../multiplayer/message_channel.dart';
 import '../multiplayer/protocol.dart';
 import 'family_identity.dart';
 import 'family_op.dart';
+import 'family_session.dart';
 import 'family_store.dart';
 import 'uid.dart';
 
 /// The family sync's own version; devices with another one do not sync
 /// (the parents' corner asks to update every device).
-const familySyncVersion = 1;
+/// 2: everything after the proofs is encrypted and signed (review R-007).
+const familySyncVersion = 2;
 
 /// Ops per message.
 const _batch = 500;
@@ -57,12 +59,32 @@ Future<SyncOutcome> syncOver(
 }) async {
   final me = await store.deviceId();
   final inbox = StreamIterator(channel.incoming.where((m) => m is FamilyMessage).cast<FamilyMessage>());
-  void send(Map<String, Object?> body) => channel.send(FamilyMessage(body));
+  // Set once both proofs are checked: from then on every message is sealed.
+  FamilySession? session;
+  void send(Map<String, Object?> body) => channel.send(FamilyMessage(session?.seal(body) ?? body));
 
-  Future<Map<String, Object?>> next(String expected) async {
+  /// The next message, opened; a sealed one that does not open is an
+  /// attack (or a broken line) and ends the meeting.
+  Future<Map<String, Object?>> receive() async {
     if (!await inbox.moveNext().timeout(timeout, onTimeout: () => false)) throw const _Refused('lost');
     final body = inbox.current.body;
-    if (body['t'] == 'bye') throw _Refused(body['reason'] as String? ?? 'bye');
+    final s = session;
+    if (s == null) {
+      if (body['t'] == 'bye') throw _Refused(body['reason'] as String? ?? 'bye');
+      return body;
+    }
+    final opened = s.open(body);
+    if (opened == null) {
+      // Not a word more to a line someone tampers with.
+      session = null;
+      throw const _Refused('auth');
+    }
+    if (opened['t'] == 'bye') throw _Refused(opened['reason'] as String? ?? 'bye');
+    return opened;
+  }
+
+  Future<Map<String, Object?>> next(String expected) async {
+    final body = await receive();
     if (body['t'] != expected) throw const _Refused('lost');
     return body;
   }
@@ -97,6 +119,7 @@ Future<SyncOutcome> syncOver(
     send({'t': 'proof', 'hmac': proof(me)});
     final theirProof = await next('proof');
     if (theirProof['hmac'] != proof(peerId)) refuse('auth');
+    session = FamilySession(familyKey: family.keyBytes, firstNonce: first, secondNonce: second, me: me, peer: peerId);
 
     // An invitation instead of a sync (spec 5.4): proven family, nothing else.
     if (invite != null) {
@@ -104,13 +127,11 @@ Future<SyncOutcome> syncOver(
       return SyncOutcome.ok(peer: peerId, sent: 0, received: 0);
     }
     send({'t': 'have', 'vector': await store.versionVector()});
-    if (!await inbox.moveNext().timeout(timeout, onTimeout: () => false)) throw const _Refused('lost');
-    final opening = inbox.current.body;
+    final opening = await receive();
     if (opening['t'] == 'invite') {
       onInvite?.call(opening);
       return SyncOutcome.ok(peer: peerId, sent: 0, received: 0);
     }
-    if (opening['t'] == 'bye') throw _Refused(opening['reason'] as String? ?? 'bye');
     if (opening['t'] != 'have') throw const _Refused('lost');
     final have = opening;
     final vector = {
@@ -130,10 +151,8 @@ Future<SyncOutcome> syncOver(
 
     final received = <FamilyOp>[];
     while (true) {
-      if (!await inbox.moveNext().timeout(timeout, onTimeout: () => false)) throw const _Refused('lost');
-      final body = inbox.current.body;
+      final body = await receive();
       if (body['t'] == 'done') break;
-      if (body['t'] == 'bye') throw _Refused(body['reason'] as String? ?? 'bye');
       if (body['t'] != 'ops') continue;
       for (final json in body['ops'] as List? ?? const []) {
         if (FamilyOp.fromJson(json) case final op?) received.add(op);
