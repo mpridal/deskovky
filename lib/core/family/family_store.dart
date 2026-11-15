@@ -168,6 +168,55 @@ class FamilyStore {
       .into(_db.familyDevices)
       .insertOnConflictUpdate(FamilyDevicesCompanion.insert(deviceId: deviceId, lastSyncMs: Value(_now().millisecondsSinceEpoch)));
 
+  /// Before moving to another family (review R-032): keeps only what is
+  /// about the profiles that play on this device – those its own ops name –
+  /// so the new family never gets the old family's other people. Returns
+  /// what was taken out, for [putBack] when the move fails.
+  Future<List<FamilyOp>> keepOnlyOwnProfiles() async {
+    final me = await deviceId();
+    final ops = await all();
+    final own = {
+      for (final op in ops)
+        if (op.origin == me) ...profilesOf(op.body),
+    };
+    final drop = [
+      for (final op in ops)
+        if (!profilesOf(op.body).any(own.contains)) op,
+    ];
+    if (drop.isEmpty) return drop;
+    await _db.transaction(() async {
+      for (final op in drop) {
+        await (_db.delete(_db.syncOps)..where((o) => o.origin.equals(op.origin) & o.seq.equals(op.seq))).go();
+      }
+    });
+    await rebuild();
+    return drop;
+  }
+
+  /// Undoes [keepOnlyOwnProfiles] after a move that did not happen.
+  Future<void> putBack(List<FamilyOp> ops) async {
+    if (ops.isEmpty) return;
+    await _db.transaction(() async {
+      for (final op in ops) {
+        await _insert(op);
+      }
+    });
+    await rebuild();
+  }
+
+  /// The profiles an op is about (none for the devices of the family).
+  static Set<String> profilesOf(OpBody body) => switch (body) {
+    ProfileCreated(:final uid) || ProfileUpdated(:final uid) || ProfileDeleted(:final uid) => {uid},
+    ProfilesMerged(:final fromUid, :final intoUid) => {fromUid, intoUid},
+    MatchRecorded(:final participants) => {for (final p in participants) ?p.playerUid},
+    PointsAdded(:final playerUid) ||
+    ItemBought(:final playerUid) ||
+    BadgeAwarded(:final playerUid) ||
+    PointsReset(:final playerUid) ||
+    CountersAdded(:final playerUid) => {playerUid},
+    DeviceJoined() || DeviceRemoved() || UnknownOp() => const {},
+  };
+
   Future<List<FamilyOp>> all() async => [for (final row in await _db.select(_db.syncOps).get()) ?_decode(row)];
 
   /// Computes the family state from every op and writes it to the tables.

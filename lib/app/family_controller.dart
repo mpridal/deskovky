@@ -395,23 +395,28 @@ class FamilyController extends ChangeNotifier {
   Future<SyncOutcome> joinFamily(FamilyTicket ticket, {required String deviceName}) async {
     final previous = _family;
     await _stop();
+    // The new family gets only the people who play here (review R-032).
+    final takenOut = await store.keepOnlyOwnProfiles();
     _family = ticket.identity;
     await ticket.identity.save(db);
-    await store.append(DeviceJoined(deviceId: await store.deviceId(), name: deviceName));
     SyncOutcome outcome;
     try {
       outcome = await _run(await net.connect(ticket.ip, ticket.port), initiator: true);
     } on Object {
       outcome = const SyncOutcome.failed('lost');
     }
-    if (!outcome.ok) {
-      // Could not reach the family: stay where this device was.
+    if (outcome.ok) {
+      // Written only once in: a failed attempt leaves no trace (review R-032).
+      await store.append(DeviceJoined(deviceId: await store.deviceId(), name: deviceName));
+    } else {
+      // Could not reach the family: stay where this device was, with all of it.
       _family = previous;
       if (previous == null) {
         await FamilyIdentity.forget(db);
       } else {
         await previous.save(db);
       }
+      await store.putBack(takenOut);
     }
     await start();
     return outcome;
