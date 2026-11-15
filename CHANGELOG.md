@@ -2,6 +2,15 @@
 
 Každá verze má sekci `## x.y.z` s poznámkami `### cs`, `### en`, `### es` – z nich se při vydání tvoří `latest.json` a karta „Je tu nová verze“. Volitelný řádek `Minimální verze: x.y.z` udělá aktualizaci povinnou pro starší verze.
 
+## 0.13.1
+
+### cs
+Oprava: spodní lišta s volbami na telefonu na výšku už není zbytečně vysoká.
+### en
+Fix: the bottom bar on a phone held upright is no longer taller than it needs to be.
+### es
+Corrección: la barra inferior en un teléfono en vertical ya no es más alta de lo necesario.
+
 ## 0.13.0
 
 ### cs
