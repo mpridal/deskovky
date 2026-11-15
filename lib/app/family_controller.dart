@@ -408,7 +408,7 @@ class FamilyController extends ChangeNotifier {
       // Could not reach the family: stay where this device was.
       _family = previous;
       if (previous == null) {
-        await (db.delete(db.appSettings)..where((s) => s.key.isIn([FamilyIdentity.idKey, FamilyIdentity.keyKey]))).go();
+        await FamilyIdentity.forget(db);
       } else {
         await previous.save(db);
       }
