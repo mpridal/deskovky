@@ -255,9 +255,10 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
   Timer? _finishTimer;
   bool _finished = false;
 
-  /// Saves come at most about once a second; [_saveTimer] brings the last one.
+  /// Saves come at most about once a second: while [_saveTimer] runs, a new
+  /// save waits ([_savePending]) and comes when it ends.
   Timer? _saveTimer;
-  DateTime? _savedAt;
+  var _savePending = false;
   var _saveWarned = false;
 
   /// Robots stopped because the app went to the background (review R-026).
@@ -510,18 +511,16 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
   void _save({bool now = false}) {
     // A network game lives in its room, not in this device's store.
     if (_isNet || _finished || !_module.supportsSaveResume || _turns.isOver) return;
-    final last = _savedAt;
-    final wait = last == null ? Duration.zero : const Duration(seconds: 1) - DateTime.now().difference(last);
-    if (!now && wait > Duration.zero) {
-      _saveTimer ??= Timer(wait, () {
-        _saveTimer = null;
-        if (mounted) _save(now: true);
-      });
+    if (!now && _saveTimer != null) {
+      _savePending = true;
       return;
     }
+    _savePending = false;
     _saveTimer?.cancel();
-    _saveTimer = null;
-    _savedAt = DateTime.now();
+    _saveTimer = Timer(const Duration(seconds: 1), () {
+      _saveTimer = null;
+      if (_savePending && mounted) _save();
+    });
     final message = AppLocalizations.of(context).saveFailed;
     unawaited(
       ref.read(gameStoreProvider).saveSession(_session.toSave(elapsed: _elapsed)).catchError((Object e) {
