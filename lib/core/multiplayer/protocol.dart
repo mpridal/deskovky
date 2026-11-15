@@ -16,7 +16,8 @@ const protocolVersion = 1;
 /// with the same rules, else their games drift apart. Raise it whenever any
 /// game's rules change (test/games/rules_version_test.dart notices).
 /// 2: Válka lays three cards in a war, Lodě place at the same time (0.12.0).
-const rulesVersion = 2;
+/// 3: Válka – a war nobody can fight on ends the game (review R-024).
+const rulesVersion = 3;
 
 /// A player as another device shows them: name and avatar JSON.
 @immutable

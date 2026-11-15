@@ -9,7 +9,7 @@ Karetní hra pro 2–4 hráče, lidi i roboty, na jednom zařízení i po Wi-Fi.
 - **Válka:** když mají dva nebo víc hráčů stejnou nejvyšší kartu, válčí jen oni. Každý položí dvě karty rubem a jednu lícem a porovnává se znovu (kdo má méně karet, položí rubem, kolik může, a poslední kartu lícem).
   - Hráč s poslední kartou ji položí lícem.
   - Hráč bez karet válku prohrává.
-  - Když nemá kartu nikdo z nich, stůl bere první z nich.
+  - Když nemá kartu nikdo z nich, válku nikdo nevyhraje: každý si vezme zpět své karty ze stolu a hra končí (pořadí podle karet, stejný počet = stejné místo).
 - **Vzít karty:** vítěz bitvy vezme jedním tahem všechny karty ze stolu pod svůj balíček (v pořadí míst).
 - **Konec hry:** hráč bez karet vypadává. Hra končí, když zbývá jeden hráč, nebo po zvoleném počtu kol: krátká hra 30 kol, dlouhá 100 kol, „do konce“ nejvýš 400 kol.
 - **Pořadí:** hráči, kteří ještě mají karty, podle počtu karet (stejný počet = stejné místo); za nimi vyřazení, kdo vypadl později, je výš.

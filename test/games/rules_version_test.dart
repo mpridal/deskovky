@@ -16,7 +16,7 @@ import 'package:flutter_test/flutter_test.dart';
 /// When this test fails after a rules change: raise `rulesVersion` in
 /// lib/core/multiplayer/protocol.dart, then put the new fingerprints here
 /// (run with REPRINT=1 to print them) together with the new version.
-const fingerprintsForRulesVersion = 2;
+const fingerprintsForRulesVersion = 3;
 const fingerprints = <String, String>{
   'sample': 'd7635cae',
   'tictactoe': '975a454a',
