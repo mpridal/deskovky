@@ -125,7 +125,7 @@ class DeviceFamilyNet implements FamilyNet {
   Future<FamilyAnnouncement> announce(FamilyBeacon beacon) async {
     final socket = await RawDatagramSocket.bind(InternetAddress.anyIPv4, 0)
       ..broadcastEnabled = true;
-    return _UdpFamilyAnnouncement(socket, beacon);
+    return _UdpFamilyAnnouncement(socket, beacon, await broadcastTargets(beacon.ip));
   }
 
   @override
@@ -165,13 +165,14 @@ class DeviceFamilyNet implements FamilyNet {
 }
 
 class _UdpFamilyAnnouncement implements FamilyAnnouncement {
-  _UdpFamilyAnnouncement(this._socket, this._beacon) {
+  _UdpFamilyAnnouncement(this._socket, this._beacon, this._targets) {
     _send();
     _timer = Timer.periodic(familyBeaconInterval, (_) => _send());
   }
 
   final RawDatagramSocket _socket;
   FamilyBeacon _beacon;
+  final List<String> _targets;
   late final Timer _timer;
   var _closed = false;
 
@@ -184,7 +185,7 @@ class _UdpFamilyAnnouncement implements FamilyAnnouncement {
   void _send() {
     if (_closed) return;
     final data = utf8.encode(jsonEncode(_beacon.toJson()));
-    for (final target in ['255.255.255.255', subnetBroadcast(_beacon.ip)]) {
+    for (final target in _targets) {
       try {
         _socket.send(data, InternetAddress(target), familyBeaconPort);
       } on Object {

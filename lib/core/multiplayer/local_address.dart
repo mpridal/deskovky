@@ -39,6 +39,50 @@ String subnetBroadcast(String ip) {
   return [...parts.take(3), '255'].join('.');
 }
 
+/// The broadcast address of [ip] in a network with a [prefix]-bit mask
+/// (`/22` → `255.255.252.0`).
+String broadcastAddress(String ip, int prefix) {
+  final p = ip.split('.').map(int.parse).toList();
+  final value = (p[0] << 24) | (p[1] << 16) | (p[2] << 8) | p[3];
+  final host = prefix >= 32 ? 0 : (1 << (32 - prefix)) - 1;
+  final b = (value | host) & 0xFFFFFFFF;
+  return [b >> 24, (b >> 16) & 255, (b >> 8) & 255, b & 255].join('.');
+}
+
+/// The mask length of the Wi-Fi network [ip] is on, asked from Android
+/// (Dart does not know it); null when it cannot tell.
+class WifiPrefix {
+  static const _channel = MethodChannel('deskovky/device');
+
+  /// Stands in for Android in tests.
+  @visibleForTesting
+  static Future<int?> Function(String ip)? debugLookup;
+
+  static Future<int?> of(String ip) async {
+    final fake = debugLookup;
+    if (fake != null) return fake(ip);
+    if (!Platform.isAndroid) return null;
+    try {
+      return await _channel.invokeMethod<int>('prefix', ip);
+    } on Object catch (e) {
+      debugPrint('WifiPrefix: $e');
+      return null;
+    }
+  }
+}
+
+/// Where rooms and family devices announce themselves: everyone on the
+/// link, the /24 neighbours (home routers, hotspots) and – on a bigger
+/// network such as a mesh with /22 – its real broadcast (review R-033).
+Future<List<String>> broadcastTargets(String ip) async {
+  final prefix = await WifiPrefix.of(ip);
+  return {
+    '255.255.255.255',
+    subnetBroadcast(ip),
+    if (prefix != null && prefix >= 8 && prefix <= 30) broadcastAddress(ip, prefix),
+  }.toList();
+}
+
 bool _isWifi(String name) {
   final n = name.toLowerCase();
   return n.startsWith('wlan') || n.startsWith('ap') || n.startsWith('swlan') || n.contains('wi-fi') || n.contains('wifi');

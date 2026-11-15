@@ -45,6 +45,20 @@ class MainActivity : FlutterActivity() {
                         else "${Build.MANUFACTURER.replaceFirstChar { it.uppercase() }} ${Build.MODEL}"
                     result.success(if (given.isNullOrBlank()) model else given)
                 }
+                // The mask of the Wi-Fi network, for the real broadcast address
+                // of networks bigger than /24 (review R-033).
+                "prefix" -> {
+                    val ip = call.arguments as? String
+                    val prefix = try {
+                        java.net.NetworkInterface.getNetworkInterfaces()?.toList().orEmpty()
+                            .flatMap { it.interfaceAddresses }
+                            .firstOrNull { it.address?.hostAddress == ip }
+                            ?.networkPrefixLength?.toInt()
+                    } catch (e: Exception) {
+                        null
+                    }
+                    result.success(prefix)
+                }
                 else -> result.notImplemented()
             }
         }

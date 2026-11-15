@@ -64,7 +64,7 @@ class DeviceNetworkEnv extends NetworkEnv {
   Future<Announcement> announce(RoomInfo room) async => _UdpAnnouncement(
     await RoomAnnouncer.start(
       room,
-      targets: [InternetAddress('255.255.255.255'), InternetAddress(subnetBroadcast(room.ip))],
+      targets: [for (final target in await broadcastTargets(room.ip)) InternetAddress(target)],
     ),
   );
 
