@@ -465,5 +465,6 @@
   "inviteToAllDevices": "Pozvánka príde na všetky zariadenia v sieti",
   "parentsReportBug": "Nahlásiť chybu",
   "parentsReportBugHint": "Otvorí formulár na GitHube, kde chybu opíšeš. Hlásenie je verejné: nepíš doň mená detí ani iné osobné údaje.",
-  "bugReportNoBrowser": "Prehliadač sa nepodarilo otvoriť. Chybu môžeš nahlásiť na adrese:"
+  "bugReportNoBrowser": "Prehliadač sa nepodarilo otvoriť. Chybu môžeš nahlásiť na adrese:",
+  "saveFailed": "Hru sa nepodarilo uložiť."
 }

@@ -465,5 +465,6 @@
   "inviteToAllDevices": "L’invito arriva a tutti i dispositivi della rete",
   "parentsReportBug": "Segnala un errore",
   "parentsReportBugHint": "Apre un modulo su GitHub dove descrivi l’errore. Le segnalazioni sono pubbliche: non scrivere nomi di bambini né altri dati personali.",
-  "bugReportNoBrowser": "Non è stato possibile aprire il browser. Puoi segnalare l’errore qui:"
+  "bugReportNoBrowser": "Non è stato possibile aprire il browser. Puoi segnalare l’errore qui:",
+  "saveFailed": "Non è stato possibile salvare la partita."
 }

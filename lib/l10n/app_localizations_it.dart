@@ -1618,4 +1618,7 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get bugReportNoBrowser =>
       'Non è stato possibile aprire il browser. Puoi segnalare l’errore qui:';
+
+  @override
+  String get saveFailed => 'Non è stato possibile salvare la partita.';
 }

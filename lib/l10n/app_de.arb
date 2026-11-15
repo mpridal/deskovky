@@ -465,5 +465,6 @@
   "inviteToAllDevices": "Die Einladung geht an alle Geräte im WLAN",
   "parentsReportBug": "Fehler melden",
   "parentsReportBugHint": "Öffnet ein Formular auf GitHub, in dem du den Fehler beschreibst. Meldungen sind öffentlich: Schreib keine Namen von Kindern oder andere persönliche Daten hinein.",
-  "bugReportNoBrowser": "Der Browser konnte nicht geöffnet werden. Du kannst den Fehler hier melden:"
+  "bugReportNoBrowser": "Der Browser konnte nicht geöffnet werden. Du kannst den Fehler hier melden:",
+  "saveFailed": "Das Spiel konnte nicht gespeichert werden."
 }

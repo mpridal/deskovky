@@ -1612,4 +1612,7 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get bugReportNoBrowser =>
       'No se pudo abrir el navegador. Puedes informar del error en:';
+
+  @override
+  String get saveFailed => 'No se pudo guardar la partida.';
 }

@@ -1,3 +1,4 @@
+import 'package:deskovky/app/providers.dart';
 import 'package:deskovky/core/avatar/avatar_spec.dart';
 import 'package:deskovky/core/db/app_database.dart';
 import 'package:deskovky/core/game/difficulty.dart';
@@ -13,11 +14,35 @@ import 'package:deskovky/features/home/active_player_bar.dart';
 import 'package:deskovky/games/_sample/sample_rules.dart';
 import 'package:deskovky/ui_kit/components/thinking_dots.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../helpers/pump_app.dart';
 import '../../helpers/test_database.dart';
+
+/// A store whose disk is full: every save fails.
+class _FullDiskStore extends GameStore {
+  _FullDiskStore(super.db);
+  int attempts = 0;
+  @override
+  Future<void> saveSession(SavedGame save) async {
+    attempts++;
+    throw StateError('disk full');
+  }
+}
+
+void _toBackground(WidgetTester tester) {
+  for (final s in [AppLifecycleState.inactive, AppLifecycleState.hidden, AppLifecycleState.paused]) {
+    tester.binding.handleAppLifecycleStateChanged(s);
+  }
+}
+
+void _toForeground(WidgetTester tester) {
+  for (final s in [AppLifecycleState.hidden, AppLifecycleState.inactive, AppLifecycleState.resumed]) {
+    tester.binding.handleAppLifecycleStateChanged(s);
+  }
+}
 
 Future<int> _player(WidgetTester tester, AppDatabase db, String name) async =>
     (await tester.runAsync(() => PlayerRepository(db).create(name: name, avatar: AvatarSpec.defaults)))!.id;
@@ -30,8 +55,8 @@ GameConfig _config(List<SeatConfig> seats, {RobotSpeed speed = RobotSpeed.fast})
   options: const {'range': 20},
 );
 
-Future<void> _startGame(WidgetTester tester, AppDatabase db, Object extra) async {
-  await pumpApp(tester, size: const Size(800, 1280), db: db, disableAnimations: true);
+Future<void> _startGame(WidgetTester tester, AppDatabase db, Object extra, {List<Override> overrides = const []}) async {
+  await pumpApp(tester, size: const Size(800, 1280), db: db, disableAnimations: true, overrides: overrides);
   GoRouter.of(tester.element(find.byType(Navigator).first)).push('/play/sample', extra: extra);
   await tester.pumpAndSettle();
   expect(find.byType(GameScreen), findsOneWidget);
@@ -335,5 +360,63 @@ void main() {
       await tester.pump(const Duration(milliseconds: 1300));
       expect(_screen(tester).debugSession!.moves, hasLength(1));
     });
+  });
+
+  testWidgets('robots wait while the app is in the background (review R-026)', (tester) async {
+    final t = await _player(tester, db, 'Tereza');
+    await _startGame(tester, db, _config([const RobotSeat(), HumanSeat(t)], speed: RobotSpeed.slow));
+    _toBackground(tester);
+    await tester.pump(const Duration(seconds: 5));
+    expect(_screen(tester).debugSession!.moves, isEmpty, reason: 'nobody is watching');
+    _toForeground(tester);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 1300));
+    expect(_screen(tester).debugSession!.moves, hasLength(1));
+  });
+
+  testWidgets('back from the background with the pause menu open, robots keep waiting', (tester) async {
+    final t = await _player(tester, db, 'Tereza');
+    await _startGame(tester, db, _config([const RobotSeat(), HumanSeat(t)], speed: RobotSpeed.slow));
+    await tester.binding.handlePopRoute();
+    await tester.pump();
+    _toBackground(tester);
+    await tester.pump(const Duration(seconds: 1));
+    _toForeground(tester);
+    await tester.pump(const Duration(seconds: 3));
+    expect(_screen(tester).debugSession!.moves, isEmpty);
+    expect(find.text('Pokračovat'), findsOneWidget);
+  });
+
+  testWidgets('a save that fails tells it once and the game goes on (review R-025)', (tester) async {
+    final t = await _player(tester, db, 'Tereza');
+    final k = await _player(tester, db, 'Kuba');
+    final store = _FullDiskStore(db);
+    await _startGame(tester, db, _config([HumanSeat(t), HumanSeat(k)]), overrides: [gameStoreProvider.overrideWithValue(store)]);
+    final secret = (_screen(tester).debugSession!.state as SampleState).secret;
+    final wrong = [for (var n = 1; n <= 20; n++) if (n != secret) n];
+    await _tapNumber(tester, wrong[0]);
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.text('Hru se nepodařilo uložit.'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 3));
+    await _tapNumber(tester, wrong[1]);
+    await tester.pump(const Duration(seconds: 2));
+    expect(store.attempts, greaterThanOrEqualTo(2));
+    expect(find.text('Hru se nepodařilo uložit.'), findsNothing, reason: 'only once per game');
+    expect(_screen(tester).debugSession!.moves, hasLength(2));
+  });
+
+  testWidgets('quick moves are saved at most about once a second, the last one always', (tester) async {
+    final t = await _player(tester, db, 'Tereza');
+    final k = await _player(tester, db, 'Kuba');
+    await _startGame(tester, db, _config([HumanSeat(t), HumanSeat(k)]));
+    final secret = (_screen(tester).debugSession!.state as SampleState).secret;
+    final wrong = [for (var n = 1; n <= 20; n++) if (n != secret) n];
+    for (final n in wrong.take(4)) {
+      await _tapNumber(tester, n);
+    }
+    await tester.pump(const Duration(milliseconds: 1100));
+    await _settleIo(tester);
+    final saved = (await tester.runAsync(() => GameStore(db).savedSession('sample')))!;
+    expect(saved.moves, hasLength(4), reason: 'the trailing save keeps the newest state');
   });
 }

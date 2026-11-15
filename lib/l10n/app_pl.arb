@@ -465,5 +465,6 @@
   "inviteToAllDevices": "Zaproszenie trafi na wszystkie urządzenia w sieci",
   "parentsReportBug": "Zgłoś błąd",
   "parentsReportBugHint": "Otwiera formularz na GitHubie, w którym opiszesz błąd. Zgłoszenia są publiczne: nie wpisuj imion dzieci ani innych danych osobowych.",
-  "bugReportNoBrowser": "Nie udało się otworzyć przeglądarki. Błąd możesz zgłosić pod adresem:"
+  "bugReportNoBrowser": "Nie udało się otworzyć przeglądarki. Błąd możesz zgłosić pod adresem:",
+  "saveFailed": "Nie udało się zapisać gry."
 }

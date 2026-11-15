@@ -1623,4 +1623,7 @@ class AppLocalizationsSk extends AppLocalizations {
   @override
   String get bugReportNoBrowser =>
       'Prehliadač sa nepodarilo otvoriť. Chybu môžeš nahlásiť na adrese:';
+
+  @override
+  String get saveFailed => 'Hru sa nepodarilo uložiť.';
 }

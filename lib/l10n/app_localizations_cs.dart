@@ -1616,4 +1616,7 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get bugReportNoBrowser =>
       'Prohlížeč se nepodařilo otevřít. Chybu můžeš nahlásit na adrese:';
+
+  @override
+  String get saveFailed => 'Hru se nepodařilo uložit.';
 }

@@ -465,5 +465,6 @@
   "inviteToAllDevices": "L’invitation arrive sur tous les appareils du Wi-Fi",
   "parentsReportBug": "Signaler un bug",
   "parentsReportBugHint": "Ouvre un formulaire sur GitHub pour décrire le bug. Les signalements sont publics : n’écris pas de prénoms d’enfants ni d’autres données personnelles.",
-  "bugReportNoBrowser": "Le navigateur n’a pas pu s’ouvrir. Tu peux signaler le bug ici :"
+  "bugReportNoBrowser": "Le navigateur n’a pas pu s’ouvrir. Tu peux signaler le bug ici :",
+  "saveFailed": "La partie n'a pas pu être enregistrée."
 }

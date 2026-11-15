@@ -1616,4 +1616,7 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get bugReportNoBrowser =>
       'Le navigateur n’a pas pu s’ouvrir. Tu peux signaler le bug ici :';
+
+  @override
+  String get saveFailed => 'La partie n\'a pas pu être enregistrée.';
 }

@@ -1618,4 +1618,7 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get bugReportNoBrowser =>
       'Не вдалося відкрити браузер. Повідомити про помилку можна тут:';
+
+  @override
+  String get saveFailed => 'Не вдалося зберегти гру.';
 }

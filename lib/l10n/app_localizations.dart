@@ -2909,6 +2909,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The browser could not be opened. You can report the bug at:'**
   String get bugReportNoBrowser;
+
+  /// No description provided for @saveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The game could not be saved.'**
+  String get saveFailed;
 }
 
 class _AppLocalizationsDelegate
