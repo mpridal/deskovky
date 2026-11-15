@@ -141,10 +141,21 @@ class FamilyStore {
   };
 
   /// The ops another device is missing, given its [theirs] version vector.
-  Future<List<FamilyOp>> opsAfter(Map<String, int> theirs) async => [
-    for (final row in await (_db.select(_db.syncOps)..orderBy([(o) => OrderingTerm.asc(o.clock)])).get())
-      if (row.seq > (theirs[row.origin] ?? 0)) ?_decode(row),
-  ];
+  /// Picked in the database by device and number, so a long log is not read
+  /// and decoded at every sync (review R-009).
+  Future<List<FamilyOp>> opsAfter(Map<String, int> theirs) async {
+    final query = _db.select(_db.syncOps)
+      ..where((o) {
+        final known = theirs.keys.toList();
+        Expression<bool> wanted = known.isEmpty ? const Constant(true) : o.origin.isNotIn(known);
+        for (final MapEntry(:key, :value) in theirs.entries) {
+          wanted = wanted | (o.origin.equals(key) & o.seq.isBiggerThanValue(value));
+        }
+        return wanted;
+      })
+      ..orderBy([(o) => OrderingTerm.asc(o.clock)]);
+    return [for (final row in await query.get()) ?_decode(row)];
+  }
 
   /// Devices taken out of the family; they are refused (spec 7.2).
   Future<Set<String>> removedDevices() async => {
