@@ -14,8 +14,9 @@ import '../multiplayer/socket_channel.dart';
 /// UDP port of the family announcements (rooms use 47123).
 const familyBeaconPort = 47124;
 
-/// How often a family device says it is here.
-const familyBeaconInterval = Duration(seconds: 10);
+/// How often a family device says it is here; the family screen shows a
+/// device as away after about four missed rounds.
+const familyBeaconInterval = Duration(seconds: 5);
 
 /// "A device of family [familyTag] is at [ip]:[port]" (spec 7.2). Only a
 /// tag of the family id is sent – no names, no data; [activeUid] says who

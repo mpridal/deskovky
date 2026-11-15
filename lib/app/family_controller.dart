@@ -85,7 +85,7 @@ class FamilyController extends ChangeNotifier {
     required this.net,
     required this.stats,
     this.resyncAfter = const Duration(minutes: 1),
-    this.presence = const Duration(seconds: 35),
+    this.presence = const Duration(seconds: 20),
     this.systemDeviceName,
   });
 
@@ -108,7 +108,7 @@ class FamilyController extends ChangeNotifier {
   final Duration resyncAfter;
 
   /// A device not heard for this long is no longer on the Wi-Fi (it says it
-  /// is here every 10 s).
+  /// is here every 5 s).
   final Duration presence;
 
   FamilyStore get store => FamilyStore.of(db);
@@ -206,6 +206,8 @@ class FamilyController extends ChangeNotifier {
     _peers[beacon.deviceId] = beacon;
     _heardAt[beacon.deviceId] = DateTime.now();
     if (isNew || before.activeUid != beacon.activeUid || before.busy != beacon.busy) _notify();
+    // A device that just came: say hello back now, not at the next round.
+    if (isNew) unawaited(_announceAgain());
     _presenceTimer ??= Timer.periodic(presence ~/ 2, (_) => _forgetQuiet());
     final last = _lastSync[beacon.deviceId];
     if (isNew || last == null || DateTime.now().difference(last) > resyncAfter) _syncWith(beacon);

@@ -57,17 +57,38 @@ bool _isPrivate(String ip) {
 }
 
 /// Android drops Wi-Fi broadcast packets unless an app holds a multicast
-/// lock; held only while the join screen looks for rooms. A no-op elsewhere.
+/// lock; held while the join screen looks for rooms and while the family
+/// listens for its devices. A no-op elsewhere.
+///
+/// The app has one lock for all listeners, so it is counted: it goes only
+/// when the last listener releases it. (Before, closing the join screen
+/// released the family's lock too and devices looked offline.)
 class MulticastLock {
   const MulticastLock();
 
   static const _channel = MethodChannel('deskovky/multicast');
 
-  Future<bool> acquire() => _call('acquire');
+  static var _holders = 0;
 
-  Future<bool> release() => _call('release');
+  /// Stands in for Android in tests.
+  @visibleForTesting
+  static Future<bool> Function(String method)? debugPlatform;
+
+  Future<bool> acquire() {
+    _holders++;
+    return _call('acquire');
+  }
+
+  Future<bool> release() async {
+    if (_holders == 0) return false;
+    _holders--;
+    if (_holders > 0) return true;
+    return _call('release');
+  }
 
   Future<bool> _call(String method) async {
+    final fake = debugPlatform;
+    if (fake != null) return fake(method);
     if (!Platform.isAndroid) return false;
     try {
       return await _channel.invokeMethod<bool>(method) ?? false;
