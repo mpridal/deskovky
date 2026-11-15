@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:deskovky/core/avatar/avatar_spec.dart';
 import 'package:deskovky/core/game/ai_player.dart';
+import 'package:deskovky/core/l10n/locale_resolution.dart';
 import 'package:deskovky/core/game/difficulty.dart';
 import 'package:deskovky/core/game/game_config.dart';
 import 'package:deskovky/core/game/game_module.dart';
@@ -55,7 +56,7 @@ void _manifest<S>(GameModule<S> m) {
     expect(m.musicTrack, id, reason: 'music is music/<id>.ogg');
   });
 
-  test('every text exists in Czech, English and Spanish', () {
+  test('every text exists in every app language', () {
     final t = m.texts;
     final used = <String>{
       m.titleKey, m.descriptionKey, m.rulesKey,
@@ -66,9 +67,10 @@ void _manifest<S>(GameModule<S> m) {
     };
     for (final key in {...used, ...t.keys}) {
       expect(key, startsWith('$id.'), reason: key);
-      for (final language in [t.cs, t.en, t.es]) {
-        expect(language[key], isNotNull, reason: '$key is missing in a language');
-        expect(language[key]!.trim(), isNotEmpty, reason: key);
+      for (final locale in supportedAppLocales) {
+        final language = t.language(locale.languageCode);
+        expect(language[key], isNotNull, reason: '$key is missing in ${locale.languageCode}');
+        expect(language[key]!.trim(), isNotEmpty, reason: '$key in ${locale.languageCode}');
       }
     }
   });

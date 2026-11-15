@@ -14,6 +14,8 @@ abstract final class AppTypography {
 
   static TextStyle _style(String family, double size, FontWeight weight, Color? color) => TextStyle(
         fontFamily: family,
+        // Baloo 2 has no Cyrillic: Ukrainian headings fall back to Nunito.
+        fontFamilyFallback: const ['Nunito'],
         fontSize: size,
         fontWeight: weight,
         fontVariations: [FontVariation.weight(weight.value.toDouble())],

@@ -1,5 +1,7 @@
+import 'l10n/flag_names.dart';
+
 /// The "Vlajky" set of Pexeso: every state – the 193 UN members plus the
-/// Vatican and Palestine – with its name in Czech, English and Spanish.
+/// Vatican and Palestine – with its name in every app language.
 /// Flag pictures are `assets/games/memory/cards/flags/<code>.png` (flagcdn.com,
 /// public domain, see `assets/games/memory/CREDITS.json`).
 ///
@@ -19,7 +21,8 @@ class MemoryFlag {
   String name(String language) => switch (language) {
     'cs' => cs,
     'es' => es,
-    _ => en,
+    'en' => en,
+    _ => memoryFlagNamesMore[language]?[code] ?? en,
   };
 }
 

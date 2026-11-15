@@ -41,9 +41,13 @@ void main() {
 
     await tester.tap(row);
     await tester.pumpAndSettle();
+    final sheetList = find.descendant(of: find.byType(BottomSheet), matching: find.byType(Scrollable)).first;
     for (final l in supportedAppLocales) {
+      await tester.scrollUntilVisible(find.byKey(ValueKey('language_${l.languageCode}')), 60, scrollable: sheetList);
       expect(find.byKey(ValueKey('language_${l.languageCode}')), findsOneWidget);
     }
+    await tester.scrollUntilVisible(find.byKey(const ValueKey('language_es')), -60, scrollable: sheetList);
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('language_es')));
     await _settle(tester);
     expect(find.text('Ajustes'), findsWidgets);

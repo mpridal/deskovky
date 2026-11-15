@@ -448,7 +448,7 @@
   "donationsKidsTitle": "Pro děti od malička",
   "donationsKidsText": "Roboti na tři obtížnosti, pravidla s obrázky, velká tlačítka a rodičovská zóna.",
   "donationsEveryoneTitle": "Pro každého",
-  "donationsEveryoneText": "Funguje se čtečkou obrazovky, má značky pro barvoslepé a mluví česky, anglicky i španělsky.",
+  "donationsEveryoneText": "Funguje se čtečkou obrazovky, má značky pro barvoslepé a mluví deseti jazyky.",
   "donationsGrowingTitle": "Pořád nové hry",
   "donationsGrowingText": "Devět her a další přibývají – i podle přání dětí.",
   "donationsWhy": "Příspěvek pomůže zaplatit čas na vývoj nových her a poplatky za Google Play.",
@@ -458,5 +458,12 @@
   "familyRename": "Přejmenovat zařízení",
   "familyOnline": "Deskovky běží",
   "familyOffline": "Není k dispozici",
-  "familyPlaysNow": "Teď hraje {name}"
+  "familyPlaysNow": "Teď hraje {name}",
+  "settingsShareApp": "Stáhnout do jiného zařízení",
+  "shareAppTitle": "Deskovky do dalšího zařízení",
+  "shareAppHint": "Naskenuj kód fotoaparátem druhého telefonu nebo tabletu. Otevře se stránka s nejnovější verzí: stáhni soubor deskovky-….apk a otevři ho.",
+  "inviteToAllDevices": "Pozvánka přijde na všechna zařízení v síti",
+  "parentsReportBug": "Nahlásit chybu",
+  "parentsReportBugHint": "Otevře formulář na GitHubu, kam chybu popíšeš. Hlášení je veřejné: nepiš do něj jména dětí ani jiné osobní údaje.",
+  "bugReportNoBrowser": "Prohlížeč se nepodařilo otevřít. Chybu můžeš nahlásit na adrese:"
 }

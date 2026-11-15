@@ -1,12 +1,18 @@
 import '../../core/game/game_texts.dart';
+import 'l10n/sample_sk.dart';
+import 'l10n/sample_de.dart';
+import 'l10n/sample_pl.dart';
+import 'l10n/sample_pt.dart';
+import 'l10n/sample_fr.dart';
+import 'l10n/sample_it.dart';
+import 'l10n/sample_uk.dart';
 
 /// Texts of the sample game "Hádej číslo" (spec 8: texts in the game folder).
 const sampleTexts = GameTexts(
   cs: {
     'sample.title': 'Hádej číslo',
     'sample.description': 'Kdo dřív uhodne tajné číslo?',
-    'sample.rules':
-        'Hra skryje číslo. Hráči se střídají v tipování. Po každém tipu se dozvíte, jestli je tajné číslo větší, nebo menší. Kdo ho trefí, vyhrává!',
+    'sample.rules': 'Hra skryje číslo. Hráči se střídají v tipování. Po každém tipu se dozvíte, jestli je tajné číslo větší, nebo menší. Kdo ho trefí, vyhrává!',
     'sample.option.range': 'Rozsah čísel',
     'sample.higher': 'Víc!',
     'sample.lower': 'Míň!',
@@ -20,8 +26,7 @@ const sampleTexts = GameTexts(
   en: {
     'sample.title': 'Guess the number',
     'sample.description': 'Who guesses the secret number first?',
-    'sample.rules':
-        'The game hides a number. Players take turns guessing. After each guess you learn whether the secret number is higher or lower. Whoever hits it wins!',
+    'sample.rules': 'The game hides a number. Players take turns guessing. After each guess you learn whether the secret number is higher or lower. Whoever hits it wins!',
     'sample.option.range': 'Number range',
     'sample.higher': 'Higher!',
     'sample.lower': 'Lower!',
@@ -35,8 +40,7 @@ const sampleTexts = GameTexts(
   es: {
     'sample.title': 'Adivina el número',
     'sample.description': '¿Quién adivina primero el número secreto?',
-    'sample.rules':
-        'El juego esconde un número. Los jugadores adivinan por turnos. Después de cada intento sabréis si el número secreto es mayor o menor. ¡Gana quien lo acierte!',
+    'sample.rules': 'El juego esconde un número. Los jugadores adivinan por turnos. Después de cada intento sabréis si el número secreto es mayor o menor. ¡Gana quien lo acierte!',
     'sample.option.range': 'Rango de números',
     'sample.higher': '¡Más!',
     'sample.lower': '¡Menos!',
@@ -46,5 +50,14 @@ const sampleTexts = GameTexts(
     'sample.step1': 'Toca un número.',
     'sample.step2': 'La flecha te dice: ¿más o menos?',
     'sample.firstHint': 'Toca el número que adivinas.',
+  },
+  more: {
+    'sk': sampleTextsSk,
+    'de': sampleTextsDe,
+    'pl': sampleTextsPl,
+    'pt': sampleTextsPt,
+    'fr': sampleTextsFr,
+    'it': sampleTextsIt,
+    'uk': sampleTextsUk,
   },
 );

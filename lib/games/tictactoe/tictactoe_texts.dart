@@ -1,12 +1,18 @@
 import '../../core/game/game_texts.dart';
+import 'l10n/tictactoe_sk.dart';
+import 'l10n/tictactoe_de.dart';
+import 'l10n/tictactoe_pl.dart';
+import 'l10n/tictactoe_pt.dart';
+import 'l10n/tictactoe_fr.dart';
+import 'l10n/tictactoe_it.dart';
+import 'l10n/tictactoe_uk.dart';
 
 /// Texts of Piškvorky in Czech, English and Spanish (keys `tictactoe.*`).
 const tictactoeTexts = GameTexts(
   cs: {
     'tictactoe.title': 'Piškvorky',
     'tictactoe.description': 'Kdo první složí řadu?',
-    'tictactoe.rules':
-        'Hráči střídavě kladou křížky a kolečka. Vyhrává, kdo první složí řadu – na desce 3×3 tři v řadě, na velké desce pět (nebo víc). Řada může být vodorovně, svisle i šikmo. Plná deska je remíza.',
+    'tictactoe.rules': 'Hráči střídavě kladou křížky a kolečka. Vyhrává, kdo první složí řadu – na desce 3×3 tři v řadě, na velké desce pět (nebo víc). Řada může být vodorovně, svisle i šikmo. Plná deska je remíza.',
     'tictactoe.option.board': 'Deska',
     'tictactoe.option.start': 'Začíná',
     'tictactoe.option.start.random': 'náhodně',
@@ -35,8 +41,7 @@ const tictactoeTexts = GameTexts(
   en: {
     'tictactoe.title': 'Tic-tac-toe',
     'tictactoe.description': 'Who makes a row first?',
-    'tictactoe.rules':
-        'Players take turns placing crosses and noughts. The first to make a row wins – three in a row on 3×3, five (or more) on the big boards. Rows count across, down and diagonally. A full board is a draw.',
+    'tictactoe.rules': 'Players take turns placing crosses and noughts. The first to make a row wins – three in a row on 3×3, five (or more) on the big boards. Rows count across, down and diagonally. A full board is a draw.',
     'tictactoe.option.board': 'Board',
     'tictactoe.option.start': 'Who starts',
     'tictactoe.option.start.random': 'random',
@@ -65,8 +70,7 @@ const tictactoeTexts = GameTexts(
   es: {
     'tictactoe.title': 'Tres en raya',
     'tictactoe.description': '¿Quién hace primero una línea?',
-    'tictactoe.rules':
-        'Los jugadores ponen por turnos cruces y círculos. Gana quien primero hace una línea: tres en el tablero de 3×3, cinco (o más) en los grandes. Vale en horizontal, vertical y diagonal. Tablero lleno es empate.',
+    'tictactoe.rules': 'Los jugadores ponen por turnos cruces y círculos. Gana quien primero hace una línea: tres en el tablero de 3×3, cinco (o más) en los grandes. Vale en horizontal, vertical y diagonal. Tablero lleno es empate.',
     'tictactoe.option.board': 'Tablero',
     'tictactoe.option.start': 'Empieza',
     'tictactoe.option.start.random': 'al azar',
@@ -91,5 +95,14 @@ const tictactoeTexts = GameTexts(
     'tictactoe.badge.blitz.description': 'Gana en un tablero grande con 9 jugadas o menos.',
     'tictactoe.badge.master.title': 'Maestro del tres en raya',
     'tictactoe.badge.master.description': 'Gana al robot difícil en el tablero de 15×15.',
+  },
+  more: {
+    'sk': tictactoeTextsSk,
+    'de': tictactoeTextsDe,
+    'pl': tictactoeTextsPl,
+    'pt': tictactoeTextsPt,
+    'fr': tictactoeTextsFr,
+    'it': tictactoeTextsIt,
+    'uk': tictactoeTextsUk,
   },
 );

@@ -1,12 +1,18 @@
 import '../../core/game/game_texts.dart';
+import 'l10n/ships_sk.dart';
+import 'l10n/ships_de.dart';
+import 'l10n/ships_pl.dart';
+import 'l10n/ships_pt.dart';
+import 'l10n/ships_fr.dart';
+import 'l10n/ships_it.dart';
+import 'l10n/ships_uk.dart';
 
 /// Texts of Lodě in Czech, English and Spanish (keys `ships.*`).
 const shipsTexts = GameTexts(
   cs: {
     'ships.title': 'Lodě',
     'ships.description': 'Najdi a potop soupeřovu flotilu',
-    'ships.rules':
-        'Každý hráč si tajně rozmístí svou flotilu na své moře. Lodě jsou rovné a nesmí se dotýkat, ani rohem. Pak se střídáte: klepneš na pole v moři soupeře a dozvíš se, jestli je to voda, nebo zásah. Když zasáhneš všechna pole jedné lodi, je potopená a pole kolem ní se označí jako voda. Po zásahu většinou střílíš znovu. Vyhrává ten, kdo první potopí celou soupeřovu flotilu.',
+    'ships.rules': 'Každý hráč si tajně rozmístí svou flotilu na své moře. Lodě jsou rovné a nesmí se dotýkat, ani rohem. Pak se střídáte: klepneš na pole v moři soupeře a dozvíš se, jestli je to voda, nebo zásah. Když zasáhneš všechna pole jedné lodi, je potopená a pole kolem ní se označí jako voda. Po zásahu většinou střílíš znovu. Vyhrává ten, kdo první potopí celou soupeřovu flotilu.',
     'ships.option.size': 'Moře',
     'ships.option.size.8': '8 × 8 (4 lodě)',
     'ships.option.size.10': '10 × 10 (5 lodí)',
@@ -50,8 +56,7 @@ const shipsTexts = GameTexts(
   en: {
     'ships.title': 'Sea Battle',
     'ships.description': 'Find and sink the other fleet',
-    'ships.rules':
-        'Each player secretly places their fleet on their own sea. Ships are straight and must not touch, not even at a corner. Then you take turns: tap a square in the other sea and find out whether it is water or a hit. When every square of a ship is hit, it is sunk and the squares around it are marked as water. After a hit you usually shoot again. Whoever sinks the whole other fleet first wins.',
+    'ships.rules': 'Each player secretly places their fleet on their own sea. Ships are straight and must not touch, not even at a corner. Then you take turns: tap a square in the other sea and find out whether it is water or a hit. When every square of a ship is hit, it is sunk and the squares around it are marked as water. After a hit you usually shoot again. Whoever sinks the whole other fleet first wins.',
     'ships.option.size': 'Sea',
     'ships.option.size.8': '8 × 8 (4 ships)',
     'ships.option.size.10': '10 × 10 (5 ships)',
@@ -95,8 +100,7 @@ const shipsTexts = GameTexts(
   es: {
     'ships.title': 'Batalla naval',
     'ships.description': 'Encuentra y hunde la flota rival',
-    'ships.rules':
-        'Cada jugador coloca en secreto su flota en su propio mar. Los barcos son rectos y no se pueden tocar, ni siquiera por una esquina. Luego os turnáis: toca una casilla del mar rival y descubre si es agua o un tocado. Cuando todas las casillas de un barco están tocadas, está hundido y las casillas de alrededor se marcan como agua. Después de un tocado normalmente vuelves a disparar. Gana quien hunde primero toda la flota rival.',
+    'ships.rules': 'Cada jugador coloca en secreto su flota en su propio mar. Los barcos son rectos y no se pueden tocar, ni siquiera por una esquina. Luego os turnáis: toca una casilla del mar rival y descubre si es agua o un tocado. Cuando todas las casillas de un barco están tocadas, está hundido y las casillas de alrededor se marcan como agua. Después de un tocado normalmente vuelves a disparar. Gana quien hunde primero toda la flota rival.',
     'ships.option.size': 'Mar',
     'ships.option.size.8': '8 × 8 (4 barcos)',
     'ships.option.size.10': '10 × 10 (5 barcos)',
@@ -136,5 +140,14 @@ const shipsTexts = GameTexts(
     'ships.badge.untouched.description': 'Gana sin perder ni un solo barco.',
     'ships.badge.admiral.title': 'Almirante',
     'ships.badge.admiral.description': 'Gana a la Batalla naval 20 veces.',
+  },
+  more: {
+    'sk': shipsTextsSk,
+    'de': shipsTextsDe,
+    'pl': shipsTextsPl,
+    'pt': shipsTextsPt,
+    'fr': shipsTextsFr,
+    'it': shipsTextsIt,
+    'uk': shipsTextsUk,
   },
 );

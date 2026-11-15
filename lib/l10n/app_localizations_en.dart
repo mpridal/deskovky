@@ -1546,7 +1546,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get donationsEveryoneText =>
-      'Works with a screen reader, has marks for colour-blind players and speaks Czech, English and Spanish.';
+      'Works with a screen reader, has marks for colour-blind players and speaks ten languages.';
 
   @override
   String get donationsGrowingTitle => 'New games keep coming';
@@ -1582,4 +1582,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String familyPlaysNow(String name) {
     return '$name is playing now';
   }
+
+  @override
+  String get settingsShareApp => 'Download to another device';
+
+  @override
+  String get shareAppTitle => 'Deskovky on another device';
+
+  @override
+  String get shareAppHint =>
+      'Scan the code with the camera of the other phone or tablet. The page with the newest version opens: download the file deskovky-….apk and open it.';
+
+  @override
+  String get inviteToAllDevices =>
+      'The invitation goes to every device on the Wi-Fi';
+
+  @override
+  String get parentsReportBug => 'Report a bug';
+
+  @override
+  String get parentsReportBugHint =>
+      'Opens a form on GitHub where you describe the bug. Reports are public: do not write children’s names or other personal details.';
+
+  @override
+  String get bugReportNoBrowser =>
+      'The browser could not be opened. You can report the bug at:';
 }

@@ -963,7 +963,7 @@
   "donationsKidsTitle": "For the youngest too",
   "donationsKidsText": "Robots on three levels, rules with pictures, big buttons and a parents’ corner.",
   "donationsEveryoneTitle": "For everyone",
-  "donationsEveryoneText": "Works with a screen reader, has marks for colour-blind players and speaks Czech, English and Spanish.",
+  "donationsEveryoneText": "Works with a screen reader, has marks for colour-blind players and speaks ten languages.",
   "donationsGrowingTitle": "New games keep coming",
   "donationsGrowingText": "Nine games and more on the way – some wished for by children.",
   "donationsWhy": "A contribution helps pay for the time to make new games and for the Google Play fees.",
@@ -974,5 +974,12 @@
   "familyOnline": "Deskovky is running",
   "familyOffline": "Not available",
   "familyPlaysNow": "{name} is playing now",
-  "@familyPlaysNow": {"placeholders": {"name": {"type": "String"}}}
+  "@familyPlaysNow": {"placeholders": {"name": {"type": "String"}}},
+  "settingsShareApp": "Download to another device",
+  "shareAppTitle": "Deskovky on another device",
+  "shareAppHint": "Scan the code with the camera of the other phone or tablet. The page with the newest version opens: download the file deskovky-….apk and open it.",
+  "inviteToAllDevices": "The invitation goes to every device on the Wi-Fi",
+  "parentsReportBug": "Report a bug",
+  "parentsReportBugHint": "Opens a form on GitHub where you describe the bug. Reports are public: do not write children’s names or other personal details.",
+  "bugReportNoBrowser": "The browser could not be opened. You can report the bug at:"
 }

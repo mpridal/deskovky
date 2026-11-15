@@ -159,6 +159,9 @@ class HostRoomScreen extends ConsumerWidget {
     // Who plays now on another device first, the others after (their
     // invitation goes to every family device on the Wi-Fi).
     final elsewhere = family.inFamily ? family.playingElsewhere : const <String, Object>{};
+    // Some family device on the Wi-Fi: an invitation reaches it even when
+    // the person plays nowhere now.
+    final familyOnline = family.inFamily && family.peers.isNotEmpty;
     final invitable = [
       if (family.inFamily && slot is OpenSlot)
         for (final p in profiles)
@@ -185,16 +188,7 @@ class HostRoomScreen extends ConsumerWidget {
                 else ...[
                   if (slot is! RobotSlot)
                     tile(RobotAvatar(color: AppColors.players[index % 4], size: 36), l10n.slotMakeRobot, 'robot'),
-                  if (profiles.any((p) => !seated.contains(p.id)))
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(l10n.slotAddLocal, style: AppTypography.caption(color: AppColors.wood)),
-                      ),
-                    ),
-                  for (final p in profiles)
-                    if (!seated.contains(p.id)) tile(AvatarView(spec: p.avatar, size: 36), p.name, p),
+                  // A robot first, then the family on their own devices, then people of this device.
                   if (invitable.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
@@ -209,14 +203,26 @@ class HostRoomScreen extends ConsumerWidget {
                       leading: AvatarView(spec: p.avatar, size: 36),
                       title: Text(p.name, style: AppTypography.body(color: AppColors.ink)),
                       subtitle: Text(
-                        elsewhere.containsKey(p.uid) ? l10n.playerActiveTag : l10n.inviteNotHere,
+                        elsewhere.containsKey(p.uid)
+                            ? l10n.playerActiveTag
+                            : (familyOnline ? l10n.inviteToAllDevices : l10n.inviteNotHere),
                         style: AppTypography.caption(
-                          color: elsewhere.containsKey(p.uid) ? AppColors.felt : AppColors.woodLight,
+                          color: elsewhere.containsKey(p.uid) || familyOnline ? AppColors.felt : AppColors.woodLight,
                         ),
                       ),
                       trailing: const Icon(Icons.send_to_mobile, color: AppColors.wood),
                       onTap: () => Navigator.of(context).pop(('invite', p)),
                     ),
+                  if (profiles.any((p) => !seated.contains(p.id)))
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(l10n.slotAddLocal, style: AppTypography.caption(color: AppColors.wood)),
+                      ),
+                    ),
+                  for (final p in profiles)
+                    if (!seated.contains(p.id)) tile(AvatarView(spec: p.avatar, size: 36), p.name, p),
                   if (slot is! OpenSlot)
                     tile(const Icon(Icons.person_add_alt, color: AppColors.ink), l10n.slotLeaveOpen, 'open'),
                 ],

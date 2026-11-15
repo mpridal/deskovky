@@ -1551,7 +1551,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get donationsEveryoneText =>
-      'Funciona con lector de pantalla, tiene marcas para daltónicos y habla checo, inglés y español.';
+      'Funciona con lector de pantalla, tiene marcas para daltónicos y habla diez idiomas.';
 
   @override
   String get donationsGrowingTitle => 'Siempre juegos nuevos';
@@ -1587,4 +1587,29 @@ class AppLocalizationsEs extends AppLocalizations {
   String familyPlaysNow(String name) {
     return 'Ahora juega $name';
   }
+
+  @override
+  String get settingsShareApp => 'Descargar en otro dispositivo';
+
+  @override
+  String get shareAppTitle => 'Deskovky en otro dispositivo';
+
+  @override
+  String get shareAppHint =>
+      'Escanea el código con la cámara del otro teléfono o tableta. Se abre la página con la versión más reciente: descarga el archivo deskovky-….apk y ábrelo.';
+
+  @override
+  String get inviteToAllDevices =>
+      'La invitación llega a todos los dispositivos de la red';
+
+  @override
+  String get parentsReportBug => 'Informar de un error';
+
+  @override
+  String get parentsReportBugHint =>
+      'Abre un formulario en GitHub donde describes el error. Los informes son públicos: no escribas nombres de niños ni otros datos personales.';
+
+  @override
+  String get bugReportNoBrowser =>
+      'No se pudo abrir el navegador. Puedes informar del error en:';
 }

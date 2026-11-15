@@ -1,12 +1,18 @@
 import '../../core/game/game_texts.dart';
+import 'l10n/matches_sk.dart';
+import 'l10n/matches_de.dart';
+import 'l10n/matches_pl.dart';
+import 'l10n/matches_pt.dart';
+import 'l10n/matches_fr.dart';
+import 'l10n/matches_it.dart';
+import 'l10n/matches_uk.dart';
 
 /// Texts of Sirky in Czech, English and Spanish (keys `matches.*`).
 const matchesTexts = GameTexts(
   cs: {
     'matches.title': 'Sirky',
     'matches.description': 'Kdo vezme poslední sirku?',
-    'matches.rules':
-        'Na stole leží tři řady sirek: 3, 5 a 7. Hráči se střídají. V tahu vezmeš libovolný počet sirek (aspoň jednu), ale jen z jedné řady. Kdo vezme poslední sirku, prohrává.',
+    'matches.rules': 'Na stole leží tři řady sirek: 3, 5 a 7. Hráči se střídají. V tahu vezmeš libovolný počet sirek (aspoň jednu), ale jen z jedné řady. Kdo vezme poslední sirku, prohrává.',
     'matches.option.start': 'Začíná',
     'matches.option.start.random': 'náhodně',
     'matches.option.start.first': 'vždy hráč 1',
@@ -32,8 +38,7 @@ const matchesTexts = GameTexts(
   en: {
     'matches.title': 'Matches',
     'matches.description': 'Who takes the last match?',
-    'matches.rules':
-        'Three rows of matches lie on the table: 3, 5 and 7. Players take turns. On your turn take any number of matches (at least one), but from one row only. Whoever takes the last match loses.',
+    'matches.rules': 'Three rows of matches lie on the table: 3, 5 and 7. Players take turns. On your turn take any number of matches (at least one), but from one row only. Whoever takes the last match loses.',
     'matches.option.start': 'Who starts',
     'matches.option.start.random': 'random',
     'matches.option.start.first': 'always player 1',
@@ -59,8 +64,7 @@ const matchesTexts = GameTexts(
   es: {
     'matches.title': 'Cerillas',
     'matches.description': '¿Quién se lleva la última cerilla?',
-    'matches.rules':
-        'En la mesa hay tres filas de cerillas: 3, 5 y 7. Los jugadores se turnan. En tu turno coges las cerillas que quieras (al menos una), pero de una sola fila. Quien coge la última cerilla pierde.',
+    'matches.rules': 'En la mesa hay tres filas de cerillas: 3, 5 y 7. Los jugadores se turnan. En tu turno coges las cerillas que quieras (al menos una), pero de una sola fila. Quien coge la última cerilla pierde.',
     'matches.option.start': 'Empieza',
     'matches.option.start.random': 'al azar',
     'matches.option.start.first': 'siempre el jugador 1',
@@ -82,5 +86,14 @@ const matchesTexts = GameTexts(
     'matches.badge.flawless.description': 'Gana dejando al rival en posición perdedora con cada jugada.',
     'matches.badge.collector.title': 'Cerillero',
     'matches.badge.collector.description': 'Gana a las Cerillas 25 veces.',
+  },
+  more: {
+    'sk': matchesTextsSk,
+    'de': matchesTextsDe,
+    'pl': matchesTextsPl,
+    'pt': matchesTextsPt,
+    'fr': matchesTextsFr,
+    'it': matchesTextsIt,
+    'uk': matchesTextsUk,
   },
 );

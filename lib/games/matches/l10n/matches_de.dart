@@ -1,0 +1,28 @@
+/// Deutsch texts of the game `matches` (keys `matches.*`).
+const matchesTextsDe = <String, String>{
+  'matches.badge.collector.description': 'Gewinne Streichhölzer 25-mal.',
+  'matches.badge.collector.title': 'Hölzchen-Profi',
+  'matches.badge.first.description': 'Gewinne Streichhölzer zum ersten Mal.',
+  'matches.badge.first.title': 'Erster Funke',
+  'matches.badge.flawless.description':
+      'Gewinne so, dass jeder deiner Züge den anderen in eine Verliererstellung bringt.',
+  'matches.badge.flawless.title': 'Fehlerfrei',
+  'matches.badge.master.description': 'Besiege den schweren Roboter.',
+  'matches.badge.master.title': 'Streichholz-Meister',
+  'matches.description': 'Wer nimmt das letzte Streichholz?',
+  'matches.firstHint': 'Tippe auf Streichhölzer in einer Reihe, dann auf Nehmen',
+  'matches.match': 'Streichholz, Reihe {row}',
+  'matches.match.selected': 'Ausgewähltes Streichholz, Reihe {row}',
+  'matches.option.start': 'Wer beginnt',
+  'matches.option.start.first': 'immer Spieler 1',
+  'matches.option.start.random': 'zufällig',
+  'matches.pile': 'Spieler {seat} hat {count} genommen',
+  'matches.rules': 'Auf dem Tisch liegen drei Reihen Streichhölzer: 3, 5 und 7. Die Spieler sind abwechselnd dran. Wenn du dran bist, nimm beliebig viele Streichhölzer (mindestens eins), aber nur aus einer Reihe. Wer das letzte Streichholz nimmt, verliert.',
+  'matches.step1': 'Es gibt Reihen mit 3, 5 und 7 Streichhölzern.',
+  'matches.step2': 'Nimm so viele du willst, aus einer Reihe.',
+  'matches.step3': 'Wer das letzte nimmt, verliert.',
+  'matches.take': 'Nehmen ({count})',
+  'matches.title': 'Streichhölzer',
+  'matches.turnHint': '{name}, nimm Streichhölzer aus einer Reihe',
+  'matches.turnHint.last': '{name}, nur noch ein Streichholz ist übrig…',
+};

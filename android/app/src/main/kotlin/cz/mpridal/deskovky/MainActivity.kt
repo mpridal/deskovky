@@ -45,6 +45,21 @@ class MainActivity : FlutterActivity() {
                         else "${Build.MANUFACTURER.replaceFirstChar { it.uppercase() }} ${Build.MODEL}"
                     result.success(if (given.isNullOrBlank()) model else given)
                 }
+                "os" -> result.success("Android ${Build.VERSION.RELEASE} (SDK ${Build.VERSION.SDK_INT})")
+                // The bug report form opens in the browser.
+                "open" -> {
+                    val url = call.arguments as? String
+                    if (url == null || !(url.startsWith("https://"))) {
+                        result.success(false)
+                    } else {
+                        try {
+                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                            result.success(true)
+                        } catch (e: Exception) {
+                            result.success(false)
+                        }
+                    }
+                }
                 else -> result.notImplemented()
             }
         }

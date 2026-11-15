@@ -1,4 +1,11 @@
 import '../../core/game/game_texts.dart';
+import 'l10n/checkers_sk.dart';
+import 'l10n/checkers_de.dart';
+import 'l10n/checkers_pl.dart';
+import 'l10n/checkers_pt.dart';
+import 'l10n/checkers_fr.dart';
+import 'l10n/checkers_it.dart';
+import 'l10n/checkers_uk.dart';
 
 /// Texts of Dáma in Czech, English and Spanish (keys `checkers.*`).
 const checkersTexts = GameTexts(
@@ -151,5 +158,14 @@ const checkersTexts = GameTexts(
     'checkers.badge.grandmaster.description': 'Gana al robot difícil.',
     'checkers.badge.international.title': 'Trotamundos',
     'checkers.badge.international.description': 'Gana en el tablero internacional de 10×10.',
+  },
+  more: {
+    'sk': checkersTextsSk,
+    'de': checkersTextsDe,
+    'pl': checkersTextsPl,
+    'pt': checkersTextsPt,
+    'fr': checkersTextsFr,
+    'it': checkersTextsIt,
+    'uk': checkersTextsUk,
   },
 );

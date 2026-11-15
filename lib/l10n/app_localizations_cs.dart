@@ -1556,7 +1556,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get donationsEveryoneText =>
-      'Funguje se čtečkou obrazovky, má značky pro barvoslepé a mluví česky, anglicky i španělsky.';
+      'Funguje se čtečkou obrazovky, má značky pro barvoslepé a mluví deseti jazyky.';
 
   @override
   String get donationsGrowingTitle => 'Pořád nové hry';
@@ -1592,4 +1592,28 @@ class AppLocalizationsCs extends AppLocalizations {
   String familyPlaysNow(String name) {
     return 'Teď hraje $name';
   }
+
+  @override
+  String get settingsShareApp => 'Stáhnout do jiného zařízení';
+
+  @override
+  String get shareAppTitle => 'Deskovky do dalšího zařízení';
+
+  @override
+  String get shareAppHint =>
+      'Naskenuj kód fotoaparátem druhého telefonu nebo tabletu. Otevře se stránka s nejnovější verzí: stáhni soubor deskovky-….apk a otevři ho.';
+
+  @override
+  String get inviteToAllDevices => 'Pozvánka přijde na všechna zařízení v síti';
+
+  @override
+  String get parentsReportBug => 'Nahlásit chybu';
+
+  @override
+  String get parentsReportBugHint =>
+      'Otevře formulář na GitHubu, kam chybu popíšeš. Hlášení je veřejné: nepiš do něj jména dětí ani jiné osobní údaje.';
+
+  @override
+  String get bugReportNoBrowser =>
+      'Prohlížeč se nepodařilo otevřít. Chybu můžeš nahlásit na adrese:';
 }

@@ -6,8 +6,15 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_cs.dart';
+import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_es.dart';
+import 'app_localizations_fr.dart';
+import 'app_localizations_it.dart';
+import 'app_localizations_pl.dart';
+import 'app_localizations_pt.dart';
+import 'app_localizations_sk.dart';
+import 'app_localizations_uk.dart';
 
 // ignore_for_file: type=lint
 
@@ -96,8 +103,15 @@ abstract class AppLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('cs'),
+    Locale('de'),
     Locale('en'),
     Locale('es'),
+    Locale('fr'),
+    Locale('it'),
+    Locale('pl'),
+    Locale('pt'),
+    Locale('sk'),
+    Locale('uk'),
   ];
 
   /// No description provided for @appTitle.
@@ -2791,7 +2805,7 @@ abstract class AppLocalizations {
   /// No description provided for @donationsEveryoneText.
   ///
   /// In en, this message translates to:
-  /// **'Works with a screen reader, has marks for colour-blind players and speaks Czech, English and Spanish.'**
+  /// **'Works with a screen reader, has marks for colour-blind players and speaks ten languages.'**
   String get donationsEveryoneText;
 
   /// No description provided for @donationsGrowingTitle.
@@ -2853,6 +2867,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name} is playing now'**
   String familyPlaysNow(String name);
+
+  /// No description provided for @settingsShareApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Download to another device'**
+  String get settingsShareApp;
+
+  /// No description provided for @shareAppTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Deskovky on another device'**
+  String get shareAppTitle;
+
+  /// No description provided for @shareAppHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan the code with the camera of the other phone or tablet. The page with the newest version opens: download the file deskovky-….apk and open it.'**
+  String get shareAppHint;
+
+  /// No description provided for @inviteToAllDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'The invitation goes to every device on the Wi-Fi'**
+  String get inviteToAllDevices;
+
+  /// No description provided for @parentsReportBug.
+  ///
+  /// In en, this message translates to:
+  /// **'Report a bug'**
+  String get parentsReportBug;
+
+  /// No description provided for @parentsReportBugHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens a form on GitHub where you describe the bug. Reports are public: do not write children’s names or other personal details.'**
+  String get parentsReportBugHint;
+
+  /// No description provided for @bugReportNoBrowser.
+  ///
+  /// In en, this message translates to:
+  /// **'The browser could not be opened. You can report the bug at:'**
+  String get bugReportNoBrowser;
 }
 
 class _AppLocalizationsDelegate
@@ -2865,8 +2921,18 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['cs', 'en', 'es'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>[
+    'cs',
+    'de',
+    'en',
+    'es',
+    'fr',
+    'it',
+    'pl',
+    'pt',
+    'sk',
+    'uk',
+  ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -2877,10 +2943,24 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   switch (locale.languageCode) {
     case 'cs':
       return AppLocalizationsCs();
+    case 'de':
+      return AppLocalizationsDe();
     case 'en':
       return AppLocalizationsEn();
     case 'es':
       return AppLocalizationsEs();
+    case 'fr':
+      return AppLocalizationsFr();
+    case 'it':
+      return AppLocalizationsIt();
+    case 'pl':
+      return AppLocalizationsPl();
+    case 'pt':
+      return AppLocalizationsPt();
+    case 'sk':
+      return AppLocalizationsSk();
+    case 'uk':
+      return AppLocalizationsUk();
   }
 
   throw FlutterError(

@@ -1,12 +1,18 @@
 import '../../core/game/game_texts.dart';
+import 'l10n/war_sk.dart';
+import 'l10n/war_de.dart';
+import 'l10n/war_pl.dart';
+import 'l10n/war_pt.dart';
+import 'l10n/war_fr.dart';
+import 'l10n/war_it.dart';
+import 'l10n/war_uk.dart';
 
 /// Texts of Válka in Czech, English and Spanish (keys `war.*`).
 const warTexts = GameTexts(
   cs: {
     'war.title': 'Válka',
     'war.description': 'Čí karta je vyšší?',
-    'war.rules':
-        'Karty se rozdají všem hráčům rubem nahoru. V každém kole otočí každý hráč svou horní kartu. Kdo má nejvyšší kartu, vezme si všechny karty ze stolu pod svůj balíček. Eso je nejvyšší, pak král, dáma, kluk, 10 a dál dolů. Když mají dva nejvyšší kartu stejnou, je válka: oba položí dvě karty rubem a jednu lícem nahoru a vyšší bere všechno. Kdo přijde o všechny karty, končí. Vyhrává ten, kdo má na konci nejvíc karet.',
+    'war.rules': 'Karty se rozdají všem hráčům rubem nahoru. V každém kole otočí každý hráč svou horní kartu. Kdo má nejvyšší kartu, vezme si všechny karty ze stolu pod svůj balíček. Eso je nejvyšší, pak král, dáma, kluk, 10 a dál dolů. Když mají dva nejvyšší kartu stejnou, je válka: oba položí dvě karty rubem a jednu lícem nahoru a vyšší bere všechno. Kdo přijde o všechny karty, končí. Vyhrává ten, kdo má na konci nejvíc karet.',
     'war.option.deck': 'Balíček',
     'war.option.deck.32': '32 karet',
     'war.option.deck.52': '52 karet',
@@ -40,8 +46,7 @@ const warTexts = GameTexts(
   en: {
     'war.title': 'War',
     'war.description': 'Whose card is higher?',
-    'war.rules':
-        'The cards are dealt face down to all players. Each round every player turns their top card. Whoever has the highest card takes all cards on the table to the bottom of their pile. The ace is highest, then king, queen, jack, 10 and on down. When the two highest cards are equal, it is war: both put two cards face down and one face up, and the higher one takes everything. Whoever runs out of cards is out. Whoever has the most cards at the end wins.',
+    'war.rules': 'The cards are dealt face down to all players. Each round every player turns their top card. Whoever has the highest card takes all cards on the table to the bottom of their pile. The ace is highest, then king, queen, jack, 10 and on down. When the two highest cards are equal, it is war: both put two cards face down and one face up, and the higher one takes everything. Whoever runs out of cards is out. Whoever has the most cards at the end wins.',
     'war.option.deck': 'Deck',
     'war.option.deck.32': '32 cards',
     'war.option.deck.52': '52 cards',
@@ -75,8 +80,7 @@ const warTexts = GameTexts(
   es: {
     'war.title': 'Guerra',
     'war.description': '¿De quién es la carta más alta?',
-    'war.rules':
-        'Las cartas se reparten boca abajo a todos los jugadores. En cada ronda cada jugador gira su carta de arriba. Quien tiene la carta más alta se lleva todas las cartas de la mesa debajo de su montón. El as es la más alta, luego el rey, la reina, la jota, el 10 y así hacia abajo. Si las dos cartas más altas son iguales, hay guerra: los dos ponen dos cartas boca abajo y una boca arriba, y la más alta se lo lleva todo. Quien se queda sin cartas sale del juego. Gana quien tiene más cartas al final.',
+    'war.rules': 'Las cartas se reparten boca abajo a todos los jugadores. En cada ronda cada jugador gira su carta de arriba. Quien tiene la carta más alta se lleva todas las cartas de la mesa debajo de su montón. El as es la más alta, luego el rey, la reina, la jota, el 10 y así hacia abajo. Si las dos cartas más altas son iguales, hay guerra: los dos ponen dos cartas boca abajo y una boca arriba, y la más alta se lo lleva todo. Quien se queda sin cartas sale del juego. Gana quien tiene más cartas al final.',
     'war.option.deck': 'Baraja',
     'war.option.deck.32': '32 cartas',
     'war.option.deck.52': '52 cartas',
@@ -106,5 +110,14 @@ const warTexts = GameTexts(
     'war.badge.comeback.description': 'Gana después de haberte quedado con tres cartas o menos.',
     'war.badge.veteran.title': 'General',
     'war.badge.veteran.description': 'Gana a la Guerra 20 veces.',
+  },
+  more: {
+    'sk': warTextsSk,
+    'de': warTextsDe,
+    'pl': warTextsPl,
+    'pt': warTextsPt,
+    'fr': warTextsFr,
+    'it': warTextsIt,
+    'uk': warTextsUk,
   },
 );

@@ -28,6 +28,21 @@ void main() {
     test('lists every key of every language', () {
       expect(texts.keys, {'demo.hello', 'demo.only'});
     });
+
+    test('more languages come from `more`: Slovak, German…', () {
+      const more = GameTexts(
+        en: {'demo.hello': 'Hi, {name}!'},
+        more: {
+          'sk': {'demo.hello': 'Ahoj, {name}!', 'demo.sk': 'len po slovensky'},
+          'de': {'demo.hello': 'Hallo, {name}!'},
+        },
+      );
+      expect(more.lookup('sk', 'demo.hello', {'name': 'Kuba'}), 'Ahoj, Kuba!');
+      expect(more.lookup('de_AT', 'demo.hello', {'name': 'Kuba'}), 'Hallo, Kuba!');
+      expect(more.lookup('pl', 'demo.hello', {'name': 'Kuba'}), 'Hi, Kuba!', reason: 'English when missing');
+      expect(more.language('sk'), containsPair('demo.sk', 'len po slovensky'));
+      expect(more.keys, {'demo.hello', 'demo.sk'});
+    });
   });
 
   group('gameText and badgeText read the game folders', () {

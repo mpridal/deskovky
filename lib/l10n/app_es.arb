@@ -448,7 +448,7 @@
   "donationsKidsTitle": "También para los más pequeños",
   "donationsKidsText": "Robots en tres niveles, reglas con dibujos, botones grandes y una zona de padres.",
   "donationsEveryoneTitle": "Para todos",
-  "donationsEveryoneText": "Funciona con lector de pantalla, tiene marcas para daltónicos y habla checo, inglés y español.",
+  "donationsEveryoneText": "Funciona con lector de pantalla, tiene marcas para daltónicos y habla diez idiomas.",
   "donationsGrowingTitle": "Siempre juegos nuevos",
   "donationsGrowingText": "Nueve juegos y vienen más, algunos a petición de los niños.",
   "donationsWhy": "Una aportación ayuda a pagar el tiempo para crear juegos nuevos y las tarifas de Google Play.",
@@ -458,5 +458,12 @@
   "familyRename": "Cambiar el nombre del dispositivo",
   "familyOnline": "Deskovky abierto",
   "familyOffline": "No disponible",
-  "familyPlaysNow": "Ahora juega {name}"
+  "familyPlaysNow": "Ahora juega {name}",
+  "settingsShareApp": "Descargar en otro dispositivo",
+  "shareAppTitle": "Deskovky en otro dispositivo",
+  "shareAppHint": "Escanea el código con la cámara del otro teléfono o tableta. Se abre la página con la versión más reciente: descarga el archivo deskovky-….apk y ábrelo.",
+  "inviteToAllDevices": "La invitación llega a todos los dispositivos de la red",
+  "parentsReportBug": "Informar de un error",
+  "parentsReportBugHint": "Abre un formulario en GitHub donde describes el error. Los informes son públicos: no escribas nombres de niños ni otros datos personales.",
+  "bugReportNoBrowser": "No se pudo abrir el navegador. Puedes informar del error en:"
 }

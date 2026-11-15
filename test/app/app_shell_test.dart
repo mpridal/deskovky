@@ -1,3 +1,4 @@
+import 'package:deskovky/core/l10n/locale_resolution.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -75,6 +76,6 @@ void main() {
   testWidgets('app title is localized from system locale', (tester) async {
     await pumpApp(tester, size: const Size(360, 740), locale: const Locale('es', 'MX'));
     expect(find.text('Ajustes'), findsOneWidget);
-    expect(tester.widget<MaterialApp>(find.byType(MaterialApp)).supportedLocales, hasLength(3));
+    expect(tester.widget<MaterialApp>(find.byType(MaterialApp)).supportedLocales, hasLength(supportedAppLocales.length));
   });
 }
