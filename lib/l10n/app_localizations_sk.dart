@@ -1373,7 +1373,7 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get familyRemoveMessage =>
-      'Zariadenie prestane dostávať profily a body. Dáta, ktoré už na ňom sú, mu zostanú.';
+      'Zariadenie zmizne zo zoznamu a prestane dostávať profily a body. Dáta, ktoré už má, mu zostanú. Je to len pre poriadok: so znalosťou rodinného QR kódu sa môže pripojiť znova. Úplne ho oddeliť ide len založením novej rodiny.';
 
   @override
   String get familyRemoved => 'odobrané';

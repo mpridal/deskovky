@@ -868,7 +868,7 @@
   "familyThisDevice": "this device",
   "familyNeverSynced": "not synced yet",
   "familyRemove": "Remove from the family",
-  "familyRemoveMessage": "The device will stop getting profiles and points. The data already on it stays there.",
+  "familyRemoveMessage": "The device leaves the list and stops getting profiles and points. Data it already has stays on it. This is just for tidiness: anyone who knows the family QR code can join again. Only a new family separates it for good.",
   "familyRemoved": "removed",
   "familyJoined": "Done – you are in the family!",
   "familyJoinFailed": "Joining the family did not work. Are both devices on the same Wi-Fi, with Family open on the other one?",

@@ -1362,7 +1362,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get familyRemoveMessage =>
-      'El dispositivo dejará de recibir perfiles y puntos. Los datos que ya tiene se quedan en él.';
+      'El dispositivo sale de la lista y deja de recibir perfiles y puntos. Los datos que ya tiene se le quedan. Es solo para ordenar: quien conozca el código QR de la familia puede volver a unirse. Solo una familia nueva lo separa del todo.';
 
   @override
   String get familyRemoved => 'quitado';

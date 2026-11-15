@@ -394,7 +394,7 @@
   "familyThisDevice": "toto zariadenie",
   "familyNeverSynced": "zatiaľ sa nesynchronizovalo",
   "familyRemove": "Odobrať z rodiny",
-  "familyRemoveMessage": "Zariadenie prestane dostávať profily a body. Dáta, ktoré už na ňom sú, mu zostanú.",
+  "familyRemoveMessage": "Zariadenie zmizne zo zoznamu a prestane dostávať profily a body. Dáta, ktoré už má, mu zostanú. Je to len pre poriadok: so znalosťou rodinného QR kódu sa môže pripojiť znova. Úplne ho oddeliť ide len založením novej rodiny.",
   "familyRemoved": "odobrané",
   "familyJoined": "Hotovo – si v rodine!",
   "familyJoinFailed": "Pripojenie k rodine sa nepodarilo. Sú obe zariadenia na rovnakej Wi-Fi a je na druhom otvorená Rodina?",

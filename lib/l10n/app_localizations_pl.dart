@@ -1371,7 +1371,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get familyRemoveMessage =>
-      'Urządzenie przestanie dostawać profile i punkty. Dane, które już na nim są, zostaną.';
+      'Urządzenie zniknie z listy i przestanie dostawać profile i punkty. Dane, które już ma, zostaną na nim. To tylko dla porządku: kto zna rodzinny kod QR, może dołączyć ponownie. Całkiem oddzielić je można tylko, zakładając nową rodzinę.';
 
   @override
   String get familyRemoved => 'usunięte';

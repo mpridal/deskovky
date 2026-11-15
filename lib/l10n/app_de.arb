@@ -394,7 +394,7 @@
   "familyThisDevice": "dieses Gerät",
   "familyNeverSynced": "noch nicht abgeglichen",
   "familyRemove": "Aus der Familie entfernen",
-  "familyRemoveMessage": "Das Gerät bekommt dann keine Profile und Punkte mehr. Die Daten, die schon darauf sind, bleiben dort.",
+  "familyRemoveMessage": "Das Gerät verschwindet aus der Liste und bekommt keine Profile und Punkte mehr. Daten, die es schon hat, bleiben dort. Das dient nur der Ordnung: Wer den Familien-QR-Code kennt, kann wieder beitreten. Ganz trennen lässt es sich nur mit einer neuen Familie.",
   "familyRemoved": "entfernt",
   "familyJoined": "Fertig – du bist in der Familie!",
   "familyJoinFailed": "Der Beitritt zur Familie hat nicht geklappt. Sind beide Geräte im selben WLAN und ist auf dem anderen Familie geöffnet?",

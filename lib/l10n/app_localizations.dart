@@ -2481,7 +2481,7 @@ abstract class AppLocalizations {
   /// No description provided for @familyRemoveMessage.
   ///
   /// In en, this message translates to:
-  /// **'The device will stop getting profiles and points. The data already on it stays there.'**
+  /// **'The device leaves the list and stops getting profiles and points. Data it already has stays on it. This is just for tidiness: anyone who knows the family QR code can join again. Only a new family separates it for good.'**
   String get familyRemoveMessage;
 
   /// No description provided for @familyRemoved.

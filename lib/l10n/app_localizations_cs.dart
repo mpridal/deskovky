@@ -1369,7 +1369,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get familyRemoveMessage =>
-      'Zařízení přestane dostávat profily a body. Data, která na něm už jsou, mu zůstanou.';
+      'Zařízení zmizí ze seznamu a přestane dostávat profily a body. Data, která už má, mu zůstanou. Je to jen pro pořádek: se znalostí rodinného QR kódu se může připojit znovu. Úplně oddělit ho jde jen založením nové rodiny.';
 
   @override
   String get familyRemoved => 'odebráno';
