@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:deskovky/core/avatar/avatar_spec.dart';
@@ -112,6 +113,36 @@ void main() {
     expect(h.reason, 'auth');
     expect((await stranger.players.all()).map((p) => p.name), ['Cizí']);
     expect((await home.players.all()).map((p) => p.name), ['Viky']);
+  });
+
+  test('an attacker without the key cannot reflect the proof back by posing as the device itself (review R-001)', () async {
+    final home = device();
+    await home.players.create(name: 'Viky', avatar: AvatarSpec.defaults);
+    final (homeSide, attacker) = LoopbackChannel.pair();
+    final outcome = syncOver(homeSide, store: home.store, family: home.family, initiator: true);
+    final inbox = StreamIterator(attacker.incoming.cast<FamilyMessage>());
+    Future<Map<String, Object?>> read() async {
+      await inbox.moveNext();
+      return inbox.current.body;
+    }
+
+    final hello = await read();
+    // Echo the home device's own family and id back.
+    attacker.send(FamilyMessage({'t': 'hello', 'v': hello['v'], 'family': hello['family'], 'device': hello['device'], 'nonce': 'x'}));
+    final proof = await read();
+    if (proof['t'] == 'proof') {
+      attacker.send(FamilyMessage(proof));
+      attacker.send(const FamilyMessage({'t': 'have', 'vector': {}}));
+    }
+    final result = await outcome;
+    expect(result.ok, isFalse);
+    expect(result.reason, 'auth');
+    // Nothing of the family went out.
+    final sent = <Map<String, Object?>>[];
+    while (await inbox.moveNext().timeout(const Duration(milliseconds: 200), onTimeout: () => false)) {
+      sent.add(inbox.current.body);
+    }
+    expect(sent.where((m) => m['t'] == 'ops'), isEmpty);
   });
 
   test('another family is turned away before anything is sent', () async {

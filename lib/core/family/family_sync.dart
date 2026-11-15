@@ -82,6 +82,9 @@ Future<SyncOutcome> syncOver(
     if (theirs['family'] != family.familyId) refuse('family');
     final peerId = theirs['device'], peerNonce = theirs['nonce'];
     if (peerId is! String || peerNonce is! String) refuse('lost');
+    // Our own id back would let a stranger reflect our proof (review R-001):
+    // the proofs differ only by the device id.
+    if (peerId == me) refuse('auth');
     peer = peerId;
     final removed = await store.removedDevices();
     if (removed.contains(peerId) || removed.contains(me)) refuse('removed');
@@ -114,6 +117,8 @@ Future<SyncOutcome> syncOver(
       for (final e in (have['vector'] as Map<String, Object?>? ?? const {}).entries)
         if (e.value case final int seq) e.key: seq,
     };
+    // Removed meanwhile (the removal may have arrived during this meeting).
+    if ((await store.removedDevices()).contains(peerId)) refuse('removed');
     final missing = await store.opsAfter(vector);
     for (var i = 0; i < missing.length; i += _batch) {
       send({
