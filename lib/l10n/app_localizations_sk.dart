@@ -22,7 +22,7 @@ class AppLocalizationsSk extends AppLocalizations {
   String get navLeaderboards => 'Rebríčky';
 
   @override
-  String get navSettings => 'Nastavenia';
+  String get navSettings => 'Voľby';
 
   @override
   String get comingSoon => 'Čoskoro';

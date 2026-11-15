@@ -19,7 +19,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get navPlayers => 'Joueurs';
 
   @override
-  String get navLeaderboards => 'Classements';
+  String get navLeaderboards => 'Scores';
 
   @override
   String get navSettings => 'Réglages';

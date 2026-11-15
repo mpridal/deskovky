@@ -21,7 +21,7 @@ const _sizes = [
   Size(800, 1280),
   Size(1280, 800),
 ];
-const _locales = [Locale('cs'), Locale('en'), Locale('es'), Locale('de'), Locale('uk')];
+final _locales = [for (final l in ['cs', 'en', 'es', 'sk', 'de', 'pl', 'pt', 'fr', 'it', 'uk']) Locale(l)];
 const _scales = [1.0, 1.3];
 
 /// True when [finder]'s paragraph shows its whole text on one line.

@@ -22,7 +22,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get navLeaderboards => 'Rankingi';
 
   @override
-  String get navSettings => 'Ustawienia';
+  String get navSettings => 'Opcje';
 
   @override
   String get comingSoon => 'Wkrótce';

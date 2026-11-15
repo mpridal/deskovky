@@ -25,3 +25,23 @@ jobs:
       - run: flutter analyze --fatal-infos
       # A stuck test fails after 90 s instead of hanging the whole run.
       - run: flutter test --timeout 90s
+
+  # Goldens are drawn on Windows (where they were made) and skipped on Linux;
+  # this job runs them so a visual change is seen before a release (review
+  # R-016). Not blocking until the first runs show the 1 % tolerance holds
+  # between Miloš's PC and the GitHub Windows machine.
+  goldens:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.47.8
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Golden tests
+        shell: bash
+        run: flutter test --timeout 90s $(grep -rl "matchesGoldenFile" test)

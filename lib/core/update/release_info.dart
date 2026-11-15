@@ -25,7 +25,12 @@ class ReleaseInfo {
   /// Release notes by language code.
   final Map<String, String> notes;
 
-  String notesFor(String languageCode) => notes[languageCode] ?? notes['en'] ?? '';
+  /// The notes exist in cs, en and es; Slovak readers get Czech (review
+  /// R-028), everyone else English.
+  String notesFor(String languageCode) =>
+      notes[languageCode] ?? notes[_closest[languageCode]] ?? notes['en'] ?? '';
+
+  static const _closest = {'sk': 'cs'};
 
   /// Builds from the GitHub API release and its `latest.json`; null when
   /// anything is missing or inconsistent (then no update is offered).
