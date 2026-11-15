@@ -8,6 +8,7 @@ import 'app/providers.dart';
 import 'app/stats_service.dart';
 import 'core/db/app_database.dart';
 import 'core/family/device_marker.dart';
+import 'core/family/family_identity.dart';
 import 'core/family/family_store.dart';
 import 'core/shop/shop_catalog.dart';
 
@@ -16,6 +17,7 @@ Future<void> main() async {
   registerAppLicenses();
   // Before the database opens: a copy restored from another phone gets an id of its own.
   FamilyStore.marker = const FileDeviceMarker();
+  FamilyIdentity.vault = const FileFamilyKeyVault();
   final rewards = await StatsService.loadRewards(rootBundle);
   final shop = ShopCatalog.parse(await rootBundle.loadString(ShopCatalog.asset).catchError((Object _) => '[]'));
   runApp(ProviderScope(

@@ -17,6 +17,8 @@ import '../core/family/fold.dart';
 import '../core/multiplayer/message_channel.dart';
 import '../core/multiplayer/network_env.dart';
 import '../core/settings/settings_repository.dart';
+import '../core/l10n/locale_resolution.dart';
+import '../l10n/app_localizations.dart';
 import 'stats_service.dart';
 
 /// Why the family cannot sync right now (shown in Rodina).
@@ -83,7 +85,7 @@ class FamilyController extends ChangeNotifier {
     required this.net,
     required this.stats,
     this.resyncAfter = const Duration(minutes: 1),
-    this.presence = const Duration(seconds: 35),
+    this.presence = const Duration(seconds: 20),
     this.systemDeviceName,
   });
 
@@ -92,7 +94,13 @@ class FamilyController extends ChangeNotifier {
 
   /// Names a device gets when nothing better is known; replaced by
   /// [systemDeviceName] when it says more.
-  static const genericNames = {'Telefon', 'Tablet', 'Phone', 'Teléfono', 'Tableta'};
+  /// Every language's word for a phone or a tablet (review R-027).
+  static final genericNames = {
+    for (final locale in supportedAppLocales) ...[
+      lookupAppLocalizations(locale).devicePhone,
+      lookupAppLocalizations(locale).deviceTablet,
+    ],
+  };
 
   final AppDatabase db;
   final FamilyNet net;
@@ -100,7 +108,7 @@ class FamilyController extends ChangeNotifier {
   final Duration resyncAfter;
 
   /// A device not heard for this long is no longer on the Wi-Fi (it says it
-  /// is here every 10 s).
+  /// is here every 5 s).
   final Duration presence;
 
   FamilyStore get store => FamilyStore.of(db);
@@ -198,6 +206,8 @@ class FamilyController extends ChangeNotifier {
     _peers[beacon.deviceId] = beacon;
     _heardAt[beacon.deviceId] = DateTime.now();
     if (isNew || before.activeUid != beacon.activeUid || before.busy != beacon.busy) _notify();
+    // A device that just came: say hello back now, not at the next round.
+    if (isNew) unawaited(_announceAgain());
     _presenceTimer ??= Timer.periodic(presence ~/ 2, (_) => _forgetQuiet());
     final last = _lastSync[beacon.deviceId];
     if (isNew || last == null || DateTime.now().difference(last) > resyncAfter) _syncWith(beacon);
@@ -385,23 +395,28 @@ class FamilyController extends ChangeNotifier {
   Future<SyncOutcome> joinFamily(FamilyTicket ticket, {required String deviceName}) async {
     final previous = _family;
     await _stop();
+    // The new family gets only the people who play here (review R-032).
+    final takenOut = await store.keepOnlyOwnProfiles();
     _family = ticket.identity;
     await ticket.identity.save(db);
-    await store.append(DeviceJoined(deviceId: await store.deviceId(), name: deviceName));
     SyncOutcome outcome;
     try {
       outcome = await _run(await net.connect(ticket.ip, ticket.port), initiator: true);
     } on Object {
       outcome = const SyncOutcome.failed('lost');
     }
-    if (!outcome.ok) {
-      // Could not reach the family: stay where this device was.
+    if (outcome.ok) {
+      // Written only once in: a failed attempt leaves no trace (review R-032).
+      await store.append(DeviceJoined(deviceId: await store.deviceId(), name: deviceName));
+    } else {
+      // Could not reach the family: stay where this device was, with all of it.
       _family = previous;
       if (previous == null) {
-        await (db.delete(db.appSettings)..where((s) => s.key.isIn([FamilyIdentity.idKey, FamilyIdentity.keyKey]))).go();
+        await FamilyIdentity.forget(db);
       } else {
         await previous.save(db);
       }
+      await store.putBack(takenOut);
     }
     await start();
     return outcome;

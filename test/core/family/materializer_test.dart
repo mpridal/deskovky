@@ -5,6 +5,7 @@ import 'package:deskovky/core/players/player_repository.dart';
 import 'package:deskovky/core/points/points_repository.dart';
 import 'package:deskovky/core/settings/settings_repository.dart';
 import 'package:deskovky/core/stats/stats_repository.dart';
+import 'package:deskovky/core/family/hlc.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../helpers/test_database.dart';
@@ -35,6 +36,20 @@ void main() {
     expect(await store.versionVector(), {me: 2});
     expect((await store.opsAfter({me: 1})).single.body, isA<PointsAdded>());
     expect(await store.opsAfter({me: 2}), isEmpty);
+  });
+
+  test('opsAfter picks by device and number in the database, in clock order, devices it never heard of included (review R-009)', () async {
+    var t = 0;
+    FamilyOp op(String origin, int seq) => FamilyOp(
+      origin: origin,
+      seq: seq,
+      clock: Hlc(1000 + t++, 0, origin),
+      body: ProfileCreated(uid: '$origin$seq', name: '$origin$seq', avatar: const {}),
+    );
+    await store.insertRemote([op('a', 1), op('b', 1), op('a', 2), op('c', 1), op('b', 2), op('a', 3)]);
+    final missing = await store.opsAfter({'a': 2, 'b': 2});
+    expect([for (final o in missing) '${o.origin}${o.seq}'], ['c1', 'a3']);
+    expect((await store.opsAfter({})).length, 6);
   });
 
   test('remote ops are taken once; the state shows them after a rebuild', () async {

@@ -157,6 +157,13 @@ class ClientRoom extends ChangeNotifier {
   void _onStart(Start start) {
     _matchUid = start.matchUid;
     _seatUids = start.seatUids;
+    // A host with other game rules: the games would drift apart (review R-002).
+    if (start.rules != rulesVersion) {
+      _closedReason = 'version';
+      channel.close();
+      notifyListeners();
+      return;
+    }
     final module = findModule(start.config.gameId);
     if (module == null) {
       _closedReason = 'unknownGame';
@@ -184,6 +191,7 @@ class ClientRoom extends ChangeNotifier {
       return;
     }
     _seq = applied.seq;
+    _resyncs = 0;
     _transport?.confirm(applied.move);
   }
 
@@ -200,8 +208,20 @@ class ClientRoom extends ChangeNotifier {
     _transport?.resynced(session.lastMove);
   }
 
+  /// Snapshots asked for since the last move that fitted; more than a few in
+  /// a row means the two devices do not play by the same rules.
+  var _resyncs = 0;
+  static const maxResyncs = 3;
+
   void _requestSnapshot() {
     if (_awaitingSnapshot) return;
+    if (++_resyncs > maxResyncs) {
+      _closedReason = 'version';
+      _transport?.reject();
+      channel.close();
+      notifyListeners();
+      return;
+    }
     _awaitingSnapshot = true;
     _send(const SnapshotRequest());
   }

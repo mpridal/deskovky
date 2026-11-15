@@ -19,7 +19,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get navPlayers => 'Joueurs';
 
   @override
-  String get navLeaderboards => 'Classements';
+  String get navLeaderboards => 'Scores';
 
   @override
   String get navSettings => 'Réglages';
@@ -731,6 +731,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get parentsGateWrong => 'Ce n’est pas ça.';
 
   @override
+  String get parentsGateLocked => 'Trop d’essais. Réessaie dans une minute.';
+
+  @override
   String get parentsGateOpen => 'Ouvrir';
 
   @override
@@ -1361,7 +1364,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get familyRemoveMessage =>
-      'L’appareil ne recevra plus les profils ni les points. Les données déjà dessus y restent.';
+      'L’appareil quitte la liste et ne reçoit plus les profils ni les points. Les données qu’il a déjà lui restent. C’est seulement pour faire de l’ordre : qui connaît le QR code de la famille peut revenir. Seule une nouvelle famille le sépare pour de bon.';
 
   @override
   String get familyRemoved => 'retiré';
@@ -1533,7 +1536,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get donationsOfflineText =>
-      'Il fonctionne hors ligne et n’envoie rien sur vous nulle part. Il utilise internet seulement pour télécharger une nouvelle version et la liste des donateurs.';
+      'Il fonctionne hors ligne et n’envoie rien sur vous nulle part. Il utilise internet seulement pour télécharger une nouvelle version.';
 
   @override
   String get donationsFamilyTitle => 'Toute la famille joue';
@@ -1572,13 +1575,6 @@ class AppLocalizationsFr extends AppLocalizations {
       'Les dons seront possibles quand le jeu sera sur Google Play. Merci !';
 
   @override
-  String get donationsThanks => 'Un grand merci à nos donateurs :';
-
-  @override
-  String get donationsNobody =>
-      'Personne pour l’instant. Seras-tu le premier ?';
-
-  @override
   String get familyRename => 'Renommer l’appareil';
 
   @override
@@ -1607,13 +1603,5 @@ class AppLocalizationsFr extends AppLocalizations {
       'L’invitation arrive sur tous les appareils du Wi-Fi';
 
   @override
-  String get parentsReportBug => 'Signaler un bug';
-
-  @override
-  String get parentsReportBugHint =>
-      'Ouvre un formulaire sur GitHub pour décrire le bug. Les signalements sont publics : n’écris pas de prénoms d’enfants ni d’autres données personnelles.';
-
-  @override
-  String get bugReportNoBrowser =>
-      'Le navigateur n’a pas pu s’ouvrir. Tu peux signaler le bug ici :';
+  String get saveFailed => 'La partie n\'a pas pu être enregistrée.';
 }

@@ -69,6 +69,7 @@ void main() {
       expect(info.apkUrl.toString(), 'https://x/deskovky-0.1.1.apk');
       expect(info.notesFor('es'), 'Arreglos');
       expect(info.notesFor('de'), 'Fixes', reason: 'English for other languages');
+      expect(info.notesFor('sk'), 'Opravy', reason: 'Slovak readers get Czech, not English (review R-028)');
     });
 
     test('a release without the APK, a bad hash or a tag that disagrees is rejected', () {

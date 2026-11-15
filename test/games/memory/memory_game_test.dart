@@ -123,6 +123,8 @@ void main() {
       await tapBest(tester);
     }
     final before = liveState(tester)!;
+    // Saves come at most once a second (review R-025): the last one after it.
+    await tester.pump(const Duration(milliseconds: 1100));
     await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 200)));
     final saved = await tester.runAsync(() => GameStore(db).savedSession('memory'));
     expect(saved, isNotNull);

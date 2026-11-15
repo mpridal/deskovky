@@ -22,7 +22,7 @@ class AppLocalizationsSk extends AppLocalizations {
   String get navLeaderboards => 'Rebríčky';
 
   @override
-  String get navSettings => 'Nastavenia';
+  String get navSettings => 'Voľby';
 
   @override
   String get comingSoon => 'Čoskoro';
@@ -738,6 +738,10 @@ class AppLocalizationsSk extends AppLocalizations {
   String get parentsGateWrong => 'To nie je správne.';
 
   @override
+  String get parentsGateLocked =>
+      'Príliš veľa pokusov. Skús to znova o minútu.';
+
+  @override
   String get parentsGateOpen => 'Otvoriť';
 
   @override
@@ -1369,7 +1373,7 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get familyRemoveMessage =>
-      'Zariadenie prestane dostávať profily a body. Dáta, ktoré už na ňom sú, mu zostanú.';
+      'Zariadenie zmizne zo zoznamu a prestane dostávať profily a body. Dáta, ktoré už má, mu zostanú. Je to len pre poriadok: so znalosťou rodinného QR kódu sa môže pripojiť znova. Úplne ho oddeliť ide len založením novej rodiny.';
 
   @override
   String get familyRemoved => 'odobrané';
@@ -1541,7 +1545,7 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get donationsOfflineText =>
-      'Hrá sa offline a hra o vás nič neposiela von. Internet použije len na stiahnutie novej verzie a zoznamu darcov.';
+      'Hrá sa offline a hra o vás nič neposiela von. Internet použije len na stiahnutie novej verzie.';
 
   @override
   String get donationsFamilyTitle => 'Hrá celá rodina';
@@ -1580,12 +1584,6 @@ class AppLocalizationsSk extends AppLocalizations {
       'Prispievať bude možné, keď bude hra na Google Play. Ďakujeme!';
 
   @override
-  String get donationsThanks => 'Srdečne ďakujeme darcom:';
-
-  @override
-  String get donationsNobody => 'Zatiaľ tu nikto nie je. Budete prví?';
-
-  @override
   String get familyRename => 'Premenovať zariadenie';
 
   @override
@@ -1614,13 +1612,5 @@ class AppLocalizationsSk extends AppLocalizations {
       'Pozvánka príde na všetky zariadenia v sieti';
 
   @override
-  String get parentsReportBug => 'Nahlásiť chybu';
-
-  @override
-  String get parentsReportBugHint =>
-      'Otvorí formulár na GitHube, kde chybu opíšeš. Hlásenie je verejné: nepíš doň mená detí ani iné osobné údaje.';
-
-  @override
-  String get bugReportNoBrowser =>
-      'Prehliadač sa nepodarilo otvoriť. Chybu môžeš nahlásiť na adrese:';
+  String get saveFailed => 'Hru sa nepodarilo uložiť.';
 }

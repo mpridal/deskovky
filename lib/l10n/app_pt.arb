@@ -205,6 +205,7 @@
   "parentsGateTitle": "Só para adultos",
   "parentsGateQuestion": "Quanto é {a} × {b}?",
   "parentsGateWrong": "Não está certo.",
+  "parentsGateLocked": "Tentativas demais. Tente de novo em um minuto.",
   "parentsGateOpen": "Abrir",
   "parentsGiftTitle": "Dar pontos",
   "parentsGiftConfirm": "Dar {points} ● para {name}?",
@@ -393,7 +394,7 @@
   "familyThisDevice": "este aparelho",
   "familyNeverSynced": "ainda não sincronizado",
   "familyRemove": "Remover da família",
-  "familyRemoveMessage": "O aparelho vai parar de receber perfis e pontos. Os dados que já estão nele continuam lá.",
+  "familyRemoveMessage": "O aparelho sai da lista e deixa de receber perfis e pontos. Os dados que já tem continuam nele. É só para organizar: quem conhece o QR code da família pode entrar de novo. Só uma família nova o separa de vez.",
   "familyRemoved": "removido",
   "familyJoined": "Pronto – você está na família!",
   "familyJoinFailed": "Não deu para entrar na família. Os dois aparelhos estão no mesmo Wi-Fi, com Família aberta no outro?",
@@ -442,7 +443,7 @@
   "donationsNoDataTitle": "Sem coleta de dados",
   "donationsNoDataText": "Sem contas, sem login. Perfis e resultados ficam nos seus aparelhos.",
   "donationsOfflineTitle": "Seguro sem internet",
-  "donationsOfflineText": "Funciona offline e não envia nada sobre você para lugar nenhum. Só usa a internet para baixar uma nova versão e a lista de doadores.",
+  "donationsOfflineText": "Funciona offline e não envia nada sobre você para lugar nenhum. Só usa a internet para baixar uma nova versão.",
   "donationsFamilyTitle": "A família toda joga",
   "donationsFamilyText": "Em volta de uma mesa ou cada um no seu, pelo Wi-Fi de casa. Os aparelhos da família só trocam dados entre si.",
   "donationsKidsTitle": "Também para os menores",
@@ -453,8 +454,6 @@
   "donationsGrowingText": "Nove jogos e mais a caminho – alguns pedidos pelas crianças.",
   "donationsWhy": "A contribuição ajuda a pagar o tempo para criar novos jogos e as taxas do Google Play.",
   "donationsSoon": "Será possível doar quando o jogo estiver no Google Play. Obrigado!",
-  "donationsThanks": "Muito obrigado aos nossos doadores:",
-  "donationsNobody": "Ainda não tem ninguém aqui. Vai ser você o primeiro?",
   "familyRename": "Renomear aparelho",
   "familyOnline": "Deskovky está aberto",
   "familyOffline": "Indisponível",
@@ -463,7 +462,5 @@
   "shareAppTitle": "Deskovky em outro aparelho",
   "shareAppHint": "Leia o código com a câmera do outro celular ou tablet. Vai abrir a página com a versão mais nova: baixe o arquivo deskovky-….apk e abra.",
   "inviteToAllDevices": "O convite vai para todos os aparelhos da rede",
-  "parentsReportBug": "Relatar um erro",
-  "parentsReportBugHint": "Abre um formulário no GitHub onde você descreve o erro. Os relatos são públicos: não escreva nomes de crianças nem outros dados pessoais.",
-  "bugReportNoBrowser": "Não foi possível abrir o navegador. Você pode relatar o erro em:"
+  "saveFailed": "Não foi possível salvar o jogo."
 }

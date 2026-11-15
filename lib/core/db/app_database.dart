@@ -56,18 +56,35 @@ class AppDatabase extends _$AppDatabase {
           from4To5: (m, schema) => m.createTable(schema.playerItems),
           // v6: family sync – ids shared by all devices and the change log.
           // Existing data gets its ids and ops on first open (importLegacy).
+          // A start killed half way leaves the columns at version 5, so each
+          // is added only when missing (review R-008).
           from5To6: (m, schema) async {
-            await m.addColumn(schema.players, schema.players.uid);
-            await m.addColumn(schema.matches, schema.matches.uid);
-            await m.addColumn(schema.pointsLedger, schema.pointsLedger.uid);
+            for (final (table, column) in [
+              (schema.players, schema.players.uid),
+              (schema.matches, schema.matches.uid),
+              (schema.pointsLedger, schema.pointsLedger.uid),
+            ]) {
+              if (!await _hasColumn(table.actualTableName, column.name)) await m.addColumn(table, column);
+            }
             await m.createTable(schema.syncOps);
             await m.createTable(schema.familyDevices);
           },
         ),
         beforeOpen: (details) async {
           await customStatement('PRAGMA foreign_keys = ON');
-          // v6: the data from before gets family ids and ops, once.
-          if (details.hadUpgrade && (details.versionBefore ?? 6) < 6 && details.versionNow >= 6) await importLegacy(this);
+          // v6: the data from before gets family ids and ops – whenever some
+          // still has none, so an import that failed is done next time (R-008).
+          if (details.versionNow >= 6 && await _missingFamilyIds()) await importLegacy(this);
         },
       );
+
+  Future<bool> _hasColumn(String table, String column) async =>
+      (await customSelect('PRAGMA table_info($table)').get()).any((r) => r.data['name'] == column);
+
+  Future<bool> _missingFamilyIds() async {
+    for (final t in ['players', 'matches', 'points_ledger']) {
+      if ((await customSelect('SELECT 1 FROM $t WHERE uid IS NULL LIMIT 1').get()).isNotEmpty) return true;
+    }
+    return false;
+  }
 }

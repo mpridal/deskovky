@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:deskovky/core/db/app_database.dart';
 import 'package:deskovky/core/family/device_marker.dart';
 import 'package:deskovky/core/family/family_op.dart';
@@ -14,6 +16,15 @@ class _Marker implements DeviceMarker {
 
   @override
   Future<void> write(String id) async => value = id;
+}
+
+/// A marker that takes its time to read, like a slow phone at start.
+class _SlowMarker extends _Marker {
+  @override
+  Future<String?> read() async {
+    await Future<void>.delayed(const Duration(milliseconds: 200));
+    return value;
+  }
 }
 
 /// A copy of another device's data (Android backup, phone-to-phone transfer)
@@ -54,5 +65,17 @@ void main() {
     final marker = FamilyStore.marker = _Marker();
     expect(await FamilyStore(db).deviceId(), id);
     expect(marker.value, id);
+  });
+
+  test('a change written while the marker is still being checked does not lock the database (review R-034)', () async {
+    // An id exists already (an earlier start), the marker check must read the file.
+    await FamilyStore(db).deviceId();
+    FamilyStore.marker = _SlowMarker()..value = (await FamilyStore(db).deviceId());
+    final store = FamilyStore(db);
+    unawaited(store.deviceId());
+    final op = await store
+        .append(const DeviceJoined(deviceId: 'x', name: 'Telefon'))
+        .timeout(const Duration(seconds: 3), onTimeout: () => throw StateError('the database locked up'));
+    expect(op.seq, 1);
   });
 }

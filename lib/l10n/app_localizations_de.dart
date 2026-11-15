@@ -730,6 +730,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get parentsGateWrong => 'Das stimmt nicht.';
 
   @override
+  String get parentsGateLocked =>
+      'Zu viele Versuche. Versuch es in einer Minute noch einmal.';
+
+  @override
   String get parentsGateOpen => 'Öffnen';
 
   @override
@@ -1360,7 +1364,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get familyRemoveMessage =>
-      'Das Gerät bekommt dann keine Profile und Punkte mehr. Die Daten, die schon darauf sind, bleiben dort.';
+      'Das Gerät verschwindet aus der Liste und bekommt keine Profile und Punkte mehr. Daten, die es schon hat, bleiben dort. Das dient nur der Ordnung: Wer den Familien-QR-Code kennt, kann wieder beitreten. Ganz trennen lässt es sich nur mit einer neuen Familie.';
 
   @override
   String get familyRemoved => 'entfernt';
@@ -1531,7 +1535,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get donationsOfflineText =>
-      'Es läuft offline und sendet nichts über dich irgendwohin. Das Internet nutzt es nur, um eine neue Version und die Liste der Spender zu laden.';
+      'Es läuft offline und sendet nichts über dich irgendwohin. Das Internet nutzt es nur, um eine neue Version zu laden.';
 
   @override
   String get donationsFamilyTitle => 'Die ganze Familie spielt';
@@ -1570,12 +1574,6 @@ class AppLocalizationsDe extends AppLocalizations {
       'Spenden geht, sobald das Spiel bei Google Play ist. Danke!';
 
   @override
-  String get donationsThanks => 'Herzlichen Dank an unsere Spender:';
-
-  @override
-  String get donationsNobody => 'Noch niemand da. Bist du der Erste?';
-
-  @override
   String get familyRename => 'Gerät umbenennen';
 
   @override
@@ -1603,13 +1601,5 @@ class AppLocalizationsDe extends AppLocalizations {
   String get inviteToAllDevices => 'Die Einladung geht an alle Geräte im WLAN';
 
   @override
-  String get parentsReportBug => 'Fehler melden';
-
-  @override
-  String get parentsReportBugHint =>
-      'Öffnet ein Formular auf GitHub, in dem du den Fehler beschreibst. Meldungen sind öffentlich: Schreib keine Namen von Kindern oder andere persönliche Daten hinein.';
-
-  @override
-  String get bugReportNoBrowser =>
-      'Der Browser konnte nicht geöffnet werden. Du kannst den Fehler hier melden:';
+  String get saveFailed => 'Das Spiel konnte nicht gespeichert werden.';
 }

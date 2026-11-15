@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'dart:async';
 import 'dart:io';
 
@@ -52,7 +53,10 @@ class DeviceNetworkEnv extends NetworkEnv {
 
   @override
   Future<OpenServer> serve() async {
-    final server = await NetServer.start();
+    // Only on the Wi-Fi, not on mobile data or a VPN (review R-021); debug
+    // builds also on localhost, for tests through `adb forward`.
+    final wifi = kDebugMode ? null : await localWifiAddress();
+    final server = await NetServer.start(address: wifi);
     return OpenServer(port: server.port, channels: server.channels, close: server.close);
   }
 
@@ -60,7 +64,7 @@ class DeviceNetworkEnv extends NetworkEnv {
   Future<Announcement> announce(RoomInfo room) async => _UdpAnnouncement(
     await RoomAnnouncer.start(
       room,
-      targets: [InternetAddress('255.255.255.255'), InternetAddress(subnetBroadcast(room.ip))],
+      targets: [for (final target in await broadcastTargets(room.ip)) InternetAddress(target)],
     ),
   );
 

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:deskovky/core/avatar/avatar_spec.dart';
@@ -42,6 +43,32 @@ Future<(SyncOutcome, SyncOutcome)> _meet(_Device a, _Device b) async {
   return (results[0], results[1]);
 }
 
+/// A meeting through someone on the Wi-Fi who sees every message and may
+/// change it ([tamper] returns the messages to pass on instead of [body]).
+Future<(SyncOutcome, SyncOutcome)> _meetThrough(
+  _Device a,
+  _Device b, {
+  required List<Map<String, Object?>> seen,
+  List<Map<String, Object?>> Function(Map<String, Object?> body, bool fromA)? tamper,
+}) async {
+  final (ca, ma) = LoopbackChannel.pair();
+  final (mb, cb) = LoopbackChannel.pair();
+  void relay(LoopbackChannel from, LoopbackChannel to, bool fromA) => from.incoming.listen((m) {
+    if (m is! FamilyMessage) return;
+    seen.add(m.body);
+    for (final body in tamper?.call(m.body, fromA) ?? [m.body]) {
+      to.send(FamilyMessage(body));
+    }
+  });
+  relay(ma, mb, true);
+  relay(mb, ma, false);
+  final results = await Future.wait([
+    syncOver(ca, store: a.store, family: a.family, initiator: true, timeout: const Duration(seconds: 2)),
+    syncOver(cb, store: b.store, family: b.family, initiator: false, timeout: const Duration(seconds: 2)),
+  ]);
+  return (results[0], results[1]);
+}
+
 void main() {
   final family = FamilyIdentity.create();
   final devices = <_Device>[];
@@ -79,6 +106,27 @@ void main() {
     expect(await tablet.stateJson(), await phone.stateJson());
   });
 
+  test('an op of a newer app version is kept and passed on, so nothing is skipped for good (review R-005)', () async {
+    final newer = device(), older = device(), third = device();
+    final id = await newer.store.deviceId();
+    await newer.players.create(name: 'Viky', avatar: AvatarSpec.defaults); // seq 1
+    // A future op type, then an ordinary op after it.
+    final future = {'o': id, 's': 2, 'c': '000001700000000:000000:$id', 'b': {'t': 'budouci', 'x': 1}};
+    await newer.db.into(newer.db.syncOps).insert(
+      SyncOpsCompanion.insert(origin: id, seq: 2, clock: future['c']! as String, json: jsonEncode(future)),
+    );
+    await newer.players.create(name: 'Kuba', avatar: AvatarSpec.defaults); // seq 3
+    await _meet(newer, older);
+    expect((await older.store.versionVector())[id], 3);
+    final ops = await older.store.all();
+    expect(ops.where((o) => o.origin == id).map((o) => o.seq).toSet(), {1, 2, 3}, reason: 'the unknown op is kept too');
+    expect((await older.players.all()).map((p) => p.name).toSet(), {'Viky', 'Kuba'}, reason: 'the known ops still apply');
+    // Passed on unchanged to a device that meets only the older one.
+    await _meet(older, third);
+    final passed = (await third.store.all()).where((o) => o.origin == id && o.seq == 2).single;
+    expect(passed.toJson()['b'], {'t': 'budouci', 'x': 1});
+  });
+
   test('three devices converge whatever order they meet in', () async {
     final a = device(), b = device(), c = device();
     await a.players.create(name: 'Ája', avatar: AvatarSpec.defaults);
@@ -112,6 +160,36 @@ void main() {
     expect(h.reason, 'auth');
     expect((await stranger.players.all()).map((p) => p.name), ['Cizí']);
     expect((await home.players.all()).map((p) => p.name), ['Viky']);
+  });
+
+  test('an attacker without the key cannot reflect the proof back by posing as the device itself (review R-001)', () async {
+    final home = device();
+    await home.players.create(name: 'Viky', avatar: AvatarSpec.defaults);
+    final (homeSide, attacker) = LoopbackChannel.pair();
+    final outcome = syncOver(homeSide, store: home.store, family: home.family, initiator: true);
+    final inbox = StreamIterator(attacker.incoming.cast<FamilyMessage>());
+    Future<Map<String, Object?>> read() async {
+      await inbox.moveNext();
+      return inbox.current.body;
+    }
+
+    final hello = await read();
+    // Echo the home device's own family and id back.
+    attacker.send(FamilyMessage({'t': 'hello', 'v': hello['v'], 'family': hello['family'], 'device': hello['device'], 'nonce': 'x'}));
+    final proof = await read();
+    if (proof['t'] == 'proof') {
+      attacker.send(FamilyMessage(proof));
+      attacker.send(const FamilyMessage({'t': 'have', 'vector': {}}));
+    }
+    final result = await outcome;
+    expect(result.ok, isFalse);
+    expect(result.reason, 'auth');
+    // Nothing of the family went out.
+    final sent = <Map<String, Object?>>[];
+    while (await inbox.moveNext().timeout(const Duration(milliseconds: 200), onTimeout: () => false)) {
+      sent.add(inbox.current.body);
+    }
+    expect(sent.where((m) => m['t'] == 'ops'), isEmpty);
   });
 
   test('another family is turned away before anything is sent', () async {
@@ -166,6 +244,53 @@ void main() {
     expect(a.ok && b.ok, isTrue);
     expect(watch.elapsed, lessThan(const Duration(seconds: 10)));
     expect(await phone.balances(), {'Viky': 5000});
+  });
+
+  test('after the proofs nobody on the Wi-Fi can read the family (review R-007)', () async {
+    final tablet = device(), phone = device();
+    final viky = await tablet.players.create(name: 'Viky', avatar: AvatarSpec.defaults);
+    await tablet.points.gift(viky.id, 30);
+    final seen = <Map<String, Object?>>[];
+    final (a, b) = await _meetThrough(tablet, phone, seen: seen);
+    expect(a.ok && b.ok, isTrue, reason: '${a.reason} ${b.reason}');
+    expect(await phone.balances(), {'Viky': 30});
+    final wire = jsonEncode(seen);
+    expect(wire, isNot(contains('Viky')));
+    expect(seen.map((m) => m['t']).toSet(), {'hello', 'proof', 'sealed'});
+  });
+
+  test('a message changed on the way stops the sync instead of changing the family (review R-007)', () async {
+    final tablet = device(), phone = device();
+    await tablet.players.create(name: 'Viky', avatar: AvatarSpec.defaults);
+    var changed = false;
+    final (a, b) = await _meetThrough(tablet, phone, seen: [], tamper: (body, fromA) {
+      if (fromA && body['t'] == 'sealed' && !changed) {
+        changed = true;
+        final c = body['c']! as String;
+        return [{...body, 'c': '${c[0] == 'A' ? 'B' : 'A'}${c.substring(1)}'}];
+      }
+      return [body];
+    });
+    expect(changed, isTrue);
+    expect(b.ok, isFalse);
+    expect(b.reason, 'auth');
+    expect(a.ok, isFalse);
+    expect(await phone.players.all(), isEmpty);
+  });
+
+  test('a message played again is refused (review R-007)', () async {
+    final tablet = device(), phone = device();
+    await tablet.players.create(name: 'Viky', avatar: AvatarSpec.defaults);
+    var replayed = false;
+    final (_, b) = await _meetThrough(tablet, phone, seen: [], tamper: (body, fromA) {
+      if (fromA && body['t'] == 'sealed' && !replayed) {
+        replayed = true;
+        return [body, body];
+      }
+      return [body];
+    });
+    expect(b.ok, isFalse);
+    expect(b.reason, 'auth');
   });
 }
 

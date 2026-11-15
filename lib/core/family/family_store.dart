@@ -92,6 +92,9 @@ class FamilyStore {
 
   /// Records a change made on this device.
   Future<FamilyOp> append(OpBody body) async {
+    // The marker check reads outside the transaction: done before it starts,
+    // so the transaction never waits for it (review R-034).
+    await deviceId();
     final op = await _db.transaction(() async {
       final id = await deviceId();
       final last = await _db
@@ -107,6 +110,7 @@ class FamilyStore {
 
   /// Takes ops from another family device; returns how many were new.
   Future<int> insertRemote(Iterable<FamilyOp> ops) async {
+    await deviceId(); // see append
     final added = await _db.transaction(() async {
       var added = 0;
       Hlc? latest;
@@ -137,10 +141,21 @@ class FamilyStore {
   };
 
   /// The ops another device is missing, given its [theirs] version vector.
-  Future<List<FamilyOp>> opsAfter(Map<String, int> theirs) async => [
-    for (final row in await (_db.select(_db.syncOps)..orderBy([(o) => OrderingTerm.asc(o.clock)])).get())
-      if (row.seq > (theirs[row.origin] ?? 0)) ?_decode(row),
-  ];
+  /// Picked in the database by device and number, so a long log is not read
+  /// and decoded at every sync (review R-009).
+  Future<List<FamilyOp>> opsAfter(Map<String, int> theirs) async {
+    final query = _db.select(_db.syncOps)
+      ..where((o) {
+        final known = theirs.keys.toList();
+        Expression<bool> wanted = known.isEmpty ? const Constant(true) : o.origin.isNotIn(known);
+        for (final MapEntry(:key, :value) in theirs.entries) {
+          wanted = wanted | (o.origin.equals(key) & o.seq.isBiggerThanValue(value));
+        }
+        return wanted;
+      })
+      ..orderBy([(o) => OrderingTerm.asc(o.clock)]);
+    return [for (final row in await query.get()) ?_decode(row)];
+  }
 
   /// Devices taken out of the family; they are refused (spec 7.2).
   Future<Set<String>> removedDevices() async => {
@@ -152,6 +167,55 @@ class FamilyStore {
   Future<void> markSynced(String deviceId) => _db
       .into(_db.familyDevices)
       .insertOnConflictUpdate(FamilyDevicesCompanion.insert(deviceId: deviceId, lastSyncMs: Value(_now().millisecondsSinceEpoch)));
+
+  /// Before moving to another family (review R-032): keeps only what is
+  /// about the profiles that play on this device – those its own ops name –
+  /// so the new family never gets the old family's other people. Returns
+  /// what was taken out, for [putBack] when the move fails.
+  Future<List<FamilyOp>> keepOnlyOwnProfiles() async {
+    final me = await deviceId();
+    final ops = await all();
+    final own = {
+      for (final op in ops)
+        if (op.origin == me) ...profilesOf(op.body),
+    };
+    final drop = [
+      for (final op in ops)
+        if (!profilesOf(op.body).any(own.contains)) op,
+    ];
+    if (drop.isEmpty) return drop;
+    await _db.transaction(() async {
+      for (final op in drop) {
+        await (_db.delete(_db.syncOps)..where((o) => o.origin.equals(op.origin) & o.seq.equals(op.seq))).go();
+      }
+    });
+    await rebuild();
+    return drop;
+  }
+
+  /// Undoes [keepOnlyOwnProfiles] after a move that did not happen.
+  Future<void> putBack(List<FamilyOp> ops) async {
+    if (ops.isEmpty) return;
+    await _db.transaction(() async {
+      for (final op in ops) {
+        await _insert(op);
+      }
+    });
+    await rebuild();
+  }
+
+  /// The profiles an op is about (none for the devices of the family).
+  static Set<String> profilesOf(OpBody body) => switch (body) {
+    ProfileCreated(:final uid) || ProfileUpdated(:final uid) || ProfileDeleted(:final uid) => {uid},
+    ProfilesMerged(:final fromUid, :final intoUid) => {fromUid, intoUid},
+    MatchRecorded(:final participants) => {for (final p in participants) ?p.playerUid},
+    PointsAdded(:final playerUid) ||
+    ItemBought(:final playerUid) ||
+    BadgeAwarded(:final playerUid) ||
+    PointsReset(:final playerUid) ||
+    CountersAdded(:final playerUid) => {playerUid},
+    DeviceJoined() || DeviceRemoved() || UnknownOp() => const {},
+  };
 
   Future<List<FamilyOp>> all() async => [for (final row in await _db.select(_db.syncOps).get()) ?_decode(row)];
 

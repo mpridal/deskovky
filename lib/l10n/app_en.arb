@@ -474,6 +474,7 @@
     }
   },
   "parentsGateWrong": "That is not right.",
+  "parentsGateLocked": "Too many tries. Try again in a minute.",
   "parentsGateOpen": "Open",
   "parentsGiftTitle": "Give points",
   "parentsGiftConfirm": "Give {points} ● to {name}?",
@@ -867,7 +868,7 @@
   "familyThisDevice": "this device",
   "familyNeverSynced": "not synced yet",
   "familyRemove": "Remove from the family",
-  "familyRemoveMessage": "The device will stop getting profiles and points. The data already on it stays there.",
+  "familyRemoveMessage": "The device leaves the list and stops getting profiles and points. Data it already has stays on it. This is just for tidiness: anyone who knows the family QR code can join again. Only a new family separates it for good.",
   "familyRemoved": "removed",
   "familyJoined": "Done – you are in the family!",
   "familyJoinFailed": "Joining the family did not work. Are both devices on the same Wi-Fi, with Family open on the other one?",
@@ -957,7 +958,7 @@
   "donationsNoDataTitle": "No data collection",
   "donationsNoDataText": "No accounts, no sign-in. Profiles and results stay on your devices.",
   "donationsOfflineTitle": "Safe without the internet",
-  "donationsOfflineText": "It plays offline and sends nothing about you anywhere. It only uses the internet to download a new version and the list of donors.",
+  "donationsOfflineText": "It plays offline and sends nothing about you anywhere. It only uses the internet to download a new version.",
   "donationsFamilyTitle": "The whole family plays",
   "donationsFamilyText": "Around one table, or each on their own over home Wi-Fi. Family devices share data only with each other.",
   "donationsKidsTitle": "For the youngest too",
@@ -968,8 +969,6 @@
   "donationsGrowingText": "Nine games and more on the way – some wished for by children.",
   "donationsWhy": "A contribution helps pay for the time to make new games and for the Google Play fees.",
   "donationsSoon": "Giving will be possible once the game is on Google Play. Thank you!",
-  "donationsThanks": "Heartfelt thanks to our donors:",
-  "donationsNobody": "Nobody here yet. Will you be the first?",
   "familyRename": "Rename device",
   "familyOnline": "Deskovky is running",
   "familyOffline": "Not available",
@@ -979,7 +978,5 @@
   "shareAppTitle": "Deskovky on another device",
   "shareAppHint": "Scan the code with the camera of the other phone or tablet. The page with the newest version opens: download the file deskovky-….apk and open it.",
   "inviteToAllDevices": "The invitation goes to every device on the Wi-Fi",
-  "parentsReportBug": "Report a bug",
-  "parentsReportBugHint": "Opens a form on GitHub where you describe the bug. Reports are public: do not write children’s names or other personal details.",
-  "bugReportNoBrowser": "The browser could not be opened. You can report the bug at:"
+  "saveFailed": "The game could not be saved."
 }

@@ -1344,6 +1344,12 @@ abstract class AppLocalizations {
   /// **'That is not right.'**
   String get parentsGateWrong;
 
+  /// No description provided for @parentsGateLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many tries. Try again in a minute.'**
+  String get parentsGateLocked;
+
   /// No description provided for @parentsGateOpen.
   ///
   /// In en, this message translates to:
@@ -2475,7 +2481,7 @@ abstract class AppLocalizations {
   /// No description provided for @familyRemoveMessage.
   ///
   /// In en, this message translates to:
-  /// **'The device will stop getting profiles and points. The data already on it stays there.'**
+  /// **'The device leaves the list and stops getting profiles and points. Data it already has stays on it. This is just for tidiness: anyone who knows the family QR code can join again. Only a new family separates it for good.'**
   String get familyRemoveMessage;
 
   /// No description provided for @familyRemoved.
@@ -2769,7 +2775,7 @@ abstract class AppLocalizations {
   /// No description provided for @donationsOfflineText.
   ///
   /// In en, this message translates to:
-  /// **'It plays offline and sends nothing about you anywhere. It only uses the internet to download a new version and the list of donors.'**
+  /// **'It plays offline and sends nothing about you anywhere. It only uses the internet to download a new version.'**
   String get donationsOfflineText;
 
   /// No description provided for @donationsFamilyTitle.
@@ -2832,18 +2838,6 @@ abstract class AppLocalizations {
   /// **'Giving will be possible once the game is on Google Play. Thank you!'**
   String get donationsSoon;
 
-  /// No description provided for @donationsThanks.
-  ///
-  /// In en, this message translates to:
-  /// **'Heartfelt thanks to our donors:'**
-  String get donationsThanks;
-
-  /// No description provided for @donationsNobody.
-  ///
-  /// In en, this message translates to:
-  /// **'Nobody here yet. Will you be the first?'**
-  String get donationsNobody;
-
   /// No description provided for @familyRename.
   ///
   /// In en, this message translates to:
@@ -2892,23 +2886,11 @@ abstract class AppLocalizations {
   /// **'The invitation goes to every device on the Wi-Fi'**
   String get inviteToAllDevices;
 
-  /// No description provided for @parentsReportBug.
+  /// No description provided for @saveFailed.
   ///
   /// In en, this message translates to:
-  /// **'Report a bug'**
-  String get parentsReportBug;
-
-  /// No description provided for @parentsReportBugHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Opens a form on GitHub where you describe the bug. Reports are public: do not write children’s names or other personal details.'**
-  String get parentsReportBugHint;
-
-  /// No description provided for @bugReportNoBrowser.
-  ///
-  /// In en, this message translates to:
-  /// **'The browser could not be opened. You can report the bug at:'**
-  String get bugReportNoBrowser;
+  /// **'The game could not be saved.'**
+  String get saveFailed;
 }
 
 class _AppLocalizationsDelegate

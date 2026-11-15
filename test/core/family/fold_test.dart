@@ -237,11 +237,15 @@ void main() {
     expect(s.devices['pho']!.name, 'Telefon');
   });
 
-  test('ops survive JSON; an unknown op type is skipped, not a crash', () {
+  test('ops survive JSON; an unknown op type is kept as it is and the fold skips it (review R-005)', () {
     final o = _Ops();
     final op = o.add('tab', 1, _create('viky', 'Viky'));
     expect(FamilyOp.fromJson(jsonDecode(jsonEncode(op.toJson()))), op);
-    expect(FamilyOp.fromJson({'o': 'tab', 's': 2, 'c': Hlc(2, 0, 'tab').pack(), 'b': {'t': 'fromTheFuture'}}), isNull);
+    final future = FamilyOp.fromJson({'o': 'tab', 's': 2, 'c': Hlc(2, 0, 'tab').pack(), 'b': {'t': 'fromTheFuture', 'x': 1}})!;
+    expect(future.body, isA<UnknownOp>());
+    expect(future.toJson()['b'], {'t': 'fromTheFuture', 'x': 1});
+    expect(FamilyOp.fromJson({'o': 'tab', 's': 2, 'c': 'nonsense', 'b': {'t': 'x'}}), isNull, reason: 'broken, not just new');
+    expect(foldFamily([op, future]).profiles.keys, ['viky']);
   });
 
   test('a rename on one device and a new hat on another both stay (review I3)', () {

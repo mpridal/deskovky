@@ -240,15 +240,28 @@ class WarRules implements GameRules<WarState> {
     ];
     if (best.length == 1) return s.copyWith(battleWinner: () => best.single);
     // A war: the tied seats that still have cards go on. A single one left
-    // wins; when none has a card left, the first of them takes the table.
+    // wins; when none has a card left, nobody can win it: every seat takes
+    // back its own cards and the game ends (review R-024: no seat favoured).
     final going = [
       for (final c in best)
         if (s.decks[c].isNotEmpty) c,
     ];
     final depth = s.warDepth + 1;
-    if (going.length <= 1) {
-      final winner = going.isEmpty ? best.first : going.single;
-      return s.copyWith(battleWinner: () => winner, warDepth: depth, wars: s.wars + 1);
+    if (going.isEmpty) {
+      return s.copyWith(
+        decks: [
+          for (var i = 0; i < s.seats; i++) [...s.decks[i], for (final (card, _) in s.table[i]) card],
+        ],
+        table: [for (var i = 0; i < s.seats; i++) const []],
+        flipped: const [],
+        warDepth: 0,
+        wars: s.wars + 1,
+        round: s.round + 1,
+        over: true,
+      );
+    }
+    if (going.length == 1) {
+      return s.copyWith(battleWinner: () => going.single, warDepth: depth, wars: s.wars + 1);
     }
     return s.copyWith(contenders: going, flipped: const [], warDepth: depth, wars: s.wars + 1);
   }

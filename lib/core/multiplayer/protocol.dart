@@ -1,3 +1,4 @@
+import 'package:characters/characters.dart';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -10,6 +11,13 @@ import '../game/move.dart';
 /// message is a small JSON object with a `type`; anything unknown or broken
 /// decodes to null and is ignored.
 const protocolVersion = 1;
+
+/// Version of the games' rules (review R-002): devices play together only
+/// with the same rules, else their games drift apart. Raise it whenever any
+/// game's rules change (test/games/rules_version_test.dart notices).
+/// 2: Válka lays three cards in a war, Lodě place at the same time (0.12.0).
+/// 3: Válka – a war nobody can fight on ends the game (review R-024).
+const rulesVersion = 3;
 
 /// A player as another device shows them: name and avatar JSON.
 @immutable
@@ -29,7 +37,10 @@ class ProfileCard {
     if (json is! Map<String, Object?>) return null;
     final name = json['name'], avatar = json['avatar'], uid = json['uid'];
     if (name is! String || avatar is! Map<String, Object?>) return null;
-    return ProfileCard(name: name, avatar: avatar, uid: uid is String ? uid : null);
+    // From another device: kept small (review R-020).
+    if (jsonEncode(avatar).length > 4096) return null;
+    final short = name.characters.length > 40 ? name.characters.take(40).toString() : name;
+    return ProfileCard(name: short, avatar: avatar, uid: uid is String && uid.length <= 64 ? uid : null);
   }
 
   @override
@@ -168,10 +179,14 @@ class Hello extends NetMessage {
     required this.roomCode,
     required this.token,
     required this.profiles,
+    this.rules = rulesVersion,
   });
 
   final int protocolVersion;
   final String appVersion;
+
+  /// The sender's [rulesVersion]; null from apps before rules versions.
+  final int? rules;
   final String roomCode;
 
   /// Set when coming back after a dropout (spec 14.4).
@@ -188,6 +203,7 @@ class Hello extends NetMessage {
     'code': roomCode,
     'token': token,
     'profiles': [for (final p in profiles) p.toJson()],
+    if (rules != null) 'rules': rules,
   };
 
   static Hello _from(Map<String, Object?> j) => Hello(
@@ -196,6 +212,7 @@ class Hello extends NetMessage {
     roomCode: j['code']! as String,
     token: j['token'] as String?,
     profiles: [for (final p in j['profiles']! as List) ProfileCard.fromJson(p)!],
+    rules: j['rules'] as int?,
   );
 }
 
@@ -272,9 +289,13 @@ class Start extends NetMessage {
     required this.yourSeats,
     this.matchUid,
     this.seatUids = const {},
+    this.rules = rulesVersion,
   });
 
   final GameConfig config;
+
+  /// The host's [rulesVersion]; null from hosts before rules versions.
+  final int? rules;
   final int seed;
   final Map<int, int> yourSeats;
 
@@ -294,6 +315,7 @@ class Start extends NetMessage {
     'yourSeats': {for (final e in yourSeats.entries) '${e.key}': e.value},
     'match': matchUid,
     'seatUids': {for (final e in seatUids.entries) '${e.key}': e.value},
+    if (rules != null) 'rules': rules,
   };
 
   static Start _from(Map<String, Object?> j) => Start(
@@ -307,6 +329,7 @@ class Start extends NetMessage {
       for (final e in (j['seatUids'] as Map<String, Object?>? ?? const {}).entries)
         if (e.value case final String uid) int.parse(e.key): uid,
     },
+    rules: j['rules'] as int?,
   );
 }
 

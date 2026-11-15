@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Android 11 and older: everything is backed up except the family device
-     marker, so a phone set up from a backup gets its own family device id. -->
+     marker and the family key (review R-030), so a phone set up from a backup gets its own family device id. -->
 <full-backup-content>
     <exclude domain="file" path="family_device" />
+    <exclude domain="file" path="family_key" />
 </full-backup-content>

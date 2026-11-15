@@ -60,9 +60,13 @@ class SocketChannel implements MessageChannel {
     }
   }
 
+  /// The longest message read (a long saved game is far smaller).
+  static const maxMessageChars = 1 << 20;
+
   void _onData(Object? data) {
     _lastHeard = DateTime.now();
-    if (data is! String) return;
+    // Nothing in a game is this big; a huge message is not decoded (review R-020).
+    if (data is! String || data.length > maxMessageChars) return;
     switch (NetMessage.decode(data)) {
       case Ping(:final t):
         send(Pong(t));

@@ -729,6 +729,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get parentsGateWrong => 'No es correcto.';
 
   @override
+  String get parentsGateLocked =>
+      'Demasiados intentos. Vuelve a intentarlo en un minuto.';
+
+  @override
   String get parentsGateOpen => 'Abrir';
 
   @override
@@ -1358,7 +1362,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get familyRemoveMessage =>
-      'El dispositivo dejará de recibir perfiles y puntos. Los datos que ya tiene se quedan en él.';
+      'El dispositivo sale de la lista y deja de recibir perfiles y puntos. Los datos que ya tiene se le quedan. Es solo para ordenar: quien conozca el código QR de la familia puede volver a unirse. Solo una familia nueva lo separa del todo.';
 
   @override
   String get familyRemoved => 'quitado';
@@ -1530,7 +1534,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get donationsOfflineText =>
-      'Se juega sin conexión y no envía nada sobre ti. Internet solo se usa para descargar una versión nueva y la lista de donantes.';
+      'Se juega sin conexión y no envía nada sobre ti. Internet solo se usa para descargar una versión nueva.';
 
   @override
   String get donationsFamilyTitle => 'Juega toda la familia';
@@ -1569,12 +1573,6 @@ class AppLocalizationsEs extends AppLocalizations {
       'Se podrá donar cuando el juego esté en Google Play. ¡Gracias!';
 
   @override
-  String get donationsThanks => 'Muchas gracias a quienes han donado:';
-
-  @override
-  String get donationsNobody => 'Aún no hay nadie. ¿Serás el primero?';
-
-  @override
   String get familyRename => 'Cambiar el nombre del dispositivo';
 
   @override
@@ -1603,13 +1601,5 @@ class AppLocalizationsEs extends AppLocalizations {
       'La invitación llega a todos los dispositivos de la red';
 
   @override
-  String get parentsReportBug => 'Informar de un error';
-
-  @override
-  String get parentsReportBugHint =>
-      'Abre un formulario en GitHub donde describes el error. Los informes son públicos: no escribas nombres de niños ni otros datos personales.';
-
-  @override
-  String get bugReportNoBrowser =>
-      'No se pudo abrir el navegador. Puedes informar del error en:';
+  String get saveFailed => 'No se pudo guardar la partida.';
 }

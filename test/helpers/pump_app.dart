@@ -15,8 +15,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../core/audio/fake_audio_backend.dart';
 import '../core/update/fake_update.dart';
-import 'package:deskovky/app/donations_providers.dart';
-import 'package:deskovky/core/donations/donors.dart';
 import 'test_database.dart';
 
 /// Pumps [DeskovkyApp] at [size] logical pixels in [locale]. Uses [db] when
@@ -34,7 +32,6 @@ Future<void> pumpApp(
   FakeApkInstaller? installer,
   FakeUpdateDownloader? downloader,
   bool checkUpdates = false,
-  DonorsSource? donors,
   List<Override> overrides = const [],
 }) async {
   tester.view.devicePixelRatio = 1.0;
@@ -63,7 +60,6 @@ Future<void> pumpApp(
         releaseSourceProvider.overrideWithValue(releases ?? FakeReleaseSource()),
         apkInstallerProvider.overrideWithValue(installer ?? FakeApkInstaller()),
         updateDownloaderProvider.overrideWithValue(downloader ?? FakeUpdateDownloader()),
-        donorsSourceProvider.overrideWithValue(donors ?? const NoDonors()),
         ...overrides,
         audioServiceProvider.overrideWith((ref) {
           final service = AudioService(backend: audio ?? FakeAudioBackend(), catalog: AudioCatalog.standard);
@@ -77,10 +73,3 @@ Future<void> pumpApp(
   await tester.pumpAndSettle();
 }
 
-/// No internet in tests: nobody has given yet.
-class NoDonors implements DonorsSource {
-  const NoDonors();
-
-  @override
-  Future<List<Donor>?> fetch() async => const [];
-}

@@ -129,6 +129,26 @@ void main() {
     back.dispose();
   });
 
+  test('coming back into a game someone paused shows it paused (review R-012)', () async {
+    final (host, client, line) = await _started(grace: const Duration(seconds: 5));
+    final token = client.token!;
+    host.pause(bySeat: 0);
+    await _settle();
+    expect(client.paused, isTrue);
+    line.drop();
+    await _settle();
+    final (back, _) = await _join(host, token: token);
+    await _settle();
+    expect(host.paused, isTrue, reason: 'the host paused it on purpose');
+    expect(back.paused, isTrue, reason: 'the returning device must know');
+    host.resume();
+    await _settle();
+    expect(back.paused, isFalse);
+    host.dispose();
+    client.dispose();
+    back.dispose();
+  });
+
   test('a device that leaves on its own is replaced by a robot at once', () async {
     final (host, client, _) = await _started();
     client.leave();

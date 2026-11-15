@@ -73,6 +73,42 @@ void main() {
     expect(devicesSeen.where((d) => d.isMe).single.name, 'Tablet');
   });
 
+  test('moving to another family takes only the profiles that play on this device (review R-032)', () async {
+    final tablet = device('Tablet'), phone = device('Telefon'), babi = device('Babi');
+    await tablet.players.create(name: 'Viky', avatar: AvatarSpec.defaults);
+    await tablet.controller.createFamily(deviceName: 'Tablet');
+    await phone.controller.joinFamily(tablet.controller.ticket!, deviceName: 'Telefon');
+    await phone.players.create(name: 'Kuba', avatar: AvatarSpec.defaults);
+    await _settle();
+    expect(await phone.names(), {'Viky', 'Kuba'});
+
+    await babi.players.create(name: 'Ema', avatar: AvatarSpec.defaults);
+    await babi.controller.createFamily(deviceName: 'Babi');
+    final outcome = await phone.controller.joinFamily(babi.controller.ticket!, deviceName: 'Telefon');
+    expect(outcome.ok, isTrue, reason: outcome.reason);
+    await _settle();
+    expect(await babi.names(), {'Ema', 'Kuba'}, reason: "Viky never played on the phone: she is not grandma's");
+    expect(await phone.names(), {'Ema', 'Kuba'});
+    expect((await babi.controller.familyDevices()).map((d) => d.name).toSet(), {'Babi', 'Telefon'});
+    expect(await tablet.names(), {'Viky', 'Kuba'}, reason: 'the old family keeps what it had');
+  });
+
+  test('a move to another family that fails keeps everything as it was', () async {
+    final tablet = device('Tablet'), phone = device('Telefon');
+    await tablet.players.create(name: 'Viky', avatar: AvatarSpec.defaults);
+    await tablet.controller.createFamily(deviceName: 'Tablet');
+    await phone.controller.joinFamily(tablet.controller.ticket!, deviceName: 'Telefon');
+    await phone.players.create(name: 'Kuba', avatar: AvatarSpec.defaults);
+    await _settle();
+    final elsewhere = FamilyTicket(familyId: 'f' * 32, key: 'a' * 64, ip: '192.168.1.250', port: 4000);
+    final outcome = await phone.controller.joinFamily(elsewhere, deviceName: 'Telefon');
+    expect(outcome.ok, isFalse);
+    expect(await phone.names(), {'Viky', 'Kuba'});
+    final before = (await phone.db.select(phone.db.syncOps).get()).length;
+    expect(before, greaterThan(3));
+    expect((await phone.controller.familyDevices()).map((d) => d.name).toSet(), {'Tablet', 'Telefon'});
+  });
+
   test('family devices on the Wi-Fi sync by themselves after a change', () async {
     final tablet = device('Tablet'), phone = device('Telefon');
     await tablet.controller.createFamily(deviceName: 'Tablet');
@@ -157,6 +193,10 @@ void main() {
     await tablet.controller.createFamily(deviceName: 'Tablet');
     await phone.controller.joinFamily(tablet.controller.ticket!, deviceName: 'Telefon');
     await _settle();
+    // Wait for the syncs after joining, not for a fixed time (review R-019).
+    for (var i = 0; i < 200 && (tablet.controller.syncing || phone.controller.syncing); i++) {
+      await _settle(10);
+    }
     await tablet.controller.removeDevice(await FamilyStore.of(phone.db).deviceId());
     await tablet.players.create(name: 'Tajná', avatar: AvatarSpec.defaults);
     await _settle(600);
@@ -279,6 +319,15 @@ void main() {
     tablet.controller.syncSoon();
     await _settle();
     expect((await tablet.controller.familyDevices()).single.name, 'Obývák');
+  });
+
+  test('a device called just "Handy" or "Телефон" takes the system name too (review R-027)', () async {
+    for (final generic in ['Handy', 'Телефон', 'Tablette', 'Celular']) {
+      final tablet = device('T', systemName: 'Galaxy Tab A7 Lite');
+      await tablet.controller.createFamily(deviceName: generic);
+      await _settle();
+      expect((await tablet.controller.familyDevices()).single.name, 'Galaxy Tab A7 Lite', reason: generic);
+    }
   });
 }
 

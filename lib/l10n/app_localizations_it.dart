@@ -19,7 +19,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get navPlayers => 'Giocatori';
 
   @override
-  String get navLeaderboards => 'Classifiche';
+  String get navLeaderboards => 'Podio';
 
   @override
   String get navSettings => 'Opzioni';
@@ -732,6 +732,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get parentsGateWrong => 'Non è giusto.';
 
   @override
+  String get parentsGateLocked => 'Troppi tentativi. Riprova tra un minuto.';
+
+  @override
   String get parentsGateOpen => 'Apri';
 
   @override
@@ -1363,7 +1366,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get familyRemoveMessage =>
-      'Il dispositivo non riceverà più profili e punti. I dati che ha già restano lì.';
+      'Il dispositivo esce dall’elenco e non riceve più profili e punti. I dati che ha già gli restano. Serve solo a fare ordine: chi conosce il codice QR della famiglia può rientrare. Solo una nuova famiglia lo separa del tutto.';
 
   @override
   String get familyRemoved => 'tolto';
@@ -1535,7 +1538,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get donationsOfflineText =>
-      'Funziona offline e non manda niente su di te da nessuna parte. Usa internet solo per scaricare una nuova versione e l\'elenco dei donatori.';
+      'Funziona offline e non manda niente su di te da nessuna parte. Usa internet solo per scaricare una nuova versione.';
 
   @override
   String get donationsFamilyTitle => 'Gioca tutta la famiglia';
@@ -1574,13 +1577,6 @@ class AppLocalizationsIt extends AppLocalizations {
       'Si potrà donare quando il gioco sarà su Google Play. Grazie!';
 
   @override
-  String get donationsThanks => 'Un grazie di cuore ai nostri donatori:';
-
-  @override
-  String get donationsNobody =>
-      'Qui non c\'è ancora nessuno. Vuoi essere il primo?';
-
-  @override
   String get familyRename => 'Rinomina dispositivo';
 
   @override
@@ -1609,13 +1605,5 @@ class AppLocalizationsIt extends AppLocalizations {
       'L’invito arriva a tutti i dispositivi della rete';
 
   @override
-  String get parentsReportBug => 'Segnala un errore';
-
-  @override
-  String get parentsReportBugHint =>
-      'Apre un modulo su GitHub dove descrivi l’errore. Le segnalazioni sono pubbliche: non scrivere nomi di bambini né altri dati personali.';
-
-  @override
-  String get bugReportNoBrowser =>
-      'Non è stato possibile aprire il browser. Puoi segnalare l’errore qui:';
+  String get saveFailed => 'Non è stato possibile salvare la partita.';
 }

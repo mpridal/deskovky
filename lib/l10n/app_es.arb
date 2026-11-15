@@ -205,6 +205,7 @@
   "parentsGateTitle": "Solo para padres",
   "parentsGateQuestion": "¿Cuánto es {a} × {b}?",
   "parentsGateWrong": "No es correcto.",
+  "parentsGateLocked": "Demasiados intentos. Vuelve a intentarlo en un minuto.",
   "parentsGateOpen": "Abrir",
   "parentsGiftTitle": "Regalar puntos",
   "parentsGiftConfirm": "¿Regalar {points} ● a {name}?",
@@ -393,7 +394,7 @@
   "familyThisDevice": "este dispositivo",
   "familyNeverSynced": "aún sin sincronizar",
   "familyRemove": "Quitar de la familia",
-  "familyRemoveMessage": "El dispositivo dejará de recibir perfiles y puntos. Los datos que ya tiene se quedan en él.",
+  "familyRemoveMessage": "El dispositivo sale de la lista y deja de recibir perfiles y puntos. Los datos que ya tiene se le quedan. Es solo para ordenar: quien conozca el código QR de la familia puede volver a unirse. Solo una familia nueva lo separa del todo.",
   "familyRemoved": "quitado",
   "familyJoined": "¡Listo, ya estás en la familia!",
   "familyJoinFailed": "No se pudo unir a la familia. ¿Están ambos en la misma Wi-Fi y con Familia abierta en el otro?",
@@ -442,7 +443,7 @@
   "donationsNoDataTitle": "Sin recogida de datos",
   "donationsNoDataText": "Sin cuentas ni inicio de sesión. Los perfiles y resultados se quedan en tus dispositivos.",
   "donationsOfflineTitle": "Seguro sin internet",
-  "donationsOfflineText": "Se juega sin conexión y no envía nada sobre ti. Internet solo se usa para descargar una versión nueva y la lista de donantes.",
+  "donationsOfflineText": "Se juega sin conexión y no envía nada sobre ti. Internet solo se usa para descargar una versión nueva.",
   "donationsFamilyTitle": "Juega toda la familia",
   "donationsFamilyText": "En una misma mesa o cada uno en el suyo por el Wi-Fi de casa. Los dispositivos de la familia comparten datos solo entre ellos.",
   "donationsKidsTitle": "También para los más pequeños",
@@ -453,8 +454,6 @@
   "donationsGrowingText": "Nueve juegos y vienen más, algunos a petición de los niños.",
   "donationsWhy": "Una aportación ayuda a pagar el tiempo para crear juegos nuevos y las tarifas de Google Play.",
   "donationsSoon": "Se podrá donar cuando el juego esté en Google Play. ¡Gracias!",
-  "donationsThanks": "Muchas gracias a quienes han donado:",
-  "donationsNobody": "Aún no hay nadie. ¿Serás el primero?",
   "familyRename": "Cambiar el nombre del dispositivo",
   "familyOnline": "Deskovky abierto",
   "familyOffline": "No disponible",
@@ -463,7 +462,5 @@
   "shareAppTitle": "Deskovky en otro dispositivo",
   "shareAppHint": "Escanea el código con la cámara del otro teléfono o tableta. Se abre la página con la versión más reciente: descarga el archivo deskovky-….apk y ábrelo.",
   "inviteToAllDevices": "La invitación llega a todos los dispositivos de la red",
-  "parentsReportBug": "Informar de un error",
-  "parentsReportBugHint": "Abre un formulario en GitHub donde describes el error. Los informes son públicos: no escribas nombres de niños ni otros datos personales.",
-  "bugReportNoBrowser": "No se pudo abrir el navegador. Puedes informar del error en:"
+  "saveFailed": "No se pudo guardar la partida."
 }

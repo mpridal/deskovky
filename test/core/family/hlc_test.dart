@@ -23,4 +23,15 @@ void main() {
     expect(Hlc.unpack(const Hlc(1731300000000, 7, 'dev-1').pack()), const Hlc(1731300000000, 7, 'dev-1'));
     expect(Hlc.unpack('nonsense'), isNull);
   });
+
+  test('a device with its date far ahead does not drag this clock along (review R-010)', () {
+    const now = 1731300000000;
+    const day = 24 * 3600 * 1000;
+    const local = Hlc(now, 0, 'a');
+    final afterFuture = local.receive(const Hlc(now + 400 * day, 3, 'b'), now + 10);
+    expect(afterFuture.millis, now + 10, reason: 'a year ahead is a wrong date, not the time');
+    expect(afterFuture.tick(now + 20).millis, now + 20);
+    // A small difference between clocks is still taken over, as before.
+    expect(local.receive(const Hlc(now + 5000, 0, 'b'), now + 10), const Hlc(now + 5000, 1, 'a'));
+  });
 }

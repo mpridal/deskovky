@@ -254,6 +254,15 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
 
   Timer? _finishTimer;
   bool _finished = false;
+
+  /// Saves come at most about once a second: while [_saveTimer] runs, a new
+  /// save waits ([_savePending]) and comes when it ends.
+  Timer? _saveTimer;
+  var _savePending = false;
+  var _saveWarned = false;
+
+  /// Robots stopped because the app went to the background (review R-026).
+  var _backgroundPaused = false;
   bool _pauseOpen = false;
 
   /// The host's turns belong to its room; this screen only watches them.
@@ -319,6 +328,7 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
     WidgetsBinding.instance.removeObserver(this);
     _family.setInGame(false);
     _finishTimer?.cancel();
+    _saveTimer?.cancel();
     (_hostRoom ?? _clientRoom)?.removeListener(_onRoom);
     _turns.removeListener(_onTurn);
     if (_ownsTurns) _turns.dispose();
@@ -329,11 +339,20 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused || state == AppLifecycleState.detached) {
       _clock.stop();
-      _save();
+      _save(now: true);
       // The host in the background (a phone call) pauses everyone (spec 14.4).
       _hostRoom?.pause();
-    } else if (state == AppLifecycleState.resumed && !_turns.paused) {
-      _clock.start();
+      // A local game waits too: robots would play while nobody watches (R-026).
+      if (!_isNet && _ownsTurns && !_turns.paused) {
+        _turns.pause();
+        _backgroundPaused = true;
+      }
+    } else if (state == AppLifecycleState.resumed) {
+      if (_backgroundPaused) {
+        _backgroundPaused = false;
+        if (!_pauseOpen) _turns.resume();
+      }
+      if (!_turns.paused) _clock.start();
     }
   }
 
@@ -487,10 +506,31 @@ class _GamePlayState<S> extends ConsumerState<_GamePlay<S>> with WidgetsBindingO
     _checkFinished();
   }
 
-  void _save() {
+  /// Saves the game for "Pokračovat": at most about once a second (each save
+  /// writes all moves so far), [now] when the app goes away (review R-025).
+  void _save({bool now = false}) {
     // A network game lives in its room, not in this device's store.
     if (_isNet || _finished || !_module.supportsSaveResume || _turns.isOver) return;
-    ref.read(gameStoreProvider).saveSession(_session.toSave(elapsed: _elapsed));
+    if (!now && _saveTimer != null) {
+      _savePending = true;
+      return;
+    }
+    _savePending = false;
+    _saveTimer?.cancel();
+    _saveTimer = Timer(const Duration(seconds: 1), () {
+      _saveTimer = null;
+      if (_savePending && mounted) _save();
+    });
+    final message = AppLocalizations.of(context).saveFailed;
+    unawaited(
+      ref.read(gameStoreProvider).saveSession(_session.toSave(elapsed: _elapsed)).catchError((Object e) {
+        debugPrint('Saving the game: $e');
+        // Once a game: "Pokračovat" will not have this game.
+        if (_saveWarned || !mounted) return;
+        _saveWarned = true;
+        showAppToast(context, message);
+      }),
+    );
   }
 
   void _checkFinished() {

@@ -737,6 +737,10 @@ class AppLocalizationsCs extends AppLocalizations {
   String get parentsGateWrong => 'To není správně.';
 
   @override
+  String get parentsGateLocked =>
+      'Příliš mnoho pokusů. Zkus to znovu za minutu.';
+
+  @override
   String get parentsGateOpen => 'Otevřít';
 
   @override
@@ -1365,7 +1369,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get familyRemoveMessage =>
-      'Zařízení přestane dostávat profily a body. Data, která na něm už jsou, mu zůstanou.';
+      'Zařízení zmizí ze seznamu a přestane dostávat profily a body. Data, která už má, mu zůstanou. Je to jen pro pořádek: se znalostí rodinného QR kódu se může připojit znovu. Úplně oddělit ho jde jen založením nové rodiny.';
 
   @override
   String get familyRemoved => 'odebráno';
@@ -1535,7 +1539,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get donationsOfflineText =>
-      'Hraje se offline a hra o vás nic neposílá ven. Internet použije jen ke stažení nové verze a seznamu dárců.';
+      'Hraje se offline a hra o vás nic neposílá ven. Internet použije jen ke stažení nové verze.';
 
   @override
   String get donationsFamilyTitle => 'Hraje celá rodina';
@@ -1574,12 +1578,6 @@ class AppLocalizationsCs extends AppLocalizations {
       'Přispívat půjde, až bude hra na Google Play. Děkujeme!';
 
   @override
-  String get donationsThanks => 'Srdečně děkujeme dárcům:';
-
-  @override
-  String get donationsNobody => 'Zatím tu nikdo není. Budete první?';
-
-  @override
   String get familyRename => 'Přejmenovat zařízení';
 
   @override
@@ -1607,13 +1605,5 @@ class AppLocalizationsCs extends AppLocalizations {
   String get inviteToAllDevices => 'Pozvánka přijde na všechna zařízení v síti';
 
   @override
-  String get parentsReportBug => 'Nahlásit chybu';
-
-  @override
-  String get parentsReportBugHint =>
-      'Otevře formulář na GitHubu, kam chybu popíšeš. Hlášení je veřejné: nepiš do něj jména dětí ani jiné osobní údaje.';
-
-  @override
-  String get bugReportNoBrowser =>
-      'Prohlížeč se nepodařilo otevřít. Chybu můžeš nahlásit na adrese:';
+  String get saveFailed => 'Hru se nepodařilo uložit.';
 }

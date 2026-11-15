@@ -187,4 +187,46 @@ void main() {
     await FamilyStore(db).rebuild();
     expect(await tables(), before, reason: 'the ops say exactly what the tables held');
   });
+
+  Future<void> v5WithAPlayer(v5.DatabaseAtV5 old) async {
+    await old.customStatement("INSERT INTO players (name, name_key, avatar_json, favorite_seat, created_at) VALUES ('Viky', 'viky', '{}', NULL, 1761400000)");
+    await old.customStatement("INSERT INTO matches (game_id, played_at, duration_ms, difficulty) VALUES ('memory', 1761500000000, 60000, 'easy')");
+  }
+
+  test('an update to v6 killed after adding the columns opens next time and finishes (review R-008)', () async {
+    final schema = await verifier.schemaAt(5);
+    final old = v5.DatabaseAtV5(schema.newConnection());
+    await v5WithAPlayer(old);
+    // What a killed first start leaves: new columns, but still version 5.
+    for (final t in ['players', 'matches', 'points_ledger']) {
+      await old.customStatement('ALTER TABLE $t ADD COLUMN uid TEXT NULL');
+    }
+    await old.close();
+
+    final db = AppDatabase(schema.newConnection());
+    addTearDown(db.close);
+    expect((await db.select(db.players).getSingle()).uid, isNotNull);
+    expect((await db.select(db.matches).getSingle()).uid, isNotNull);
+    expect(await db.select(db.syncOps).get(), isNotEmpty);
+  });
+
+  test('profiles left without family ids by a failed import get them on the next open (review R-008)', () async {
+    final schema = await verifier.schemaAt(5);
+    final old = v5.DatabaseAtV5(schema.newConnection());
+    await v5WithAPlayer(old);
+    await old.close();
+    final first = AppDatabase(schema.newConnection());
+    await first.select(first.players).get();
+    // The import did not happen (it failed) although the version is 6 now.
+    await first.customStatement('UPDATE players SET uid = NULL');
+    await first.customStatement('UPDATE matches SET uid = NULL');
+    await first.customStatement('DELETE FROM sync_ops');
+    await first.close();
+
+    final db = AppDatabase(schema.newConnection());
+    addTearDown(db.close);
+    expect((await db.select(db.players).getSingle()).uid, isNotNull);
+    expect((await db.select(db.matches).getSingle()).uid, isNotNull);
+    expect(await db.select(db.syncOps).get(), isNotEmpty);
+  });
 }

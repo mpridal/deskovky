@@ -14,8 +14,9 @@ import '../multiplayer/socket_channel.dart';
 /// UDP port of the family announcements (rooms use 47123).
 const familyBeaconPort = 47124;
 
-/// How often a family device says it is here.
-const familyBeaconInterval = Duration(seconds: 10);
+/// How often a family device says it is here; the family screen shows a
+/// device as away after about four missed rounds.
+const familyBeaconInterval = Duration(seconds: 5);
 
 /// "A device of family [familyTag] is at [ip]:[port]" (spec 7.2). Only a
 /// tag of the family id is sent – no names, no data; [activeUid] says who
@@ -110,7 +111,10 @@ class DeviceFamilyNet implements FamilyNet {
 
   @override
   Future<OpenServer> serve() async {
-    final server = await NetServer.start();
+    // Only on the Wi-Fi, not on mobile data or a VPN (review R-021); debug
+    // builds also on localhost, for tests through `adb forward`.
+    final wifi = kDebugMode ? null : await localWifiAddress();
+    final server = await NetServer.start(address: wifi);
     return OpenServer(port: server.port, channels: server.channels, close: server.close);
   }
 
@@ -121,7 +125,7 @@ class DeviceFamilyNet implements FamilyNet {
   Future<FamilyAnnouncement> announce(FamilyBeacon beacon) async {
     final socket = await RawDatagramSocket.bind(InternetAddress.anyIPv4, 0)
       ..broadcastEnabled = true;
-    return _UdpFamilyAnnouncement(socket, beacon);
+    return _UdpFamilyAnnouncement(socket, beacon, await broadcastTargets(beacon.ip));
   }
 
   @override
@@ -161,13 +165,14 @@ class DeviceFamilyNet implements FamilyNet {
 }
 
 class _UdpFamilyAnnouncement implements FamilyAnnouncement {
-  _UdpFamilyAnnouncement(this._socket, this._beacon) {
+  _UdpFamilyAnnouncement(this._socket, this._beacon, this._targets) {
     _send();
     _timer = Timer.periodic(familyBeaconInterval, (_) => _send());
   }
 
   final RawDatagramSocket _socket;
   FamilyBeacon _beacon;
+  final List<String> _targets;
   late final Timer _timer;
   var _closed = false;
 
@@ -180,7 +185,7 @@ class _UdpFamilyAnnouncement implements FamilyAnnouncement {
   void _send() {
     if (_closed) return;
     final data = utf8.encode(jsonEncode(_beacon.toJson()));
-    for (final target in ['255.255.255.255', subnetBroadcast(_beacon.ip)]) {
+    for (final target in _targets) {
       try {
         _socket.send(data, InternetAddress(target), familyBeaconPort);
       } on Object {

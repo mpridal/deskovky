@@ -11,7 +11,7 @@ class NetServer {
     _sub = _server.listen(_onRequest);
   }
 
-  /// Listens on [port] (0: any free one) of [address].
+  /// Listens on [port] (0: any free one) of [address] (every IPv4 one when null).
   static Future<NetServer> start({
     Object? address,
     int port = 0,

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import '../../ui_kit/components/primary_button.dart';
@@ -16,12 +17,12 @@ import '../../ui_kit/components/round_icon_button.dart';
 import '../../ui_kit/components/ui_feedback.dart';
 import '../../ui_kit/surfaces/felt_background.dart';
 import '../../ui_kit/tokens/app_colors.dart';
-import '../../app/bug_report.dart';
-import '../../app/update_controller.dart';
 import '../../ui_kit/tokens/app_typography.dart';
 
 /// Asks a times-table question that children of the target age cannot yet
-/// answer (spec 5.6 "Rodičovská zóna"); true when answered right.
+/// answer (spec 5.6 "Rodičovská zóna"); true when answered right. Two-digit
+/// times one-digit, and three wrong answers lock it for a minute (review
+/// R-013): the small times table is known from the third class.
 Future<bool> showParentsGate(BuildContext context, {Random? random}) async {
   return await showDialog<bool>(context: context, builder: (_) => _Gate(random: random ?? Random())) ?? false;
 }
@@ -35,32 +36,73 @@ class _Gate extends StatefulWidget {
   State<_Gate> createState() => _GateState();
 }
 
+/// Wrong answers in a row and the end of a lockout; kept while the app runs,
+/// so closing and opening the gate again does not help.
+var _gateMisses = 0;
+DateTime? _gateLockedUntil;
+
 class _GateState extends State<_Gate> {
   final _answer = TextEditingController();
   bool _wrong = false;
   late (int, int) _question = _next();
+  Timer? _unlock;
 
-  /// A new 6–9 × 6–9 question, never the same as the last one.
+  static const _maxMisses = 3;
+  static const _lockout = Duration(minutes: 1);
+
+  bool get _locked => _unlock != null;
+
+  @override
+  void initState() {
+    super.initState();
+    final until = _gateLockedUntil;
+    if (until != null) {
+      final left = until.difference(DateTime.now());
+      if (left > Duration.zero) {
+        _lockFor(left);
+      } else {
+        _gateLockedUntil = null;
+      }
+    }
+  }
+
+  /// A new 12–19 × 3–9 question, never the same as the last one.
   (int, int) _next([(int, int)? last]) {
-    final q = (6 + widget.random.nextInt(4), 6 + widget.random.nextInt(4));
-    return q == last ? (q.$1, 6 + (q.$2 - 5) % 4) : q;
+    final q = (12 + widget.random.nextInt(8), 3 + widget.random.nextInt(7));
+    return q == last ? (q.$1, 3 + (q.$2 - 2) % 7) : q;
+  }
+
+  void _lockFor(Duration time) {
+    _unlock?.cancel();
+    _unlock = Timer(time, () {
+      _gateLockedUntil = null;
+      _gateMisses = 0;
+      if (mounted) setState(() => _unlock = null);
+    });
   }
 
   @override
   void dispose() {
+    _unlock?.cancel();
     _answer.dispose();
     super.dispose();
   }
 
   void _check() {
+    if (_locked) return;
     if (int.tryParse(_answer.text.trim()) == _question.$1 * _question.$2) {
+      _gateMisses = 0;
       Navigator.of(context).pop(true);
     } else {
-      // A new question each time: guessing through ten answers stops working.
+      // A new question each time: guessing through answers stops working.
       setState(() {
         _wrong = true;
         _question = _next(_question);
         _answer.clear();
+        if (++_gateMisses >= _maxMisses) {
+          _gateLockedUntil = DateTime.now().add(_lockout);
+          _lockFor(_lockout);
+        }
       });
     }
   }
@@ -86,17 +128,25 @@ class _GateState extends State<_Gate> {
             ),
             TextField(
               controller: _answer,
+              enabled: !_locked,
               autofocus: true,
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               onSubmitted: (_) => _check(),
             ),
-            if (_wrong) ...[
+            if (_locked || _wrong) ...[
               const SizedBox(height: 4),
-              Text(l10n.parentsGateWrong, style: AppTypography.caption(color: AppColors.players[0])),
+              Text(
+                _locked ? l10n.parentsGateLocked : l10n.parentsGateWrong,
+                style: AppTypography.caption(color: AppColors.players[0]),
+              ),
             ],
             const SizedBox(height: 16),
-            PrimaryButton(key: const ValueKey('gateOpen'), label: l10n.parentsGateOpen, onPressed: _check),
+            PrimaryButton(
+              key: const ValueKey('gateOpen'),
+              label: l10n.parentsGateOpen,
+              onPressed: _locked ? null : _check,
+            ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
               style: TextButton.styleFrom(minimumSize: const Size(48, 48)),
@@ -121,36 +171,6 @@ class ParentsScreen extends ConsumerStatefulWidget {
 }
 
 class _ParentsScreenState extends ConsumerState<ParentsScreen> {
-  /// Opens the GitHub issue form with the app, system and device filled in;
-  /// without a browser it shows the address.
-  Future<void> _reportBug() async {
-    final l10n = AppLocalizations.of(context);
-    final language = Localizations.localeOf(context).languageCode;
-    final version = await ref.read(appVersionProvider.future).catchError((Object _) => '?');
-    final info = await ref.read(deviceInfoProvider)();
-    final uri = bugReportUri(version: version, device: info.device, os: info.os, language: language);
-    final opened = await ref.read(browserOpenerProvider)(uri);
-    if (opened || !mounted) return;
-    await showDialog<void>(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.paper,
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(l10n.bugReportNoBrowser, style: AppTypography.body(color: AppColors.ink)),
-            const SizedBox(height: 8),
-            SelectableText(
-              bugReportPage.replaceFirst('https://', ''),
-              style: AppTypography.button(color: AppColors.felt),
-            ),
-          ],
-        ),
-        actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(l10n.close))],
-      ),
-    );
-  }
-
   String? _done;
 
   Future<void> _gift(PlayerProfile player, int amount) async {
@@ -216,18 +236,6 @@ class _ParentsScreenState extends ConsumerState<ParentsScreen> {
                 onPressed: () => context.push('/settings/parents/family'),
               ),
               const SizedBox(height: 8),
-              // A bug report: a GitHub issue form in the browser (public).
-              PrimaryButton(
-                key: const ValueKey('parentsReportBug'),
-                label: l10n.parentsReportBug,
-                icon: Icons.bug_report,
-                secondary: true,
-                onPressed: _reportBug,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: Text(l10n.parentsReportBugHint, style: AppTypography.caption(color: AppColors.paper2)),
-              ),
               const SizedBox(height: 16),
               Text(l10n.parentsGiftTitle, style: AppTypography.h2(color: AppColors.paper)),
               const SizedBox(height: 8),

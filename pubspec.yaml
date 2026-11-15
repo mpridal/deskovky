@@ -1,7 +1,7 @@
 name: deskovky
 description: "Rodinná kolekce deskových her pro Android."
 publish_to: 'none'
-version: 0.13.1+1301
+version: 0.14.0+1400
 
 environment:
   sdk: ^3.13.7

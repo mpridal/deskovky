@@ -17,8 +17,15 @@ class Hlc implements Comparable<Hlc> {
   /// The stamp for a new local event at wall time [nowMillis].
   Hlc tick(int nowMillis) => nowMillis > millis ? Hlc(nowMillis, 0, deviceId) : Hlc(millis, counter + 1, deviceId);
 
-  /// This device's clock after seeing [remote] at wall time [nowMillis].
+  /// How far ahead of this device another one may be and still move its
+  /// clock; more is a wrong date (a tablet with a flat battery), not time.
+  static const maxDriftMillis = 24 * 3600 * 1000;
+
+  /// This device's clock after seeing [remote] at wall time [nowMillis]. A
+  /// stamp more than [maxDriftMillis] ahead is not followed (review R-010):
+  /// its op still counts, but this device's next ops keep the real time.
   Hlc receive(Hlc remote, int nowMillis) {
+    if (remote.millis > nowMillis + maxDriftMillis) return tick(nowMillis);
     final m = max(nowMillis, max(millis, remote.millis));
     final int c;
     if (m == millis && m == remote.millis) {

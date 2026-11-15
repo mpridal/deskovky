@@ -45,20 +45,19 @@ class MainActivity : FlutterActivity() {
                         else "${Build.MANUFACTURER.replaceFirstChar { it.uppercase() }} ${Build.MODEL}"
                     result.success(if (given.isNullOrBlank()) model else given)
                 }
-                "os" -> result.success("Android ${Build.VERSION.RELEASE} (SDK ${Build.VERSION.SDK_INT})")
-                // The bug report form opens in the browser.
-                "open" -> {
-                    val url = call.arguments as? String
-                    if (url == null || !(url.startsWith("https://"))) {
-                        result.success(false)
-                    } else {
-                        try {
-                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-                            result.success(true)
-                        } catch (e: Exception) {
-                            result.success(false)
-                        }
+                // The mask of the Wi-Fi network, for the real broadcast address
+                // of networks bigger than /24 (review R-033).
+                "prefix" -> {
+                    val ip = call.arguments as? String
+                    val prefix = try {
+                        java.net.NetworkInterface.getNetworkInterfaces()?.toList().orEmpty()
+                            .flatMap { it.interfaceAddresses }
+                            .firstOrNull { it.address?.hostAddress == ip }
+                            ?.networkPrefixLength?.toInt()
+                    } catch (e: Exception) {
+                        null
                     }
+                    result.success(prefix)
                 }
                 else -> result.notImplemented()
             }

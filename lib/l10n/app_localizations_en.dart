@@ -727,6 +727,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get parentsGateWrong => 'That is not right.';
 
   @override
+  String get parentsGateLocked => 'Too many tries. Try again in a minute.';
+
+  @override
   String get parentsGateOpen => 'Open';
 
   @override
@@ -1354,7 +1357,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get familyRemoveMessage =>
-      'The device will stop getting profiles and points. The data already on it stays there.';
+      'The device leaves the list and stops getting profiles and points. Data it already has stays on it. This is just for tidiness: anyone who knows the family QR code can join again. Only a new family separates it for good.';
 
   @override
   String get familyRemoved => 'removed';
@@ -1525,7 +1528,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get donationsOfflineText =>
-      'It plays offline and sends nothing about you anywhere. It only uses the internet to download a new version and the list of donors.';
+      'It plays offline and sends nothing about you anywhere. It only uses the internet to download a new version.';
 
   @override
   String get donationsFamilyTitle => 'The whole family plays';
@@ -1564,12 +1567,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Giving will be possible once the game is on Google Play. Thank you!';
 
   @override
-  String get donationsThanks => 'Heartfelt thanks to our donors:';
-
-  @override
-  String get donationsNobody => 'Nobody here yet. Will you be the first?';
-
-  @override
   String get familyRename => 'Rename device';
 
   @override
@@ -1598,13 +1595,5 @@ class AppLocalizationsEn extends AppLocalizations {
       'The invitation goes to every device on the Wi-Fi';
 
   @override
-  String get parentsReportBug => 'Report a bug';
-
-  @override
-  String get parentsReportBugHint =>
-      'Opens a form on GitHub where you describe the bug. Reports are public: do not write children’s names or other personal details.';
-
-  @override
-  String get bugReportNoBrowser =>
-      'The browser could not be opened. You can report the bug at:';
+  String get saveFailed => 'The game could not be saved.';
 }

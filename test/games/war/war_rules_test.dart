@@ -170,6 +170,21 @@ void main() {
       expect(s.warDepth, 1);
     });
 
+    test('a war nobody can fight on: everyone takes back their cards and the game ends, no seat favoured (review R-024)', () {
+      final s = flipAll(deal([
+        [c(10)],
+        [c(10, 1)],
+      ]));
+      expect(s.over, isTrue);
+      expect(s.battleWinner, isNull);
+      expect(s.decks, [
+        [c(10)],
+        [c(10, 1)],
+      ]);
+      expect(WarRules.places(s), [1, 1], reason: 'equal cards, shared place');
+      expect(rules.result(s).stars, [3, 3]);
+    });
+
     test('a war after a war earns the doubleWar event for its winner', () {
       var s = flipAll(deal([
         [c(10), c(7), c(7, 2), c(9), c(7, 3), c(8), c(13), c(8, 3)],

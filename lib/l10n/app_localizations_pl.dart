@@ -22,7 +22,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get navLeaderboards => 'Rankingi';
 
   @override
-  String get navSettings => 'Ustawienia';
+  String get navSettings => 'Opcje';
 
   @override
   String get comingSoon => 'Wkrótce';
@@ -738,6 +738,9 @@ class AppLocalizationsPl extends AppLocalizations {
   String get parentsGateWrong => 'To nie jest dobrze.';
 
   @override
+  String get parentsGateLocked => 'Za dużo prób. Spróbuj ponownie za minutę.';
+
+  @override
   String get parentsGateOpen => 'Otwórz';
 
   @override
@@ -1368,7 +1371,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get familyRemoveMessage =>
-      'Urządzenie przestanie dostawać profile i punkty. Dane, które już na nim są, zostaną.';
+      'Urządzenie zniknie z listy i przestanie dostawać profile i punkty. Dane, które już ma, zostaną na nim. To tylko dla porządku: kto zna rodzinny kod QR, może dołączyć ponownie. Całkiem oddzielić je można tylko, zakładając nową rodzinę.';
 
   @override
   String get familyRemoved => 'usunięte';
@@ -1540,7 +1543,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get donationsOfflineText =>
-      'Gra działa offline i nie wysyła nigdzie nic o was. Internetu używa tylko do pobrania nowej wersji i listy darczyńców.';
+      'Gra działa offline i nie wysyła nigdzie nic o was. Internetu używa tylko do pobrania nowej wersji.';
 
   @override
   String get donationsFamilyTitle => 'Gra cała rodzina';
@@ -1579,12 +1582,6 @@ class AppLocalizationsPl extends AppLocalizations {
       'Wspierać będzie można, gdy gra trafi do Google Play. Dziękujemy!';
 
   @override
-  String get donationsThanks => 'Serdecznie dziękujemy darczyńcom:';
-
-  @override
-  String get donationsNobody => 'Na razie nikogo tu nie ma. Będziesz pierwszy?';
-
-  @override
   String get familyRename => 'Zmień nazwę urządzenia';
 
   @override
@@ -1613,13 +1610,5 @@ class AppLocalizationsPl extends AppLocalizations {
       'Zaproszenie trafi na wszystkie urządzenia w sieci';
 
   @override
-  String get parentsReportBug => 'Zgłoś błąd';
-
-  @override
-  String get parentsReportBugHint =>
-      'Otwiera formularz na GitHubie, w którym opiszesz błąd. Zgłoszenia są publiczne: nie wpisuj imion dzieci ani innych danych osobowych.';
-
-  @override
-  String get bugReportNoBrowser =>
-      'Nie udało się otworzyć przeglądarki. Błąd możesz zgłosić pod adresem:';
+  String get saveFailed => 'Nie udało się zapisać gry.';
 }

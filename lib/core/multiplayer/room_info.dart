@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 
+import 'local_address.dart';
 import 'protocol.dart';
 
 /// A room as its host announces it on the Wi-Fi (spec 14.2 step 3).
@@ -97,7 +98,7 @@ class JoinTicket {
     if (uri == null || uri.scheme != 'deskovky' || uri.host != 'join') return null;
     final ip = uri.queryParameters['ip'], code = uri.queryParameters['code'];
     final port = int.tryParse(uri.queryParameters['port'] ?? '');
-    if (ip == null || !_ipv4.hasMatch(ip) || code == null || !_code.hasMatch(code)) return null;
+    if (ip == null || !_ipv4.hasMatch(ip) || !isLocalNetworkAddress(ip) || code == null || !_code.hasMatch(code)) return null;
     if (port == null || port <= 0 || port > 65535) return null;
     return JoinTicket(ip: ip, port: port, code: code);
   }
