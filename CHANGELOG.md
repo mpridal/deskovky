@@ -2,6 +2,15 @@
 
 Každá verze má sekci `## x.y.z` s poznámkami `### cs`, `### en`, `### es` – z nich se při vydání tvoří `latest.json` a karta „Je tu nová verze“. Volitelný řádek `Minimální verze: x.y.z` udělá aktualizaci povinnou pro starší verze.
 
+## 0.14.0
+
+### cs
+Rodina je bezpečnější: synchronizace mezi zařízeními je šifrovaná a rodinný klíč se už nezálohuje do účtu Google. Aktualizujte prosím všechna zařízení v rodině – starší verze se s novou nesynchronizují. Zařízení v Rodině správně ukazují, kdo je zrovna dostupný. Roboti počkají, když aplikaci odložíte, a rodičovská brána je těžší. Válka bez karet končí remízou. Seznam dárců a hlášení chyb jsme odebrali.
+### en
+Family is safer: syncing between devices is encrypted and the family key is no longer backed up to the Google account. Please update every device in the family – older versions do not sync with the new one. Family devices now show correctly who is available. Robots wait while the app is in the background, and the parents' check is harder. A war with no cards left ends in a draw. The donors list and bug reporting have been removed.
+### es
+Familia es más segura: la sincronización entre dispositivos va cifrada y la clave familiar ya no se guarda en la copia de la cuenta de Google. Actualiza todos los dispositivos de la familia: las versiones anteriores no se sincronizan con la nueva. Los dispositivos de Familia muestran bien quién está disponible. Los robots esperan mientras la app está en segundo plano y el control para padres es más difícil. Una guerra sin cartas termina en empate. Se han quitado la lista de donantes y el informe de errores.
+
 ## 0.13.1
 
 ### cs
