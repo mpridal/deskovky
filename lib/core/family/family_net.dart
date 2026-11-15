@@ -110,7 +110,10 @@ class DeviceFamilyNet implements FamilyNet {
 
   @override
   Future<OpenServer> serve() async {
-    final server = await NetServer.start();
+    // Only on the Wi-Fi, not on mobile data or a VPN (review R-021); debug
+    // builds also on localhost, for tests through `adb forward`.
+    final wifi = kDebugMode ? null : await localWifiAddress();
+    final server = await NetServer.start(address: wifi);
     return OpenServer(port: server.port, channels: server.channels, close: server.close);
   }
 

@@ -35,7 +35,7 @@ typedef BrowserOpener = Future<bool> Function(Uri uri);
 
 final browserOpenerProvider = Provider<BrowserOpener>((ref) => openInBrowser);
 
-/// The device's name and system for the report ("Galaxy Tab A7 Lite",
+/// The device's model and system for the report ("Samsung SM-T220",
 /// "Android 14 (SDK 34)"); nulls off Android.
 typedef DeviceInfo = Future<({String? device, String? os})> Function();
 
@@ -56,9 +56,10 @@ Future<bool> openInBrowser(Uri uri) async {
 Future<({String? device, String? os})> _deviceInfo() async {
   if (!Platform.isAndroid) return (device: null, os: null);
   try {
-    final name = await _device.invokeMethod<String>('name');
+    // The model, not the device's own name: the report is public (review R-011).
+    final model = await _device.invokeMethod<String>('model');
     final os = await _device.invokeMethod<String>('os');
-    return (device: name, os: os);
+    return (device: model, os: os);
   } on Object catch (e) {
     debugPrint('deviceInfo: $e');
     return (device: null, os: null);

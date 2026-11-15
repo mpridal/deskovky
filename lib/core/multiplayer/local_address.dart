@@ -77,3 +77,12 @@ class MulticastLock {
     }
   }
 }
+
+/// An address in a home network (private ranges, link-local, this device):
+/// rooms and families live only there, never on the internet (review R-006).
+bool isLocalNetworkAddress(String ip) {
+  final p = ip.split('.').map(int.tryParse).toList();
+  if (p.length != 4 || p.any((x) => x == null || x < 0 || x > 255)) return false;
+  final (a, b) = (p[0]!, p[1]!);
+  return _isPrivate(ip) || a == 127 || (a == 169 && b == 254);
+}

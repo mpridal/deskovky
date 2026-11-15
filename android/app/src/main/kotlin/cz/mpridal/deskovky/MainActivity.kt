@@ -46,6 +46,11 @@ class MainActivity : FlutterActivity() {
                     result.success(if (given.isNullOrBlank()) model else given)
                 }
                 "os" -> result.success("Android ${Build.VERSION.RELEASE} (SDK ${Build.VERSION.SDK_INT})")
+                // For public bug reports: the model only, never the owner's own name.
+                "model" -> result.success(
+                    if (Build.MODEL.startsWith(Build.MANUFACTURER, ignoreCase = true)) Build.MODEL
+                    else "${Build.MANUFACTURER.replaceFirstChar { it.uppercase() }} ${Build.MODEL}"
+                )
                 // The bug report form opens in the browser.
                 "open" -> {
                     val url = call.arguments as? String

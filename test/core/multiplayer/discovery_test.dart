@@ -7,6 +7,7 @@ import 'package:deskovky/core/multiplayer/protocol.dart';
 import 'package:deskovky/core/multiplayer/room_announcer.dart';
 import 'package:deskovky/core/multiplayer/room_finder.dart';
 import 'package:deskovky/core/multiplayer/room_info.dart';
+import 'package:deskovky/core/family/family_identity.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 RoomInfo _room({String code = '4321', int free = 2}) => RoomInfo(
@@ -119,6 +120,21 @@ void main() {
     // An emulator or a desktop: some private address is better than none.
     expect(pickWifiAddress([('eth0', '10.0.2.15')]), '10.0.2.15');
     expect(subnetBroadcast('192.168.1.23'), '192.168.1.255');
+  });
+
+  test('links and tickets only lead into the home network, never to a server on the internet (review R-006)', () {
+    expect(JoinTicket.parse('deskovky://join?ip=8.8.8.8&port=80&code=1234'), isNull);
+    expect(JoinTicket.parse('deskovky://join?ip=93.184.216.34&port=80&code=1234'), isNull);
+    expect(JoinTicket.parse('deskovky://join?ip=10.0.0.7&port=5000&code=1234'), isNotNull);
+    expect(JoinTicket.parse('deskovky://join?ip=172.20.1.2&port=5000&code=1234'), isNotNull);
+    expect(JoinTicket.parse('deskovky://join?ip=172.32.1.2&port=5000&code=1234'), isNull, reason: 'outside 172.16/12');
+    const key = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+    const id = '0123456789abcdef0123456789abcdef';
+    expect(FamilyTicket.parse('deskovky://family?id=$id&key=$key&ip=8.8.4.4&port=5000'), isNull);
+    expect(FamilyTicket.parse('deskovky://family?id=$id&key=$key&ip=192.168.0.9&port=5000'), isNotNull);
+    expect(isLocalNetworkAddress('127.0.0.1'), isTrue, reason: 'a developer forwarding a port');
+    expect(isLocalNetworkAddress('169.254.3.4'), isTrue);
+    expect(isLocalNetworkAddress('example.com'), isFalse);
   });
 
   test('the join link carries address, port and room code there and back', () {

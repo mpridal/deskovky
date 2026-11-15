@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 
 import '../db/app_database.dart';
+import '../multiplayer/local_address.dart';
 import 'uid.dart';
 
 /// The family this device belongs to (spec "Rodinná synchronizace" 7.1): an
@@ -78,7 +79,9 @@ class FamilyTicket {
     final id = q['id'], key = q['key'], ip = q['ip'];
     final port = int.tryParse(q['port'] ?? '');
     if (id == null || !_hex32.hasMatch(id) || key == null || !_hex64.hasMatch(key)) return null;
-    if (ip == null || !_ipv4.hasMatch(ip) || port == null || port <= 0 || port > 65535) return null;
+    if (ip == null || !_ipv4.hasMatch(ip) || !isLocalNetworkAddress(ip) || port == null || port <= 0 || port > 65535) {
+      return null;
+    }
     return FamilyTicket(familyId: id, key: key, ip: ip, port: port);
   }
 

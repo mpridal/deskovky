@@ -21,6 +21,7 @@ import '../../ui_kit/components/thinking_dots.dart';
 import '../../ui_kit/tokens/app_colors.dart';
 import '../../ui_kit/tokens/app_typography.dart';
 import 'qr_scanner.dart';
+import '../../core/multiplayer/local_address.dart';
 import 'room_widgets.dart';
 
 /// "Připojit se ke hře" (spec 14.2 step 3–4): who plays on this device, the
@@ -117,7 +118,8 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
     if (address.isNotEmpty) {
       final parts = address.split(':');
       final port = parts.length == 2 ? int.tryParse(parts[1]) : null;
-      if (port == null || parts[0].isEmpty) {
+      // Only the home network: a typed address cannot send profiles to the internet.
+      if (port == null || parts[0].isEmpty || !isLocalNetworkAddress(parts[0])) {
         showAppToast(context, l10n.joinFailed);
         return;
       }
