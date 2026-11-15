@@ -1601,16 +1601,5 @@ class AppLocalizationsDe extends AppLocalizations {
   String get inviteToAllDevices => 'Die Einladung geht an alle Geräte im WLAN';
 
   @override
-  String get parentsReportBug => 'Fehler melden';
-
-  @override
-  String get parentsReportBugHint =>
-      'Öffnet ein kurzes Formular (ohne Anmeldung), in dem du den Fehler beschreibst. Schreib keine Namen von Kindern oder andere persönliche Daten hinein.';
-
-  @override
-  String get bugReportNoBrowser =>
-      'Der Browser konnte nicht geöffnet werden. Du kannst den Fehler hier melden:';
-
-  @override
   String get saveFailed => 'Das Spiel konnte nicht gespeichert werden.';
 }

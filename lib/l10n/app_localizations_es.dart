@@ -1601,16 +1601,5 @@ class AppLocalizationsEs extends AppLocalizations {
       'La invitación llega a todos los dispositivos de la red';
 
   @override
-  String get parentsReportBug => 'Informar de un error';
-
-  @override
-  String get parentsReportBugHint =>
-      'Abre un formulario corto (sin iniciar sesión) donde describes el error. No escribas nombres de niños ni otros datos personales.';
-
-  @override
-  String get bugReportNoBrowser =>
-      'No se pudo abrir el navegador. Puedes informar del error en:';
-
-  @override
   String get saveFailed => 'No se pudo guardar la partida.';
 }

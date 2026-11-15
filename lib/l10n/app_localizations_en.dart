@@ -1595,16 +1595,5 @@ class AppLocalizationsEn extends AppLocalizations {
       'The invitation goes to every device on the Wi-Fi';
 
   @override
-  String get parentsReportBug => 'Report a bug';
-
-  @override
-  String get parentsReportBugHint =>
-      'Opens a short form (no sign-in) where you describe the bug. Do not write children’s names or other personal details.';
-
-  @override
-  String get bugReportNoBrowser =>
-      'The browser could not be opened. You can report the bug at:';
-
-  @override
   String get saveFailed => 'The game could not be saved.';
 }

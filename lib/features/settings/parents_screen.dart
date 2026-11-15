@@ -17,8 +17,6 @@ import '../../ui_kit/components/round_icon_button.dart';
 import '../../ui_kit/components/ui_feedback.dart';
 import '../../ui_kit/surfaces/felt_background.dart';
 import '../../ui_kit/tokens/app_colors.dart';
-import '../../app/bug_report.dart';
-import '../../app/update_controller.dart';
 import '../../ui_kit/tokens/app_typography.dart';
 
 /// Asks a times-table question that children of the target age cannot yet
@@ -173,36 +171,6 @@ class ParentsScreen extends ConsumerStatefulWidget {
 }
 
 class _ParentsScreenState extends ConsumerState<ParentsScreen> {
-  /// Opens the bug report form with the app, system and device filled in;
-  /// without a browser it shows the address.
-  Future<void> _reportBug() async {
-    final l10n = AppLocalizations.of(context);
-    final language = Localizations.localeOf(context).languageCode;
-    final version = await ref.read(appVersionProvider.future).catchError((Object _) => '?');
-    final info = await ref.read(deviceInfoProvider)();
-    final uri = bugReportUri(version: version, device: info.device, os: info.os, language: language);
-    final opened = await ref.read(browserOpenerProvider)(uri);
-    if (opened || !mounted) return;
-    await showDialog<void>(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.paper,
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(l10n.bugReportNoBrowser, style: AppTypography.body(color: AppColors.ink)),
-            const SizedBox(height: 8),
-            SelectableText(
-              bugReportForm.shortLink.replaceFirst('https://', ''),
-              style: AppTypography.button(color: AppColors.felt),
-            ),
-          ],
-        ),
-        actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(l10n.close))],
-      ),
-    );
-  }
-
   String? _done;
 
   Future<void> _gift(PlayerProfile player, int amount) async {
@@ -268,18 +236,6 @@ class _ParentsScreenState extends ConsumerState<ParentsScreen> {
                 onPressed: () => context.push('/settings/parents/family'),
               ),
               const SizedBox(height: 8),
-              // A bug report: a GitHub issue form in the browser (public).
-              PrimaryButton(
-                key: const ValueKey('parentsReportBug'),
-                label: l10n.parentsReportBug,
-                icon: Icons.bug_report,
-                secondary: true,
-                onPressed: _reportBug,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: Text(l10n.parentsReportBugHint, style: AppTypography.caption(color: AppColors.paper2)),
-              ),
               const SizedBox(height: 16),
               Text(l10n.parentsGiftTitle, style: AppTypography.h2(color: AppColors.paper)),
               const SizedBox(height: 8),

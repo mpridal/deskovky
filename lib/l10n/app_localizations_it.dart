@@ -1605,16 +1605,5 @@ class AppLocalizationsIt extends AppLocalizations {
       'L’invito arriva a tutti i dispositivi della rete';
 
   @override
-  String get parentsReportBug => 'Segnala un errore';
-
-  @override
-  String get parentsReportBugHint =>
-      'Apre un breve modulo (senza accesso) dove descrivi l’errore. Non scrivere nomi di bambini né altri dati personali.';
-
-  @override
-  String get bugReportNoBrowser =>
-      'Non è stato possibile aprire il browser. Puoi segnalare l’errore qui:';
-
-  @override
   String get saveFailed => 'Non è stato possibile salvare la partita.';
 }

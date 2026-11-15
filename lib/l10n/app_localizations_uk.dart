@@ -1606,16 +1606,5 @@ class AppLocalizationsUk extends AppLocalizations {
   String get inviteToAllDevices => 'Запрошення прийде на всі пристрої в мережі';
 
   @override
-  String get parentsReportBug => 'Повідомити про помилку';
-
-  @override
-  String get parentsReportBugHint =>
-      'Відкриває коротку форму (без входу), де ти опишеш помилку. Не пиши імена дітей чи інші особисті дані.';
-
-  @override
-  String get bugReportNoBrowser =>
-      'Не вдалося відкрити браузер. Повідомити про помилку можна тут:';
-
-  @override
   String get saveFailed => 'Не вдалося зберегти гру.';
 }

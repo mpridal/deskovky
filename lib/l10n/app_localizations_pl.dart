@@ -1610,16 +1610,5 @@ class AppLocalizationsPl extends AppLocalizations {
       'Zaproszenie trafi na wszystkie urządzenia w sieci';
 
   @override
-  String get parentsReportBug => 'Zgłoś błąd';
-
-  @override
-  String get parentsReportBugHint =>
-      'Otwiera krótki formularz (bez logowania), w którym opiszesz błąd. Nie wpisuj imion dzieci ani innych danych osobowych.';
-
-  @override
-  String get bugReportNoBrowser =>
-      'Nie udało się otworzyć przeglądarki. Błąd możesz zgłosić pod adresem:';
-
-  @override
   String get saveFailed => 'Nie udało się zapisać gry.';
 }

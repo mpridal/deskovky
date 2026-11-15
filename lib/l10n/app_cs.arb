@@ -462,9 +462,6 @@
   "shareAppTitle": "Deskovky do dalšího zařízení",
   "shareAppHint": "Naskenuj kód fotoaparátem druhého telefonu nebo tabletu. Otevře se stránka s nejnovější verzí: stáhni soubor deskovky-….apk a otevři ho.",
   "inviteToAllDevices": "Pozvánka přijde na všechna zařízení v síti",
-  "parentsReportBug": "Nahlásit chybu",
-  "parentsReportBugHint": "Otevře krátký formulář (bez přihlašování), kam chybu popíšeš. Nepiš do něj jména dětí ani jiné osobní údaje.",
-  "bugReportNoBrowser": "Prohlížeč se nepodařilo otevřít. Chybu můžeš nahlásit na adrese:",
   "saveFailed": "Hru se nepodařilo uložit.",
   "@saveFailed": {"description": "Shown once when saving a game in progress fails (full storage)."}
 }

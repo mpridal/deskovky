@@ -1605,16 +1605,5 @@ class AppLocalizationsCs extends AppLocalizations {
   String get inviteToAllDevices => 'Pozvánka přijde na všechna zařízení v síti';
 
   @override
-  String get parentsReportBug => 'Nahlásit chybu';
-
-  @override
-  String get parentsReportBugHint =>
-      'Otevře krátký formulář (bez přihlašování), kam chybu popíšeš. Nepiš do něj jména dětí ani jiné osobní údaje.';
-
-  @override
-  String get bugReportNoBrowser =>
-      'Prohlížeč se nepodařilo otevřít. Chybu můžeš nahlásit na adrese:';
-
-  @override
   String get saveFailed => 'Hru se nepodařilo uložit.';
 }

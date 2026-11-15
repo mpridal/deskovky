@@ -1612,16 +1612,5 @@ class AppLocalizationsSk extends AppLocalizations {
       'Pozvánka príde na všetky zariadenia v sieti';
 
   @override
-  String get parentsReportBug => 'Nahlásiť chybu';
-
-  @override
-  String get parentsReportBugHint =>
-      'Otvorí krátky formulár (bez prihlasovania), kde chybu opíšeš. Nepíš doň mená detí ani iné osobné údaje.';
-
-  @override
-  String get bugReportNoBrowser =>
-      'Prehliadač sa nepodarilo otvoriť. Chybu môžeš nahlásiť na adrese:';
-
-  @override
   String get saveFailed => 'Hru sa nepodarilo uložiť.';
 }

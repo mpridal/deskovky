@@ -462,8 +462,5 @@
   "shareAppTitle": "Deskovky su un altro dispositivo",
   "shareAppHint": "Inquadra il codice con la fotocamera dell'altro telefono o tablet. Si apre la pagina con la versione più nuova: scarica il file deskovky-….apk e aprilo.",
   "inviteToAllDevices": "L’invito arriva a tutti i dispositivi della rete",
-  "parentsReportBug": "Segnala un errore",
-  "parentsReportBugHint": "Apre un breve modulo (senza accesso) dove descrivi l’errore. Non scrivere nomi di bambini né altri dati personali.",
-  "bugReportNoBrowser": "Non è stato possibile aprire il browser. Puoi segnalare l’errore qui:",
   "saveFailed": "Non è stato possibile salvare la partita."
 }
