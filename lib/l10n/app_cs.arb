@@ -205,6 +205,7 @@
   "parentsGateTitle": "Jen pro rodiče",
   "parentsGateQuestion": "Kolik je {a} × {b}?",
   "parentsGateWrong": "To není správně.",
+  "parentsGateLocked": "Příliš mnoho pokusů. Zkus to znovu za minutu.",
   "parentsGateOpen": "Otevřít",
   "parentsGiftTitle": "Darovat body",
   "parentsGiftConfirm": "Darovat {points} ● hráči {name}?",

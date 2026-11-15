@@ -205,6 +205,7 @@
   "parentsGateTitle": "Лише для батьків",
   "parentsGateQuestion": "Скільки буде {a} × {b}?",
   "parentsGateWrong": "Неправильно.",
+  "parentsGateLocked": "Забагато спроб. Спробуй ще раз за хвилину.",
   "parentsGateOpen": "Відкрити",
   "parentsGiftTitle": "Подарувати бали",
   "parentsGiftConfirm": "Подарувати {points} ● гравцю {name}?",

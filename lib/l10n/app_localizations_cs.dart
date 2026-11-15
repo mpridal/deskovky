@@ -737,6 +737,10 @@ class AppLocalizationsCs extends AppLocalizations {
   String get parentsGateWrong => 'To není správně.';
 
   @override
+  String get parentsGateLocked =>
+      'Příliš mnoho pokusů. Zkus to znovu za minutu.';
+
+  @override
   String get parentsGateOpen => 'Otevřít';
 
   @override

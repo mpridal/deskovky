@@ -731,6 +731,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get parentsGateWrong => 'Ce n’est pas ça.';
 
   @override
+  String get parentsGateLocked => 'Trop d’essais. Réessaie dans une minute.';
+
+  @override
   String get parentsGateOpen => 'Ouvrir';
 
   @override

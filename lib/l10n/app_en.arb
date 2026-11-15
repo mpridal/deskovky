@@ -474,6 +474,7 @@
     }
   },
   "parentsGateWrong": "That is not right.",
+  "parentsGateLocked": "Too many tries. Try again in a minute.",
   "parentsGateOpen": "Open",
   "parentsGiftTitle": "Give points",
   "parentsGiftConfirm": "Give {points} ● to {name}?",

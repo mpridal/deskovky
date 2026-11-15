@@ -1344,6 +1344,12 @@ abstract class AppLocalizations {
   /// **'That is not right.'**
   String get parentsGateWrong;
 
+  /// No description provided for @parentsGateLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many tries. Try again in a minute.'**
+  String get parentsGateLocked;
+
   /// No description provided for @parentsGateOpen.
   ///
   /// In en, this message translates to:

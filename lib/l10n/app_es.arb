@@ -205,6 +205,7 @@
   "parentsGateTitle": "Solo para padres",
   "parentsGateQuestion": "¿Cuánto es {a} × {b}?",
   "parentsGateWrong": "No es correcto.",
+  "parentsGateLocked": "Demasiados intentos. Vuelve a intentarlo en un minuto.",
   "parentsGateOpen": "Abrir",
   "parentsGiftTitle": "Regalar puntos",
   "parentsGiftConfirm": "¿Regalar {points} ● a {name}?",

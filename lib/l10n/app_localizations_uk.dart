@@ -738,6 +738,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get parentsGateWrong => 'Неправильно.';
 
   @override
+  String get parentsGateLocked => 'Забагато спроб. Спробуй ще раз за хвилину.';
+
+  @override
   String get parentsGateOpen => 'Відкрити';
 
   @override

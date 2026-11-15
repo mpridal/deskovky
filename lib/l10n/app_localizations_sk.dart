@@ -738,6 +738,10 @@ class AppLocalizationsSk extends AppLocalizations {
   String get parentsGateWrong => 'To nie je správne.';
 
   @override
+  String get parentsGateLocked =>
+      'Príliš veľa pokusov. Skús to znova o minútu.';
+
+  @override
   String get parentsGateOpen => 'Otvoriť';
 
   @override

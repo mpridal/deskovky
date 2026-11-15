@@ -9,6 +9,7 @@ import 'package:deskovky/core/shop/shop_catalog.dart';
 import 'package:deskovky/core/shop/shop_repository.dart';
 import 'package:deskovky/core/stats/stats_repository.dart';
 import 'package:deskovky/features/settings/parents_screen.dart';
+import 'package:deskovky/ui_kit/components/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -56,6 +57,38 @@ void main() {
     final before = tester.widget<Text>(find.byKey(const ValueKey('gateQuestion'))).data;
     await _answer(tester, right: false);
     expect(tester.widget<Text>(find.byKey(const ValueKey('gateQuestion'))).data, isNot(before));
+  });
+
+  testWidgets('the question is a two-digit times table, not the small one schoolchildren know (review R-013)', (tester) async {
+    await _openGate(tester, db);
+    for (var i = 0; i < 2; i++) {
+      final question = tester.widget<Text>(find.byKey(const ValueKey('gateQuestion'))).data!;
+      final n = RegExp(r'\d+').allMatches(question).map((m) => int.parse(m[0]!)).toList();
+      expect(n[0], inInclusiveRange(12, 19), reason: question);
+      expect(n[1], inInclusiveRange(3, 9), reason: question);
+      await _answer(tester, right: false);
+    }
+  });
+
+  testWidgets('three wrong answers lock the gate for a minute, even when it is opened again (review R-013)', (tester) async {
+    await _openGate(tester, db);
+    for (var i = 0; i < 3; i++) {
+      await _answer(tester, right: false);
+    }
+    expect(find.text('Příliš mnoho pokusů. Zkus to znovu za minutu.'), findsOneWidget);
+    expect(tester.widget<PrimaryButton>(find.byKey(const ValueKey('gateOpen'))).onPressed, isNull);
+    await tester.tap(find.text('Zrušit'));
+    await tester.pumpAndSettle();
+    final link = find.byKey(const ValueKey('parentsLink'));
+    await tester.ensureVisible(link);
+    await tester.tap(link);
+    await tester.pumpAndSettle();
+    expect(tester.widget<PrimaryButton>(find.byKey(const ValueKey('gateOpen'))).onPressed, isNull, reason: 'still locked');
+    await tester.pump(const Duration(seconds: 61));
+    await tester.pumpAndSettle();
+    expect(tester.widget<PrimaryButton>(find.byKey(const ValueKey('gateOpen'))).onPressed, isNotNull);
+    await _answer(tester);
+    expect(find.byType(ParentsScreen), findsOneWidget);
   });
 
   testWidgets('a parent gives a player 50 points; it is in the ledger as a gift', (tester) async {
