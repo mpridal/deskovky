@@ -1611,7 +1611,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get parentsReportBugHint =>
-      'Otwiera formularz na GitHubie, w którym opiszesz błąd. Zgłoszenia są publiczne: nie wpisuj imion dzieci ani innych danych osobowych.';
+      'Otwiera krótki formularz (bez logowania), w którym opiszesz błąd. Nie wpisuj imion dzieci ani innych danych osobowych.';
 
   @override
   String get bugReportNoBrowser =>

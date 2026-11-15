@@ -2889,7 +2889,7 @@ abstract class AppLocalizations {
   /// No description provided for @parentsReportBugHint.
   ///
   /// In en, this message translates to:
-  /// **'Opens a form on GitHub where you describe the bug. Reports are public: do not write children’s names or other personal details.'**
+  /// **'Opens a short form (no sign-in) where you describe the bug. Do not write children’s names or other personal details.'**
   String get parentsReportBugHint;
 
   /// No description provided for @bugReportNoBrowser.

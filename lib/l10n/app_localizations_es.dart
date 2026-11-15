@@ -1601,7 +1601,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get parentsReportBugHint =>
-      'Abre un formulario en GitHub donde describes el error. Los informes son públicos: no escribas nombres de niños ni otros datos personales.';
+      'Abre un formulario corto (sin iniciar sesión) donde describes el error. No escribas nombres de niños ni otros datos personales.';
 
   @override
   String get bugReportNoBrowser =>

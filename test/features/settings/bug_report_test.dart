@@ -32,17 +32,23 @@ Future<void> _openParents(WidgetTester tester, List<Uri> opened, {bool works = t
 }
 
 void main() {
-  test('the report form is a new GitHub issue with the app, system and device filled in', () {
+  test('the report form is a Google form (no sign-in) with the app, system and device filled in', () {
     final uri = bugReportUri(version: '0.13.0', device: 'Galaxy Tab A7 Lite', os: 'Android 14 (SDK 34)', language: 'cs');
-    expect(uri.host, 'github.com');
-    expect(uri.path, '/mpridal/deskovky/issues/new');
-    final body = uri.queryParameters['body']!;
-    expect(body, contains('0.13.0'));
-    expect(body, contains('Galaxy Tab A7 Lite'));
-    expect(body, contains('Android 14'));
-    expect(body, contains('cs'));
-    expect(uri.queryParameters['labels'], 'bug');
-    expect(uri.queryParameters['title'], isNotEmpty);
+    expect(uri.host, 'docs.google.com');
+    expect(uri.path, endsWith('/viewform'));
+    expect(uri.queryParameters['usp'], 'pp_url');
+    final q = uri.queryParameters;
+    expect(q[bugReportForm.versionField], '0.13.0');
+    expect(q[bugReportForm.deviceField], 'Galaxy Tab A7 Lite');
+    expect(q[bugReportForm.osField], 'Android 14 (SDK 34)');
+    expect(q[bugReportForm.languageField], 'cs');
+    expect(uri.toString(), isNot(contains('github')));
+  });
+
+  test('an unknown device or system is a question mark, not "null"', () {
+    final q = bugReportUri(version: '0.13.0', device: null, os: null, language: 'en').queryParameters;
+    expect(q[bugReportForm.deviceField], '?');
+    expect(q[bugReportForm.osField], '?');
   });
 
   testWidgets('the parents corner opens the bug report form in the browser', (tester) async {
@@ -53,8 +59,8 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(button);
     await tester.pumpAndSettle();
-    expect(opened.single.path, '/mpridal/deskovky/issues/new');
-    expect(opened.single.queryParameters['body'], contains('Galaxy Tab A7 Lite'));
+    expect(opened.single.host, 'docs.google.com');
+    expect(opened.single.queryParameters[bugReportForm.deviceField], 'Galaxy Tab A7 Lite');
   });
 
   testWidgets('without a browser it says so and shows the address', (tester) async {
@@ -65,6 +71,6 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(button);
     await tester.pumpAndSettle();
-    expect(find.textContaining('github.com/mpridal/deskovky/issues'), findsOneWidget);
+    expect(find.text(bugReportForm.shortLink.replaceFirst('https://', '')), findsOneWidget);
   });
 }

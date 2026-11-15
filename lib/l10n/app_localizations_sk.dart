@@ -1612,7 +1612,7 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get parentsReportBugHint =>
-      'Otvorí formulár na GitHube, kde chybu opíšeš. Hlásenie je verejné: nepíš doň mená detí ani iné osobné údaje.';
+      'Otvorí krátky formulár (bez prihlasovania), kde chybu opíšeš. Nepíš doň mená detí ani iné osobné údaje.';
 
   @override
   String get bugReportNoBrowser =>

@@ -462,7 +462,7 @@
   "shareAppHint": "Naskenuj kód fotoaparátom druhého telefónu alebo tabletu. Otvorí sa stránka s najnovšou verziou: stiahni súbor deskovky-….apk a otvor ho.",
   "inviteToAllDevices": "Pozvánka príde na všetky zariadenia v sieti",
   "parentsReportBug": "Nahlásiť chybu",
-  "parentsReportBugHint": "Otvorí formulár na GitHube, kde chybu opíšeš. Hlásenie je verejné: nepíš doň mená detí ani iné osobné údaje.",
+  "parentsReportBugHint": "Otvorí krátky formulár (bez prihlasovania), kde chybu opíšeš. Nepíš doň mená detí ani iné osobné údaje.",
   "bugReportNoBrowser": "Prehliadač sa nepodarilo otvoriť. Chybu môžeš nahlásiť na adrese:",
   "saveFailed": "Hru sa nepodarilo uložiť."
 }

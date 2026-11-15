@@ -121,7 +121,7 @@ class ParentsScreen extends ConsumerStatefulWidget {
 }
 
 class _ParentsScreenState extends ConsumerState<ParentsScreen> {
-  /// Opens the GitHub issue form with the app, system and device filled in;
+  /// Opens the bug report form with the app, system and device filled in;
   /// without a browser it shows the address.
   Future<void> _reportBug() async {
     final l10n = AppLocalizations.of(context);
@@ -141,7 +141,7 @@ class _ParentsScreenState extends ConsumerState<ParentsScreen> {
             Text(l10n.bugReportNoBrowser, style: AppTypography.body(color: AppColors.ink)),
             const SizedBox(height: 8),
             SelectableText(
-              bugReportPage.replaceFirst('https://', ''),
+              bugReportForm.shortLink.replaceFirst('https://', ''),
               style: AppTypography.button(color: AppColors.felt),
             ),
           ],

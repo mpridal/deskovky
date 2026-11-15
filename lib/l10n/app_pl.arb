@@ -462,7 +462,7 @@
   "shareAppHint": "Zeskanuj kod aparatem drugiego telefonu lub tabletu. Otworzy się strona z najnowszą wersją: pobierz plik deskovky-….apk i otwórz go.",
   "inviteToAllDevices": "Zaproszenie trafi na wszystkie urządzenia w sieci",
   "parentsReportBug": "Zgłoś błąd",
-  "parentsReportBugHint": "Otwiera formularz na GitHubie, w którym opiszesz błąd. Zgłoszenia są publiczne: nie wpisuj imion dzieci ani innych danych osobowych.",
+  "parentsReportBugHint": "Otwiera krótki formularz (bez logowania), w którym opiszesz błąd. Nie wpisuj imion dzieci ani innych danych osobowych.",
   "bugReportNoBrowser": "Nie udało się otworzyć przeglądarki. Błąd możesz zgłosić pod adresem:",
   "saveFailed": "Nie udało się zapisać gry."
 }

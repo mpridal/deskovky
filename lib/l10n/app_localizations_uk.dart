@@ -1607,7 +1607,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get parentsReportBugHint =>
-      'Відкриває форму на GitHub, де ти опишеш помилку. Повідомлення публічні: не пиши імена дітей чи інші особисті дані.';
+      'Відкриває коротку форму (без входу), де ти опишеш помилку. Не пиши імена дітей чи інші особисті дані.';
 
   @override
   String get bugReportNoBrowser =>

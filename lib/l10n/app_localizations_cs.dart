@@ -1605,7 +1605,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get parentsReportBugHint =>
-      'Otevře formulář na GitHubu, kam chybu popíšeš. Hlášení je veřejné: nepiš do něj jména dětí ani jiné osobní údaje.';
+      'Otevře krátký formulář (bez přihlašování), kam chybu popíšeš. Nepiš do něj jména dětí ani jiné osobní údaje.';
 
   @override
   String get bugReportNoBrowser =>

@@ -4,29 +4,52 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Where bugs are reported: a new issue in the public repository.
-const bugReportPage = 'https://github.com/mpridal/deskovky/issues/new';
+/// A Google form: anyone can send it without an account (a GitHub issue
+/// needed signing in, which put parents off). The parent writes what
+/// happened; the app fills in what helps to find the bug.
+@immutable
+class BugReportForm {
+  const BugReportForm({
+    required this.url,
+    required this.shortLink,
+    required this.versionField,
+    required this.deviceField,
+    required this.osField,
+    required this.languageField,
+  });
 
-/// A new GitHub issue with what helps to find the bug filled in; the parent
-/// writes what happened. Nothing is sent until they submit it on GitHub.
+  /// The form's `…/viewform` address.
+  final String url;
+
+  /// Shown when no browser opens, to type in elsewhere.
+  final String shortLink;
+
+  /// The `entry.N` names of the prefilled questions (from the form's
+  /// "Get pre-filled link").
+  final String versionField, deviceField, osField, languageField;
+}
+
+// TODO(milos): the real form – its address and entry ids come from its
+// "Get pre-filled link".
+const bugReportForm = BugReportForm(
+  url: 'https://docs.google.com/forms/d/e/FORM_ID/viewform',
+  shortLink: 'https://forms.gle/FORM_ID',
+  versionField: 'entry.1000001',
+  deviceField: 'entry.1000002',
+  osField: 'entry.1000003',
+  languageField: 'entry.1000004',
+);
+
+/// The bug report form with the app, system, device and language filled in.
+/// Nothing is sent until the parent submits it.
 Uri bugReportUri({required String version, required String? device, required String? os, required String language}) =>
-    Uri.parse(bugReportPage).replace(
+    Uri.parse(bugReportForm.url).replace(
       queryParameters: {
-        'title': 'Chyba: ',
-        'labels': 'bug',
-        'body': [
-          '**Co se stalo / What happened**',
-          '',
-          '',
-          '**Jak to zopakovat / Steps to reproduce**',
-          '1. ',
-          '',
-          '---',
-          'Deskovky $version',
-          'Systém / OS: ${os ?? '?'}',
-          'Zařízení / Device: ${device ?? '?'}',
-          'Jazyk / Language: $language',
-        ].join('\n'),
+        'usp': 'pp_url',
+        bugReportForm.versionField: version,
+        bugReportForm.deviceField: device ?? '?',
+        bugReportForm.osField: os ?? '?',
+        bugReportForm.languageField: language,
       },
     );
 

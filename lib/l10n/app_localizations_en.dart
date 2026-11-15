@@ -1596,7 +1596,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get parentsReportBugHint =>
-      'Opens a form on GitHub where you describe the bug. Reports are public: do not write children’s names or other personal details.';
+      'Opens a short form (no sign-in) where you describe the bug. Do not write children’s names or other personal details.';
 
   @override
   String get bugReportNoBrowser =>
