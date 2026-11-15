@@ -349,4 +349,46 @@ void main() {
     host.dispose();
     mama.dispose();
   });
+
+  test('a device that never says hello is let go after a while (review R-020)', () async {
+    final host = HostRoom(
+      module: memoryModule,
+      roomCode: '4321',
+      slots: [LocalSlot(profileId: 1, card: _card('Táta')), const OpenSlot()],
+      difficulty: Difficulty.easy,
+      robotSpeed: RobotSpeed.fast,
+      options: const {'cards': 12, 'set': 'animals'},
+      runner: const InlineAiRunner(),
+      robotDelay: Duration.zero,
+      seed: 77,
+      helloTimeout: const Duration(milliseconds: 100),
+    );
+    final (hostSide, clientSide) = LoopbackChannel.pair();
+    host.accept(hostSide);
+    var closed = false;
+    clientSide.incoming.listen((_) {}, onDone: () => closed = true);
+    await Future<void>.delayed(const Duration(milliseconds: 250));
+    expect(closed, isTrue);
+    host.dispose();
+  });
+
+  test('names and avatars from other devices are kept small (review R-020)', () {
+    final long = ProfileCard.fromJson({'name': 'K' * 500, 'avatar': <String, Object?>{}})!;
+    expect(long.name.length, lessThanOrEqualTo(40));
+    expect(ProfileCard.fromJson({'name': 'Kuba', 'avatar': {'x': 'y' * 10000}}), isNull);
+  });
+
+  test('a player removed after the start leaves a robot in their place, the game goes on (review R-023)', () async {
+    final host = _host();
+    final kuba = await _join(host, 'Kuba');
+    kuba.setReady(true);
+    await _settle();
+    host.start();
+    await _settle();
+    host.kick(kuba.clientId!);
+    await _settle();
+    expect(host.controller!.isRobotSeat(1), isTrue);
+    host.dispose();
+    kuba.dispose();
+  });
 }

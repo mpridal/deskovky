@@ -72,6 +72,9 @@ class _Conn {
   final MessageChannel channel;
   StreamSubscription<NetMessage>? sub;
   String? clientId;
+
+  /// Closes a line that never says hello (review R-020).
+  Timer? helloTimer;
 }
 
 /// The host of a network game (spec 14): keeps the room, deals places, starts
@@ -89,9 +92,13 @@ class HostRoom extends ChangeNotifier {
     Duration? robotDelay,
     int? seed,
     this.reconnectGrace = const Duration(seconds: 30),
+    this.helloTimeout = const Duration(seconds: 5),
   }) : _slots = [...slots],
        robotDelay = robotDelay ?? robotSpeed.delay,
        _seed = seed ?? Random().nextInt(1 << 31);
+
+  /// How long a new line may stay silent before it says hello.
+  final Duration helloTimeout;
 
   /// The `clientId` of the host's own players in the shared config.
   static const hostId = 'host';
@@ -228,6 +235,14 @@ class HostRoom extends ChangeNotifier {
       for (final (i, s) in _slots.indexed) {
         if (s is RemoteSlot && s.clientId == clientId) _slots[i] = const OpenSlot();
       }
+    } else if (_controller case final controller?) {
+      // In a running game a robot takes the places, so it does not stop (review R-023).
+      for (final seat in _seatsOf(clientId).keys) {
+        _waiting.remove(seat);
+        controller.setStandIn(seat, true);
+      }
+      if (_waiting.isEmpty) _clearWait();
+      _broadcastPeers();
     }
     _tokens.removeWhere((_, id) => id == clientId);
     _lobbyChanged();
@@ -242,6 +257,9 @@ class HostRoom extends ChangeNotifier {
     final conn = _Conn(channel);
     _conns.add(conn);
     conn.sub = channel.incoming.listen((m) => _onMessage(conn, m), onDone: () => _onGone(conn));
+    conn.helloTimer = Timer(helloTimeout, () {
+      if (conn.clientId == null && _conns.contains(conn)) _drop(conn);
+    });
   }
 
   void start() {
@@ -440,7 +458,10 @@ class HostRoom extends ChangeNotifier {
     if (_disposed) return;
     final clientId = conn.clientId;
     if (clientId == null) {
-      if (message is Hello) _onHello(conn, message);
+      if (message is Hello) {
+        conn.helloTimer?.cancel();
+        _onHello(conn, message);
+      }
       return;
     }
     switch (message) {
@@ -474,6 +495,8 @@ class HostRoom extends ChangeNotifier {
 
   void _onHello(_Conn conn, Hello hello) {
     if (hello.protocolVersion != protocolVersion) return _refuse(conn, 'version');
+    // Other game rules would drift apart unnoticed (review R-002).
+    if (hello.rules != rulesVersion) return _refuse(conn, 'version');
     if (hello.roomCode != roomCode) return _refuse(conn, 'code');
     final known = hello.token == null ? null : _tokens[hello.token];
     if (known != null) {
@@ -508,6 +531,9 @@ class HostRoom extends ChangeNotifier {
             _broadcast(const Resume());
           }
         }
+        // Still paused (by someone, or waiting for another device): the
+        // returning device must know, its start said "running" (review R-012).
+        if (_controller?.paused ?? false) conn.channel.send(const Pause());
         _broadcastPeers();
         notifyListeners();
       }
@@ -568,6 +594,7 @@ class HostRoom extends ChangeNotifier {
   }
 
   void _onGone(_Conn conn) {
+    conn.helloTimer?.cancel();
     _conns.remove(conn);
     final clientId = conn.clientId;
     if (_disposed || clientId == null || _conns.any((c) => c.clientId == clientId)) return;
@@ -648,6 +675,7 @@ class HostRoom extends ChangeNotifier {
   }
 
   void _drop(_Conn conn) {
+    conn.helloTimer?.cancel();
     _conns.remove(conn);
     conn.sub?.cancel();
     conn.channel.close();
