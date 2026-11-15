@@ -17,6 +17,8 @@ import '../core/family/fold.dart';
 import '../core/multiplayer/message_channel.dart';
 import '../core/multiplayer/network_env.dart';
 import '../core/settings/settings_repository.dart';
+import '../core/l10n/locale_resolution.dart';
+import '../l10n/app_localizations.dart';
 import 'stats_service.dart';
 
 /// Why the family cannot sync right now (shown in Rodina).
@@ -92,7 +94,13 @@ class FamilyController extends ChangeNotifier {
 
   /// Names a device gets when nothing better is known; replaced by
   /// [systemDeviceName] when it says more.
-  static const genericNames = {'Telefon', 'Tablet', 'Phone', 'Teléfono', 'Tableta'};
+  /// Every language's word for a phone or a tablet (review R-027).
+  static final genericNames = {
+    for (final locale in supportedAppLocales) ...[
+      lookupAppLocalizations(locale).devicePhone,
+      lookupAppLocalizations(locale).deviceTablet,
+    ],
+  };
 
   final AppDatabase db;
   final FamilyNet net;

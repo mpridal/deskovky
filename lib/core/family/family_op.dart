@@ -19,7 +19,8 @@ class FamilyOp {
 
   Map<String, Object?> toJson() => {'o': origin, 's': seq, 'c': clock.pack(), 'b': body.toJson()};
 
-  /// Null for anything broken or of an unknown type (a newer app version).
+  /// Null for anything broken; an op of an unknown type (a newer app
+  /// version) comes back with an [UnknownOp] body.
   static FamilyOp? fromJson(Object? json) {
     if (json is! Map<String, Object?>) return null;
     final origin = json['o'], seq = json['s'], clock = json['c'];
@@ -113,10 +114,13 @@ sealed class OpBody {
         ),
         'deviceJoined' => DeviceJoined(deviceId: json['device']! as String, name: json['name']! as String),
         'deviceRemoved' => DeviceRemoved(deviceId: json['device']! as String),
+        // A newer app version's op: kept as it is and passed on, so it is
+        // never skipped for good (review R-005); the fold leaves it out.
+        final String _ => UnknownOp({...json}),
         _ => null,
       };
     } on Object {
-      return null;
+      return json['t'] is String ? UnknownOp({...json}) : null;
     }
   }
 }
@@ -433,4 +437,18 @@ class DeviceRemoved extends OpBody {
 
   @override
   Map<String, Object?> get fields => {'device': deviceId};
+}
+
+/// An op this version does not know (or cannot read): stored and synced as
+/// it came, ignored when the family state is computed.
+class UnknownOp extends OpBody {
+  const UnknownOp(this.raw);
+
+  final Map<String, Object?> raw;
+
+  @override
+  String get type => raw['t']! as String;
+
+  @override
+  Map<String, Object?> get fields => {...raw}..remove('t');
 }

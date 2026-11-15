@@ -92,6 +92,9 @@ class FamilyStore {
 
   /// Records a change made on this device.
   Future<FamilyOp> append(OpBody body) async {
+    // The marker check reads outside the transaction: done before it starts,
+    // so the transaction never waits for it (review R-034).
+    await deviceId();
     final op = await _db.transaction(() async {
       final id = await deviceId();
       final last = await _db
@@ -107,6 +110,7 @@ class FamilyStore {
 
   /// Takes ops from another family device; returns how many were new.
   Future<int> insertRemote(Iterable<FamilyOp> ops) async {
+    await deviceId(); // see append
     final added = await _db.transaction(() async {
       var added = 0;
       Hlc? latest;

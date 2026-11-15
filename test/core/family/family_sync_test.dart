@@ -80,6 +80,27 @@ void main() {
     expect(await tablet.stateJson(), await phone.stateJson());
   });
 
+  test('an op of a newer app version is kept and passed on, so nothing is skipped for good (review R-005)', () async {
+    final newer = device(), older = device(), third = device();
+    final id = await newer.store.deviceId();
+    await newer.players.create(name: 'Viky', avatar: AvatarSpec.defaults); // seq 1
+    // A future op type, then an ordinary op after it.
+    final future = {'o': id, 's': 2, 'c': '000001700000000:000000:$id', 'b': {'t': 'budouci', 'x': 1}};
+    await newer.db.into(newer.db.syncOps).insert(
+      SyncOpsCompanion.insert(origin: id, seq: 2, clock: future['c']! as String, json: jsonEncode(future)),
+    );
+    await newer.players.create(name: 'Kuba', avatar: AvatarSpec.defaults); // seq 3
+    await _meet(newer, older);
+    expect((await older.store.versionVector())[id], 3);
+    final ops = await older.store.all();
+    expect(ops.where((o) => o.origin == id).map((o) => o.seq).toSet(), {1, 2, 3}, reason: 'the unknown op is kept too');
+    expect((await older.players.all()).map((p) => p.name).toSet(), {'Viky', 'Kuba'}, reason: 'the known ops still apply');
+    // Passed on unchanged to a device that meets only the older one.
+    await _meet(older, third);
+    final passed = (await third.store.all()).where((o) => o.origin == id && o.seq == 2).single;
+    expect(passed.toJson()['b'], {'t': 'budouci', 'x': 1});
+  });
+
   test('three devices converge whatever order they meet in', () async {
     final a = device(), b = device(), c = device();
     await a.players.create(name: 'Ája', avatar: AvatarSpec.defaults);

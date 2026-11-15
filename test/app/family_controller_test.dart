@@ -157,6 +157,10 @@ void main() {
     await tablet.controller.createFamily(deviceName: 'Tablet');
     await phone.controller.joinFamily(tablet.controller.ticket!, deviceName: 'Telefon');
     await _settle();
+    // Wait for the syncs after joining, not for a fixed time (review R-019).
+    for (var i = 0; i < 200 && (tablet.controller.syncing || phone.controller.syncing); i++) {
+      await _settle(10);
+    }
     await tablet.controller.removeDevice(await FamilyStore.of(phone.db).deviceId());
     await tablet.players.create(name: 'Tajná', avatar: AvatarSpec.defaults);
     await _settle(600);
@@ -279,6 +283,15 @@ void main() {
     tablet.controller.syncSoon();
     await _settle();
     expect((await tablet.controller.familyDevices()).single.name, 'Obývák');
+  });
+
+  test('a device called just "Handy" or "Телефон" takes the system name too (review R-027)', () async {
+    for (final generic in ['Handy', 'Телефон', 'Tablette', 'Celular']) {
+      final tablet = device('T', systemName: 'Galaxy Tab A7 Lite');
+      await tablet.controller.createFamily(deviceName: generic);
+      await _settle();
+      expect((await tablet.controller.familyDevices()).single.name, 'Galaxy Tab A7 Lite', reason: generic);
+    }
   });
 }
 

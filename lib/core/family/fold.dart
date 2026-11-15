@@ -194,7 +194,8 @@ FamilyState foldFamily(Iterable<FamilyOp> input) {
         devices[deviceId] = DeviceView(deviceId: deviceId, name: name, removed: devices[deviceId]?.removed ?? false);
       case DeviceRemoved(:final deviceId):
         devices[deviceId] = DeviceView(deviceId: deviceId, name: devices[deviceId]?.name ?? '', removed: true);
-      case ProfilesMerged() || ProfileDeleted():
+      // A newer version's op: kept for that version, nothing here (review R-005).
+      case ProfilesMerged() || ProfileDeleted() || UnknownOp():
         break;
     }
   }
