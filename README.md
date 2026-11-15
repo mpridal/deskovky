@@ -64,13 +64,7 @@ Pravidla a technické podrobnosti každé hry jsou v `lib/games/<id>/README.md`.
 
 ## Dary
 
-Záložka **Dary** vysvětluje, proč hru podpořit, nabízí příspěvek 2, 5, 10 nebo 25 € (zatím nefunkční, přijde s Google Play Billing za rodičovskou kontrolou) a děkuje dárcům. Seznam dárců je soubor [`donors.json`](donors.json) v tomto repozitáři; aplikace si ho stáhne při otevření záložky a pamatuje si ho pro offline. Google Play jména dárců neprozrazuje, proto se seznam doplňuje ručně a jen se souhlasem dárce:
-
-```json
-[
-  {"name": "Babička Jana", "amount": 25, "currency": "EUR", "date": "2026-11-02"}
-]
-```
+Záložka **Dary** vysvětluje, proč hru podpořit, a nabízí příspěvek 2, 5, 10 nebo 25 € (zatím nefunkční, přijde s Google Play Billing za rodičovskou kontrolou). Seznam dárců aplikace neukazuje – jména by šla zveřejnit jen s výslovným souhlasem dárců.
 
 ## Hudba
 

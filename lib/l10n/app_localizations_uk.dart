@@ -1537,7 +1537,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get donationsOfflineText =>
-      'Грає офлайн і нікуди нічого про вас не надсилає. Інтернет потрібен лише для завантаження нової версії та списку тих, хто підтримав.';
+      'Грає офлайн і нікуди нічого про вас не надсилає. Інтернет потрібен лише для завантаження нової версії.';
 
   @override
   String get donationsFamilyTitle => 'Грає вся сім’я';
@@ -1574,12 +1574,6 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get donationsSoon =>
       'Підтримати можна буде, щойно гра з’явиться в Google Play. Дякуємо!';
-
-  @override
-  String get donationsThanks => 'Щиро дякуємо тим, хто нас підтримав:';
-
-  @override
-  String get donationsNobody => 'Тут ще нікого немає. Будеш першим?';
 
   @override
   String get familyRename => 'Перейменувати пристрій';

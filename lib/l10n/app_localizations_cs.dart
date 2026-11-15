@@ -1535,7 +1535,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get donationsOfflineText =>
-      'Hraje se offline a hra o vás nic neposílá ven. Internet použije jen ke stažení nové verze a seznamu dárců.';
+      'Hraje se offline a hra o vás nic neposílá ven. Internet použije jen ke stažení nové verze.';
 
   @override
   String get donationsFamilyTitle => 'Hraje celá rodina';
@@ -1572,12 +1572,6 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get donationsSoon =>
       'Přispívat půjde, až bude hra na Google Play. Děkujeme!';
-
-  @override
-  String get donationsThanks => 'Srdečně děkujeme dárcům:';
-
-  @override
-  String get donationsNobody => 'Zatím tu nikdo není. Budete první?';
 
   @override
   String get familyRename => 'Přejmenovat zařízení';

@@ -1540,7 +1540,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get donationsOfflineText =>
-      'Gra działa offline i nie wysyła nigdzie nic o was. Internetu używa tylko do pobrania nowej wersji i listy darczyńców.';
+      'Gra działa offline i nie wysyła nigdzie nic o was. Internetu używa tylko do pobrania nowej wersji.';
 
   @override
   String get donationsFamilyTitle => 'Gra cała rodzina';
@@ -1577,12 +1577,6 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get donationsSoon =>
       'Wspierać będzie można, gdy gra trafi do Google Play. Dziękujemy!';
-
-  @override
-  String get donationsThanks => 'Serdecznie dziękujemy darczyńcom:';
-
-  @override
-  String get donationsNobody => 'Na razie nikogo tu nie ma. Będziesz pierwszy?';
 
   @override
   String get familyRename => 'Zmień nazwę urządzenia';

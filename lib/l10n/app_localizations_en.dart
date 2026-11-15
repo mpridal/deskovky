@@ -1525,7 +1525,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get donationsOfflineText =>
-      'It plays offline and sends nothing about you anywhere. It only uses the internet to download a new version and the list of donors.';
+      'It plays offline and sends nothing about you anywhere. It only uses the internet to download a new version.';
 
   @override
   String get donationsFamilyTitle => 'The whole family plays';
@@ -1562,12 +1562,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get donationsSoon =>
       'Giving will be possible once the game is on Google Play. Thank you!';
-
-  @override
-  String get donationsThanks => 'Heartfelt thanks to our donors:';
-
-  @override
-  String get donationsNobody => 'Nobody here yet. Will you be the first?';
 
   @override
   String get familyRename => 'Rename device';

@@ -2769,7 +2769,7 @@ abstract class AppLocalizations {
   /// No description provided for @donationsOfflineText.
   ///
   /// In en, this message translates to:
-  /// **'It plays offline and sends nothing about you anywhere. It only uses the internet to download a new version and the list of donors.'**
+  /// **'It plays offline and sends nothing about you anywhere. It only uses the internet to download a new version.'**
   String get donationsOfflineText;
 
   /// No description provided for @donationsFamilyTitle.
@@ -2831,18 +2831,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Giving will be possible once the game is on Google Play. Thank you!'**
   String get donationsSoon;
-
-  /// No description provided for @donationsThanks.
-  ///
-  /// In en, this message translates to:
-  /// **'Heartfelt thanks to our donors:'**
-  String get donationsThanks;
-
-  /// No description provided for @donationsNobody.
-  ///
-  /// In en, this message translates to:
-  /// **'Nobody here yet. Will you be the first?'**
-  String get donationsNobody;
 
   /// No description provided for @familyRename.
   ///

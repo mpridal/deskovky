@@ -1,10 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/donations_providers.dart';
-import '../../core/donations/donors.dart';
 import '../../l10n/app_localizations.dart';
 import '../../ui_kit/components/app_toast.dart';
 import '../../ui_kit/components/paper_card.dart';
@@ -15,16 +10,14 @@ import '../../ui_kit/tokens/app_typography.dart';
 /// The amounts offered, in euros.
 const donationAmounts = [2, 5, 10, 25];
 
-/// Dary: why Deskovky deserve support, the (not yet working) buttons to give,
-/// and the thanks to the donors – a list that fills the rest of the screen
-/// and scrolls, newest first.
-class DonationsScreen extends ConsumerWidget {
+/// Dary: why Deskovky deserve support and the (not yet working) buttons to
+/// give. No list of donors: showing names would need their consent.
+class DonationsScreen extends StatelessWidget {
   const DonationsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final donors = ref.watch(donorsProvider).value ?? const <Donor>[];
     final points = [
       (Icons.money_off, l10n.donationsFreeTitle, l10n.donationsFreeText),
       (Icons.block, l10n.donationsNoAdsTitle, l10n.donationsNoAdsText),
@@ -89,79 +82,11 @@ class DonationsScreen extends ConsumerWidget {
       ],
     );
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-        child: LayoutBuilder(
-          builder: (context, box) {
-            final thanks = Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(l10n.donationsThanks, style: AppTypography.h2(color: AppColors.paper)),
-                const SizedBox(height: 6),
-                Expanded(
-                  child: PaperCard(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    child: donors.isEmpty
-                        ? Center(
-                            child: Text(
-                              l10n.donationsNobody,
-                              textAlign: TextAlign.center,
-                              style: AppTypography.body(color: AppColors.wood),
-                            ),
-                          )
-                        : ListView.separated(
-                            key: const ValueKey('donorsList'),
-                            itemCount: donors.length,
-                            separatorBuilder: (_, _) => const Divider(height: 1, color: AppColors.paper2),
-                            itemBuilder: (context, i) => Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.favorite, size: 18, color: AppColors.players[0]),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      donors[i].name,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: AppTypography.body(color: AppColors.ink),
-                                    ),
-                                  ),
-                                  Text(donors[i].amountText, style: AppTypography.button(color: AppColors.felt)),
-                                ],
-                              ),
-                            ),
-                          ),
-                  ),
-                ),
-              ],
-            );
-            final story = SingleChildScrollView(key: const ValueKey('donationsStory'), child: top);
-            // Wide and low (a phone on its side, a tablet lying): side by side.
-            if (box.maxWidth > box.maxHeight * 1.3 && box.maxWidth >= 480) {
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(flex: 3, child: story),
-                  const SizedBox(width: 16),
-                  Expanded(flex: 2, child: thanks),
-                ],
-              );
-            }
-            // Upright: the story and the buttons take at most ~60 %, the thanks the rest.
-            final topMax = max(120.0, box.maxHeight * 0.6);
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                ConstrainedBox(
-                  constraints: BoxConstraints(maxHeight: topMax),
-                  child: story,
-                ),
-                const SizedBox(height: 12),
-                Expanded(child: thanks),
-              ],
-            );
-          },
+      child: SingleChildScrollView(
+        key: const ValueKey('donationsStory'),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+        child: Center(
+          child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 720), child: top),
         ),
       ),
     );
